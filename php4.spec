@@ -198,7 +198,6 @@ PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
 Obsoletes:	phpfi
 Obsoletes:	apache-mod_php
-Conflicts:	php >= 3:5.0.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/php4
