@@ -114,7 +114,8 @@
  y2k_compliance = On
 @@ -285,14 +352,14 @@
  ;
- ;   - Show all errors except for notices and coding standards warnings
+-;   - Show all errors except for notices and coding standards warnings
++;   - Show all errors
  ;
 -error_reporting  =  E_ALL & ~E_NOTICE & ~E_STRICT
 +error_reporting  =  E_ALL
