@@ -38,6 +38,7 @@ Patch8:		%{name}-apache-fixes.patch
 #Patch9:	%{name}-system-expat.patch
 Patch10:	%{name}-quotes.patch
 Patch11:	%{name}-session-path.patch
+Patch12:	%{name}-libtool_version_check_fix.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -719,6 +720,7 @@ Pliki potrzebne do kompilacji modu³ów PHP.
 #%patch9 -p1
 %patch10 -p1
 %patch11 -p1
+%patch12 -p1
 
 %build
 libtoolize --copy --force
