@@ -338,26 +338,22 @@ diff -burN php-4.3.9RC2.orig/ext/ldap/config.m4 php-4.3.9RC2/ext/ldap/config.m4
  ])
  
 diff -burN php-4.3.9RC2.orig/ext/mcal/config.m4 php-4.3.9RC2/ext/mcal/config.m4
---- php-4.3.9RC2.orig/ext/mcal/config.m4	2004-09-04 13:19:31.000000000 +0200
+--- php-4.3.9RC2.orig/ext/mcal/config.m4	2004-09-04 15:05:51.745755072 +0200
 +++ php-4.3.9RC2/ext/mcal/config.m4	2004-09-04 14:26:05.237559464 +0200
-@@ -19,8 +19,8 @@
+@@ -19,7 +19,7 @@
      fi
    done
  
 -  for i in $MCAL_DIR $MCAL_DIR/mcal $MCAL_DIR/mcal/lib $MCAL_DIR/lib/mcal $MCAL_DIR/lib; do
--    if test -r "$i/libmcal.a"; then
 +  for i in $MCAL_DIR $MCAL_DIR/mcal $MCAL_DIR/mcal/lib64 $MCAL_DIR/lib64/mcal $MCAL_DIR/lib64; do
-+    if test -r "$i/libmcal.so" -o -r "$i/libmcal.a"; then
+     if test -r "$i/libmcal.so" -o -r "$i/libmcal.a"; then
        MCAL_LIBRARY=$i
      fi
-   done
-@@ -31,8 +31,8 @@
-     fi
+@@ -32,7 +32,7 @@
    done
  
--  if test ! -f "$MCAL_LIBRARY/libmcal.a"; then
--    AC_MSG_ERROR(Unable to locate your libmcal library files - libmcal.a should be in the directory you specify or in the lib/ subdirectory below it - default search location is $MCAL_DEFAULT_SEARCH)
-+  if test ! -f "$MCAL_LIBRARY/libmcal.a" -a ! -f "$MCAL_LIBRARY/libmcal.so"; then
+   if test ! -f "$MCAL_LIBRARY/libmcal.a" -a ! -f "$MCAL_LIBRARY/libmcal.so"; then
+-    AC_MSG_ERROR(Unable to locate your libmcal library files - libmcal.* should be in the directory you specify or in the lib/ subdirectory below it - default search location is $MCAL_DEFAULT_SEARCH)
 +    AC_MSG_ERROR(Unable to locate your libmcal library files - libmcal.* should be in the directory you specify or in the lib64/ subdirectory below it - default search location is $MCAL_DEFAULT_SEARCH)
    fi
  
@@ -389,14 +385,14 @@ diff -burN php-4.3.9RC2.orig/ext/ming/config.m4 php-4.3.9RC2/ext/ming/config.m4
    AC_MSG_CHECKING([for destroySWFBlock])
    AC_TRY_RUN([
 diff -burN php-4.3.9RC2.orig/ext/mssql/config.m4 php-4.3.9RC2/ext/mssql/config.m4
---- php-4.3.9RC2.orig/ext/mssql/config.m4	2004-09-04 13:19:32.000000000 +0200
+--- php-4.3.9RC2.orig/ext/mssql/config.m4	2004-09-04 15:05:54.954267304 +0200
 +++ php-4.3.9RC2/ext/mssql/config.m4	2004-09-04 14:45:31.009335216 +0200
 @@ -32,12 +32,12 @@
      fi
    fi  
  
--  if test ! -r "$FREETDS_INSTALLATION_DIR/lib/libtds.a"; then
--     AC_MSG_ERROR(Could not find $FREETDS_INSTALLATION_DIR/lib/libtds.a)
+-  if test ! -r "$FREETDS_INSTALLATION_DIR/lib/libtds.so"; then
+-     AC_MSG_ERROR(Could not find $FREETDS_INSTALLATION_DIR/lib/libtds.so)
 +  if test ! -r "$FREETDS_INSTALLATION_DIR/lib64/libtds.so"; then
 +     AC_MSG_ERROR(Could not find $FREETDS_INSTALLATION_DIR/lib64/libtds.so)
    fi
@@ -523,18 +519,6 @@ diff -burN php-4.3.9RC2.orig/ext/pgsql/config.m4 php-4.3.9RC2/ext/pgsql/config.m
 +    for j in lib64 lib64/pgsql lib64/postgres lib64/postgresql ""; do
        if test -f "$i/$j/libpq.so" || test -f "$i/$j/libpq.a"; then 
          PGSQL_LIBDIR=$i/$j
-       fi
-diff -burN php-4.3.9RC2.orig/ext/xml/config.m4 php-4.3.9RC2/ext/xml/config.m4
---- php-4.3.9RC2.orig/ext/xml/config.m4	2004-09-04 13:19:30.000000000 +0200
-+++ php-4.3.9RC2/ext/xml/config.m4	2004-09-04 14:48:42.401239224 +0200
-@@ -30,7 +30,7 @@
-   else
-     PHP_NEW_EXTENSION(xml, xml.c, $ext_shared)
- 
--    for i in $PHP_XML $PHP_EXPAT_DIR; do
-+    for i in /usr /usr/local $PHP_XML `echo $PHP_EXPAT_DIR | sed -e s/shared,//` ; do
-       if test -f $i/lib/libexpat.a -o -f $i/lib/libexpat.$SHLIB_SUFFIX_NAME ; then
-         EXPAT_DIR=$i
        fi
 diff -burN php-4.3.9RC2.orig/ext/xmlrpc/config.m4 php-4.3.9RC2/ext/xmlrpc/config.m4
 --- php-4.3.9RC2.orig/ext/xmlrpc/config.m4	2004-09-04 13:19:34.000000000 +0200
