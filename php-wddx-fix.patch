@@ -10,3 +10,16 @@
 +LTLIBRARY_SHARED_LIBADD = $(EXPAT_SHARED_LIBADD)
  
  include $(top_srcdir)/build/dynlib.mk
+--- php-4.2.0/ext/wddx/wddx.c.orig	Thu May  2 03:21:31 2002
++++ php-4.2.0/ext/wddx/wddx.c	Thu May  2 03:21:17 2002
+@@ -124,6 +124,10 @@
+ };
+ /* }}} */
+ 
++#ifdef COMPILE_DL_WDDX
++ZEND_GET_MODULE(wddx)
++#endif
++
+ /* {{{ wddx_stack_init
+  */	
+ static int wddx_stack_init(wddx_stack *stack)
