@@ -59,7 +59,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.3.0
-Release:	0.5
+Release:	0.6
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -301,6 +301,7 @@ Summary(ru):	Пакет разработки для построения расширений PHP4
 Summary(uk):	Пакет розробки для побудови розширень PHP4
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{version}
+Obsoletes:	%{name}-pear-devel
 
 %description devel
 The php-devel package lets you compile dynamic extensions to PHP.
@@ -994,6 +995,21 @@ support to PHP.
 ModuЁ PHP umo©liwiaj╠cy tworzenie plikСw PDF. Wykorzystuje bibliotekЙ
 pdflib.
 
+%package pear
+Summary:	PEAR - PHP Extension and Application Repository
+Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
+Group:		Development/Languages/PHP
+Requires:	%{name}-pcre = %{version}
+Requires:	%{name}-xml = %{version}
+Obsoletes:	%{name}-pear-additional_classes
+
+%description pear
+PEAR - PHP Extension and Application Repository.
+
+%description pear -l pl
+PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
+Repozytorium Aplikacji.
+
 %package pgsql
 Summary:	PostgreSQL database module for PHP
 Summary(pl):	ModuЁ bazy danych PostgreSQL dla PHP
@@ -1292,53 +1308,6 @@ compression (zlib) support to PHP.
 %description zlib -l pl
 ModuЁ PHP umo©liwiaj╠cy u©ywanie kompresji (poprzez bibliotekЙ zlib).
 
-%package pear
-Summary:	PEAR - PHP Extension and Application Repository
-Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
-Group:		Development/Languages/PHP
-Requires:	%{name}-pcre = %{version}
-Requires:	%{name}-xml = %{version}
-
-%description pear
-PEAR - PHP Extension and Application Repository.
-
-%description pear -l pl
-PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
-Repozytorium Aplikacji.
-
-%package pear-additional_classes
-Summary:	PEAR - PHP Extension and Application Repository
-Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
-Group:		Development/Languages/PHP
-Requires:	%{name}-pcre = %{version}
-Requires:	%{name}-pear
-
-%description pear-additional_classes
-PEAR - PHP Extension and Application Repository. Additional classes
-which can't be found in pear packages.
-
-%description pear-additional_classes -l pl
-PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
-Repozytorium Aplikacji. Dodatkowe klasy, ktСrych nie ma w innych
-pakietach peara.
-
-%package pear-devel
-Summary:	PEAR - PHP Extension and Application Repository
-Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
-Group:		Development/Languages/PHP
-Requires:	%{name}-cgi = %{version}
-Requires:	%{name}-pcre = %{version}
-Requires:	%{name}-xml = %{version}
-Requires:	%{name}-pear
-Requires:	%{name}-pear-PEAR-Command
-
-%description pear-devel
-PEAR - PHP Extension and Application Repository. This package contains
-aplications needed to use pear from cvs.
-
-%description pear-devel -l pl
-PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
-Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 
 %prep
 %setup -q
@@ -1519,7 +1488,7 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 	$RPM_BUILD_ROOT/var/run/php \
 	$RPM_BUILD_ROOT/etc/httpd/httpd.conf
 
-%{__make} install install-build install-programs install-headers \
+%{__make} install install-build install-programs install-headers install-pear \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
 	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi ; \$(LIBTOOL) --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php.cli"
 
@@ -1536,9 +1505,10 @@ install %{SOURCE5} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
 
 install %{SOURCE1} .
 
-mv -f Zend/LICENSE{,.Zend}
+cp -f Zend/LICENSE{,.Zend}
 
-install -d $RPM_BUILD_ROOT%{php_pear_dir}/{Auth,Science,HTML/Template}
+# Directories created for pear:
+install -d $RPM_BUILD_ROOT%{php_pear_dir}/{Archive,Console,Crypt,HTML/Template,Image,Net,Science,XML}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -2302,6 +2272,19 @@ fi
 %attr(755,root,root) %{extensionsdir}/pdf.so
 %endif
 
+%files pear
+%defattr(644,root,root,755)
+%dir %{php_pear_dir}
+%dir %{php_pear_dir}/Archive
+%dir %{php_pear_dir}/Console
+%dir %{php_pear_dir}/Crypt
+%dir %{php_pear_dir}/HTML
+%dir %{php_pear_dir}/HTML/Template
+%dir %{php_pear_dir}/Image
+%dir %{php_pear_dir}/Net
+%dir %{php_pear_dir}/Science
+%dir %{php_pear_dir}/XML
+
 %if %{!?_without_pgsql:1}%{?_without_pgsql:0}
 %files pgsql
 %defattr(644,root,root,755)
@@ -2396,46 +2379,3 @@ fi
 %files zlib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/zlib.so
-
-# not built yet
-%if 0
-%files pear
-%defattr(644,root,root,755)
-%dir %{php_pear_dir}
-%dir %{php_pear_dir}/Archive
-%dir %{php_pear_dir}/Auth
-%dir %{php_pear_dir}/Console
-%dir %{php_pear_dir}/Crypt
-%dir %{php_pear_dir}/Date
-%dir %{php_pear_dir}/DB
-%dir %{php_pear_dir}/File
-%dir %{php_pear_dir}/HTML
-%dir %{php_pear_dir}/HTML/Template
-%dir %{php_pear_dir}/HTTP
-%dir %{php_pear_dir}/Image
-%dir %{php_pear_dir}/Mail
-%dir %{php_pear_dir}/Net
-%dir %{php_pear_dir}/PEAR
-%dir %{php_pear_dir}/Schedule
-%dir %{php_pear_dir}/Science
-%dir %{php_pear_dir}/XML
-
-%files pear-additional_classes
-%defattr(644,root,root,755)
-%attr(644,root,root) %{php_pear_dir}/Crypt/HCEMD5.php
-%attr(644,root,root) %{php_pear_dir}/File/Passwd.php
-%attr(644,root,root) %{php_pear_dir}/HTML/Form.php
-%attr(644,root,root) %{php_pear_dir}/HTML/IT*.php
-%attr(644,root,root) %{php_pear_dir}/HTML/Page.php
-%attr(644,root,root) %{php_pear_dir}/HTML/Processor.php
-%attr(644,root,root) %{php_pear_dir}/HTML/Select.php
-%attr(644,root,root) %{php_pear_dir}/HTTP/Compress.php
-%attr(644,root,root) %{php_pear_dir}/Schedule/At.php
-
-%files pear-devel
-%defattr(644,root,root,755)
-# in proper class now
-#%attr(755,root,root) %{_bindir}/pear
-%attr(755,root,root) %{_bindir}/pearize
-%attr(755,root,root) %{_bindir}/phptar
-%endif
