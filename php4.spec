@@ -59,7 +59,6 @@
 %define	apxs		/usr/sbin/apxs
 # some problems with apache 2.x
 %if %{_apache2}
-%undefine	with_recode
 %undefine	with_mm
 %endif
 %ifnarch %{ix86} sparc sparcv9 ppc
@@ -1449,6 +1448,9 @@ cp php.ini-dist php.ini
 %patch22 -p1
 %patch23 -p1
 %patch24 -p1
+
+# conflict seems to be resolved by recode patches
+rm -f ext/recode/config9.m4
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
