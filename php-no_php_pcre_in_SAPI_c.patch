@@ -1,0 +1,87 @@
+diff -Nur php-4.1.2.orig/main/SAPI.c php-4.1.2/main/SAPI.c
+--- php-4.1.2.orig/main/SAPI.c	Mon Jan 14 14:43:03 2002
++++ php-4.1.2/main/SAPI.c	Wed Feb 27 15:21:13 2002
+@@ -25,9 +25,6 @@
+ #include "SAPI.h"
+ #include "ext/standard/php_string.h"
+ #include "ext/standard/pageinfo.h"
+-#if HAVE_PCRE || HAVE_BUNDLED_PCRE
+-#include "ext/pcre/php_pcre.h"
+-#endif
+ #ifdef ZTS
+ #include "TSRM.h"
+ #endif
+@@ -448,65 +445,8 @@
+ 			} else if (!STRCASECMP(header_line, "WWW-Authenticate")) { /* HTTP Authentication */
+ 				int newlen;
+ 				char *result, *newheader;
+-#if HAVE_PCRE || HAVE_BUNDLED_PCRE
+-				zval *repl_temp;
+-				char *ptr = colon_offset+1;
+-				int ptr_len=0, result_len = 0;
+-#endif
+ 
+ 				SG(sapi_headers).http_response_code = 401; /* authentication-required */
+-#if HAVE_PCRE || HAVE_BUNDLED_PCRE
+-				if(PG(safe_mode)) {
+-					myuid = php_getuid();
+-
+-					ptr_len = strlen(ptr);
+-					MAKE_STD_ZVAL(repl_temp);
+-					Z_TYPE_P(repl_temp) = IS_STRING;
+-					Z_STRVAL_P(repl_temp) = emalloc(32);
+-					Z_STRLEN_P(repl_temp) = sprintf(Z_STRVAL_P(repl_temp), "realm=\"\\1-%ld\"", myuid);
+-					/* Modify quoted realm value */
+-					result = php_pcre_replace("/realm=\"(.*?)\"/i", 16,
+-											 ptr, ptr_len,
+-											 repl_temp,
+-											 0, &result_len, -1 TSRMLS_CC);
+-					if(result_len==ptr_len) {
+-						efree(result);
+-						sprintf(Z_STRVAL_P(repl_temp), "realm=\\1-%ld\\2", myuid);
+-						/* modify unquoted realm value */
+-						result = php_pcre_replace("/realm=([^\\s]+)(.*)/i", 21, 
+-											 	ptr, ptr_len,
+-											 	repl_temp,
+-											 	0, &result_len, -1 TSRMLS_CC);
+-						if(result_len==ptr_len) {
+-							char *lower_temp = estrdup(ptr);	
+-							char conv_temp[32];
+-							int conv_len;
+-
+-							php_strtolower(lower_temp,strlen(lower_temp));
+-							/* If there is no realm string at all, append one */
+-							if(!strstr(lower_temp,"realm")) {
+-								efree(result);
+-								conv_len = sprintf(conv_temp," realm=\"%ld\"",myuid);		
+-								result = emalloc(ptr_len+conv_len+1);
+-								result_len = ptr_len + conv_len;
+-								memcpy(result, ptr, ptr_len);	
+-								memcpy(result+ptr_len, conv_temp, conv_len);
+-								*(result+ptr_len+conv_len) = '\0';
+-							}
+-							efree(lower_temp);
+-						}
+-					}
+-					newlen = sizeof("WWW-Authenticate: ") + result_len;
+-					newheader = emalloc(newlen+1);
+-					sprintf(newheader,"WWW-Authenticate: %s", result);
+-					efree(header_line);
+-					sapi_header.header = newheader;
+-					sapi_header.header_len = newlen;
+-					efree(result);
+-					efree(Z_STRVAL_P(repl_temp));
+-					efree(repl_temp);
+-				}
+-#else
+ 				if(PG(safe_mode)) {
+ 					myuid = php_getuid();
+ 					result = emalloc(32);
+@@ -517,7 +457,6 @@
+ 					sapi_header.header_len = newlen;
+ 					efree(result);
+ 				} 
+-#endif
+ 			}
+ 			if (sapi_header.header==header_line) {
+ 				*colon_offset = ':';
