@@ -61,7 +61,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.3.5
-%define	_pre	RC3
+%define	_pre	RC4
 %define	_version	4.3.5%{_pre}
 Release:	0.%{_pre}
 Epoch:		3
@@ -69,7 +69,7 @@ Group:		Libraries
 License:	PHP
 #Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
 Source0:	http://downloads.php.net/ilia/%{name}-%{_version}.tar.bz2
-# Source0-md5:	efa1b74ed9c34f4801ce576f73bbd29c
+# Source0-md5:	677df559363411d0251c009c15d4eada
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -107,8 +107,7 @@ Patch26:	%{name}-zlib.patch
 Patch27:	%{name}-db-shared.patch
 Patch28:	%{name}-sybase-fix.patch
 Patch29:	%{name}-mssql-fix.patch
-Patch30:	%{name}-db42.patch
-Patch31:	%{name}-lib64.patch
+Patch30:	%{name}-lib64.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1518,9 +1517,8 @@ cp php.ini-dist php.ini
 %patch27 -p1
 %patch28 -p1
 %patch29 -p1
-%patch30 -p1
 %ifarch amd64
-%patch31 -p1
+%patch30 -p1
 %endif
 
 %build
