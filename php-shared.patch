@@ -1,5 +1,6 @@
---- php-4.0.6/Makefile.in.wiget	Sun Apr 22 03:09:12 2001
-+++ php-4.0.6/Makefile.in	Wed Jul  4 23:21:35 2001
+diff -ur php-4.1.2/Makefile.in php-4.1.2.x/Makefile.in
+--- php-4.1.2/Makefile.in	Sun Apr 22 03:09:12 2001
++++ php-4.1.2.x/Makefile.in	Sat Mar  2 23:05:56 2002
 @@ -2,40 +2,68 @@
  ZEND_DIR = $(srcdir)/Zend
  SUBDIRS = Zend main ext sapi $(TSRM_DIR) $(REGEX_DIR) . $(PEAR_DIR)
@@ -30,9 +31,6 @@
 -LTLIBRARY_LIBADD = $(LTLIBRARY_DEPENDENCIES) $(EXTRA_LIBS)
 +libphp4_la_LDFLAGS = -rpath $(phptempdir) $(EXTRA_LDFLAGS) $(LDFLAGS) $(PHP_RPATHS)
 +libphp4_la_LIBADD = $(libphp4_la_DEPENDENCIES) $(EXTRA_LIBS)
-+
-+libphp_common_la_LDFLAGS = -rpath $(phptempdir) -release 4.0.6 -version-info 0:0:0 $(LDFLAGS) $(PHP_RPATHS)
-+libphp_common_la_LIBADD = $(libphp_common_la_DEPENDENCIES) $(EXTRA_LIBS)
  
  PROGRAM_NAME         = php
  PROGRAM_SOURCES      = stub.c
@@ -50,6 +48,9 @@
 -include $(top_srcdir)/build/library.mk
  include $(top_srcdir)/build/program.mk
  
++libphp_common_la_LDFLAGS = -rpath $(phptempdir) -release $(PHP_VERSION) -version-info 0:0:0 $(LDFLAGS) $(PHP_RPATHS)
++libphp_common_la_LIBADD = $(libphp_common_la_DEPENDENCIES) $(EXTRA_LIBS)
++
 +libphp_common_la_OBJECTS = $(libphp_common_la_SOURCES:.c=.lo) $(libphp_common_la_OBJECTS_X)
 +
 +$(libphp_common_la_NAME): $(libphp_common_la_OBJECTS) $(libphp_common_la_DEPENDENCIES)
