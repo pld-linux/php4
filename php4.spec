@@ -40,6 +40,7 @@
 # _without_mm		- without mm support for session storage
 # _without_mnogosearch	- without mnogosearch extension module
 # _without_msession	- without msession extension module
+# _without_mssql	- without MS SQL extension module
 # _without_odbc		- without ODBC extension module
 # _without_openssl	- without OpenSSL support and OpenSSL extension (module)
 # _without_pcre		- without PCRE extension module
@@ -65,7 +66,7 @@ Summary(uk):	PHP ÷ÅÒÓ¦§ 4 -- ÍÏ×Á ÐÒÅÐÒÏÃÅÓÕ×ÁÎÎÑ HTML-ÆÁÊÌ¦×, ×ÉËÏÎÕ×ÁÎÁ ÎÁ ÓÅÒ
 Name:		php
 Version:	4.3.4
 %define		_rc	RC2
-Release:	0.%{_rc}.1
+Release:	0.%{_rc}.2
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -109,6 +110,7 @@ Patch26:	%{name}-no_pear_install.patch
 Patch27:	%{name}-zlib.patch
 Patch28:	%{name}-db-shared.patch
 Patch29:	%{name}-sybase-fix.patch
+Patch30:	%{name}-mssql-fix.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird}}
@@ -129,7 +131,9 @@ BuildRequires:	expat-devel
 %endif
 %{?_with_fdf:BuildRequires:	fdftk-devel}
 BuildRequires:	flex
-%{!?_without_sybase:BuildRequires:	freetds-devel}
+%if %(expr %{?_without_mssql:0}%{!?_without_mssql:1} + %{?_without_sybase:0}%{!?_without_sybase:1})
+BuildRequires:	freetds-devel
+%endif
 BuildRequires:	freetype-devel >= 2.0
 %{!?_without_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
 BuildRequires:	gd-devel >= 2.0.1
@@ -907,6 +911,20 @@ to demon szybkiej obs³ugi sesji, który mo¿e dzia³aæ lokalnie lub na
 innej maszynie. S³u¿y do zapewniania spójnej obs³ugi sesji dla farmy
 serwerów.
 
+%package mssql
+Summary:	MS SQL extension module for PHP
+Summary(pl):	Modu³ MS SQL dla PHP
+Group:		Libraries
+Requires(post,preun):	%{name}-common = %{epoch}:%{version}
+Requires:	%{name}-common = %{epoch}:%{version}
+
+%description mssql
+This is a dynamic shared object (DSO) for PHP that will add MS SQL
+databases support through FreeTDS library.
+
+%description mssql -l pl
+Modu³ PHP dodaj±cy obs³ugê baz danych MS SQL poprzez bibliotekê FreeTDS.
+
 %package mysql
 Summary:	MySQL database module for PHP
 Summary(pl):	Modu³ bazy danych MySQL dla PHP
@@ -1489,6 +1507,7 @@ cp php.ini-dist php.ini
 %patch27 -p1
 %patch28 -p1
 %patch29 -p1
+%patch30 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
@@ -1579,6 +1598,7 @@ for i in cgi cli apxs ; do
 	%{!?_without_mm:--with-mm} \
 	%{?_without_mnogosearch:--without-mnogosearch}%{!?_without_mnogosearch:--with-mnogosearch=shared,/usr} \
 	%{!?_without_msession:--with-msession=shared}%{?_without_msession:--without-msession} \
+	%{!?_without_mssql:--with-mssql=shared} \
 	--with-mysql=shared,/usr \
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-ncurses=shared \
@@ -1986,6 +2006,14 @@ fi
 %preun msession
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove msession %{_sysconfdir}/php.ini
+fi
+
+%post mssql
+%{_sbindir}/php-module-install install mssql %{_sysconfdir}/php.ini
+
+%preun mssql
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove mssql %{_sysconfdir}/php.ini
 fi
 
 %post mysql
@@ -2494,6 +2522,12 @@ fi
 %files msession
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/msession.so
+%endif
+
+%if %{?_without_mssql:0}%{!?_without_mssql:1}
+%files mssql
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/mssql.so
 %endif
 
 %files mysql
