@@ -33,7 +33,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.2.1
-Release:	1
+Release:	2
 Epoch:		3
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -61,6 +61,7 @@ Patch13:	%{name}-java-fix.patch
 Patch14:	%{name}-mcal-shared-lib.patch
 Patch15:	%{name}-msession-shared-lib.patch
 Patch16:	%{name}-xmlrpc-includes.patch
+Patch17:	%{name}-build_modules.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -94,7 +95,7 @@ BuildRequires:	libxml2-devel >= 2.2.7
 BuildRequires:	mhash-devel
 BuildRequires:	ming-devel >= 0.1.0
 %{!?_without_mm:BuildRequires:	mm-devel >= 1.1.3}
-BuildRequires:	mnogosearch-devel
+BuildRequires:	mnogosearch-devel < 3.2.5
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
 %if %(expr %{?_without_openssl:0}%{!?_without_openssl:1} + %{?_without_ldap:0}%{!?_without_ldap:1})
@@ -190,6 +191,7 @@ PHP jako program CGI.
 Summary:	Common files nneded by both apache module and CGI
 Summary(pl):	Wspólne pliki dla modu³u apacha i programu CGI
 Group:		Libraries
+Provides:	%{name}-session = %{version}
 
 %description common
 Common files needed by both apache module and CGI.
@@ -1112,6 +1114,7 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
+%patch17 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
@@ -1151,7 +1154,7 @@ for i in cgi apxs ; do
 	--enable-overload=shared \
 	--disable-pcntl \
 	--enable-posix=shared \
-	--enable-session=shared \
+	--enable-session \
 	--enable-shared \
 	--enable-shmop=shared \
 	--enable-sysvsem=shared \
@@ -1192,7 +1195,7 @@ for i in cgi apxs ; do
 	--with-mcrypt=shared \
 	--with-mhash=shared \
 	--with-ming=shared \
-	%{?_without_mm:--with-mm=shared,no}%{!?_without_mm:--with-mm=shared} \
+	%{!?_without_mm:--with-mm} \
 	--with-mnogosearch=shared,/usr \
 	%{!?_without_msession:--with-msession=shared} \
 	--with-mysql=shared,/usr \
@@ -1203,7 +1206,7 @@ for i in cgi apxs ; do
 	--with-pcre-regex=shared \
 	--with-pdflib=shared \
 	--with-pear=%{peardir} \
-	--with-pgsql=shared,%{_prefix} \
+	--with-pgsql=shared,/usr \
 	--with-png-dir=shared,/usr \
 	--with-pspell=shared \
 	%{!?_without_recode:--with-recode=shared} \
@@ -1221,6 +1224,10 @@ for i in cgi apxs ; do
 	--with-zlib=shared \
 	--with-zlib-dir=shared
 done
+
+# for now session_mm doesn't work with shared session module...
+# --enable-session=shared
+# %{?_without_mm:--with-mm=shared,no}%{!?_without_mm:--with-mm=shared}
 
 # TODO --with-pspell=/usr,shared (pspell missing)
 #	--with-qtdom=shared
@@ -1258,9 +1265,8 @@ install %{SOURCE5} $RPM_BUILD_ROOT/%{_sbindir}
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
 
 install %{SOURCE1} .
-gzip -9nf CODING_STANDARDS CREDITS \
-	EXTENSIONS NEWS TODO* LICENSE Zend/LICENSE \
-	Zend/ZEND_CHANGES README.SELF-CONTAINED-EXTENSIONS README.EXT_SKEL
+
+mv -f Zend/LICENSE{,.Zend}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -1783,9 +1789,9 @@ fi
 
 %files common
 %defattr(644,root,root,755)
-%doc {CODING_STANDARDS,CREDITS,Zend/ZEND_CHANGES}.gz
-%doc {LICENSE,Zend/LICENSE,EXTENSIONS,NEWS,TODO*}.gz
-%doc {README.EXT_SKEL,README.SELF-CONTAINED-EXTENSIONS}.gz
+%doc CODING_STANDARDS CREDITS Zend/ZEND_CHANGES
+%doc LICENSE Zend/LICENSE.Zend EXTENSIONS NEWS TODO*
+%doc README.EXT_SKEL README.SELF-CONTAINED-EXTENSIONS
 
 %dir %{_sysconfdir}
 %attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
@@ -2013,9 +2019,10 @@ fi
 %attr(755,root,root) %{extensionsdir}/recode.so
 %endif
 
-%files session
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/session.so
+# session_mm doesn't work with shared session
+#%files session
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/session.so
 
 %files shmop
 %defattr(644,root,root,755)
