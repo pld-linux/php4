@@ -145,6 +145,7 @@ BuildRequires:	zziplib-devel
 # apache 1.3 vs apache 2.0
 %if %{_apache2}
 PreReq:		apache >= 2.0.40
+%requires_eq	apache
 %else
 PreReq:		apache(EAPI) < 2.0.0
 PreReq:		apache(EAPI) >= 1.3.9
