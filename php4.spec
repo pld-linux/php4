@@ -1548,7 +1548,7 @@ cp php.ini-dist php.ini
 %patch22 -p1
 %patch23 -p1
 %patch24 -p1
-%{?with_pear:%patch25 -p1}
+%{!?with_pear:%patch25 -p1}
 %patch26 -p1
 %patch27 -p1
 %patch28 -p1
