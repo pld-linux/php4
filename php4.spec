@@ -28,7 +28,7 @@ Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Summary(pt_BR):	A linguagem de script PHP
 Name:		php
 Version:	4.1.2
-Release:	6
+Release:	7
 Epoch:		1
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -53,6 +53,7 @@ Patch10:	%{name}-no_%{name}_pcre_in_SAPI_c.patch
 Patch11:	%{name}-libpq_fs_h_path.patch
 Patch12:	%{name}-apache2.patch
 Patch13:	%{name}-pdflib4.0.2.patch
+Patch14:	%{name}-build_modules.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -895,6 +896,7 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej.
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
@@ -1020,6 +1022,11 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 	INSTALL_IT="install libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache/ ; install libs/libphp_common*.so.*.*.* $RPM_BUILD_ROOT%{_libdir}"
 
 install .libs/php $RPM_BUILD_ROOT%{_bindir}/php
+
+install -d $RPM_BUILD_ROOT%{_includedir}/php/ext/ #skeleton/test
+#install ext/skeleton/tests/* $RPM_BUILD_ROOT%{_includedir}/php/ext/skeleton/test
+cp -r ext/skeleton $RPM_BUILD_ROOT%{_includedir}/php/ext/ 
+install ext/ext_skel $RPM_BUILD_ROOT%{_bindir}
 
 #exit 1
 #install .libs/*.so	$RPM_BUILD_ROOT%{_pkglibdir}
@@ -1447,6 +1454,7 @@ fi
 %defattr(644,root,root,755)
 %{_includedir}/php
 %{_libdir}/php/build
+%attr(755,root,root) %{_bindir}/ext_skel
 %attr(755,root,root) %{_bindir}/phpextdist
 %attr(755,root,root) %{_bindir}/phpize
 %attr(755,root,root) %{_bindir}/php-config
