@@ -15,16 +15,14 @@ diff -uar php-4.0.6orig/ext/standard/info.c php-4.0.6/ext/standard/info.c
 +                  }
 +                  PUTS("?="PLD_LOGO_GUID"\" border=\"0\" align=\"right\" alt=\"PHP logo\"></a>\n");
 +                }
-+                php_printf("This server is using PLD GNU/Linux OS:<BR>");
-+                php_printf("More informations at www.pld.org.pl");
++                php_printf("This server is using PLD Linux <BR>");
++                php_printf("More informations at <a href="http://www.pld.org.pl">www.pld.org.pl</a>");
 +                php_printf("</BR>\n");
 +                php_info_print_box_end(); 
 +                efree(php_uname);
  	}
  
  	if ((flag & PHP_INFO_CREDITS) && expose_php) {	
-Only in php-4.0.6/ext/standard: info.c.orig
-Only in php-4.0.6/ext/standard: info.c~
 diff -uar php-4.0.6orig/ext/standard/info.h php-4.0.6/ext/standard/info.h
 --- php-4.0.6orig/ext/standard/info.h	Tue Nov 13 12:07:48 2001
 +++ php-4.0.6/ext/standard/info.h	Tue Nov 13 22:44:22 2001
