@@ -19,7 +19,7 @@
 %endif
 
 # Conditional build:
-# _with_db3		- use db3 packages instead of db (4.x) for Berkeley DB support
+# _with_db		- use db packages instead of db (3.x) for Berkeley DB support
 # _with_interbase_inst	- use InterBase install., not Firebird	(BR: proprietary libs)
 # _with_java		- with Java extension module		(BR: jdk)
 # _with_oci8		- with Oracle oci8 extension module	(BR: proprietary libs)
@@ -110,8 +110,8 @@ BuildRequires:	bzip2-devel
 BuildRequires:	cracklib-devel >= 2.7-15
 %{!?_without_curl:BuildRequires:	curl-devel >= 7.9.8 }
 BuildRequires:	cyrus-sasl-devel
-%{?_with_db3:BuildRequires:	db3-devel}
-%{!?_with_db3:BuildRequires:	db-devel >= 4.0}
+%{!?_with_db:BuildRequires:	db3-devel}
+%{?_with_db:BuildRequires:	db-devel >= 4.0}
 %if %(expr %{?_without_xml:0}%{!?_without_xml:1} + %{?_without_xmlrpc:0}%{!?_without_xmlrpc:1})
 BuildRequires:	expat-devel
 %endif
@@ -142,7 +142,7 @@ BuildRequires:	libtool >= 0:1.4.2-9
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
 %if %(expr %{?_without_openssl:0}%{!?_without_openssl:1} + %{?_without_ldap:0}%{!?_without_ldap:1})
-BuildRequires:	openssl-devel >= 0.9.7
+BuildRequires:	openssl-devel >= 0.9.6j
 %endif
 BuildRequires:	pam-devel
 %{!?_without_pdf:BuildRequires:	pdflib-devel >= 4.0.0}
@@ -1401,7 +1401,7 @@ for i in cgi cli apxs ; do
 	%{!?_without_cpdf:--with-cpdflib=shared} \
 	--with-crack=shared \
 	%{?_without_curl:--without-curl}%{!?_without_curl:--with-curl=shared} \
-	%{?_with_db3:--with-db3}%{!?_with_db3:--with-db4} \
+	%{!?_with_db3:--with-db3}%{?_with_db3:--with-db4} \
 	--with-dbase=shared \
 	%{!?_without_xml:--with-dom=shared} \
 	%{!?_without_domxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
