@@ -21,8 +21,14 @@ BuildRequires:	zlib-devel
 BuildRequires:	kaffe-devel
 BuildRequires:	libxml-devel >= 1.0.0
 BuildRequires:	postgresql-devel
-BuildRequires: pdflib-devel >= 3.0
+BuildRequires:	pdflib-devel >= 3.0
 BuildRequires:	gd-devel
+BuildRequires:	bison
+BuildRequires:	flex
+BuildRequires:	libpng-devel
+BuildRequires:	libtiff-devel
+BuildRequires:	libjpeg-devel
+BuildRequires:	zlib-devel
 Requires:	apache(EAPI) >= 1.3.9
 Prereq:		%{_sbindir}/apxs
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -155,9 +161,8 @@ Comprehensive documentation for PHP4, viewable through your web server, too!
 
 %description doc -l pl
 Dokumentacja dla pakietu PHP4.  Mo¿na j± równie¿ ogl±daæ poprzez serwer WWW.
-
 %prep
-%setup -q 
+%setup -q
 
 %build
 LDFLAGS=""; export LDFLAGS
@@ -222,6 +227,9 @@ gzip -9nf CODING_STANDARDS CREDITS ChangeLog FUNCTION_LIST.txt \
 %post
 %{_sbindir}/apxs -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
 perl -pi -e 's|^#AddType application/x-httpd-php .php|AddType application/x-httpd-php .php|'
+echo "There were some conflicts with mod_magic module."
+echo "If you ecounter problems with running .php files"
+echo "try turn off it in httpd.conf before using php4."
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
