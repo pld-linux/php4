@@ -1,12 +1,14 @@
-diff -ur php-4.1.2/Makefile.in php-4.1.2.x/Makefile.in
---- php-4.1.2/Makefile.in	Sun Apr 22 03:09:12 2001
-+++ php-4.1.2.x/Makefile.in	Sat Mar  2 23:05:56 2002
+diff -urN php-4_2_0RC3.org/Makefile.in php-4_2_0RC3/Makefile.in
+--- php-4_2_0RC3.org/Makefile.in	Sat Apr 13 01:18:28 2002
++++ php-4_2_0RC3/Makefile.in	Sat Apr 13 01:26:49 2002
 @@ -2,40 +2,68 @@
  ZEND_DIR = $(srcdir)/Zend
- SUBDIRS = Zend main ext sapi $(TSRM_DIR) $(REGEX_DIR) . $(PEAR_DIR)
+ SUBDIRS = Zend main ext sapi $(TSRM_DIR) $(REGEX_DIR) $(CLI_DIR) . $(PEAR_DIR)
  
 -LTLIBRARY_NAME = libphp4.la
 -LTLIBRARY_SOURCES = stub.c
+-
+-LTLIBRARY_DEPENDENCIES = \
 +libexec_LTLIBRARIES = libphp_common.la libphp4.la
 +libphp4_la_NAME = libphp4.la
 +libphp_common_la_NAME = libphp_common.la
@@ -16,9 +18,7 @@ diff -ur php-4.1.2/Makefile.in php-4.1.2.x/Makefile.in
 +libphp4_la_DEPENDENCIES = \
 +		libphp_common.la \
 +		sapi/$(PHP_SAPI)/libsapi.la
- 
--LTLIBRARY_DEPENDENCIES = \
-+
++		
 +libphp_common_la_DEPENDENCIES = \
  		Zend/libZend.la \
 -		sapi/$(PHP_SAPI)/libsapi.la \
@@ -28,7 +28,7 @@ diff -ur php-4.1.2/Makefile.in php-4.1.2.x/Makefile.in
  		$(TSRM_LIB)
  
 -LTLIBRARY_LDFLAGS = -rpath $(phptempdir) $(EXTRA_LDFLAGS) $(LDFLAGS) $(PHP_RPATHS)
--LTLIBRARY_LIBADD = $(LTLIBRARY_DEPENDENCIES) $(EXTRA_LIBS)
+-LTLIBRARY_LIBADD = $(LTLIBRARY_DEPENDENCIES) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS)
 +libphp4_la_LDFLAGS = -rpath $(phptempdir) $(EXTRA_LDFLAGS) $(LDFLAGS) $(PHP_RPATHS)
 +libphp4_la_LIBADD = $(libphp4_la_DEPENDENCIES) $(EXTRA_LIBS)
  
@@ -69,14 +69,15 @@ diff -ur php-4.1.2/Makefile.in php-4.1.2.x/Makefile.in
  	-@if test ! -r $(phptempdir)/libphp4.$(SHLIB_SUFFIX_NAME); then \
  		for i in 0.0.0 0.0 0; do \
  			if test -r $(phptempdir)/libphp4.$(SHLIB_SUFFIX_NAME).$$i; then \
-+				break; \
++				break;  \
 +			fi; \
 +		done; \
 +	fi
 +	-@if test ! -r $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME); then \
 +		for i in 0.0.0 0.0 0; do \
 +			if test -r $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME).$$i; then \
-+				$(LN_S) $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME).$$i $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME); \
++				$(LN_S) $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME).$$i $(phptempdir)/libphp_
++common.$(SHLIB_SUFFIX_NAME); \
  				$(LN_S) $(phptempdir)/libphp4.$(SHLIB_SUFFIX_NAME).$$i $(phptempdir)/libphp4.$(SHLIB_SUFFIX_NAME); \
  				break; \
  			fi; \
