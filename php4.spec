@@ -27,7 +27,6 @@
 # _with_java		- with Java extension module		(BR: jdk)
 # _with_oci8		- with Oracle oci8 extension module	(BR: proprietary libs)
 # _with_oracle		- with oracle extension module		(BR: proprietary libs)
-# _with_pcntl		- with pcntl extension module		(problems: SEGV on exit)
 # _without_cpdf		- without cpdf extension module
 # _without_curl		- without CURL extension module
 # _without_domxslt	- without DOM XSLT/EXSLT support in DOM XML extension module
@@ -1236,6 +1235,7 @@ Summary(pl):	Modu³ Sybase DB dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}
 Requires:	%{name}-common = %{epoch}:%{version}
+Obsoletes:	%{name}-sybase-ct
 
 %description sybase
 This is a dynamic shared object (DSO) for PHP that will add Sybase and
@@ -1251,6 +1251,7 @@ Summary(pl):	Modu³ Sybase-CT dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}
 Requires:	%{name}-common = %{epoch}:%{version}
+Obsoletes:	%{name}-sybase
 
 %description sybase-ct
 This is a dynamic shared object (DSO) for PHP that will add Sybase and
@@ -1511,7 +1512,7 @@ for i in cgi cli apxs ; do
 	--enable-magic-quotes \
 	--enable-mbstring=shared,all --enable-mbregex \
 	--enable-overload=shared \
-	%{?_with_pcntl:--enable-pcntl=shared}%{!?_with_pcntl:--disable-pcntl} \
+	--enable-pcntl=shared \
 	--enable-posix=shared \
 	--enable-session \
 	--enable-shared \
@@ -2519,11 +2520,9 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/overload.so
 
-%if 0%{?_with_pcntl:1}
 %files pcntl
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pcntl.so
-%endif
 
 %if 0%{!?_without_pcre:1}
 %files pcre

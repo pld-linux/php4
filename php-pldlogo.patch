@@ -1,20 +1,20 @@
---- php-4.3.0/ext/standard/info.c.orig	Thu Nov 14 22:17:00 2002
-+++ php-4.3.0/ext/standard/info.c	Thu Jan  2 12:19:36 2003
-@@ -478,6 +478,21 @@
- 		PUTS(PG(html_errors)?"<br />":"\n");
+--- php-4.3.3RC3/ext/standard/info.c.orig	2003-06-19 18:43:41.000000000 +0200
++++ php-4.3.3RC3/ext/standard/info.c	2003-08-16 21:37:18.705836072 +0200
+@@ -518,6 +518,21 @@
+ 		PUTS(!sapi_module.phpinfo_as_text?"<br />":"\n");
  		PUTS(zend_version);
  		php_info_print_box_end();
 +		/* PLD Linux */
 +		php_info_print_box_start(0);
-+		if (expose_php && PG(html_errors)) {
-+			PUTS("<a href=\"http://www.pld.org.pl/\"><img src=\"");
++		if (expose_php && !sapi_module.phpinfo_as_text) {
++			PUTS("<a href=\"http://www.pld-linux.org/\"><img src=\"");
 +			if (SG(request_info).request_uri) {
 +				PUTS(SG(request_info).request_uri);
 +			}
 +			PUTS("?="PLD_LOGO_GUID"\" border=\"0\" align=\"right\" alt=\"PLD logo\"></a>\n");
 +		}
 +		PUTS("This server is using PLD Linux.");
-+		if (PG(html_errors))
++		if (!sapi_module.phpinfo_as_text)
 +			PUTS("<br />More information at <a href=\"http://www.pld-linux.org/\">http://www.pld-linux.org/</a>.<br />\n");
 +		else
 +			PUTS("\nMore information at http://www.pld-linux.org/.\n");
