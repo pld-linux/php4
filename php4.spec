@@ -1700,7 +1700,7 @@ for i in fcgi cgi cli apxs ; do
 	%{?with_imap:--with-imap=shared --with-imap-ssl} \
 	%{?with_interbase:--with-interbase=shared%{!?with_interbase_inst:,/usr}} \
 	%{?with_java:--with-java=%{_libdir}/java} \
-	--with-jpeg-dir=shared,/usr \
+	--with-jpeg-dir=/usr \
 	%{?with_ldap:--with-ldap=shared} \
 	--with-mcal=shared,/usr \
 	--with-mcrypt=shared \
@@ -1721,7 +1721,7 @@ for i in fcgi cgi cli apxs ; do
 	%{?with_pdf:--with-pdflib=shared} \
 	--with-pear=%{php_pear_dir} \
 	%{!?with_pgsql:--without-pgsql}%{?with_pgsql:--with-pgsql=shared,/usr} \
-	--with-png-dir=shared,/usr \
+	--with-png-dir=/usr \
 	%{?with_pspell:--with-pspell=shared} \
 	--with-readline=shared \
 	%{?with_recode:--with-recode=shared} \
@@ -1731,7 +1731,7 @@ for i in fcgi cgi cli apxs ; do
 	%{?with_snmp:--with-snmp=shared} \
 	%{?with_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
 	--with-t1lib=shared \
-	--with-tiff-dir=shared,/usr \
+	--with-tiff-dir=/usr \
 	%{?with_odbc:--with-unixODBC=shared} \
 	%{!?with_xmlrpc:--without-xmlrpc}%{?with_xmlrpc:--with-xmlrpc=shared,/usr} \
 	%{?with_xslt:--with-xslt-sablot=shared} \
@@ -2477,13 +2477,7 @@ fi
 %attr(755,root,root) %{_libdir}/libphp_common.so
 %{_libdir}/libphp_common.la
 %{_includedir}/php
-# Is it really needed? Breaks installation of php4-devel (when replacing php-devel)
-##%{_libdir}/php/build
-#%ifarch amd64
-# same on all arch
-# shouldn't it be %%{_libdir} on amd64?
-%{_ulibdir}/php/build
-#%endif
+%{_libdir}/php/build
 
 %files bcmath
 %defattr(644,root,root,755)
