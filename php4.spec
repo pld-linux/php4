@@ -25,7 +25,7 @@ BuildRequires:	apache(EAPI)-devel
 BuildRequires:	zip
 BuildRequires:	bison
 BuildRequires:	flex
-BuildRequires:	db-devel >= 3.0.55
+#BuildRequires:	db-devel >= 3.0.55
 BuildRequires:	freetype-devel
 BuildRequires:	gd-devel
 BuildRequires:	gdbm-devel
@@ -46,6 +46,7 @@ BuildRequires:	recode-devel >= 3.5
 BuildRequires:	t1lib-devel
 # BuildRequires:	unixODBC-devel
 BuildRequires:	zlib-devel >= 1.0.9
+BuildRequires:	ucd-snmp-devel >= 4.1
 #BuildRequires:	libmcrypt-devel
 Requires:	apache(EAPI) >= 1.3.9
 Prereq:		/usr/sbin/apxs
