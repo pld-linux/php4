@@ -47,7 +47,7 @@
 # _without_pgsql	- without PostgreSQL extension module
 # _without_pspell	- without pspell extension module
 # _without_recode	- without recode extension module
-# _without_qt		- without QT DOM extension module
+# _without_qtdom	- without QT DOM extension module
 # _without_snmp		- without SNMP extension module
 # _without_sybase	- without Sybase and Sybase-CT extension modules
 # _without_wddx		- without WDDX extension module
@@ -164,7 +164,7 @@ BuildRequires:	%{__perl}
 %{!?_without_pgsql:BuildRequires:	postgresql-devel}
 %{!?_without_pgsql:BuildRequires:	postgresql-backend-devel >= 7.2}
 %{!?_without_pspell:BuildRequires:	pspell-devel}
-%{!?_without_qt:BuildRequires:	qt-devel >= 2.2.0}
+%{!?_without_qtdom:BuildRequires:	qt-devel >= 2.2.0}
 BuildRequires:	readline-devel
 %{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-100
@@ -2551,7 +2551,7 @@ fi
 %attr(755,root,root) %{extensionsdir}/pspell.so
 %endif
 
-%if 0%{!?_without_qt:1}
+%if 0%{!?_without_qtdom:1}
 %files qtdom
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/qtdom.so
