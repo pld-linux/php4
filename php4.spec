@@ -196,6 +196,7 @@ Requires(post,preun):	%{__perl}
 %endif
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
+Obsoletes:	php >= 5.0
 Obsoletes:	phpfi
 Obsoletes:	apache-mod_php
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
