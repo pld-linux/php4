@@ -326,7 +326,6 @@ Group:		Libraries
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
 Provides:	php-session = %{epoch}:%{version}-%{release}
 Provides:	php-common = %{epoch}:%{version}-%{release}
-Conflicts:	php-common >= 3:5.0.0
 
 %description common
 Common files needed by both apache module and CGI.
@@ -352,8 +351,8 @@ Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	autoconf
 Requires:	automake
-Conflicts:	php-devel >= 3:5.0.0
 Provides:	php-devel = %{epoch}:%{version}-%{release}
+Obsoletes:	php-devel
 
 %description devel
 The php-devel package lets you compile dynamic extensions to PHP.
