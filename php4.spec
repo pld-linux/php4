@@ -721,6 +721,13 @@ Group:		Development/Languages/PHP
 %description pear
 PEAR.
 
+%package domxml
+Summary:        XML
+Group:          Development/Languages/PHP
+
+%description domxml
+XML.
+
 %package devel
 Summary:	Files for PHP modules development
 Summary(pl):	Pliki do kompilacji modu³ów PHP
@@ -834,12 +841,12 @@ for i in cgi apxs ; do
 	%{?_with_oracle:--with-oracle=shared} \
 	%{?_with_oci8:--with-oci8=shared} \
 	--without-db2 \
+	--with-dom=shared \
 	--with-pear=%{peardir}
 done
 
 # TODO --with-pspell=/usr,shared (pspell missing)
-
-# --with-dom need libxml >= 2.2.7 \
+#	--with-qtdom=shared
 
 %{__make}
 %{__make} CFLAGS="%{rpmcflags} -DDISCARD_PATH=1" -C sapi/cgi
@@ -1037,6 +1044,13 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove libpdf_php %{_sysconfdir}/php.ini
 fi
 
+%preun domxml
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove domxml %{_sysconfdir}/php.ini
+
+%post domxml
+%{_sbindir}/php-module-install install domxml %{_sysconfdir}/php.ini
+
 %if %{?_with_oci8:1}%{!?_with_oci8:0}
 %post oci8
 %{_sbindir}/php-module-install install oci8 %{_sysconfdir}/php.ini
@@ -1208,6 +1222,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/phpextdist
 %attr(755,root,root) %{_bindir}/phpize
 %attr(755,root,root) %{_bindir}/php-config
+
+%files domxml
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/domxml.so
 
 %files pear
 %defattr(644,root,root,755)
