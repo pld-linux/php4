@@ -105,6 +105,7 @@ Patch21:	%{name}-allow-db31.patch
 Patch22:	%{name}-threads-acfix.patch
 Patch23:	%{name}-tsrmlsfetchgcc2.patch
 Patch24:	%{name}-qt.patch
+Patch25:	%{name}-no_pear_install.patch
 Patch26:	%{name}-zlib.patch
 Patch27:	%{name}-db-shared.patch
 Patch28:	%{name}-sybase-fix.patch
@@ -1547,6 +1548,7 @@ cp php.ini-dist php.ini
 %patch22 -p1
 %patch23 -p1
 %patch24 -p1
+%{?with_pear:%patch25 -p1}
 %patch26 -p1
 %patch27 -p1
 %patch28 -p1
@@ -1689,6 +1691,7 @@ done
 #	--with-qtdom=shared
 
 %{__make}
+%{__make} CFLAGS="%{rpmcflags} -DDISCARD_PATH=1" -C sapi/cgi
 
 # fix install paths, avoid evil rpaths
 %{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
@@ -1744,7 +1747,6 @@ cp -f Zend/LICENSE{,.Zend}
 ln -sf ../../lib/%{name}/build $RPM_BUILD_ROOT%{_libdir}/%{name}/build
 %endif
 
-mkdir $RPM_BUILD_ROOT%{php_pear_dir}/{Auth,Science,HTML/Template}
 rm -f $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.la
 
 %clean
@@ -2760,6 +2762,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/zlib.so
 
+%if %{with pear}
 %files pear
 %defattr(644,root,root,755)
 %dir %{php_pear_dir}
@@ -2799,3 +2802,4 @@ fi
 #%attr(755,root,root) %{_bindir}/pear
 %attr(755,root,root) %{_bindir}/pearize
 %attr(755,root,root) %{_bindir}/phptar
+%endif
