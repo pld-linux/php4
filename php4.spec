@@ -142,7 +142,7 @@ BuildRequires:	perl
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 %{!?_without_xslt:BuildRequires:	sablotron-devel}
 BuildRequires:	t1lib-devel
-%{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.3}
+%{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.6}
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
 %{!?_without_xmlrpc:BuildRequires:	xmlrpc-epi-devel}
 BuildRequires:	yaz-devel
