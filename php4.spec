@@ -131,7 +131,7 @@ BuildRequires:	freetds-devel
 %endif
 BuildRequires:	freetype-devel >= 2.0
 %{?with_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
-BuildRequires:	gd-devel >= 2.0.1
+BuildRequires:	gd-devel >= 2.0.20
 %{?with_gif:BuildRequires:	gd-devel(gif)}
 %{!?with_gif:BuildConflicts:	gd-devel(gif)}
 BuildRequires:	gdbm-devel
@@ -652,6 +652,7 @@ Summary(pl):	Modu³ GD dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}
 Requires:	%{name}-common = %{epoch}:%{version}
+Requires:	gd >= 2.0.20
 %{?with_gif:Requires:	gd(gif)}
 %{?with_gif:Provides:	%{name}-gd(gif) = %{epoch}:%{version}-%{release}}
 
