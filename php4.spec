@@ -3,7 +3,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache.
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache.
 Name:		php
 Version:	4.0.0
-Release:	1
+Release:	2
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
@@ -44,7 +44,7 @@ BuildRequires:	pdflib-devel >= 3.0
 BuildRequires:	postgresql-devel
 BuildRequires:	recode-devel >= 3.5
 BuildRequires:	t1lib-devel
-BuildRequires:	unixODBC-devel
+# BuildRequires:	unixODBC-devel
 BuildRequires:	zlib-devel >= 1.0.9
 #BuildRequires:	libmcrypt-devel
 Requires:	apache(EAPI) >= 1.3.9
@@ -122,20 +122,20 @@ you should install this package in addition to the main %{name} package.
 %description pgsql -l pl
 Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych PostgreSQL.
 
-#%package gd
-#Summary:	GD extension module for PHP4
-#Summary:	Modu³ GD dla PHP4
-#Group:		Libraries
-#Group(fr):	Librairies
-#Group(pl):	Biblioteki
-#Requires: 	%{name} = %{version}
-#
-#%description gd
-#This is a dynamic shared object (DSO) for Apache that will add GD
-#support to PHP4. You should install this package in addition to the main
-#%{name} package if you want to create and manipulate images with PHP.
-#
-#%description gd -l pl
+%package gd
+Summary:	GD extension module for PHP4
+Summary:	Modu³ GD dla PHP4
+Group:		Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Requires: 	%{name} = %{version}
+
+%description gd
+This is a dynamic shared object (DSO) for Apache that will add GD
+support to PHP4. You should install this package in addition to the main
+%{name} package if you want to create and manipulate images with PHP.
+
+%description gd -l pl
 
 %package java
 Summary:	Java extension module for PHP4
@@ -378,12 +378,13 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 	--with-ldap \
 	--with-mysql=shared \
 	--with-mysql-sock=/var/state/mysql/mysql.sock \
-	--with-gd \
+	--with-gd=shared \
 	--with-dbase=shared \
 	--with-filepro=shared \
 	--enable-ftp=shared \
 	--with-hyperwave \
-	--with-pdflib \
+	--with-pdflib=shared \
+	--with-cpdflib=shared \
 	--with-java \
 	--with-pgsql=shared,/usr \
 	--with-imap \
@@ -408,7 +409,6 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 
 #	--with-db3 \
 
-#	--with-unixODBC \
 # snmp won
 #	--with-snmp=shared \
 #	--with-openssl \
@@ -416,6 +416,8 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 #Syntax error on line 228 of /etc/httpd/httpd.conf: Cannot load /usr/lib/apache/libphp4.so into server: /usr/lib/apache/libphp4.so: undefined symbol: phpi_get_le_gd
 # Solution: make pdf and cpdf shared
 #	--with-gd=shared \
+
+#	--with-unixODBC \
 
 # This option get trouble with imap
 #	--enable-versioning \
@@ -482,7 +484,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun mysql
+%preun mysql
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'mysql.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=mysql.so|;extension=mysql.so|g' \
@@ -502,7 +504,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun pgsql
+%preun pgsql
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'pgsql.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=pgsql.so|;extension=pgsql.so|g' \
@@ -512,25 +514,25 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-#%post gd
-#if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-#	echo "activating module 'gd.so' in /etc/httpd/php.ini" 1>&2
-#	perl -pi -e 's|^;extension=gd.so|extension=gd.so|g' \
-#	%{_sysconfdir}/httpd/php.ini
-#fi
-#if [ -f /var/lock/subsys/httpd ]; then
-#	/etc/rc.d/init.d/httpd restart 1>&2
-#fi
-#
-#%postun gd
-#if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-#	echo "deactivating module 'gd.so' in /etc/httpd/php.ini" 1>&2
-#	perl -pi -e 's|^extension=gd.so|;extension=gd.so|g' \
-#	%{_sysconfdir}/httpd/php.ini
-#fi
-#if [ -f /var/lock/subsys/httpd ]; then
-#	/etc/rc.d/init.d/httpd restart 1>&2
-#fi
+%post gd
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "activating module 'gd.so' in /etc/httpd/php.ini" 1>&2
+	perl -pi -e 's|^;extension=gd.so|extension=gd.so|g' \
+	%{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+%preun gd
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "deactivating module 'gd.so' in /etc/httpd/php.ini" 1>&2
+	perl -pi -e 's|^extension=gd.so|;extension=gd.so|g' \
+	%{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
 
 %post xml
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
@@ -542,7 +544,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun xml
+%preun xml
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'xml.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=xml.so|;extension=xml.so|g' \
@@ -562,7 +564,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun dba
+%preun dba
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'dba.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=dba.so|;extension=dba.so|g' \
@@ -582,7 +584,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun calendar
+%preun calendar
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'calendar.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=calendar.so|;extension=calendar.so|g' \
@@ -602,7 +604,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun dbase
+%preun dbase
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'dbase.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=dbase.so|;extension=dbase.so|g' \
@@ -623,7 +625,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun java
+%preun java
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'libphp_java.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=libphp_java.so|;extension=libphp_java.so|g' \
@@ -643,7 +645,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun filepro
+%preun filepro
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'filepro.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=filepro.so|;extension=filepro.so|g' \
@@ -663,7 +665,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun pcre
+%preun pcre
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'pcre.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=pcre.so|;extension=pcre.so|g' \
@@ -683,7 +685,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun posix
+%preun posix
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'posix.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=posix.so|;extension=posix.so|g' \
@@ -703,7 +705,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun sysvsem
+%preun sysvsem
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'sysvsem.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=sysvsem.so|;extension=sysvsem.so|g' \
@@ -723,7 +725,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun sysvshm
+%preun sysvshm
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'sysvshm.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=sysvshm.so|;extension=sysvshm.so|g' \
@@ -743,7 +745,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun yp
+%preun yp
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'yp.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=yp.so|;extension=yp.so|g' \
@@ -763,7 +765,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun ftp
+%preun ftp
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'ftp.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=ftp.so|;extension=ftp.so|g' \
@@ -783,7 +785,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun zlib
+%preun zlib
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'zlib.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=zlib.so|;extension=zlib.so|g' \
@@ -803,7 +805,7 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%postun bcmath
+%preun bcmath
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'bcmath.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=bcmath.so|;extension=bcmath.so|g' \
@@ -840,9 +842,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/pgsql.so
 
-#%files gd
-#%defattr(644,root,root,755)
-#%attr(755,root,root) %{_pkglibdir}/php/gd.so
+%files gd
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_pkglibdir}/php/gd.so
 
 %files xml
 %defattr(644,root,root,755)
