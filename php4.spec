@@ -122,7 +122,7 @@ BuildRequires:	postgresql-devel
 BuildRequires:	postgresql-backend-devel >= 7.2
 BuildRequires:	pspell-devel
 %{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
-BuildRequires:	rpm-php-pearprov >= 4.0.4-80
+BuildRequires:	rpm-php-pearprov >= 4.0.2-80
 %{!?_without_xslt:BuildRequires:	sablotron-devel}
 BuildRequires:	t1lib-devel
 %{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.3}
