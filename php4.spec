@@ -1519,6 +1519,7 @@ for i in cgi cli apxs ; do
 	--enable-dio=shared \
 	--enable-exif=shared \
 	--enable-ftp=shared \
+	--enable-filepro=shared \
 	--enable-gd-native-ttf \
 	--enable-magic-quotes \
 	--enable-mbstring=shared,all --enable-mbregex \
