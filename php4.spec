@@ -56,10 +56,10 @@
 %include	/usr/lib/rpm/macros.php
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
-Summary(pl):	JЙzyk skryptowy PHP -- u©ywany wraz z serwerem Apache
+Summary(pl):	JЙzyk skryptowy PHP - u©ywany wraz z serwerem Apache
 Summary(pt_BR):	A linguagem de script PHP
-Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на сервере
-Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
+Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на сервере
+Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.9
 Release:	0.4
@@ -213,7 +213,7 @@ non-commercial database management systems, so writing a
 database-enabled web page with PHP is fairly simple. The most common
 use of PHP coding is probably as a replacement for CGI scripts. The
 mod_php module enables the Apache web server to understand and process
-the embedded PHP language in web pages. This package contains PHP
+the embedded PHP language in web pages. This package contains php
 version %{version}. If you use applications which specifically rely on
 PHP/FI (PHP v2 and earlier), you should instead install the PHP/FI
 module contained in the phpfi package. If you're just starting with
@@ -229,7 +229,7 @@ non-connerciaux, qui rent facile la creation de pages web liees avec
 des bases de donnees. L'utilisation la plus commune de PHP est
 probablement en remplacement de scripts CGI. Le module mod_php permet
 au serveur web apache de comprendre et de traiter le langage PHP
-integre dans des pages web. Ce package contient PHP version
+integre dans des pages web. Ce package contient php version
 %{version}. Si vous utilisez des applications qui utilisent
 specifiquement PHP/FI, vous devrez installer le module PHP/FI inclus
 dans le package mod_php. Si vous debutez avec PHP, vous devriez
@@ -272,46 +272,46 @@ PHP4 - це мова написання скрипт╕в, що вбудовуються в HTML-код. PHP
 ╕нтерпретатор PHP в якост╕ модуля apache, встанов╕ть пакет apache-php.
 
 %package fcgi
-Summary:	PHP as FastCGI program
-Summary(pl):	PHP jako program FastCGI
+Summary:	php4 as FastCGI program
+Summary(pl):	php4 jako program FastCGI
 Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-fcgi = %{epoch}:%{version}-%{release}
 Provides:	php-program = %{epoch}:%{version}-%{release}
 
 %description fcgi
-PHP as FastCGI program.
+php4 as FastCGI program.
 
 %description fcgi -l pl
-PHP jako program FastCGI.
+php4 jako program FastCGI.
 
 %package cgi
-Summary:	PHP as CGI program
-Summary(pl):	PHP jako program CGI
+Summary:	php4 as CGI program
+Summary(pl):	php4 jako program CGI
 Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-cgi = %{epoch}:%{version}-%{release}
 Provides:	php-program = %{epoch}:%{version}-%{release}
 
 %description cgi
-PHP as CGI program.
+php4 as CGI program.
 
 %description cgi -l pl
-PHP jako program CGI.
+php4 jako program CGI.
 
 %package cli
-Summary:	PHP as CLI interpreter
-Summary(pl):	PHP jako interpreter dziaЁaj╠cy z linii poleceЯ
+Summary:	php4 as CLI interpreter
+Summary(pl):	php4 jako interpreter dziaЁaj╠cy z linii poleceЯ
 Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-cli = %{epoch}:%{version}-%{release}
 Provides:	php-program = %{epoch}:%{version}-%{release}
 
 %description cli
-PHP as CLI interpreter.
+php4 as CLI interpreter.
 
 %description cli -l pl
-PHP jako interpreter dziaЁaj╠cy z linii poleceЯ.
+php4 jako interpreter dziaЁaj╠cy z linii poleceЯ.
 
 %package common
 Summary:	Common files needed by both apache module and CGI
@@ -340,8 +340,8 @@ WspСlne pliki dla moduЁu apacha i programu CGI.
 Summary:	Files for PHP modules development
 Summary(pl):	Pliki do kompilacji moduЁСw PHP
 Summary(pt_BR):	Arquivos de desenvolvimento para PHP
-Summary(ru):	Пакет разработки для построения расширений PHP4
-Summary(uk):	Пакет розробки для побудови розширень PHP4
+Summary(ru):	Пакет разработки для построения расширений PHP
+Summary(uk):	Пакет розробки для побудови розширень PHP
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	autoconf
@@ -352,7 +352,7 @@ Provides:	php-devel = %{epoch}:%{version}-%{release}
 %description devel
 The php-devel package lets you compile dynamic extensions to PHP.
 Included here is the source for the PHP extensions. Instead of
-recompiling the whole PHP binary to add support for, say, oracle,
+recompiling the whole php4 binary to add support for, say, oracle,
 install this package and use the new self-contained extensions
 support. For more information, read the file
 SELF-CONTAINED-EXTENSIONS.
@@ -367,14 +367,14 @@ mСdulos PHP.
 %description devel -l uk
 Пакет php-devel да╓ можлив╕сть комп╕лювати динам╕чн╕ розширення PHP.
 До пакету включено вих╕дний код для розширень. Зам╕сть повторно╖
-комп╕ляц╕╖ б╕нарного файлу PHP для додання, наприклад, п╕дтримки
+комп╕ляц╕╖ б╕нарного файлу php4 для додання, наприклад, п╕дтримки
 oracle, встанов╕ть цей пакет для комп╕ляц╕╖ окремих розширень.
 Детальн╕ша ╕нформац╕я - в файл╕ SELF-CONTAINED-EXTENSIONS.
 
 %description devel -l ru
 Пакет php-devel дает возможность компилировать динамические расширения
 PHP. Пакет включает исходный код этих расширений. Вместо повторной
-компиляции бинарного файла PHP для добавления, например, поддержки
+компиляции бинарного файла php4 для добавления, например, поддержки
 oracle, установите этот пакет для компилирования отдельных расширений.
 Подробности - в файле SELF-CONTAINED-EXTENSIONS.
 
@@ -1537,7 +1537,7 @@ ModuЁ PHP umo©liwiaj╠cy u©ywanie kompresji zlib.
 
 %package pear
 Summary:	PEAR - PHP Extension and Application Repository
-Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
+Summary(pl):	PEAR - rozszerzenie PHP i repozytorium aplikacji
 Group:		Development/Languages/PHP
 Requires:	%{name}-pcre = %{epoch}:%{version}-%{release}
 Requires:	%{name}-xml = %{epoch}:%{version}-%{release}
@@ -1552,12 +1552,12 @@ with PHP, please install appropriate php-pear-* (php-pear-PEAR,
 php-PEAR-Archive_Tar, etc) packages.
 
 %description pear -l pl
-PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
+PEAR (PHP Extension and Application Repository) - rozszerzenie PHP i
 repozytorium aplikacji.
 
-PamiЙtaj, ©e ten pakiet dostarcza tylko podstawow╠ strukturЙ
-katalogСw. Je╤li chcesz u©yФ podstawowych klas PEAR (PEAR.php
-PEAR/*.php), dostarczanych z PHP, zainstaluj odpowiednie pakiety
+Nale©y pamiЙtaФ, ©e ten pakiet dostarcza tylko podstawow╠ strukturЙ
+katalogСw. Aby u©yФ podstawowych klas PEAR (PEAR.php PEAR/*.php),
+dostarczanych z PHP, nale©y zainstaliwaФ odpowiednie pakiety
 php-pear-* (php-pear-PEAR, php-pear-Archive_Tar, itp).
 
 %prep
