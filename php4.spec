@@ -1346,6 +1346,7 @@ for i in cgi cli apxs ; do
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
+	--enable-memory-limit \
 	--enable-bcmath=shared \
 	--enable-calendar=shared \
 	--enable-ctype=shared \
