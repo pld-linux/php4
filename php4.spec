@@ -24,7 +24,7 @@ BuildRequires:	postgresql-devel
 BuildRequires:	gd-devel
 Requires:	apache(EAPI) >= 1.3.9
 Prereq:		/usr/sbin/apxs
-BuildRoot:	/tmp/%{name}-%{version}-root
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_pkglibdir	%{_libdir}/apache
 
@@ -188,12 +188,10 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI"; export CFLAGS
 
 make
 
-
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_pkglibdir}/php,%{_sysconfdir}/httpd} \
 		$RPM_BUILD_ROOT/home/httpd/html/{icons,docs,docs/php4-doc}
-
 
 install .libs/*.so	$RPM_BUILD_ROOT%{_pkglibdir}
 install modules/*.so	$RPM_BUILD_ROOT%{_pkglibdir}/php
@@ -219,7 +217,6 @@ gzip -9nf CODING_STANDARDS CREDITS FAQ* ChangeLog FUNCTION_LIST.txt \
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
-
 
 %preun
 if [ "$1" = "0" ]; then
