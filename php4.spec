@@ -37,6 +37,15 @@ Source4:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
 Source5:	%{name}-module-install
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
+Patch2:		%{name}-mysql-socket.patch
+Patch3:		%{name}-mail.patch
+Patch4:		%{name}-link-libs.patch
+Patch5:		%{name}-session-path.patch
+Patch6:		%{name}-am_ac_lt.patch
+Patch7:		%{name}-fastcgi.patch
+Patch8:		%{name}-ac250.patch
+Patch9:		%{name}-mailsecurity2.patch
+Patch10:	%{name}-oracle9.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -975,6 +984,15 @@ Modu³ PHP dodaj±cy obs³ugê libcpdf.
 %setup  -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
@@ -982,13 +1000,13 @@ bzip2 -dc %{SOURCE4} | tar -xf - -C manual
 %build
 CFLAGS="%{rpmcflags} -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
-#./buildconf
+./buildconf
 libtoolize --copy --force
-#aclocal
-#autoconf
+aclocal
+autoconf
 #for i in cgi fastcgi apxs ; do
 for i in cgi apxs ; do
-./configure \
+%configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
 	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=%{_prefix}` \
 	`[ $i = apxs ] && echo --with-apxs=%{_sbindir}/apxs` \
