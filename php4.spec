@@ -1531,10 +1531,10 @@ for i in fcgi cgi cli apxs ; do
 	`[ $i = fcgi ] && echo --enable-fastcgi --with-fastcgi=/usr` \
 %if %{_apache2}
 	`[ $i = apxs ] && echo --with-apxs2=%{apxs}` \
+	--enable-experimental-zts \
 %else
 	`[ $i = apxs ] && echo --with-apxs=%{apxs}` \
 %endif
-	--enable-experimental-zts \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
