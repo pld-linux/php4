@@ -17,7 +17,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.1.2
-Release:	3
+Release:	3.5
 Epoch:		1
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -27,6 +27,7 @@ Source2:	%{name}.ini
 Source3:	zend.gif
 Source4:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
 Source5:	%{name}-module-install
+Source6:	%{name}-xml_fix
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-mysql-socket.patch
@@ -871,6 +872,9 @@ done
 # TODO --with-pspell=/usr,shared (pspell missing)
 #	--with-qtdom=shared
 
+rm -f ext/xml/libs.mk
+install %{SOURCE6} ext/xml/libs.mk
+
 %{__make}
 %{__make} CFLAGS="%{rpmcflags} -DDISCARD_PATH=1" -C sapi/cgi
 
@@ -1350,10 +1354,9 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/gd.so
 
-# To check
-#%files xml
-#%defattr(644,root,root,755)
-#%attr(755,root,root) %{extensionsdir}/xml.so
+%files xml
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/xml.so
 
 %files dba
 %defattr(644,root,root,755)
