@@ -1,6 +1,7 @@
 #
 # TODO:
 # - make additional headers added by mail patch configurable
+# - /var/run/php group not owned
 #
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
