@@ -14,7 +14,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.5
-Release:	0.3
+Release:	0.4
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -38,6 +38,8 @@ Patch8:		%{name}-session-path.patch
 Patch9:		%{name}-libtool_version_check_fix.patch
 Patch10:	%{name}-pdflib.patch
 Patch11:	%{name}-am_ac_lt.patch
+Patch12:	%{name}-fastcgi.patch
+Patch13:	%{name}-shared.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -74,6 +76,7 @@ BuildRequires:	mhash-devel
 BuildRequires:	bzip2-devel
 BuildRequires:	gmp-devel
 BuildRequires:	curl-devel
+#BuildRequires:	fastcgi-devkit
 %if %(expr %{?bcond_on_openssl:1}%{!?bcond_on_openssl:0} + %{!?bcond_off_ldap:1}%{?bcond_off_ldap:0})
 BuildRequires:	openssl-devel >= 0.9.6a
 %endif
@@ -719,6 +722,8 @@ Pliki potrzebne do kompilacji modu³ów PHP.
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
+%patch12 -p1
+%patch13 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
@@ -726,80 +731,11 @@ CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
 libtoolize --copy --force
 aclocal
 autoconf
+for i in cgi fastcgi apxs ; do
 %configure \
-	--enable-discard-path \
-	--with-config-file-path=%{_sysconfdir} \
-	--with-exec-dir=%{_bindir} \
-	--disable-debug \
-	--enable-magic-quotes \
-	--enable-shared \
-	--enable-track-vars \
-	--enable-safe-mode \
-	--enable-trans-sid \
-	--enable-sysvsem=shared \
-	--enable-sysvshm=shared \
-	--enable-shmop=shared \
-	--enable-session \
-	--enable-exif=shared \
-	--with-regex=php \
-	--with-gettext=shared \
-	%{!?bcond_off_ldap:--with-ldap=shared} \
-	--with-mysql=shared,%{_prefix} \
-	--with-mysql-sock=%{_var}/lib/mysql/mysql.sock \
-	--with-gd=shared \
-	--enable-gd-imgstrttf \
-	--with-dbase=shared \
-	--with-filepro=shared \
-	--enable-ftp=shared \
-	--with-hyperwave \
-	--with-pdflib=shared \
-	--with-cpdflib=shared \
-	%{?bcond_on_java:--with-java} \
-	--with-pgsql=shared,%{_prefix} \
-	%{!?bcond_off_imap:--with-imap=shared} \
-	--enable-bcmath=shared \
-	--enable-calendar=shared \
-	--with-mm \
-	--with-pcre-regex=shared \
-	--enable-posix=shared \
-	--with-ttf \
-	--with-t1lib \
-	--with-recode=shared \
-	--enable-ucd-snmp-hack \
-	--enable-dba=shared \
-	%{!?bcond_off_snmp:--with-snmp=shared} \
-	--with-gdbm \
-	--with-db3 \
-	--enable-yp=shared \
-	--with-xml=shared \
-	--enable-xml=shared \
-	--with-zlib=shared \
-	--with-mcrypt=shared \
-	--enable-sockets=shared \
-	--with-bz2=shared \
-	--with-ctype=shared \
-	--with-mhash=shared \
-	--with-curl=shared \
-	--with-gmp=shared \
-	%{?bcond_on_openssl:--with-openssl} \
-	%{!?bcond_off_odbc:--with-unixODBC=shared} \
-	%{?bcond_on_oracle:--with-oracle=shared} \
-	%{?bcond_on_oci8:--with-oci8=shared} \
-	--without-db2 
-
-# TODO --with-pspell=/usr,shared (pspell missing)
-
-# --with-dom need libxml >= 2.2.7 \
-
-%{__make}
-mv php php.cgi
-%{__make} clean
-
-./buildconf
-aclocal
-autoconf
-%configure \
-	--with-apxs=%{_sbindir}/apxs \
+	`[ $i = cgi ] && echo --enable-discard-path` \
+	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=/usr` \
+	`[ $i = apxs ] && echo --with-apxs=%{_sbindir}/apxs` \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--disable-debug \
@@ -858,12 +794,22 @@ autoconf
 	%{?bcond_on_oracle:--with-oracle=shared} \
 	%{?bcond_on_oci8:--with-oci8=shared} \
 	--without-db2 
+done
 
 # TODO --with-pspell=/usr,shared (pspell missing)
 
 # --with-dom need libxml >= 2.2.7 \
 
 %{__make}
+%{__make} CFLAGS="%{rpmcflags} -DDISCARD_PATH=1" -C sapi/cgi
+
+# Kill -rpath from php binary and libphp4.so
+perl -pi -e 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+perl -pi -e 's|^runpath_var=.*|runpath_var=|g' libtool
+%{__make} CFLAGS="%{rpmcflags} -DDISCARD_PATH=1" php
+
+perl -pi -e 's|^hardcode_into_libs=.*|hardcode_into_libs=no|g' libtool
+rm libphp4.la ; %{__make} libphp4.la
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -873,9 +819,9 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
-	INSTALL_IT="install .libs/*.so $RPM_BUILD_ROOT%{_libdir}/apache/"
+	INSTALL_IT="install libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache/ ; install libs/libphp_common*.so.*.*.* $RPM_BUILD_ROOT%{_libdir}"
 
-install php.cgi $RPM_BUILD_ROOT%{_bindir}/php
+install .libs/php $RPM_BUILD_ROOT%{_bindir}/php
 
 #exit 1
 #install .libs/*.so	$RPM_BUILD_ROOT%{_pkglibdir}
@@ -912,6 +858,9 @@ if [ "$1" = "0" ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
 fi
+
+%post common -p /sbin/ldconfig
+%postun common -p /sbin/ldconfig
 
 %post bcmath
 %{_sbindir}/php-module-install install bcmath %{_sysconfdir}/php.ini
@@ -1191,6 +1140,8 @@ rm -rf $RPM_BUILD_ROOT
 /home/httpd/icons/*
 
 %attr(755,root,root) %{_sbindir}/*
+
+%attr(755,root,root) %{_libdir}/libphp_common*.so.*.*.*
 
 %dir %{_libdir}/php
 %dir %{_libdir}/php/extensions
