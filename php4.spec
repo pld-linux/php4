@@ -6,6 +6,7 @@
 # _with_openssl - with OpenSSL support
 # _with_wddx    - with WDDX support
 # _with_xslt    - with XSLT support
+# _with_libcpdf	- with libcpdf support
 # _without_imap   - without IMAP support
 # _without_ldap   - without LDAP support
 # _without_odbc   - without ODBC support
@@ -96,6 +97,7 @@ BuildRequires:	openssl-devel >= 0.9.6a
 %{?_with_xslt:BuildRequires:	sablotron-devel}
 %{?_with_xslt:BuildRequires:	expat-devel}
 %{?_with_xslt:BuildRequires:	w3c-libwww-devel}
+%{?_with_libcpdf:BuildRequires:	libcpdf-devel >= 2.00}
 Prereq:		apache(EAPI) >= 1.3.9
 Prereq:		perl
 Prereq:		%{_sbindir}/apxs
@@ -960,6 +962,26 @@ This is a dynamic shared object (DSO) for Apache that will add ming
 Modu≥ PHP dodaj±cy obs≥ugÍ plikÛw Flash (.swf) poprzez bibliotekÍ
 ming.
 
+%package libcpdf
+Summary:	cpdf extension module for PHP
+Summary(pl):	Modu≥ cpdf dla PHP
+Group:		Libraries
+Group(de):	Libraries
+Group(es):	Bibliotecas
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	‚…¬Ã…œ‘≈À…
+Group(uk):	‚¶¬Ã¶œ‘≈À…
+PreReq:		%{name}-common = %{version}
+
+%description libcpdf
+This is a dynamic shared object (DSO) for Apache that will add libcpdf
+support to PHP.
+
+%description libcpdf -l pl
+Modu≥ PHP dodaj±cy obs≥ugÍ libcpdf.
+
 %prep
 %setup  -q
 %patch0 -p1
@@ -1024,7 +1046,7 @@ for i in cgi apxs ; do
 	--enable-ftp=shared \
 	--with-hyperwave \
 	--with-pdflib=shared \
-	--with-cpdflib=shared \
+	%{?_with_libcpdf:--with-cpdflib=shared} \
 	%{?_with_java:--with-java} \
 	--with-pgsql=shared,/usr \
 	%{!?_without_imap:--with-imap=shared --with-imap-ssl} \
@@ -1207,7 +1229,7 @@ if [ "$1" = "0" ]; then
 fi
 %endif
 
-%if %{?bond_on_java:1}%{!?bond_on_java:0}
+%if %{?_with_java:1}%{!?_with_java:0}
 %post java
 %{_sbindir}/php-module-install install libphp_java %{_sysconfdir}/php.ini
 
@@ -1403,21 +1425,43 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove curl %{_sysconfdir}/php.ini
 fi
 
-#%post xslt
-#%{_sbindir}/php-module-install install xslt %{_sysconfdir}/php.ini
-#
-#%preun xslt
-#if [ "$1" = "0" ]; then
-#        %{_sbindir}/php-module-install remove xslt %{_sysconfdir}/php.ini
-#fi
-#
-#%post wddx
-#%{_sbindir}/php-module-install install wddx %{_sysconfdir}/php.ini
-#
-#%preun wddx
-#if [ "$1" = "0" ]; then
-#        %{_sbindir}/php-module-install remove wddx %{_sysconfdir}/php.ini
-#fi
+%post ming
+%{_sbindir}/php-module-install install ming %{_sysconfdir}/php.ini
+
+%preun ming
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove ming %{_sysconfdir}/php.ini
+fi
+
+%if %{?_with_xslt:1}%{!?_with_xslt:0}
+%post xslt
+%{_sbindir}/php-module-install install xslt %{_sysconfdir}/php.ini
+
+%preun xslt
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove xslt %{_sysconfdir}/php.ini
+fi
+%endif
+
+%if %{?_with_wddx:1}%{!?_with_wddx:0}
+%post wddx
+%{_sbindir}/php-module-install install wddx %{_sysconfdir}/php.ini
+
+%preun wddx
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove wddx %{_sysconfdir}/php.ini
+fi
+%endif
+
+%if %{?_with_libcpdf:1}%{!?_with_libcpdf:0}
+%post libcpdf
+%{_sbindir}/php-module-install install libcpdf %{_sysconfdir}/php.ini
+
+%preun libcpdf
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove libcpdf %{_sysconfdir}/php.ini
+fi
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -1625,4 +1669,10 @@ rm -rf $RPM_BUILD_ROOT
 %files wddx
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/wddx.so
+%endif
+
+%if %{?_with_libcpdf:1}%{!?_with_libcpdf:0}
+%files libcpdf
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/cpdf.so
 %endif
