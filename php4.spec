@@ -1446,11 +1446,11 @@ install php-pear-PEAR package.
 
 %description pear -l pl
 PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
-Repozytorium Aplikacji.
+repozytorium aplikacji.
 
-Pamiêtaj, ¿e ten pakiet dostarcza tylko podstawowej strukturê katalogów.
-Je¶li chcesz u¿yæ podstawowych klas PEAR (PEAR.php PEAR/*.php),
-zainstaluj pakiet php-pear-PEAR.
+Pamiêtaj, ¿e ten pakiet dostarcza tylko podstawow± strukturê
+katalogów. Je¶li chcesz u¿yæ podstawowych klas PEAR (PEAR.php
+PEAR/*.php), zainstaluj pakiet php-pear-PEAR.
 
 %prep
 %setup -q -n %{name}-%{version}%{_rc}
