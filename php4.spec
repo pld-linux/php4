@@ -133,7 +133,6 @@ BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	zziplib-devel
 #BuildRequires:	fastcgi-devkit
-BuildRequires:	/usr/lib/sendmail
 # apache 1.3 vs apache 2.0
 %if %{_apache2}
 PreReq:		apache >= 2.0.39
@@ -1265,6 +1264,7 @@ EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 aclocal
 autoconf
 #for i in cgi fastcgi apxs ; do
+PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
 for i in cgi apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
