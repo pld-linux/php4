@@ -9,14 +9,14 @@ diff -urN php-4.2.1RC2.org/ext/standard/info.c php-4.2.1RC2/ext/standard/info.c
 +	        /* PLD Linux */
 +                php_info_print_box_start(0);
 +                if (expose_php) {
-+                  PUTS("<a href=\"http://www.pld.org.pl/\"><img src=\"");
++                  PUTS("<a href=\"http://www.pld-linux.org/\"><img src=\"");
 +                  if (SG(request_info).request_uri) {
 +                    PUTS(SG(request_info).request_uri);
 +                  }
 +                  PUTS("?="PLD_LOGO_GUID"\" border=\"0\" align=\"right\" alt=\"PLD logo\"></a>\n");
 +                }
 +                php_printf("This server is using PLD Linux. <BR>");
-+                php_printf("More information at <a href=\"http://www.pld.org.pl/\">http://www.pld.org.pl/</a>.");
++                php_printf("More information at <a href=\"http://www.pld-linux.org/\">http://www.pld-linux.org/</a>.");
 +                php_printf("</BR>\n");
 +                php_info_print_box_end(); 
 +                efree(php_uname);
