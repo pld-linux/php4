@@ -41,23 +41,30 @@
 %bcond_without	yaz		# without YAZ extension module
 #
 %define	_apache2	%{?with_apache1:0}%{?!with_apache1:1}
+
 %if %{_apache2}
 %define	apxs		/usr/sbin/apxs
+%define	_apache_confdir /etc/httpd/httpd.conf
 %else
 %define apxs		/usr/sbin/apxs1
+%define	_apache_confdir /etc/apache/conf.d
 %endif
+
 # some problems with apache 2.x
 %if %{_apache2}
 %undefine	with_recode
 %undefine	with_mm
 %endif
+
 %ifnarch %{ix86} amd64 sparc sparcv9 alpha ppc
 %undefine	with_interbase
 %endif
+
 # x86-only lib
 %ifnarch %{ix86}
 %undefine	with_msession
 %endif
+
 %include	/usr/lib/rpm/macros.php
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
@@ -67,7 +74,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.10
-Release:	5%{?with_hardened:hardened}
+Release:	5.1%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -196,10 +203,11 @@ BuildRequires:	apr-util-devel >= 1:1.0.0
 PreReq:		apache >= 2.0.52-2
 Requires:	apache(modules-api) = %{apache_modules_api}
 %else
-BuildRequires:	apache1-devel
+BuildRequires:	apache1-devel >= 1.3.33-2
 PreReq:		apache1(EAPI) >= 1.3.9
 Requires(post,preun):	%{apxs}
 Requires(post,preun):	%{__perl}
+Conflicts:	apache1 < 1.3.33-2
 %endif
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
@@ -1771,11 +1779,7 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/php,%{apachelib},%{_sysconfdir}/{apache,cg
 	$RPM_BUILD_ROOT%{httpdir}/icons \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/run/php \
-%if %{_apache2}
-	$RPM_BUILD_ROOT/etc/httpd/httpd.conf
-%else
-	$RPM_BUILD_ROOT/etc/apache/apache.conf
-%endif
+	$RPM_BUILD_ROOT%{_apache_confdir}
 
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
@@ -1792,10 +1796,7 @@ for i in %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE8}; do
 done
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{httpdir}/icons
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sbindir}
-%if %{_apache2}
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php4.conf
-%endif
-
+install %{SOURCE4} $RPM_BUILD_ROOT%{_apache_confdir}/70_mod_php4.conf
 install %{SOURCE1} .
 
 cp -f Zend/LICENSE{,.Zend}
@@ -1804,6 +1805,10 @@ cp -f Zend/LICENSE{,.Zend}
 #%%ifarch amd64
 #ln -sf ../../lib/php/build $RPM_BUILD_ROOT%{_libdir}/php/build
 #%%endif
+
+%if %{with apache1}
+sed -i -e 's,httpd,apache,' $RPM_BUILD_ROOT%{_sbindir}/php4-module-install
+%endif
 
 rm -f $RPM_BUILD_ROOT%{apachelib}/libphp4.la
 
@@ -1819,38 +1824,28 @@ mv -f $RPM_BUILD_ROOT%{_mandir}/man1/php{,4}.1
 rm -rf $RPM_BUILD_ROOT
 
 %post
-%if ! %{_apache2}
-%{__perl} -pi -e 's|^#AddType application/x-httpd-php \.php|AddType application/x-httpd-php .php|' \
-	/etc/apache/apache.conf
-%{apxs} -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
-if [ -f /var/lock/subsys/apache ]; then
-	/etc/rc.d/init.d/apache restart 1>&2
-fi
-%else
+%if %{_apache2}
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
+%else
+if [ -f /var/lock/subsys/apache ]; then
+	/etc/rc.d/init.d/apache restart 1>&2
+fi
 %endif
 
-%if %{_apache2}
 %postun
 if [ "$1" = "0" ]; then
+%if %{_apache2}
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
-fi
 %else
-%preun
-if [ "$1" = "0" ]; then
-	%{apxs} -e -A -n php4 %{_pkglibdir}/libphp4.so 1>&2
-	%{__perl} -pi -e \
-		's|^AddType application/x-httpd-php \.php|#AddType application/x-httpd-php .php|' \
-		/etc/apache/apache.conf
 	if [ -f /var/lock/subsys/apache ]; then
 		/etc/rc.d/init.d/apache restart 1>&2
 	fi
-fi
 %endif
+fi
 
 %post	common -p /sbin/ldconfig
 %postun	common -p /sbin/ldconfig
@@ -2440,7 +2435,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %if %{_apache2}
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php4.conf
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_apache_confdir}/*_mod_php4.conf
 %endif
 %attr(755,root,root) %{apachelib}/libphp4.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
