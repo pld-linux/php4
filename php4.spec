@@ -92,6 +92,8 @@ BuildRequires:	zlib-devel >= 1.0.9
 %{?_with_xslt:BuildRequires:	sablotron-devel}
 %{?_with_xslt:BuildRequires:	expat-devel}
 %{?_with_xslt:BuildRequires:	w3c-libwww-devel}
+# apache 1.3 vs apache 2.0
+%requires_eq	apache
 PreReq:		apache(EAPI) >= 1.3.9
 PreReq:		perl
 PreReq:		%{_sbindir}/apxs
@@ -169,7 +171,8 @@ Wspólne pliki dla modu³u apacha i programu CGI.
 Summary:	MySQL database module for PHP
 Summary(pl):	Modu³ bazy danych MySQL dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description mysql
 This is a dynamic shared object (DSO) for Apache that will add MySQL
@@ -183,7 +186,8 @@ Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych MySQL.
 Summary:	libPDF module for PHP
 Summary(pl):	Modu³ do tworzenia plików PDF dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 PreReq:		pdflib
 
 %description pdf
@@ -198,7 +202,8 @@ pdflib.
 Summary:	PostgreSQL database module for PHP
 Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description pgsql
 This is a dynamic shared object (DSO) for Apache that will add
@@ -213,7 +218,8 @@ Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych PostgreSQL.
 Summary:	Oracle 8 database module for PHP
 Summary(pl):	Modu³ bazy danych Oracle 8 dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 Autoreq:	false
 
 %description oci8
@@ -229,7 +235,8 @@ Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 8.
 Summary:	Oracle 7 database module for PHP
 Summary(pl):	Modu³ bazy danych Oracle 7 dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 Autoreq:	false
 
 %description oracle
@@ -245,7 +252,8 @@ Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 7.
 Summary:	GD extension module for PHP
 Summary:	Modu³ GD dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description gd
 This is a dynamic shared object (DSO) for Apache that will add GD
@@ -261,7 +269,8 @@ obrazków z poziomu PHP.
 Summary:	Java extension module for PHP
 Summary(pl):	Modu³ Javy dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description java
 This is a dynamic shared object (DSO) for Apache that will add JAVA
@@ -276,7 +285,8 @@ obiektów Javy z poziomu PHP.
 Summary:	XML extension module for PHP
 Summary(pl):	Modu³ XML dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description xml
 This is a dynamic shared object (DSO) for Apache that will add XML
@@ -293,7 +303,8 @@ zwi±zanych z tymi plikami.
 Summary:	DBA extension module for PHP
 Summary(pl):	Modu³ DBA dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description dba
 This is a dynamic shared object (DSO) for Apache that will add
@@ -307,7 +318,8 @@ wsparcie dla baz danych DBA.
 Summary:	ODBC extension module for PHP
 Summary(pl):	Modu³ ODBC dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description odbc
 This is a dynamic shared object (DSO) for Apache that will add ODBC
@@ -320,7 +332,8 @@ Modu³ PHP ze wsparciem dla ODBC.
 Summary:	Calendar extension module for PHP
 Summary(pl):	Modu³ funkcji kalendarza dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description calendar
 This is a dynamic shared object (DSO) for Apache that will add
@@ -334,7 +347,8 @@ wsparcie dla kalendarza.
 Summary:	DBase extension module for PHP
 Summary(pl):	Modu³ DBase dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description dbase
 This is a dynamic shared object (DSO) for Apache that will add DBase
@@ -347,7 +361,8 @@ Modu³ PHP ze wsparciem dla DBase.
 Summary:	FilePro extension module for PHP
 Summary(pl):	Modu³ FilePro dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description filepro
 This is a dynamic shared object (DSO) for Apache that will add FilePro
@@ -361,7 +376,8 @@ wsparcie dla FilePro.
 Summary:	POSIX extension module for PHP
 Summary(pl):	Modu³ POSIX dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description posix
 This is a dynamic shared object (DSO) for Apache that will add POSIX
@@ -374,7 +390,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z funkcji POSIX.
 Summary:	PCRE extension module for PHP
 Summary(pl):	Modu³ PCRE dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description pcre
 This is a dynamic shared object (DSO) for Apache that will add Perl
@@ -388,7 +405,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z perlowych wyra¿eñ regularnych
 Summary:	SysV sem extension module for PHP
 Summary(pl):	Modu³ SysV sem dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description sysvsem
 This is a dynamic shared object (DSO) for Apache that will add SysV
@@ -401,7 +419,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z semaforów SysV.
 Summary:	SysV shm extension module for PHP
 Summary(pl):	Modu³ SysV shm dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description sysvshm
 This is a dynamic shared object (DSO) for Apache that will add SysV
@@ -414,7 +433,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej SysV.
 Summary:	NIS (yp) extension module for PHP
 Summary(pl):	Modu³ NIS (yp) dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description yp
 This is a dynamic shared object (DSO) for Apache that will add NIS
@@ -428,7 +448,8 @@ wsparcie dla NIS (Yellow Pages).
 Summary:	bcmath extension module for PHP
 Summary(pl):	Modu³ bcmath dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description bcmath
 This is a dynamic shared object (DSO) for Apache that will add bc
@@ -442,7 +463,8 @@ matematycznych takich jak w programie bc.
 Summary:	FTP extension module for PHP
 Summary(pl):	Modu³ FTP dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description ftp
 This is a dynamic shared object (DSO) for Apache that will add FTP
@@ -455,7 +477,8 @@ Modu³ PHP dodaj±cy obs³ugê protoko³u FTP.
 Summary:	Zlib extension module for PHP
 Summary(pl):	Modu³ zlib dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description zlib
 This is a dynamic shared object (DSO) for Apache that will add
@@ -468,7 +491,8 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
 Summary:	Bzip2 extension module for PHP
 Summary(pl):	Modu³ bzip2 dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description bzip2
 This is a dynamic shared object (DSO) for Apache that will add
@@ -481,7 +505,8 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê bzip2).
 Summary:	exif extension module for PHP
 Summary(pl):	Modu³ exif dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description exif
 This is a dynamic shared object (DSO) for Apache that will add exif
@@ -494,7 +519,8 @@ Modu³ PHP dodaj±cy obs³ugê plików EXIF.
 Summary:	recode extension module for PHP
 Summary(pl):	Modu³ recode dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 Requires:	recode >= 3.5d-3
 
 %description recode
@@ -509,7 +535,8 @@ bibliotekê recode).
 Summary:	session extension module for PHP
 Summary(pl):	Modu³ session dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description session
 This is a dynamic shared object (DSO) for Apache that will add session
@@ -522,7 +549,8 @@ Modu³ PHP dodaj±cy obs³ugê sesji.
 Summary:	gettext extension module for PHP
 Summary(pl):	Modu³ gettext dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description gettext
 This is a dynamic shared object (DSO) for Apache that will add gettext
@@ -535,7 +563,8 @@ Modu³ PHP dodaj±cy obs³ugê lokalizacji przez gettext.
 Summary:	SNMP extension module for PHP
 Summary(pl):	Modu³ SNMP dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description snmp
 This is a dynamic shared object (DSO) for Apache that will add SNMP
@@ -548,7 +577,8 @@ Modu³ PHP dodaj±cy obs³ugê SNMP.
 Summary:	IMAP extension module for PHP
 Summary(pl):	Modu³ IMAP dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description imap
 This is a dynamic shared object (DSO) for Apache that will add IMAP
@@ -561,7 +591,8 @@ Modu³ PHP dodaj±cy obs³ugê skrzynek IMAP.
 Summary:	LDAP extension module for PHP
 Summary(pl):	Modu³ LDAP dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description ldap
 This is a dynamic shared object (DSO) for Apache that will add LDAP
@@ -574,7 +605,8 @@ Modu³ PHP dodaj±cy obs³ugê LDAP.
 Summary:	sockets extension module for PHP
 Summary(pl):	Modu³ socket dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description sockets
 This is a dynamic shared object (DSO) for Apache that will add sockets
@@ -587,7 +619,8 @@ Modu³ PHP dodaj±cy obs³ugê gniazdek.
 Summary:	mcrypt extension module for PHP
 Summary(pl):	Modu³ mcrypt dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description mcrypt
 This is a dynamic shared object (DSO) for Apache that will add mcrypt
@@ -600,7 +633,8 @@ Modu³ PHP dodaj±cy mo¿liwo¶æ szyfrowania poprzez bibliotekê mcrypt.
 Summary:	mhash extension module for PHP
 Summary(pl):	Modu³ mhash dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description mhash
 This is a dynamic shared object (DSO) for Apache that will add mhash
@@ -664,7 +698,6 @@ Pliki potrzebne do kompilacji modu³ów PHP.
 Summary:	curl extension module for PHP
 Summary(pl):	Modu³ curl dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
 
 %description curl
 This is a dynamic shared object (DSO) for Apache that will add curl
@@ -677,7 +710,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki curl.
 Summary:	xslt extension module for PHP
 Summary(pl):	Modu³ xslt dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description xslt
 This is a dynamic shared object (DSO) for Apache that will add xslt
@@ -690,7 +724,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z technologii xslt.
 Summary:	wddx extension module for PHP
 Summary(pl):	Modu³ wddx dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description wddx
 This is a dynamic shared object (DSO) for Apache that will add wddx
@@ -703,7 +738,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z wddx.
 Summary:	ming extension module for PHP
 Summary(pl):	Modu³ ming dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description ming
 This is a dynamic shared object (DSO) for Apache that will add ming
@@ -717,7 +753,8 @@ ming.
 Summary:	cpdf extension module for PHP
 Summary(pl):	Modu³ cpdf dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description libcpdf
 This is a dynamic shared object (DSO) for Apache that will add libcpdf
@@ -730,7 +767,8 @@ Modu³ PHP dodaj±cy obs³ugê libcpdf.
 Summary:	iconv extension module for PHP
 Summary(pl):	Modu³ iconv dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description iconv
 This is a dynamic shared object (DSO) for Apache that will add iconv
@@ -743,7 +781,8 @@ Modu³ PHP dodaj±cy obs³ugê iconv.
 Summary:	gmp extension module for PHP
 Summary(pl):	Modu³ gmp dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description gmp
 This is a dynamic shared object (DSO) for Apache that will add
@@ -756,7 +795,8 @@ Modu³ PHP umorzliwiaj±cy korzystanie z biblioteki gmp.
 Summary:	Shared Memory Operations extension module for PHP
 Summary(pl):	Modu³ shmop dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description shmop
 This is a dynamic shared object (DSO) for Apache that will add
