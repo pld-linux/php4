@@ -7,7 +7,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.4pl1
-Release:	0.5
+Release:	0.6
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -23,7 +23,7 @@ Source5:	php-module-install
 Patch0:		%{name}-imap.patch
 Patch1:		%{name}-mysql-socket.patch
 Patch2:		%{name}-mail.patch
-Patch5:		%{name}-no_libnsl.patch
+#Patch5:	%{name}-no_libnsl.patch
 Patch6:		%{name}-DESTDIR.patch
 Patch7:		%{name}-gd-shared.patch
 Patch8:		%{name}-apache-fixes.patch
@@ -621,7 +621,7 @@ Files for PHP modules development.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch5 -p1
+#%patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
