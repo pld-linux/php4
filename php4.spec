@@ -16,8 +16,8 @@ Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
-Version:	4.1.1
-Release:	3.1
+Version:	4.1.2
+Release:	0.1
 Epoch:		1
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -32,7 +32,7 @@ Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-mysql-socket.patch
 Patch3:		%{name}-mail.patch
 Patch4:		%{name}-link-libs.patch
-Patch5:		%{name}-session-path.patch
+#Patch5:		%{name}-session-path.patch
 Patch6:		%{name}-am_ac_lt.patch
 Patch7:		%{name}-fastcgi.patch
 Patch8:		%{name}-ac250.patch
@@ -721,7 +721,7 @@ Modu³ PHP dodaj±cy obs³ugê libcpdf.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
+#%patch5 -p1	obsolete
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
