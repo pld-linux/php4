@@ -7,6 +7,7 @@
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
 %bcond_with	fdf		# with FDF (PDF forms) module		(BR: proprietary lib)
 %bcond_with	interbase_inst	# use InterBase install., not Firebird	(BR: proprietary libs)
+%bcond_with	hardened	# build with hardened patch applied (http://www.hardenet.php/)
 %bcond_with	java		# with Java extension module		(BR: jdk)
 %bcond_with	oci8		# with Oracle oci8 extension module	(BR: proprietary libs)
 %bcond_with	oracle		# with oracle extension module		(BR: proprietary libs)
@@ -62,7 +63,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.10
-Release:	1
+Release:	1%{?with_hardened:hardended}
 Epoch:		0
 Group:		Libraries
 License:	PHP
@@ -76,6 +77,8 @@ Source5:	%{name}-cgi-fcgi.ini
 Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Source8:	%{name}-cli.ini
+Source9:	http://www.hardened-php.net/hardened-php-%{version}-0.2.5.patch.gz
+# Source9-md5:	4330fa3d2addf6e8f9920d54eeda1b78
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-xml-expat-fix.patch
@@ -1609,6 +1612,8 @@ cp php.ini-dist php.ini
 %patch31
 %endif
 %patch32 -p1
+
+%{?with_hardened:zcat %{SOURCE9} | patch -p1}
 
 # new apr
 sed -i -e 's#apr-config#apr-1-config#g' sapi/apache*/*.m4
