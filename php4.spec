@@ -180,6 +180,25 @@ should install this package in addition to the main %{name} package.
 %description mysql -l pl
 Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych MySQL.
 
+%package pdf
+Summary:	libPDF module for PHP
+Summary(pl):	Modu³ do tworzenia plików PDF dla PHP
+Group:		Libraries
+Group(de):	Libraries
+Group(es):	Bibliotecas
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+PreReq:		%{name}-common = %{version}
+PreReq:		pdflib
+
+%description pdf
+This is a dynamic shared object (DSO) for Apache that will add PDF
+support to PHP.
+
+%description pdf -l pl
+Modu³ PHP umo¿liwiaj±cy tworzenie plików PDF. Wykorzystuje bibliotekê
+pdflib.
+
 %package pgsql
 Summary:	PostgreSQL database module for PHP
 Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP
@@ -1007,6 +1026,14 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove mysql %{_sysconfdir}/php.ini
 fi
 
+%post pdf
+%{_sbindir}/php-module-install install libpdf_php %{_sysconfdir}/php.ini
+
+%preun pdf
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove libpdf_php %{_sysconfdir}/php.ini
+fi
+
 %if %{?_with_oci8:1}%{!?_with_oci8:0}
 %post oci8
 %{_sbindir}/php-module-install install oci8 %{_sysconfdir}/php.ini
@@ -1187,6 +1214,10 @@ rm -rf $RPM_BUILD_ROOT
 %files mysql
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mysql.so
+
+%files pdf
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/libpdf_php.so
 
 %files pgsql
 %defattr(644,root,root,755)
