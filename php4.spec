@@ -1315,7 +1315,7 @@ for i in cgi apxs ; do
 	--with-db3 \
 	--with-dbase=shared \
 	--with-dom=shared \
-	%{!?_without_libxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
+	%{!?_without_domxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
 	--with-expat-dir=shared,/usr \
 	--with-iconv=shared \
 	--with-filepro=shared \
