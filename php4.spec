@@ -940,6 +940,7 @@ for i in cgi apxs ; do
 	--enable-ucd-snmp-hack \
 	--enable-xml=shared \
 	--with-expat-dir=/usr \
+	--enable-versioning \
 	%{?_with_xslt:--enable-xslt=shared} \
 	--with-bz2=shared \
 	%{?_with_libcpdf:--with-cpdflib=shared} \
