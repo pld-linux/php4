@@ -8,7 +8,7 @@ Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 License: 	The PHP license (see "LICENSE" file included in distribution)
-Source0:	ftp://ftp.php.net/pub/version4/downloads/%{name}-%{version}.tar.gz
+Source0:	http://www.php.net/version4/downloads/%{name}-%{version}.tar.gz
 Source1:	FAQ.php
 Source2:	php.ini
 Source3:	zend.gif
