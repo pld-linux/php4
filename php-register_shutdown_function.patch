@@ -1,0 +1,19 @@
+--- php-4.1.1/sapi/apache/sapi_apache.c	Sat Aug  4 21:42:45 2001
++++ ../php-4.1.1-changed/php-4.1.1/sapi/apache/sapi_apache.c	Thu Jan 24
+12:08:40 2002
+@@ -89,13 +89,13 @@
+ 
+ 		(void) php_execute_script(&file_handle TSRMLS_CC);
+ 	}
+-
++/*
+ 	AP(in_request) = 0;
+ 	
+ 	zend_try {
+ 		php_request_shutdown(NULL);
+ 	} zend_end_try();
+-	
++*/	
+ 	return (OK);
+ }
+ /* }}} */

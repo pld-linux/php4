@@ -1,0 +1,10 @@
+--- php-4.1.1/ext/domxml/php_domxml.c~	Thu Feb 14 15:23:48 2002
++++ php-4.1.1/ext/domxml/php_domxml.c	Thu Feb 14 15:23:48 2002
+@@ -833,6 +833,7 @@
+ 			if (Z_TYPE_P(obj) == XML_ENTITY_REF_NODE) {
+ 				content = xmlNodeGetContent(nodep);
+ 				if (content)
++					add_property_long(wrapper, "type", Z_TYPE_P(nodep));
+ 					add_property_stringl(wrapper, "content", (char *) content, strlen(content), 1);
+ 			}
+ 			break;
