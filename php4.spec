@@ -222,9 +222,6 @@ gzip -9nf CODING_STANDARDS CREDITS ChangeLog FUNCTION_LIST.txt \
 %post
 %{_sbindir}/apxs -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
 perl -pi -e 's|^#AddType application/x-httpd-php .php|AddType application/x-httpd-php .php|'
-echo "There were some conflicts with mod_magic module."
-echo "If you ecounter problems with running .php files"
-echo "try turn off it in httpd.conf before using php4."
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
