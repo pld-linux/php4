@@ -41,7 +41,7 @@
 %bcond_without	xslt		# without XSLT extension module
 %bcond_without	yaz		# without YAZ extension module
 #
-%define	_apache2	%{?with_apache1:0}%{?!with_apache1:1}
+%define	_apache2	%{?with_apache1:0}%{!?with_apache1:1}
 
 %if %{_apache2}
 %define	apxs		/usr/sbin/apxs
