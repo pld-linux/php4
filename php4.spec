@@ -75,7 +75,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.10
-Release:	6.2%{?with_hardened:hardened}
+Release:	6.3%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -611,7 +611,6 @@ Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-domxml = %{epoch}:%{version}-%{release}
-Provides:	php-dom = %{epoch}:%{version}-%{release}
 
 %description domxml
 This is a dynamic shared object (DSO) for PHP that will add DOM XML
