@@ -53,7 +53,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.2.3
-Release:	8
+Release:	9
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -89,6 +89,7 @@ Patch20:	%{name}-ini.patch
 Patch21:	%{name}-acam.patch
 Patch22:	%{name}-xmlrpc-fix.patch
 Patch23:	%{name}-iconv-bug18039.patch
+Patch24:	%{name}-wrap.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -1339,6 +1340,7 @@ cp php.ini-dist php.ini
 %patch21 -p1
 %patch22 -p1
 %patch23 -p1
+%patch24 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE3} | tar -xf - -C manual
