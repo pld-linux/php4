@@ -31,13 +31,13 @@
 +libphp4_la_LDFLAGS = -rpath $(phptempdir) $(EXTRA_LDFLAGS) $(LDFLAGS) $(PHP_RPATHS)
 +libphp4_la_LIBADD = $(libphp4_la_DEPENDENCIES) $(EXTRA_LIBS)
 +
-+libphp_common_la_LDFLAGS = -rpath $(phptempdir) -release 4.0.5 -version-info 0:0:0 $(LDFLAGS) $(PHP_RPATHS)
++libphp_common_la_LDFLAGS = -rpath $(phptempdir) -release 4.0.6 -version-info 0:0:0 $(LDFLAGS) $(PHP_RPATHS)
 +libphp_common_la_LIBADD = $(libphp_common_la_DEPENDENCIES) $(EXTRA_LIBS)
  
  PROGRAM_NAME         = php
  PROGRAM_SOURCES      = stub.c
 -PROGRAM_LDADD        = libphp4.la $(EXT_PROGRAM_LDADD)
-+PROGRAM_LDADD        = libphp_common.la sapi/cgi/libsapi.la libphp4.la $(EXT_PROGRAM_LDADD)
++PROGRAM_LDADD        = libphp_common.la sapi/cgi/libsapi.la $(EXT_PROGRAM_LDADD)
  PROGRAM_LDFLAGS      = -export-dynamic	
  PROGRAM_DEPENDENCIES = $(PROGRAM_LDADD)
  
