@@ -65,9 +65,11 @@ Epoch:		3
 Group:		Libraries
 License:	PHP
 Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
+# Source0-md5:	bbfe584acb3549c62bb61355165e2ca6
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source3:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.gz
+# Source3-md5:	5598b2d3eb6740d9ca26697c92b6598d
 Source4:	%{name}-module-install
 Source5:	%{name}-mod_%{name}.conf
 Source6:	%{name}-cgi.ini
