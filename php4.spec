@@ -991,7 +991,11 @@ install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
 
 %build
-CFLAGS="%{rpmcflags} -DEAPI=1 -I%{_prefix}/X11R6/include"; export CFLAGS
+CFLAGS="%{rpmcflags} -DEAPI=1 -I%{_prefix}/X11R6/include"
+if [ -f %{_pkgconfigdir}/libpng12.pc ] ; then
+	CFLAGS="`pkg-config libpng12 --cflags` $CFLAGS"
+fi
+export CFLAGS
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf
 libtoolize --copy --force
