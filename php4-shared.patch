@@ -1,0 +1,82 @@
+diff -ur php-4.1.2/Makefile.in php-4.1.2.x/Makefile.in
+--- php-4.1.2/Makefile.in	Sun Apr 22 03:09:12 2001
++++ php-4.1.2.x/Makefile.in	Sat Mar  2 23:05:56 2002
+@@ -2,40 +2,68 @@
+ ZEND_DIR = $(srcdir)/Zend
+ SUBDIRS = Zend main ext sapi $(TSRM_DIR) $(REGEX_DIR) . $(PEAR_DIR)
+ 
+-LTLIBRARY_NAME = libphp4.la
+-LTLIBRARY_SOURCES = stub.c
++libexec_LTLIBRARIES = libphp_common.la libphp4.la
++libphp4_la_NAME = libphp4.la
++libphp_common_la_NAME = libphp_common.la
++libphp4_la_SOURCES = stub.c
++libphp_la_common_SOURCES = stub.c
++
++libphp4_la_DEPENDENCIES = \
++		libphp_common.la \
++		sapi/$(PHP_SAPI)/libsapi.la
+ 
+-LTLIBRARY_DEPENDENCIES = \
++
++libphp_common_la_DEPENDENCIES = \
+ 		Zend/libZend.la \
+-		sapi/$(PHP_SAPI)/libsapi.la \
+ 		main/libmain.la \
+ 		$(REGEX_LIB) \
+ 		$(EXT_LTLIBS) \
+ 		$(TSRM_LIB)
+ 
+-LTLIBRARY_LDFLAGS = -rpath $(phptempdir) $(EXTRA_LDFLAGS) $(LDFLAGS) $(PHP_RPATHS)
+-LTLIBRARY_LIBADD = $(LTLIBRARY_DEPENDENCIES) $(EXTRA_LIBS)
++libphp4_la_LDFLAGS = -rpath $(phptempdir) $(EXTRA_LDFLAGS) $(LDFLAGS) $(PHP_RPATHS)
++libphp4_la_LIBADD = $(libphp4_la_DEPENDENCIES) $(EXTRA_LIBS)
+ 
+ PROGRAM_NAME         = php
+ PROGRAM_SOURCES      = stub.c
+-PROGRAM_LDADD        = libphp4.la $(EXT_PROGRAM_LDADD)
++PROGRAM_LDADD        = libphp_common.la sapi/cgi/libsapi.la $(EXT_PROGRAM_LDADD)
+ PROGRAM_LDFLAGS      = -export-dynamic	
+ PROGRAM_DEPENDENCIES = $(PROGRAM_LDADD)
+ 
+-targets = $(LTLIBRARY_NAME) $(PHP_PROGRAM)
++targets = $(libexec_LTLIBRARIES) $(PHP_PROGRAM)
+ 
+ install_targets = install-sapi install-modules
+ 
+ include $(top_srcdir)/build/rules.mk
+-include $(top_srcdir)/build/library.mk
+ include $(top_srcdir)/build/program.mk
+ 
++libphp_common_la_LDFLAGS = -rpath $(phptempdir) -release $(PHP_VERSION) -version-info 0:0:0 $(LDFLAGS) $(PHP_RPATHS)
++libphp_common_la_LIBADD = $(libphp_common_la_DEPENDENCIES) $(EXTRA_LIBS)
++
++libphp_common_la_OBJECTS = $(libphp_common_la_SOURCES:.c=.lo) $(libphp_common_la_OBJECTS_X)
++
++$(libphp_common_la_NAME): $(libphp_common_la_OBJECTS) $(libphp_common_la_DEPENDENCIES)
++	$(LINK) $(libphp_common_la_LDFLAGS) $(libphp_common_la_OBJECTS) $(libphp_common_la_LIBADD)
++
++libphp4_la_OBJECTS = $(libphp4_la_SOURCES:.c=.lo) $(libphp4_la_OBJECTS_X)
++
++$(libphp4_la_NAME): $(libphp4_la_OBJECTS) $(libphp4_la_DEPENDENCIES)
++	$(LINK) $(libphp4_la_LDFLAGS) $(libphp4_la_OBJECTS) $(libphp4_la_LIBADD)
++
+ install-sapi:
+-	@$(LIBTOOL) --silent --mode=install cp libphp4.la $(phptempdir)/libphp4.la >/dev/null 2>&1
++	@$(LIBTOOL) --silent --mode=install cp libphp_common.la $(phptempdir)/libphp_common.la
++	@$(LIBTOOL) --silent --mode=install cp libphp4.la $(phptempdir)/libphp4.la
+ 	-@$(mkinstalldirs) $(INSTALL_ROOT)$(bindir)
+ 	-@if test ! -r $(phptempdir)/libphp4.$(SHLIB_SUFFIX_NAME); then \
+ 		for i in 0.0.0 0.0 0; do \
+ 			if test -r $(phptempdir)/libphp4.$(SHLIB_SUFFIX_NAME).$$i; then \
++				break; \
++			fi; \
++		done; \
++	fi
++	-@if test ! -r $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME); then \
++		for i in 0.0.0 0.0 0; do \
++			if test -r $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME).$$i; then \
++				$(LN_S) $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME).$$i $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME); \
+ 				$(LN_S) $(phptempdir)/libphp4.$(SHLIB_SUFFIX_NAME).$$i $(phptempdir)/libphp4.$(SHLIB_SUFFIX_NAME); \
+ 				break; \
+ 			fi; \
