@@ -301,8 +301,8 @@ This is a dynamic shared object (DSO) for Apache that will add
 flat-file databases (DBA) support to PHP.
 
 %description dba -l pl
-Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy
-do PHP wsparcie dla baz danych DBA.
+Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy do PHP
+wsparcie dla baz danych DBA.
 
 %package odbc
 Summary:	ODBC extension module for PHP
@@ -328,8 +328,8 @@ This is a dynamic shared object (DSO) for Apache that will add
 calendar support to PHP.
 
 %description calendar -l pl
-Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy
-do PHP wsparcie dla kalendarza.
+Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy do PHP
+wsparcie dla kalendarza.
 
 %package dbase
 Summary:	DBase extension module for PHP
@@ -355,8 +355,8 @@ This is a dynamic shared object (DSO) for Apache that will add FilePro
 support to PHP.
 
 %description filepro -l pl
-Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy
-do PHP wsparcie dla FilePro.
+Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy do PHP
+wsparcie dla FilePro.
 
 %package posix
 Summary:	POSIX extension module for PHP
@@ -422,8 +422,8 @@ This is a dynamic shared object (DSO) for Apache that will add NIS
 (Yellow Pages) support to PHP.
 
 %description yp -l pl
-Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy
-do PHP wsparcie dla NIS (Yellow Pages).
+Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy do PHP
+wsparcie dla NIS (Yellow Pages).
 
 %package bcmath
 Summary:	bcmath extension module for PHP
