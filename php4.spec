@@ -3,6 +3,13 @@
 # - fastcgi option in cgi SAPI? or separate fcgi SAPI?
 # - make sure that session-unregister patch is no longer needed
 #   (any crash reports related to session modules?)
+# - think of including support for:
+#    - mcve,
+#    - ovrimos,
+#    - pfpro,
+#    - ircg,
+#   These extensions BuildRequires proprietary libraries...
+# - fix building of mono, sybase and sqlite extensions
 #
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
@@ -15,6 +22,7 @@
 %bcond_without	cpdf		# without cpdf extension module
 %bcond_without	curl		# without CURL extension module
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
+%bcond_without	fam		# without FAM (File Alteration Monitor) extension module
 %bcond_without	gif		# build GD extension module with gd library without GIF support
 %bcond_without	imap		# without IMAP extension module
 %bcond_without	interbase	# without InterBase extension module
@@ -23,6 +31,7 @@
 %bcond_without	ming		# without ming extension module
 %bcond_without	mm		# without mm support for session storage
 %bcond_without	mnogosearch	# without mnogosearch extension module
+%bcond_without	mono		# without Mono extensions module
 %bcond_without	msession	# without msession extension module
 %bcond_without	mssql		# without MS SQL extension module
 %bcond_without	odbc		# without ODBC extension module
@@ -34,6 +43,7 @@
 %bcond_without	recode		# without recode extension module
 %bcond_without	simplexml	# without simplexml extension module
 %bcond_without	snmp		# without SNMP extension module
+%bcond_without	sqlite		# without SQLite extension module
 %bcond_without	sybase		# without Sybase and Sybase-CT extension modules
 %bcond_without	tidy		# without Tidy extension module
 %bcond_without	wddx		# without WDDX extension module
@@ -121,6 +131,7 @@ BuildRequires:	cyrus-sasl-devel
 BuildRequires:	elfutils-devel
 %if %{with xml} || %{with xmlrpc}
 BuildRequires:	expat-devel
+%{?with_fam:BuildRequires:	fam-devel}
 %endif
 %{?with_fdf:BuildRequires:	fdftk-devel}
 BuildRequires:	flex
@@ -148,6 +159,7 @@ BuildRequires:	libtool >= 1.4.3
 %{?with_ming:BuildRequires:	ming-devel >= 0.1.0}
 %{?with_mm:BuildRequires:	mm-devel >= 1.3.0}
 %{?with_mnogosearch:BuildRequires:	mnogosearch-devel >= 3.2.6}
+%{?with_mono:BuildRequires:	mono-devel}
 BuildRequires:	mysql-devel >= 3.23.32
 BuildRequires:	ncurses-devel
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.0}
@@ -165,6 +177,7 @@ BuildRequires:	readline-devel
 BuildRequires:	rpm-php-pearprov >= 4.0.2-100
 BuildRequires:	rpmbuild(macros) >= 1.120
 %{?with_xslt:BuildRequires:	sablotron-devel >= 0.96}
+%{?with_sqlite:BuildRequires:	sqlite-devel}
 BuildRequires:	t1lib-devel
 %{?with_tidy:BuildRequires:	tidy-devel}
 %{?with_snmp:BuildRequires:	net-snmp-devel >= 5.0.7}
@@ -507,6 +520,23 @@ tags support in image files.
 %description exif -l pl
 Modu³ PHP dodaj±cy obs³ugê znaczników EXIF w plikach obrazków.
 
+%package fam
+Summary:	FAM (File Alteration Monitor) module for PHP
+Summary(pl):	Modu³ FAM (File Alteration Monitor) dla PHP
+Group:		Libraries
+Requires(post,preun):	%{name}-common = %{epoch}:%{version}
+Requires:	%{name}-common = %{epoch}:%{version}
+
+%description fam
+This PHP module adds support for FAM (File Alteration Monitor).
+FAM monitors files and directories, notifying interested applications
+of changes.
+
+%description fam -l pl
+Modu³ PHP dodaj±cy obs³ugê dla FAM (File Alteration Monitor).
+FAM monitoruje pliki oraz katalogi, informuj±c zainteresowane aplikacje
+o zmianach.
+
 %package fdf
 Summary:	FDF extension module for PHP
 Summary(pl):	Modu³ FDF dla PHP
@@ -787,6 +817,21 @@ access mnoGoSearch free search engine.
 %description mnogosearch -l pl
 Modu³ PHP dodaj±cy pozwalaj±cy na dostêp do wolnodostêpnego silnika
 wyszukiwarki mnoGoSearch.
+
+%package mono
+Summary:	Mono extension module for PHP
+Summary(pl):	Modu³ Mono dla PHP
+Group:		Libraries
+Requires(post,preun):	%{name}-common = %{epoch}:%{version}
+Requires:	%{name}-common = %{epoch}:%{version}
+
+%description mono
+This is a dynamic shared object (DSO) for PHP that will allow you to
+access .NET assemblies via free Mono library.
+
+%description mono -l pl
+Modu³ PHP pozwalaj±cy na dostêp do wstawek .NET za pomoc± darmowej
+biblioteki Mono.
 
 %package msession
 Summary:	msession extension module for PHP
@@ -1128,6 +1173,31 @@ Modu³ PHP dodaj±cy obs³ugê gniazdek.
 
 Uwaga: to jest modu³ eksperymentalny.
 
+%package sqlite
+Summary:	SQLite extension module for PHP
+Summary(pl):	Modu³ SQLite dla PHP
+Group:		Libraries
+Requires(post,preun):	%{name}-common = %{epoch}:%{version}
+Requires:	%{name}-common = %{epoch}:%{version}
+
+%description sqlite
+SQLite is a C library that implements an embeddable SQL database engine.
+Programs that link with the SQLite library can have SQL database access
+without running a separate RDBMS process.
+
+SQLite is not a client library used to connect to a big database server.
+SQLite is the server. The SQLite library reads and writes directly to
+and from the database files on disk. 
+
+%description sqlite -l pl
+SQLite jest napisan± w C bibliotek± implementuj±c± osadzalny silnik
+bazodanowy SQL. Program linkuj±cy siê z bibliotek± SQLite mo¿e mieæ
+dostêp do bazy SQL bez potrzeby uruchamiania dodatkowego procesu RDBMS.
+
+SQLite to nie klient baz danych - biblioteka nie ³±czy siê z serwerami
+baz danych. SQLite sam jest serwerem. Biblioteka SQLite czyta i zapisuje
+dane bezpo¶rednio z/do plików baz danych znajduj±cych siê na dysku.
+
 %package sybase
 Summary:	Sybase DB extension module for PHP
 Summary(pl):	Modu³ Sybase DB dla PHP
@@ -1421,7 +1491,7 @@ for i in cgi cli apxs ; do
 	--enable-session \
 	--enable-shared \
 	--enable-shmop=shared \
-	--enable-simplexml=shared \
+	%{?with_simplexml:--enable-simplexml=shared} \
 	--enable-sysvmsg=shared \
 	--enable-sysvsem=shared \
 	--enable-sysvshm=shared \
@@ -1448,6 +1518,7 @@ for i in cgi cli apxs ; do
 %endif
 	%{?with_fdf:--with-fdftk=shared} \
 	--with-iconv=shared \
+	%{?with_fam:--with-fam=shared} \
 	--with-filepro=shared \
 	--with-freetype-dir=shared \
 	--with-gettext=shared \
@@ -1458,7 +1529,7 @@ for i in cgi cli apxs ; do
 	%{?with_imap:--with-imap=shared --with-imap-ssl} \
 	%{?with_interbase:--with-interbase=shared%{!?with_interbase_inst:,/usr}} \
 	%{?with_java:--with-java=/usr/lib/java} \
-	--with-jpeg-dir=shared,/usr \
+	--with-jpeg-dir=/usr \
 	%{?with_ldap:--with-ldap=shared} \
 	--with-mcrypt=shared \
 	%{?with_mhash:--with-mhash=shared} \
@@ -1466,6 +1537,7 @@ for i in cgi cli apxs ; do
 	%{?with_ming:--with-ming=shared} \
 	%{?with_mm:--with-mm} \
 	%{!?with_mnogosearch:--without-mnogosearch}%{?with_mnogosearch:--with-mnogosearch=shared,/usr} \
+	%{?with_mono:--with-mono} \
 	%{?with_msession:--with-msession=shared}%{!?with_msession:--without-msession} \
 	%{?with_mssql:--with-mssql=shared} \
 	--with-mysql=shared,/usr \
@@ -1478,7 +1550,7 @@ for i in cgi cli apxs ; do
 	%{?with_pdf:--with-pdflib=shared} \
 	--with-pear=%{php_pear_dir} \
 	%{!?with_pgsql:--without-pgsql}%{?with_pgsql:--with-pgsql=shared,/usr} \
-	--with-png-dir=shared,/usr \
+	--with-png-dir=/usr \
 	%{?with_pspell:--with-pspell=shared} \
 	--with-readline=shared \
 	%{?with_recode:--with-recode=shared} \
@@ -1486,17 +1558,17 @@ for i in cgi cli apxs ; do
 	--without-sablot-js \
 	%{?with_snmp:--with-snmp=shared} \
 	%{?with_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
+	%{?with_sqlite:--with-sqlite=shared} \
 	--with-t1lib=shared \
-	--with-tiff-dir=shared,/usr \
+	%{?with_tidy:--with-tidy=shared} \
+	--with-tiff-dir=/usr \
 	%{?with_odbc:--with-unixODBC=shared} \
 	%{!?with_xmlrpc:--without-xmlrpc}%{?with_xmlrpc:--with-xmlrpc=shared,/usr} \
+	--with-xsl \
 	%{?with_xslt:--with-xslt-sablot=shared} \
 	%{?with_yaz:--with-yaz=shared} \
 	--with-zlib=shared \
-	--with-zlib-dir=shared,/usr \
-	%{?with_tidy:--with-tidy=shared}
-# db module not included anymore - now exists as a PECL extension (adamg)
-#	--with-db=shared \
+	--with-zlib-dir=shared,/usr
 
 cp -f Makefile Makefile.$i
 # left for debugging purposes
@@ -1569,7 +1641,7 @@ rm -rf $RPM_BUILD_ROOT
 %if ! %{_apache2}
 %{__perl} -pi -e 's|^#AddType application/x-httpd-php \.php|AddType application/x-httpd-php .php|' \
 	/etc/httpd/httpd.conf
-%{apxs} -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
+%{apxs} -e -a -n php5 %{_pkglibdir}/libphp5.so 1>&2
 %endif
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
@@ -1585,7 +1657,7 @@ fi
 %else
 %preun
 if [ "$1" = "0" ]; then
-	%{apxs} -e -A -n php4 %{_pkglibdir}/libphp4.so 1>&2
+	%{apxs} -e -A -n php5 %{_pkglibdir}/libphp5.so 1>&2
 	%{__perl} -pi -e \
 		's|^AddType application/x-httpd-php \.php|#AddType application/x-httpd-php .php|' \
 		/etc/httpd/httpd.conf
@@ -1684,6 +1756,14 @@ fi
 %preun exif
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove exif %{_sysconfdir}/php.ini
+fi
+
+%post fam
+%{_sbindir}/php-module-install install fam %{_sysconfdir}/php.ini
+
+%preun fam
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove fam %{_sysconfdir}/php.ini
 fi
 
 %post fdf
@@ -1828,6 +1908,14 @@ fi
 %preun mnogosearch
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove mnogosearch %{_sysconfdir}/php.ini
+fi
+
+%post mono
+%{_sbindir}/php-module-install install mono %{_sysconfdir}/php.ini
+
+%preun mono
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove mono %{_sysconfdir}/php.ini
 fi
 
 %post msession
@@ -2206,6 +2294,12 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/dio.so
 
+%if %{with fam}
+%files fam
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/fam.so
+%endif
+
 %if %{with fdf}
 %files fdf
 %defattr(644,root,root,755)
@@ -2299,6 +2393,12 @@ fi
 %files mnogosearch
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mnogosearch.so
+%endif
+
+%if %{with mono}
+%files mono
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/mono.so
 %endif
 
 %if %{with msession}
