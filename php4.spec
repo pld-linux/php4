@@ -13,20 +13,22 @@
 # - build simplexml as shared (now it's static)
 #
 # Conditional build:
-%bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
+%bcond_without	db3		# use db packages instead of db3 (3.x) for Berkeley DB support
 %bcond_with	fdf		# with FDF (PDF forms) module		(BR: proprietary libs)
 %bcond_with	hyperwave	# with Hw API support			(BR: proprietary libs)
+%bcond_with	interbase	# with InterBase extension module
 %bcond_with	interbase_inst	# use InterBase install., not Firebird	(BR: proprietary libs)
 %bcond_with	java		# with Java extension module		(BR: jdk)
 %bcond_with	oci8		# with Oracle oci8 extension module	(BR: proprietary libs)
 %bcond_with	oracle		# with oracle extension module		(BR: proprietary libs)
+%bcond_with	xml		# with XML and DOMXML extension modules
+%bcond_with	simplexml	# without simplexml extension module
 %bcond_without	cpdf		# without cpdf extension module
 %bcond_without	curl		# without CURL extension module
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
 %bcond_without	fam		# without FAM (File Alteration Monitor) extension module
 %bcond_without	gif		# build GD extension module with gd library without GIF support
 %bcond_without	imap		# without IMAP extension module
-%bcond_without	interbase	# without InterBase extension module
 %bcond_without	ldap		# without LDAP extension module
 %bcond_without	mhash		# without mhash extension module
 %bcond_without	ming		# without ming extension module
@@ -40,13 +42,11 @@
 %bcond_without	pgsql		# without PostgreSQL extension module
 %bcond_without	pspell		# without pspell extension module
 %bcond_without	recode		# without recode extension module
-%bcond_without	simplexml	# without simplexml extension module
 %bcond_without	snmp		# without SNMP extension module
 %bcond_without	sqlite		# without SQLite extension module
 %bcond_without	tidy		# without Tidy extension module
 %bcond_without	wddx		# without WDDX extension module
 %bcond_without	xmlrpc		# without XML-RPC extension module
-%bcond_without	xml		# without XML and DOMXML extension modules
 %bcond_without	xslt		# without XSLT extension module
 # To be verified
 # Removed from sources?
@@ -127,11 +127,11 @@ BuildRequires:	autoconf >= 2.53
 BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
 BuildRequires:	bzip2-devel
-%{?with_curl:BuildRequires:	curl-devel >= 7.12.0 }
+%{?with_curl:BuildRequires:	curl-devel >= 7.10.5 }
 BuildRequires:	cyrus-sasl-devel
 %{?with_db3:BuildRequires:	db3-devel >= 3.1}
 %{!?with_db3:BuildRequires:	db-devel >= 4.0}
-BuildRequires:	elfutils-devel
+#BuildRequires:	elfutils-devel
 %if %{with xml} || %{with xmlrpc}
 BuildRequires:	expat-devel
 %{?with_fam:BuildRequires:	fam-devel}
@@ -143,7 +143,7 @@ BuildRequires:	flex
 BuildRequires:	freetds-devel
 %endif
 BuildRequires:	freetype-devel >= 2.0
-BuildRequires:	gd-devel >= 2.0.20
+BuildRequires:	gd-devel >= 2.0.1
 %{?with_gif:BuildRequires:	gd-devel(gif)}
 %{!?with_gif:BuildConflicts:	gd-devel(gif)}
 BuildRequires:	gdbm-devel
@@ -162,14 +162,14 @@ BuildRequires:	libtool >= 1.4.3
 %{?with_domxslt:BuildRequires:	libxslt-devel >= 1.0.3}
 %{?with_mhash:BuildRequires:	mhash-devel}
 %{?with_ming:BuildRequires:	ming-devel >= 0.1.0}
-%{?with_mm:BuildRequires:	mm-devel >= 1.3.0}
+%{?with_mm:BuildRequires:	mm-devel >= 1.1.3}
 %{?with_mnogosearch:BuildRequires:	mnogosearch-devel >= 3.2.6}
 %{?with_mono:BuildRequires:	mono-devel}
 BuildRequires:	mysql-devel >= 4.0.0
 BuildRequires:	ncurses-devel
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.0}
 %if %{with openssl} || %{with ldap}
-BuildRequires:	openssl-devel >= 0.9.7d
+BuildRequires:	openssl-devel >= 0.9.6m
 %endif
 BuildRequires:	pam-devel
 BuildRequires:	%{__perl}
@@ -184,7 +184,7 @@ BuildRequires:	rpmbuild(macros) >= 1.120
 %{?with_sqlite:BuildRequires:	sqlite-devel}
 BuildRequires:	t1lib-devel
 %{?with_tidy:BuildRequires:	tidy-devel}
-%{?with_snmp:BuildRequires:	net-snmp-devel >= 5.0.7}
+%{?with_snmp:BuildRequires:	ucd-snmp-devel >= 4.2.6}
 %{?with_odbc:BuildRequires:	unixODBC-devel}
 %{?with_xmlrpc:BuildRequires:	xmlrpc-epi-devel}
 %{?with_yaz:BuildRequires:	yaz-devel >= 1.9}
