@@ -116,6 +116,7 @@ Patch20:	%{name}-zlib.patch
 Patch21:	%{name}-sybase-fix.patch
 Patch22:	%{name}-mssql-fix.patch
 Patch23:	%{name}-mnogosearch-fix.patch
+Patch24:	%{name}-nohttpd.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1447,6 +1448,7 @@ cp php.ini-dist php.ini
 %patch21 -p1
 %patch22 -p1
 %patch23 -p1
+%patch24 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
