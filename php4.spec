@@ -21,14 +21,18 @@ Release:	1
 Epoch:		1
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 License:	The PHP license (see "LICENSE" file included in distribution)
 Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.gz
@@ -48,7 +52,7 @@ Patch7:		%{name}-fastcgi.patch
 Patch8:		%{name}-ac250.patch
 Patch9:		%{name}-mailsecurity2.patch
 Patch10:	%{name}-oracle9.patch
-Patch11:	%{name}-no_php_pcre_in_SAPI_c.patch
+Patch11:	%{name}-no_%{name}_pcre_in_SAPI_c.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -154,14 +158,18 @@ Summary:	PHP as CGI program
 Summary(pl):	PHP jako program CGI
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -176,14 +184,18 @@ Summary:	Common files nneded by both apache module and CGI
 Summary(pl):	WspСlne pliki dla moduЁu apacha i programu CGI
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 
 %description common
@@ -197,14 +209,18 @@ Summary:	MySQL database module for PHP
 Summary(pl):	ModuЁ bazy danych MySQL dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -221,14 +237,18 @@ Summary:	libPDF module for PHP
 Summary(pl):	ModuЁ do tworzenia plikСw PDF dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 PreReq:		pdflib
@@ -246,14 +266,18 @@ Summary:	PostgreSQL database module for PHP
 Summary(pl):	ModuЁ bazy danych PostgreSQL dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -271,14 +295,18 @@ Summary:	Oracle 8 database module for PHP
 Summary(pl):	ModuЁ bazy danych Oracle 8 dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 Autoreq:	false
@@ -297,14 +325,18 @@ Summary:	Oracle 7 database module for PHP
 Summary(pl):	ModuЁ bazy danych Oracle 7 dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 Autoreq:	false
@@ -323,14 +355,18 @@ Summary:	GD extension module for PHP
 Summary:	ModuЁ GD dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -349,14 +385,18 @@ Summary:	Java extension module for PHP
 Summary(pl):	ModuЁ Javy dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -374,14 +414,18 @@ Summary:	XML extension module for PHP
 Summary(pl):	ModuЁ XML dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -401,14 +445,18 @@ Summary:	DBA extension module for PHP
 Summary(pl):	ModuЁ DBA dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -423,14 +471,18 @@ Summary:	ODBC extension module for PHP
 Summary(pl):	ModuЁ ODBC dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -446,14 +498,18 @@ Summary:	Calendar extension module for PHP
 Summary(pl):	ModuЁ funkcji kalendarza dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -468,14 +524,18 @@ Summary:	DBase extension module for PHP
 Summary(pl):	ModuЁ DBase dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -491,14 +551,18 @@ Summary:	FilePro extension module for PHP
 Summary(pl):	ModuЁ FilePro dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -513,14 +577,18 @@ Summary:	POSIX extension module for PHP
 Summary(pl):	ModuЁ POSIX dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -535,14 +603,18 @@ Summary:	PCRE extension module for PHP
 Summary(pl):	ModuЁ PCRE dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -559,14 +631,18 @@ Summary:	SysV sem extension module for PHP
 Summary(pl):	ModuЁ SysV sem dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -582,14 +658,18 @@ Summary:	SysV shm extension module for PHP
 Summary(pl):	ModuЁ SysV shm dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -605,14 +685,18 @@ Summary:	NIS (yp) extension module for PHP
 Summary(pl):	ModuЁ NIS (yp) dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -627,14 +711,18 @@ Summary:	bcmath extension module for PHP
 Summary(pl):	ModuЁ bcmath dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -651,14 +739,18 @@ Summary:	FTP extension module for PHP
 Summary(pl):	ModuЁ FTP dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -674,14 +766,18 @@ Summary:	Zlib extension module for PHP
 Summary(pl):	ModuЁ zlib dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -697,14 +793,18 @@ Summary:	exif extension module for PHP
 Summary(pl):	ModuЁ exif dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -720,14 +820,18 @@ Summary:	recode extension module for PHP
 Summary(pl):	ModuЁ recode dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 Requires:	recode >= 3.5d-3
@@ -745,14 +849,18 @@ Summary:	session extension module for PHP
 Summary(pl):	ModuЁ session dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -768,14 +876,18 @@ Summary:	gettext extension module for PHP
 Summary(pl):	ModuЁ gettext dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -791,14 +903,18 @@ Summary:	SNMP extension module for PHP
 Summary(pl):	ModuЁ SNMP dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -814,14 +930,18 @@ Summary:	IMAP extension module for PHP
 Summary(pl):	ModuЁ IMAP dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -837,14 +957,18 @@ Summary:	LDAP extension module for PHP
 Summary(pl):	ModuЁ LDAP dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -860,14 +984,18 @@ Summary:	sockets extension module for PHP
 Summary(pl):	ModuЁ socket dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -883,14 +1011,18 @@ Summary:	mcrypt extension module for PHP
 Summary(pl):	ModuЁ mcrypt dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -906,14 +1038,18 @@ Summary:	mhash extension module for PHP
 Summary(pl):	ModuЁ mhash dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -929,12 +1065,16 @@ Summary:	Online manual for PHP
 Summary(pl):	Dokumentacja dla PHP
 Group:		Networking/Daemons
 Group(cs):	SМ╩ovИ/DИmoni
+Group(da):	NetvФrks/DФmoner
 Group(de):	Netzwerkwesen/Server
 Group(es):	Red/Servidores
 Group(fr):	RИseau/Serveurs
+Group(it):	Rete/Demoni
+Group(no):	Nettverks/Daemoner
 Group(pl):	Sieciowe/Serwery
 Group(pt):	Rede/Servidores
 Group(ru):	Сетевые/Демоны
+Group(sv):	NДtverk/Demoner
 Obsoletes:	php-manual
 
 %description doc
@@ -950,13 +1090,17 @@ Summary:	PEAR - PHP Extension and Application Repository
 Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
 Group:		Development/Languages/PHP
 Group(cs):	VЩvojovИ prostЬedky/ProgramovacМ jazyky/PHP
+Group(da):	Udvikling/Sprog/PHP
 Group(de):	Entwicklung/Sprachen/PHP
 Group(es):	Desarrollo/Lenguajes/PHP
 Group(fr):	Development/Langues/PHP
+Group(it):	Sviluppo/Linguaggi/PHP
 Group(ja):	Ё╚х╞/╦ю╦Л/PHP
+Group(no):	Utvikling/ProgrammeringssprЕk/PHP
 Group(pl):	Programowanie/JЙzyki/PHP
 Group(pt):	Desenvolvimento/Linguagens/PHP
 Group(ru):	Разработка/Языки/PHP
+Group(sv):	Utveckling/SprЕk/PHP
 
 %description pear
 PEAR - PHP Extension and Application Repository.
@@ -970,13 +1114,17 @@ Summary:	DOM XML module
 Summary(pl):	ModuЁ DOM XML
 Group:		Development/Languages/PHP
 Group(cs):	VЩvojovИ prostЬedky/ProgramovacМ jazyky/PHP
+Group(da):	Udvikling/Sprog/PHP
 Group(de):	Entwicklung/Sprachen/PHP
 Group(es):	Desarrollo/Lenguajes/PHP
 Group(fr):	Development/Langues/PHP
+Group(it):	Sviluppo/Linguaggi/PHP
 Group(ja):	Ё╚х╞/╦ю╦Л/PHP
+Group(no):	Utvikling/ProgrammeringssprЕk/PHP
 Group(pl):	Programowanie/JЙzyki/PHP
 Group(pt):	Desenvolvimento/Linguagens/PHP
 Group(ru):	Разработка/Языки/PHP
+Group(sv):	Utveckling/SprЕk/PHP
 
 %description domxml
 DOM XML module.
@@ -989,13 +1137,17 @@ Summary:	Files for PHP modules development
 Summary(pl):	Pliki do kompilacji moduЁСw PHP
 Group:		Development/Languages/PHP
 Group(cs):	VЩvojovИ prostЬedky/ProgramovacМ jazyky/PHP
+Group(da):	Udvikling/Sprog/PHP
 Group(de):	Entwicklung/Sprachen/PHP
 Group(es):	Desarrollo/Lenguajes/PHP
 Group(fr):	Development/Langues/PHP
+Group(it):	Sviluppo/Linguaggi/PHP
 Group(ja):	Ё╚х╞/╦ю╦Л/PHP
+Group(no):	Utvikling/ProgrammeringssprЕk/PHP
 Group(pl):	Programowanie/JЙzyki/PHP
 Group(pt):	Desenvolvimento/Linguagens/PHP
 Group(ru):	Разработка/Языки/PHP
+Group(sv):	Utveckling/SprЕk/PHP
 Requires:	%{name}-common = %{version}
 
 %description devel
@@ -1009,14 +1161,18 @@ Summary:	curl extension module for PHP
 Summary(pl):	ModuЁ curl dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -1032,14 +1188,18 @@ Summary:	xslt extension module for PHP
 Summary(pl):	ModuЁ xslt dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -1055,14 +1215,18 @@ Summary:	wddx extension module for PHP
 Summary(pl):	ModuЁ wddx dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -1078,14 +1242,18 @@ Summary:	ming extension module for PHP
 Summary(pl):	ModuЁ ming dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
@@ -1102,14 +1270,18 @@ Summary:	cpdf extension module for PHP
 Summary(pl):	ModuЁ cpdf dla PHP
 Group:		Libraries
 Group(cs):	Knihovny
+Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
+Group(no):	Biblioteker
 Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
