@@ -47,7 +47,7 @@
 %define	_apache1_confdir /etc/apache/conf.d
 %endif
 %if %{with apache2}
-%define	apxs2		/usr/sbin/apxs2
+%define	apxs2		/usr/sbin/apxs
 %define	_apache2_confdir /etc/httpd/httpd.conf
 %endif
 
@@ -1644,115 +1644,11 @@ sed -i -e 's#apu-config#apu-1-config#g' sapi/apache*/*.m4
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
 
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
-#./buildconf --force
-#%{__libtoolize}
-#%{__aclocal}
-#%{__autoconf}
+./buildconf --force
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
-
-COMMON_CONFIG="
-	--with-config-file-path=%{_sysconfdir} \
-	--with-exec-dir=%{_bindir} \
-	--%{!?debug:dis}%{?debug:en}able-debug \
-	--enable-memory-limit \
-	--enable-bcmath=shared \
-	--enable-calendar=shared \
-	--enable-ctype=shared \
-	--enable-dba=shared \
-	--enable-dbx=shared \
-	--enable-dio=shared \
-	--enable-exif=shared \
-	--enable-ftp=shared \
-	--enable-filepro=shared \
-	--enable-gd-native-ttf \
-	--enable-magic-quotes \
-	--enable-mbstring=shared,all \
-	--enable-mbregex \
-	--enable-overload=shared \
-	--enable-pcntl=shared \
-	--enable-posix=shared \
-	--enable-session \
-	--enable-shared \
-	--enable-shmop=shared \
-	--enable-sysvmsg=shared \
-	--enable-sysvsem=shared \
-	--enable-sysvshm=shared \
-	--enable-track-vars \
-	--enable-trans-sid \
-	--enable-safe-mode \
-	--enable-sockets=shared \
-	--enable-ucd-snmp-hack \
-	%{?with_wddx:--enable-wddx=shared} \
-	%{!?with_xml:--disable-xml}%{?with_xml:--enable-xml=shared} \
-	%{?with_xslt:--enable-xslt=shared} \
-	--enable-yp=shared \
-	--with-bz2=shared \
-	%{?with_cpdf:--with-cpdflib=shared} \
-	--with-crack=shared \
-	%{!?with_curl:--without-curl}%{?with_curl:--with-curl=shared} \
-	--with-db=shared \
-	%{?with_db3:--with-db3}%{!?with_db3:--with-db4} \
-	--with-dbase=shared \
-	%{?with_xml:--with-dom=shared} \
-	%{?with_domxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
-%if %{with xml} || %{with xmlrpc}
-	--with-expat-dir=shared,/usr \
-%else
-	--without-expat-dir \
-%endif
-	%{?with_fdf:--with-fdftk=shared} \
-	%{?with_fribidi:--with-fribidi=shared} \
-	--with-iconv=shared \
-	--with-filepro=shared \
-	--with-freetype-dir=shared \
-	--with-gettext=shared \
-	--with-gd=shared,/usr \
-	--with-gdbm \
-	--with-gmp=shared \
-	--with-hyperwave=shared \
-	%{?with_imap:--with-imap=shared --with-imap-ssl} \
-	%{?with_interbase:--with-interbase=shared%{!?with_interbase_inst:,/usr}} \
-	%{?with_java:--with-java=%{_libdir}/java} \
-	--with-jpeg-dir=shared,/usr \
-	%{?with_ldap:--with-ldap=shared} \
-	--with-mcal=shared,/usr \
-	--with-mcrypt=shared \
-	%{?with_mhash:--with-mhash=shared} \
-	--with-mime-magic=shared,/usr/share/file/magic.mime \
-	%{?with_ming:--with-ming=shared} \
-	%{?with_mm:--with-mm} \
-	%{!?with_mnogosearch:--without-mnogosearch}%{?with_mnogosearch:--with-mnogosearch=shared,/usr} \
-	%{?with_msession:--with-msession=shared}%{!?with_msession:--without-msession} \
-	%{?with_mssql:--with-mssql=shared} \
-	--with-mysql=shared,/usr \
-	--with-mysql-sock=/var/lib/mysql/mysql.sock \
-	--with-ncurses=shared \
-	%{?with_oci8:--with-oci8=shared} \
-	%{?with_openssl:--with-openssl=/usr} \
-	%{?with_oracle:--with-oracle=shared} \
-	%{!?with_pcre:--without-pcre-regex}%{?with_pcre:--with-pcre-regex=shared} \
-	%{?with_pdf:--with-pdflib=shared} \
-	--with-pear=%{php_pear_dir} \
-	%{!?with_pgsql:--without-pgsql}%{?with_pgsql:--with-pgsql=shared,/usr} \
-	--with-png-dir=shared,/usr \
-	%{?with_pspell:--with-pspell=shared} \
-	--with-readline=shared \
-	%{?with_recode:--with-recode=shared} \
-	--with-regex=php \
-	%{?with_qtdom:--with-qtdom=shared} \
-	--without-sablot-js \
-	%{?with_snmp:--with-snmp=shared} \
-	%{?with_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
-	--with-t1lib=shared \
-	--with-tiff-dir=shared,/usr \
-	%{?with_odbc:--with-unixODBC=shared} \
-	%{!?with_xmlrpc:--without-xmlrpc}%{?with_xmlrpc:--with-xmlrpc=shared,/usr} \
-	%{?with_xslt:--with-xslt-sablot=shared} \
-	%{?with_yaz:--with-yaz=shared} \
-	--with-zip=shared \
-	--with-zlib=shared \
-	--with-zlib-dir=shared,/usr
-"
 
 # for now session_mm doesn't work with shared session module...
 # --enable-session=shared
@@ -1767,7 +1663,6 @@ sapis="fcgi cgi cli
 %endif
 "
 
-sapis="cgi cli fcgi"
 # leave apxs2 last, as we change CFLAGS (TODO: fix this)
 for sapi in $sapis; do
 	rm -rf build-$sapi
@@ -1776,12 +1671,115 @@ for sapi in $sapis; do
 
 	[ $sapi = apxs2 ] && CFLAGS="$CFLAGS `%{_bindir}/apr-1-config --cppflags --includes` `%{_bindir}/apu-1-config --includes`"
 	../%configure \
-		$COMMON_CONFIG \
+		--enable-experimental-zts \
 		$([ $sapi = cgi ] && echo --enable-discard-path) \
 		$([ $sapi = cli ] && echo --disable-cgi) \
 		$([ $sapi = fcgi ] && echo --enable-fastcgi --with-fastcgi=/usr) \
-		$([ $sapi = apxs2 ] && echo --with-apxs2=%{apxs2} --enable-experimental-zts) \
+		$([ $sapi = apxs2 ] && echo --with-apxs2=%{apxs2}) \
 		$([ $sapi = apxs1 ] && echo --with-apxs=%{apxs1}) \
+		--with-config-file-path=%{_sysconfdir} \
+		--with-exec-dir=%{_bindir} \
+		--%{!?debug:dis}%{?debug:en}able-debug \
+		--enable-memory-limit \
+		--enable-bcmath=shared \
+		--enable-calendar=shared \
+		--enable-ctype=shared \
+		--enable-dba=shared \
+		--enable-dbx=shared \
+		--enable-dio=shared \
+		--enable-exif=shared \
+		--enable-ftp=shared \
+		--enable-filepro=shared \
+		--enable-gd-native-ttf \
+		--enable-magic-quotes \
+		--enable-mbstring=shared,all \
+		--enable-mbregex \
+		--enable-overload=shared \
+		--enable-pcntl=shared \
+		--enable-posix=shared \
+		--enable-session \
+		--enable-shared \
+		--enable-shmop=shared \
+		--enable-sysvmsg=shared \
+		--enable-sysvsem=shared \
+		--enable-sysvshm=shared \
+		--enable-track-vars \
+		--enable-trans-sid \
+		--enable-safe-mode \
+		--enable-sockets=shared \
+		--enable-ucd-snmp-hack \
+		%{?with_wddx:--enable-wddx=shared} \
+		%{!?with_xml:--disable-xml}%{?with_xml:--enable-xml=shared} \
+		%{?with_xslt:--enable-xslt=shared} \
+		--enable-yp=shared \
+		--with-bz2=shared \
+		%{?with_cpdf:--with-cpdflib=shared} \
+		--with-crack=shared \
+		%{!?with_curl:--without-curl}%{?with_curl:--with-curl=shared} \
+		--with-db=shared \
+		%{?with_db3:--with-db3}%{!?with_db3:--with-db4} \
+		--with-dbase=shared \
+		%{?with_xml:--with-dom=shared} \
+		%{?with_domxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
+%if %{with xml} || %{with xmlrpc}
+		--with-expat-dir=shared,/usr \
+%else
+		--without-expat-dir \
+%endif
+		%{?with_fdf:--with-fdftk=shared} \
+		%{?with_fribidi:--with-fribidi=shared} \
+		--with-iconv=shared \
+		--with-filepro=shared \
+		--with-freetype-dir=shared \
+		--with-gettext=shared \
+		--with-gd=shared,/usr \
+		--with-gdbm \
+		--with-gmp=shared \
+		--with-hyperwave=shared \
+		%{?with_imap:--with-imap=shared --with-imap-ssl} \
+		%{?with_interbase:--with-interbase=shared%{!?with_interbase_inst:,/usr}} \
+		%{?with_java:--with-java=%{_libdir}/java} \
+		--with-jpeg-dir=shared,/usr \
+		%{?with_ldap:--with-ldap=shared} \
+		--with-mcal=shared,/usr \
+		--with-mcrypt=shared \
+		%{?with_mhash:--with-mhash=shared} \
+		--with-mime-magic=shared,/usr/share/file/magic.mime \
+		%{?with_ming:--with-ming=shared} \
+		%{?with_mm:--with-mm} \
+		%{!?with_mnogosearch:--without-mnogosearch}%{?with_mnogosearch:--with-mnogosearch=shared,/usr} \
+		%{?with_msession:--with-msession=shared}%{!?with_msession:--without-msession} \
+		%{?with_mssql:--with-mssql=shared} \
+		--with-mysql=shared,/usr \
+		--with-mysql-sock=/var/lib/mysql/mysql.sock \
+		--with-ncurses=shared \
+		%{?with_oci8:--with-oci8=shared} \
+		%{?with_openssl:--with-openssl=/usr} \
+		%{?with_oracle:--with-oracle=shared} \
+		%{!?with_pcre:--without-pcre-regex}%{?with_pcre:--with-pcre-regex=shared} \
+		%{?with_pdf:--with-pdflib=shared} \
+		--with-pear=%{php_pear_dir} \
+		%{!?with_pgsql:--without-pgsql}%{?with_pgsql:--with-pgsql=shared,/usr} \
+		--with-png-dir=shared,/usr \
+		%{?with_pspell:--with-pspell=shared} \
+		--with-readline=shared \
+		%{?with_recode:--with-recode=shared} \
+		--with-regex=php \
+		%{?with_qtdom:--with-qtdom=shared} \
+		--without-sablot-js \
+		%{?with_snmp:--with-snmp=shared} \
+		%{?with_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
+		--with-t1lib=shared \
+		--with-tiff-dir=shared,/usr \
+		%{?with_odbc:--with-unixODBC=shared} \
+		%{!?with_xmlrpc:--without-xmlrpc}%{?with_xmlrpc:--with-xmlrpc=shared,/usr} \
+		%{?with_xslt:--with-xslt-sablot=shared} \
+		%{?with_yaz:--with-yaz=shared} \
+		--with-zip=shared \
+		--with-zlib=shared \
+		--with-zlib-dir=shared,/usr
+
+#		$([ $sapi = apxs2 ] && echo --with-apxs2=%{apxs2} --enable-experimental-zts) \
 
 	# copied from debian/rules
 	cp ../Zend/zend_ini_scanner.c ../Zend/zend_language_scanner.c \
@@ -1790,10 +1788,7 @@ for sapi in $sapis; do
 	Zend/
 
 	%{__make}
-
-	cp -f Makefile Makefile.$sapi
-	# left for debugging purposes
-	cp -f main/php_config.h php_config.h.$sapi
+	cd ..
 done
 
 # fix install paths, avoid evil rpaths
