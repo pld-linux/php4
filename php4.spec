@@ -11,13 +11,14 @@
 # _without_ldap   - without LDAP support
 # _without_odbc   - without ODBC support
 # _without_snmp   - without SNMP support
+# _without_sablot - without sablot support
 #
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.6
-Release:	13
+Release:	14
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -1081,6 +1082,7 @@ for i in cgi apxs ; do
 	--with-dom=shared \
     %{?_with_xslt:--enable-xslt=shared} \
     %{?_with_xslt:--with-xslt-sablot=shared} \
+    %{!?_without_sablot:--with-sablot=/usr/lib} \
     %{?_with_wddx:--enable-wddx=shared} \
 	--with-pear=%{peardir}
 done
@@ -1203,7 +1205,6 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove ftp %{_sysconfdir}/php.ini
 fi
 
-%post gd
 %{_sbindir}/php-module-install install gd %{_sysconfdir}/php.ini
 
 %preun gd
@@ -1659,11 +1660,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/ming.so
 
-%if %{?_with_xslt:1}%{!?_with_xslt:0}
-%files xslt
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/xslt.so
-%endif
+# --with xslt dose not produce xslt.so (fix me - pascalek)
+#%if %{?_with_xslt:1}%{!?_with_xslt:0}
+#%files xslt
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/xslt.so
+#%endif
 
 %if %{?_with_wddx:1}%{!?_with_wddx:0}
 %files wddx
