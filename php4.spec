@@ -157,7 +157,7 @@ BuildRequires:	libtool >= 1.4.3
 %{?with_mm:BuildRequires:	mm-devel >= 1.3.0}
 %{?with_mnogosearch:BuildRequires:	mnogosearch-devel >= 3.2.6}
 %{?with_mono:BuildRequires:	mono-devel}
-BuildRequires:	mysql-devel >= 3.23.32
+BuildRequires:	mysql-devel >= 4.0.0
 BuildRequires:	ncurses-devel
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.0}
 %if %{with openssl} || %{with ldap}
@@ -1566,7 +1566,7 @@ for i in fcgi cgi cli apxs ; do
 	--without-sablot-js \
 	%{?with_snmp:--with-snmp=shared} \
 	%{?with_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
-	%{?with_sqlite:--with-sqlite=shared} \
+	%{?with_sqlite:--with-sqlite=shared,/usr} \
 	--with-t1lib=shared \
 	%{?with_tidy:--with-tidy=shared} \
 	--with-tiff-dir=/usr \
