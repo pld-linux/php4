@@ -1,6 +1,6 @@
-diff -burN php-5.0.0b3/php.ini-dist php-5.0.0b3-php.ini/php.ini-dist
---- php-5.0.0b3/php.ini-dist	2003-12-18 03:06:00.000000000 +0100
-+++ php-5.0.0b3-php.ini/php.ini	2003-12-27 00:29:41.000000000 +0100
+diff -urN php-5.0.1.org/php.ini-dist php-5.0.1/php.ini-dist
+--- php-5.0.1.org/php.ini-dist	2004-08-13 13:28:45.800911928 +0200
++++ php-5.0.1/php.ini-dist	2004-08-13 13:31:28.844125592 +0200
 @@ -3,13 +3,18 @@
  ;;;;;;;;;;;
  ; WARNING ;
@@ -26,17 +26,20 @@ diff -burN php-5.0.0b3/php.ini-dist php-5.0.0b3-php.ini/php.ini-dist
 +; few options)
  
  ;;;;;;;;;;;;;;;;;;;
+ ; About php.ini   ;
+@@ -59,10 +64,72 @@
+ ;;;;;;;;;;;;;;;;;;;
  ; About this file ;
-@@ -54,10 +59,69 @@
- ; If you use constants in your value, and these constants belong to a
- ; dynamically loaded extension (either a PHP extension or a Zend extension),
- ; you may only use these constants *after* the line that loads the extension.
--;
+ ;;;;;;;;;;;;;;;;;;;
 -; All the values in the php.ini-dist file correspond to the builtin
 -; defaults (that is, if no php.ini is used, or if you delete these lines,
 -; the builtin defaults will be identical).
-+
-+
+-
++; If you use constants in your value, and these constants belong to a
++; dynamically loaded extension (either a PHP extension or a Zend extension),
++; you may only use these constants *after* the line that loads the extension.
++ 
++ 
 +; Below is the list of settings changed from default as specified in
 +; php.ini-recommended. These settings make PHP more secure and encourage
 +; cleaner coding.
@@ -78,7 +81,7 @@ diff -burN php-5.0.0b3/php.ini-dist php-5.0.0b3-php.ini/php.ini-dist
 +; performance, but NOT applied in default php.ini in PLD (since they are
 +; not needed for security or may cause problems with some applications
 +; more likely than above).
-+
++ 
 +; - output_buffering = 4096        [Performance]
 +;     Set a 4KB output buffer.  Enabling output buffering typically results in less
 +;     writes, and sometimes less packets sent on the wire, which can often lead to
@@ -99,9 +102,9 @@ diff -burN php-5.0.0b3/php.ini-dist php-5.0.0b3-php.ini/php.ini-dist
 +;     when calling a function.  The PHP 4 style to do this is by making the
 +;     function require the relevant argument by reference.
  
- 
  ;;;;;;;;;;;;;;;;;;;;
-@@ -79,7 +143,7 @@
+ ; Language Options ;
+@@ -86,7 +153,7 @@
  asp_tags = Off
  
  ; The number of significant digits displayed in floating point numbers.
@@ -110,7 +113,7 @@ diff -burN php-5.0.0b3/php.ini-dist php-5.0.0b3-php.ini/php.ini-dist
  
  ; Enforce year 2000 compliance (will cause problems with non-compliant browsers)
  y2k_compliance = On
-@@ -270,14 +334,14 @@
+@@ -285,14 +352,14 @@
  ;
  ;   - Show all errors except for notices and coding standards warnings
  ;
@@ -127,7 +130,7 @@ diff -burN php-5.0.0b3/php.ini-dist php-5.0.0b3-php.ini/php.ini-dist
  
  ; Even when display_errors is on, errors that occur during PHP's startup
  ; sequence are not displayed.  It's strongly recommended to keep
-@@ -435,7 +499,7 @@
+@@ -447,7 +514,7 @@
  user_dir =
  
  ; Directory in which the loadable extensions (modules) reside.
