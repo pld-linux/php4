@@ -109,6 +109,7 @@ Patch29:	%{name}-sybase-fix.patch
 Patch30:	%{name}-mssql-fix.patch
 Patch31:	%{name}-phpize_fixes.patch
 Patch32:	%{name}-db42.patch
+Patch33:	%{name}-lib64.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -201,6 +202,7 @@ Obsoletes:	apache-mod_php
 %define		_sysconfdir	/etc/php
 %define		extensionsdir	%{_libdir}/php
 %define		httpdir		/home/services/httpd
+%define		_ulibdir	%{_prefix}/lib
 
 %description
 PHP is an HTML-embedded scripting language. PHP attempts to make it
@@ -1507,6 +1509,9 @@ cp php.ini-dist php.ini
 %patch30 -p1
 %patch31 -p0
 %patch32 -p1
+%ifarch amd64
+%patch33 -p1
+%endif
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
@@ -1688,6 +1693,10 @@ cp -f Zend/LICENSE{,.Zend}
 
 # Directories created for pear:
 install -d $RPM_BUILD_ROOT%{php_pear_dir}/{Archive,Console,Crypt,HTML/Template,Image,Net,Science,XML}
+
+%ifarch amd64
+ln -sf ../../lib/%{name}/build $RPM_BUILD_ROOT%{_libdir}/%{name}/build
+%endif
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.la
 
@@ -2354,6 +2363,9 @@ fi
 %{_libdir}/libphp_common.la
 %{_includedir}/php
 %{_libdir}/php/build
+%ifarch amd64
+%{_ulibdir}/php/build
+%endif
 
 %files bcmath
 %defattr(644,root,root,755)
