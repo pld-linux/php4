@@ -126,7 +126,7 @@ BuildRequires:	zziplib-devel
 #BuildRequires:	fastcgi-devkit
 # apache 1.3 vs apache 2.0
 %if %{_apache2}
-PreReq:		apache >= 2.0.35
+PreReq:		apache >= 2.0.39
 %else
 PreReq:		apache(EAPI) < 2.0.0
 PreReq:		apache(EAPI) >= 1.3.9
@@ -196,6 +196,7 @@ Summary:	Common files nneded by both apache module and CGI
 Summary(pl):	Wspólne pliki dla modu³u apacha i programu CGI
 Group:		Libraries
 Provides:	%{name}-session = %{version}
+Obsoletes:	%{name}-session <= %{epoch}:%{version}-%{release}
 
 %description common
 Common files needed by both apache module and CGI.
