@@ -49,3 +49,13 @@
  
  fi
  
+--- php-4.0.6.orig/ext/gmp/config.m4	Tue Mar 27 22:34:27 2001
++++ php-4.0.6/ext/gmp/config.m4	Fri Aug  3 15:34:22 2001
+@@ -23,5 +23,6 @@
+ 
+   PHP_EXTENSION(gmp, $ext_shared)
+   AC_DEFINE(HAVE_GMP, 1, [ ])
+-  PHP_ADD_LIBRARY_WITH_PATH(gmp, $GMP_DIR/lib)
++  PHP_ADD_LIBRARY_WITH_PATH(gmp, $GMP_DIR/lib, GMP_SHARED_LIBADD)
+ fi
++PHP_SUBST(GMP_SHARED_LIBADD)

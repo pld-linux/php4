@@ -16,7 +16,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.6
-Release:	2
+Release:	3
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -34,22 +34,24 @@ Patch0:		%{name}-imap.patch
 Patch1:		%{name}-mysql-socket.patch
 Patch2:		%{name}-mail.patch
 Patch3:		%{name}-link-libs.patch
-Patch4:		%{name}-DESTDIR.patch
-Patch5:		%{name}-gd-shared.patch
+#Patch4:		%{name}-DESTDIR.patch
+#Patch5:		%{name}-gd-shared.patch
 Patch6:		%{name}-session-path.patch
-Patch7:		%{name}-libtool_version_check_fix.patch
-Patch8:		%{name}-pdflib.patch
+#Patch7:		%{name}-libtool_version_check_fix.patch
+#Patch8:		%{name}-pdflib.patch
 Patch9:		%{name}-am_ac_lt.patch
 Patch10:	%{name}-fastcgi.patch
 Patch11:	%{name}-shared.patch
 Patch12:	%{name}-ac250.patch
 Patch13:	%{name}-pearinstall.patch
+#Patch14:	%{name}-linking.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
 BuildRequires:	zip
 BuildRequires:	bison
 BuildRequires:	flex
+BuildRequires:	perl
 BuildRequires:	db3-devel >= 3.1.17
 BuildRequires:	freetype-devel >= 2.0
 BuildRequires:	gd-devel >= 2.0.1
@@ -759,9 +761,9 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add curl
 support to PHP.
 
-#%description curl -l pl
-#Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki curl.
-#
+%description curl -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki curl.
+
 #%package xslt
 #Summary:	xslt extension module for PHP
 #Summary(pl):	Modu³ xslt dla PHP
@@ -808,6 +810,7 @@ support to PHP.
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+#%patch14 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
@@ -841,7 +844,12 @@ for i in cgi apxs ; do
 	--with-mysql=shared,/usr \
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-gd=shared \
+	--with-jpeg-dir=shared \
+	--with-zlib-dir=shared \
+	--with-png-dir=shared \
 	--enable-gd-native-ttf \
+	--with-freetype-dir=shared \
+	--with-t1lib=shared \
 	--with-dbase=shared \
 	--with-filepro=shared \
 	--enable-ftp=shared \
@@ -856,8 +864,6 @@ for i in cgi apxs ; do
 	--with-mm \
 	--with-pcre-regex=shared \
 	--enable-posix=shared \
-	--with-freetype-dir=shared \
-	--with-t1lib \
 	--with-recode=shared \
 	--enable-ucd-snmp-hack \
 	--enable-dba=shared \
