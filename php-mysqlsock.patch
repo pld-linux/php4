@@ -1,0 +1,12 @@
+diff -urN php-4.0RC1.orig/ext/mysql/config.m4 php-4.0RC1/ext/mysql/config.m4
+--- php-4.0RC1.orig/ext/mysql/config.m4	Sun Mar 26 21:51:10 2000
++++ php-4.0RC1/ext/mysql/config.m4	Tue Apr 25 18:55:50 2000
+@@ -5,7 +5,7 @@
+ 
+ AC_DEFUN(PHP_MYSQL_SOCK,[
+   AC_MSG_CHECKING(for MySQL UNIX socket)
+-  MYSQL_SOCK=/tmp/mysql.sock
++  MYSQL_SOCK=/var/state/mysql/mysql.sock
+   for i in  \
+       /var/run/mysqld/mysqld.sock \
+       /var/tmp/mysql.sock \
