@@ -1,36 +1,30 @@
---- php-4.0.5/ext/imap/php_imap.c.wiget	Tue Apr 24 16:17:41 2001
-+++ php-4.0.5/ext/imap/php_imap.c	Fri May  4 13:07:19 2001
-@@ -428,28 +428,28 @@
+--- php-4.0.6/ext/imap/config.m4.imap	Wed Jul 11 09:21:00 2001
++++ php-4.0.6/ext/imap/config.m4	Wed Jul 11 09:28:24 2001
+@@ -49,14 +49,11 @@
  
+   if test "$PHP_IMAP_SSL" != "no"; then
+     PHP_ADD_LIBPATH($PHP_IMAP_SSL/lib, IMAP_SHARED_LIBADD)
+-    PHP_ADD_LIBRARY_DEFER(crypto)
+-    PHP_ADD_LIBRARY_DEFER(ssl)
++    PHP_ADD_LIBRARY(crypto, 1, IMAP_SHARED_LIBADD)
++    PHP_ADD_LIBRARY(ssl, 1, IMAP_SHARED_LIBADD)
  
- #if 1
--#ifndef PHP_WIN32
-+#if 0
- 	mail_link(&unixdriver);   /* link in the unix driver */
- #endif
- 	mail_link(&imapdriver);      /* link in the imap driver */
- 	mail_link(&nntpdriver);      /* link in the nntp driver */
- 	mail_link(&pop3driver);      /* link in the pop3 driver */
--#ifndef PHP_WIN32
-+#if 0
- 	mail_link(&mhdriver);        /* link in the mh driver */
- 	mail_link(&mxdriver);        /* link in the mx driver */
--#endif
- 	mail_link(&mbxdriver);       /* link in the mbx driver */
- 	mail_link(&tenexdriver);     /* link in the tenex driver */
- 	mail_link(&mtxdriver);       /* link in the mtx driver */
-+#endif
--#ifndef PHP_WIN32
-+#if 0
- 	mail_link(&mmdfdriver);      /* link in the mmdf driver */
- 	mail_link(&newsdriver);      /* link in the news driver */
- 	mail_link(&philedriver);     /* link in the phile driver */
-+#endif
- 	auth_link(&auth_log);        /* link in the log authenticator */
- #ifdef  HAVE_IMAP_SSL
- 	ssl_onceonlyinit ();
- 	auth_link (&auth_ssl);       /* link in the ssl authenticator */
--#endif
- #endif
- 	mail_link(&dummydriver);     /* link in the dummy driver */
- #else
+     old_LIBS=$LIBS
+-    LIBS="$LIBS -lc-client"
+-    if test $PHP_KERBEROS != "no"; then
+-      LIBS="$LIBS -lgssapi_krb5 -lkrb5 -lk5crypto -lcom_err"
+-    fi
++    LIBS="$LIBS $IMAP_SHARED_LIBADD"
+     AC_TRY_RUN([
+       void mm_log(void){}
+       void mm_dlog(void){}
+@@ -133,8 +130,7 @@
+     fi
+ 
+     PHP_ADD_INCLUDE($IMAP_INC_DIR)
+-    PHP_ADD_LIBPATH($IMAP_LIBDIR, IMAP_SHARED_LIBADD)
+-    PHP_ADD_LIBRARY_DEFER($IMAP_LIB)
++    PHP_ADD_LIBRARY_WITH_PATH($IMAP_LIB, $IMAP_LIBDIR, IMAP_SHARED_LIBADD)
+     PHP_IMAP_KRB_CHK
+     PHP_IMAP_SSL_CHK
+ fi
