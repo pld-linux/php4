@@ -1,0 +1,24 @@
+--- php-4.0.6/configure.in.pear	Mon Jul  9 12:11:47 2001
++++ php-4.0.6/configure.in	Mon Jul  9 12:19:09 2001
+@@ -501,13 +501,14 @@
+ 
+ if test "x$PHP_PEAR" != "xno"; then
+   PEAR_DIR=pear
+-fi
+-
+-if test "x$PHP_PEAR" = "xDEFAULT"; then
+-  case $PHP_LAYOUT in
+-    GNU) PEAR_INSTALLDIR="$datadir/pear";;
+-    *)   PEAR_INSTALLDIR="$libdir/php";;
+-  esac
++  if test "x$PHP_PEAR" = "xDEFAULT" -o "x$PHP_PEAR" = "xyes" ; then
++    case $PHP_LAYOUT in
++      GNU) PEAR_INSTALLDIR="$datadir/pear";;
++      *)   PEAR_INSTALLDIR="$libdir/php";;
++    esac
++  else
++    PEAR_INSTALLDIR="$PHP_PEAR"
++  fi
+ fi
+ 
+ test -n "$DEBUG_CFLAGS" && CFLAGS="$CFLAGS $DEBUG_CFLAGS"
