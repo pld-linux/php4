@@ -14,7 +14,6 @@
 %bcond_without	curl		# without CURL extension module
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
 %bcond_without	fribidi		# without FriBiDi extension module
-%bcond_without	gif		# build GD extension module with gd library without GIF support
 %bcond_without	imap		# without IMAP extension module
 %bcond_without	interbase	# without InterBase extension module
 %bcond_without	ldap		# without LDAP extension module
@@ -64,7 +63,7 @@ Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сер
 Name:		php4
 Version:	4.3.8
 %define	_rc	%{nil}
-Release:	2
+Release:	3
 Epoch:		0
 Group:		Libraries
 License:	PHP
@@ -134,9 +133,8 @@ BuildRequires:	freetds-devel
 %endif
 BuildRequires:	freetype-devel >= 2.0
 %{?with_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
-BuildRequires:	gd-devel >= 2.0.20
-%{?with_gif:BuildRequires:	gd-devel(gif)}
-%{!?with_gif:BuildConflicts:	gd-devel(gif)}
+BuildRequires:	gd-devel >= 2.0.28-2
+BuildRequires:	gd-devel(gif)
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
 %{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2 }
@@ -657,9 +655,9 @@ Summary(pl):	ModuЁ GD dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}
 Requires:	%{name}-common = %{epoch}:%{version}
-Requires:	gd >= 2.0.20
-%{?with_gif:Requires:	gd(gif)}
-%{?with_gif:Provides:	%{name}-gd(gif) = %{epoch}:%{version}-%{release}}
+Requires:	gd >= 2.0.28-2
+Requires:	gd(gif)
+Provides:	%{name}-gd(gif) = %{epoch}:%{version}-%{release}
 
 %description gd
 This is a dynamic shared object (DSO) for PHP that will add GD
