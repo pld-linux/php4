@@ -28,7 +28,7 @@ Source2:	%{name}.ini
 Source3:	zend.gif
 Source4:	http://www.php.net/distributions/manual.tar.gz
 Source5:	php-module-install
-#Patch0:		%{name}-imap.patch
+Patch0:		%{name}-imap.patch
 Patch1:		%{name}-mysql-socket.patch
 Patch2:		%{name}-mail.patch
 Patch3:		%{name}-link-libs.patch
@@ -52,7 +52,7 @@ BuildRequires:	db3-devel >= 3.1.17
 BuildRequires:	freetype1-devel
 BuildRequires:	gd-devel >= 1.8.3
 BuildRequires:	gdbm-devel
-%{!?_without_imap:BuildRequires: imap-devel >= 1:2001-0.BETA }
+%{!?_without_imap:BuildRequires: imap-devel >= 1:2001-0.BETA.200107022325.2 }
 # I think jdk is better for java
 # BuildRequires:	jdk
 %{?_with_java:BuildRequires:	kaffe-devel}
@@ -752,6 +752,7 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki curl.
 
 %prep
 %setup  -q
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
@@ -803,7 +804,7 @@ for i in cgi apxs ; do
 	--with-cpdflib=shared \
 	%{?_with_java:--with-java} \
 	--with-pgsql=shared,/usr \
-	%{!?_without_imap:--with-imap=shared} \
+	%{!?_without_imap:--with-imap=shared --with-imap-ssl} \
 	--enable-bcmath=shared \
 	--enable-calendar=shared \
 	--with-mm \
