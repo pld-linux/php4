@@ -28,11 +28,11 @@ Group(ru):	‚…¬Ã…œ‘≈À…
 Group(uk):	‚¶¬Ã¶œ‘≈À…
 License:	The PHP license (see "LICENSE" file included in distribution)
 Source0:	http://download.php.net/distributions/%{name}-%{version}.tar.gz
-Source1:	FAQ.php
+Source1:	FAQ.%{name}
 Source2:	%{name}.ini
 Source3:	zend.gif
-Source4:	http://www.php.net/distributions/manual/php_manual_en.tar.bz2
-Source5:	php-module-install
+Source4:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
+Source5:	%{name}-module-install
 #Patch0:		%{name}-imap.patch
 #Patch1:		%{name}-mysql-socket.patch
 Patch2:		%{name}-mail.patch
@@ -853,9 +853,9 @@ PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
 Repozytorium Aplikacji.
 
 %package domxml
-Summary:        DOM XML module
+Summary:	DOM XML module
 Summary(pl):	Modu≥ DOM XML
-Group:          Development/Languages/PHP
+Group:		Development/Languages/PHP
 Group(de):	Entwicklung/Sprachen/PHP
 Group(pl):	Programowanie/JÍzyki/PHP
 
@@ -982,7 +982,7 @@ install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
 
 %build
-CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
+CFLAGS="%{rpmcflags} -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 #./buildconf
 libtoolize --copy --force
@@ -992,7 +992,7 @@ libtoolize --copy --force
 for i in cgi apxs ; do
 ./configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
-	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=/usr` \
+`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=%{_prefix}` \
 	`[ $i = apxs ] && echo --with-apxs=%{_sbindir}/apxs` \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
@@ -1010,7 +1010,7 @@ for i in cgi apxs ; do
 	--with-regex=php \
 	--with-gettext=shared \
 	%{!?_without_ldap:--with-ldap=shared} \
-	--with-mysql=shared,/usr \
+--with-mysql=shared,%{_prefix} \
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-gd=shared \
 	--with-jpeg-dir=shared \
@@ -1026,7 +1026,7 @@ for i in cgi apxs ; do
 	--with-pdflib=shared \
 	--with-cpdflib=shared \
 	%{?_with_java:--with-java} \
-	--with-pgsql=shared,/usr \
+--with-pgsql=shared,%{_prefix} \
 	%{!?_without_imap:--with-imap=shared --with-imap-ssl} \
 	--enable-bcmath=shared \
 	--enable-calendar=shared \
