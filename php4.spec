@@ -62,7 +62,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.9
-Release:	2.2
+Release:	3
 Epoch:		0
 Group:		Libraries
 License:	PHP
@@ -325,7 +325,9 @@ Group:		Libraries
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
 Provides:	php-common = %{epoch}:%{version}-%{release}
 Provides:	php-session = %{epoch}:%{version}-%{release}
+Provides:	php-openssl = %{epoch}:%{version}-%{release}
 Obsoletes:	php-session < 3:4.2.1-2
+Obsoletes:	php-openssl < 3:4.3.9-2.2
 
 %description common
 Common files needed by both apache module and CGI.
