@@ -86,9 +86,9 @@ BuildRequires:	curl-devel
 %if %(expr %{?_with_openssl:1}%{!?_with_openssl:0} + %{!?_without_ldap:1}%{?_without_ldap:0})
 BuildRequires:	openssl-devel >= 0.9.6a
 %endif
-{?_with_xslt:BuildRequires:	sablotron-devel}
-{?_with_xslt:BuildRequires:	expat-devel}
-{?_with_xslt:BuildRequires:	w3c-libwww-devel}
+%{?_with_xslt:BuildRequires:	sablotron-devel}
+%{?_with_xslt:BuildRequires:	expat-devel}
+%{?_with_xslt:BuildRequires:	w3c-libwww-devel}
 Prereq:		apache(EAPI) >= 1.3.9
 Prereq:		perl
 Prereq:		%{_sbindir}/apxs
