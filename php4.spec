@@ -59,7 +59,7 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
-Version:	4.3.0
+Version:	4.3.1
 Release:	1
 Epoch:		3
 Group:		Libraries
@@ -1348,7 +1348,7 @@ EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf
 %{__libtoolize}
 %{__aclocal}
-autoconf
+%{__autoconf)
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
 for i in cgi cli apxs ; do
 %configure \
