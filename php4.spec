@@ -14,7 +14,8 @@
 %bcond_without	cpdf		# without cpdf extension module
 %bcond_without	curl		# without CURL extension module
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
-%bcond_without	fribidi		# without FriBiDi extension module
+# fribidi moved to PECL
+#%bcond_without	fribidi		# without FriBiDi extension module
 %bcond_without	gif		# build GD extension module with gd library without GIF support
 %bcond_without	imap		# without IMAP extension module
 %bcond_without	interbase	# without InterBase extension module
@@ -32,7 +33,8 @@
 %bcond_without	pgsql		# without PostgreSQL extension module
 %bcond_without	pspell		# without pspell extension module
 %bcond_without	recode		# without recode extension module
-%bcond_without	qtdom		# without QT DOM extension module
+# Qtdom moved to PECL
+#%bcond_without	qtdom		# without QT DOM extension module
 %bcond_without	snmp		# without SNMP extension module
 %bcond_without	sybase		# without Sybase and Sybase-CT extension modules
 %bcond_without	wddx		# without WDDX extension module
@@ -61,14 +63,17 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP ÷ÅÒÓÉÉ 4 -- ÑÚÙË ÐÒÅÐÒÏÃÅÓÓÉÒÏ×ÁÎÉÑ HTML-ÆÁÊÌÏ×, ×ÙÐÏÌÎÑÅÍÙÊ ÎÁ ÓÅÒ×ÅÒÅ
 Summary(uk):	PHP ÷ÅÒÓ¦§ 4 -- ÍÏ×Á ÐÒÅÐÒÏÃÅÓÕ×ÁÎÎÑ HTML-ÆÁÊÌ¦×, ×ÉËÏÎÕ×ÁÎÁ ÎÁ ÓÅÒ×ÅÒ¦
 Name:		php
-Version:	4.3.4
+Version:	5.0.0
+%define _pre	b3
 Release:	3
 Epoch:		3
 Group:		Libraries
 License:	PHP
 #Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
-Source0:	http://downloads.php.net/ilia/%{name}-%{version}.tar.bz2
-# Source0-md5:	b9dd601863e08e52e3c4d5e02c2627cf
+#Source0:	http://downloads.php.net/ilia/%{name}-%{version}.tar.bz2
+#Source0:	http://www.php.net/get/%{name}-%{version}%{_pre}.tar.bz2/from/this/mirror
+Source0:	%{name}-%{version}%{_pre}.tar.bz2
+# Source0-md5:	91957dae6b1a1dbdb386a92a3227d5d6
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -107,9 +112,8 @@ Patch27:	%{name}-zlib.patch
 Patch28:	%{name}-db-shared.patch
 Patch29:	%{name}-sybase-fix.patch
 Patch30:	%{name}-mssql-fix.patch
-Patch31:	%{name}-phpize_fixes.patch
-Patch32:	%{name}-db42.patch
-Icon:		php4.gif
+Patch31:	%{name}-db42.patch
+#Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 BuildRequires:	apache-devel
@@ -118,7 +122,7 @@ BuildRequires:	autoconf >= 2.53
 BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
 BuildRequires:	bzip2-devel
-BuildRequires:	cracklib-devel >= 2.7-15
+#BuildRequires:	cracklib-devel >= 2.7-15
 %{?with_curl:BuildRequires:	curl-devel >= 7.9.8 }
 BuildRequires:	cyrus-sasl-devel
 %{?with_db3:BuildRequires:	db3-devel >= 3.1}
@@ -144,7 +148,7 @@ BuildRequires:	gmp-devel
 %{?with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libltdl-devel >= 1.4
-BuildRequires:	libmcal-devel
+#BuildRequires:	libmcal-devel
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libtiff-devel
@@ -415,23 +419,23 @@ support through libcpdf library.
 %description cpdf -l pl
 Modu³ PHP dodaj±cy obs³ugê plików PDF poprzez bibliotekê libcpdf.
 
-%package crack
-Summary:	crack extension module for PHP
-Summary(pl):	Modu³ crack dla PHP
-Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}
-Requires:	%{name}-common = %{epoch}:%{version}
-
-%description crack
-This is a dynamic shared object (DSO) for PHP that will add cracklib
-support to PHP.
-
-Warning: this is an experimental module.
-
-%description crack -l pl
-Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki cracklib.
-
-Uwaga: to jest modu³ eksperymentalny.
+#%package crack
+#Summary:	crack extension module for PHP
+#Summary(pl):	Modu³ crack dla PHP
+#Group:		Libraries
+#Requires(post,preun):	%{name}-common = %{epoch}:%{version}
+#Requires:	%{name}-common = %{epoch}:%{version}
+#
+#%description crack
+#This is a dynamic shared object (DSO) for PHP that will add cracklib
+#support to PHP.
+#
+#Warning: this is an experimental module.
+#
+#%description crack -l pl
+#Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki cracklib.
+#
+#Uwaga: to jest modu³ eksperymentalny.
 
 %package ctype
 Summary:	ctype extension module for PHP
@@ -542,23 +546,23 @@ file I/O support.
 %description dio -l pl
 Modu³ PHP dodaj±cy obs³ugê bezpo¶rednich operacji I/O na plikach.
 
-%package domxml
-Summary:	DOM XML extension module for PHP
-Summary(pl):	Modu³ DOM XML dla PHP
-Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}
-Requires:	%{name}-common = %{epoch}:%{version}
-
-%description domxml
-This is a dynamic shared object (DSO) for PHP that will add DOM XML
-support.
-
-Warning: this is an experimental module.
-
-%description domxml -l pl
-Modu³ PHP dodaj±cy obs³ugê DOM XML.
-
-Uwaga: to jest modu³ eksperymentalny.
+#%package domxml
+#Summary:	DOM XML extension module for PHP
+#Summary(pl):	Modu³ DOM XML dla PHP
+#Group:		Libraries
+#Requires(post,preun):	%{name}-common = %{epoch}:%{version}
+#Requires:	%{name}-common = %{epoch}:%{version}
+#
+#%description domxml
+#This is a dynamic shared object (DSO) for PHP that will add DOM XML
+#support.
+#
+#Warning: this is an experimental module.
+#
+#%description domxml -l pl
+#Modu³ PHP dodaj±cy obs³ugê DOM XML.
+#
+#Uwaga: to jest modu³ eksperymentalny.
 
 %package exif
 Summary:	exif extension module for PHP
@@ -683,19 +687,19 @@ length number support with GNU MP library.
 Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki gmp do obliczeñ na
 liczbach o dowolnej d³ugo¶ci.
 
-%package hyperwave
-Summary:	Hyperwave extension module for PHP
-Summary(pl):	Modu³ Hyperwave dla PHP
-Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}
-Requires:	%{name}-common = %{epoch}:%{version}
-
-%description hyperwave
-This is a dynamic shared object (DSO) for PHP that will add Hyperwave
-support.
-
-%description hyperwave -l pl
-Modu³ PHP dodaj±cy obs³ugê Hyperwave.
+#%package hyperwave
+#Summary:	Hyperwave extension module for PHP
+#Summary(pl):	Modu³ Hyperwave dla PHP
+#Group:		Libraries
+#Requires(post,preun):	%{name}-common = %{epoch}:%{version}
+#Requires:	%{name}-common = %{epoch}:%{version}
+#
+#%description hyperwave
+#This is a dynamic shared object (DSO) for PHP that will add Hyperwave
+#support.
+#
+#%description hyperwave -l pl
+#Modu³ PHP dodaj±cy obs³ugê Hyperwave.
 
 %package iconv
 Summary:	iconv extension module for PHP
@@ -800,20 +804,20 @@ multibyte string support.
 %description mbstring -l pl
 Modu³ PHP dodaj±cy obs³ugê ci±gów znaków wielobajtowych.
 
-%package mcal
-Summary:	mcal extension module for PHP
-Summary(pl):	Modu³ mcal dla PHP
-Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}
-Requires:	%{name}-common = %{epoch}:%{version}
-
-%description mcal
-This is a dynamic shared object (DSO) for PHP that will add mcal
-(Modular Calendar Access Library) support.
-
-%description mcal -l pl
-Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki mcal (daj±cej dostêp
-do kalendarzy).
+#%package mcal
+#Summary:	mcal extension module for PHP
+#Summary(pl):	Modu³ mcal dla PHP
+#Group:		Libraries
+#Requires(post,preun):	%{name}-common = %{epoch}:%{version}
+#Requires:	%{name}-common = %{epoch}:%{version}
+#
+#%description mcal
+#This is a dynamic shared object (DSO) for PHP that will add mcal
+#(Modular Calendar Access Library) support.
+#
+#%description mcal -l pl
+#Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki mcal (daj±cej dostêp
+#do kalendarzy).
 
 %package mcrypt
 Summary:	mcrypt extension module for PHP
@@ -1139,18 +1143,18 @@ suggestions.
 Modu³ PHP umo¿liwiaj±cy korzystanie z pspella. Pozwala on na
 sprawdzanie pisowni s³owa i sugerowanie poprawek.
 
-%package qtdom
-Summary:	QT DOM extension module for PHP
-Summary(pl):	Modu³ QT DOM dla PHP
-Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}
-Requires:	%{name}-common = %{epoch}:%{version}
-
-%description qtdom
-This PHP module adds QT DOM functions support.
-
-%description qtdom -l pl
-Modu³ PHP dodaj±cy obs³ugê funkcji QT DOM.
+#%package qtdom
+#Summary:	QT DOM extension module for PHP
+#Summary(pl):	Modu³ QT DOM dla PHP
+#Group:		Libraries
+#Requires(post,preun):	%{name}-common = %{epoch}:%{version}
+#Requires:	%{name}-common = %{epoch}:%{version}
+#
+#%description qtdom
+#This PHP module adds QT DOM functions support.
+#
+#%description qtdom -l pl
+#Modu³ PHP dodaj±cy obs³ugê funkcji QT DOM.
 
 %package readline
 Summary:	readline extension module for PHP
@@ -1470,27 +1474,29 @@ PEAR/*.php), dostarczanych z PHP, zainstaluj odpowiednie pakiety
 php-pear-* (php-pear-PEAR, php-pear-Archive_Tar, itp).
 
 %prep
-%setup -q
-%patch0 -p1
+%setup -q -n %{name}-%{version}%{_pre}
+#%patch0 -p1
 %patch1 -p1
-%patch2 -p1
+#%patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
+#%patch5 -p1
 %patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
+#%patch7 -p1
+# Patch8 not needed - hyperwave (removed ?)
+#%patch8 -p1
+#%patch9 -p1
+#%patch10 -p1
+# Not needed - mcal removed (?)
+#%patch11 -p1
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
-%patch15 -p1
+#%patch15 -p1
 %patch16 -p1
 %patch17 -p1
 cp php.ini-dist php.ini
-%patch18 -p1
+#%patch18 -p1
 # for ac2.53b/am1.6b - AC_LANG_CXX has AM_CONDITIONAL, so cannot be invoked
 # conditionally...
 %patch19 -p1
@@ -1499,14 +1505,14 @@ cp php.ini-dist php.ini
 %patch22 -p1
 %patch23 -p1
 %patch24 -p1
-%patch25 -p1
+#%patch25 -p1
+# Patch26 (no_pear_install) updated
 %patch26 -p1
-%patch27 -p1
-%patch28 -p1
+#%patch27 -p1
+#%patch28 -p1
 %patch29 -p1
 %patch30 -p1
-%patch31 -p0
-%patch32 -p1
+%patch31 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
@@ -1564,7 +1570,6 @@ for i in cgi cli apxs ; do
 	%{?with_cpdf:--with-cpdflib=shared} \
 	--with-crack=shared \
 	%{!?with_curl:--without-curl}%{?with_curl:--with-curl=shared} \
-	--with-db=shared \
 	%{?with_db3:--with-db3}%{!?with_db3:--with-db4} \
 	--with-dbase=shared \
 	%{?with_xml:--with-dom=shared} \
@@ -1583,13 +1588,11 @@ for i in cgi cli apxs ; do
 	--with-gd=shared,/usr \
 	--with-gdbm \
 	--with-gmp=shared \
-	--with-hyperwave=shared \
 	%{?with_imap:--with-imap=shared --with-imap-ssl} \
 	%{?with_interbase:--with-interbase=shared%{!?with_interbase_inst:,/usr}} \
 	%{?with_java:--with-java=/usr/lib/java} \
 	--with-jpeg-dir=shared,/usr \
 	%{?with_ldap:--with-ldap=shared} \
-	--with-mcal=shared,/usr \
 	--with-mcrypt=shared \
 	%{?with_mhash:--with-mhash=shared} \
 	--with-mime-magic=shared,/usr/share/file/magic.mime \
@@ -1627,6 +1630,12 @@ for i in cgi cli apxs ; do
 	--with-zlib=shared \
 	--with-zlib-dir=shared,/usr
 # --with-openssl=shared not supported in 4.3.2
+# db module not included anymore - now exists as a PECL extension (adamg)
+#	--with-db=shared \
+# Not included anymore ? (adamg)
+#	--with-hyperwave=shared \
+# Not included anymore?  (adamg)
+#	--with-mcal=shared,/usr \
 
 cp -f Makefile Makefile.$i
 # left for debugging purposes
@@ -1759,13 +1768,13 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove cpdf %{_sysconfdir}/php.ini
 fi
 
-%post crack
-%{_sbindir}/php-module-install install crack %{_sysconfdir}/php.ini
+#%post crack
+#%{_sbindir}/php-module-install install crack %{_sysconfdir}/php.ini
 
-%preun crack
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove crack %{_sysconfdir}/php.ini
-fi
+#%preun crack
+#if [ "$1" = "0" ]; then
+#	%{_sbindir}/php-module-install remove crack %{_sysconfdir}/php.ini
+#fi
 
 %post ctype
 %{_sbindir}/php-module-install install ctype %{_sysconfdir}/php.ini
@@ -1783,13 +1792,13 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove curl %{_sysconfdir}/php.ini
 fi
 
-%post db
-%{_sbindir}/php-module-install install db %{_sysconfdir}/php.ini
-
-%preun db
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove db %{_sysconfdir}/php.ini
-fi
+#%post db
+#%{_sbindir}/php-module-install install db %{_sysconfdir}/php.ini
+#
+#%preun db
+#if [ "$1" = "0" ]; then
+#	%{_sbindir}/php-module-install remove db %{_sysconfdir}/php.ini
+#fi
 
 %post dba
 %{_sbindir}/php-module-install install dba %{_sysconfdir}/php.ini
@@ -1823,13 +1832,13 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove dio %{_sysconfdir}/php.ini
 fi
 
-%post domxml
-%{_sbindir}/php-module-install install domxml %{_sysconfdir}/php.ini
-
-%preun domxml
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove domxml %{_sysconfdir}/php.ini
-fi
+#%post domxml
+#%{_sbindir}/php-module-install install domxml %{_sysconfdir}/php.ini
+#
+#%preun domxml
+#if [ "$1" = "0" ]; then
+#	%{_sbindir}/php-module-install remove domxml %{_sysconfdir}/php.ini
+#fi
 
 %post exif
 %{_sbindir}/php-module-install install exif %{_sysconfdir}/php.ini
@@ -1855,13 +1864,13 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove filepro %{_sysconfdir}/php.ini
 fi
 
-%post fribidi
-%{_sbindir}/php-module-install install fribidi %{_sysconfdir}/php.ini
-
-%preun fribidi
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove fribidi %{_sysconfdir}/php.ini
-fi
+#%post fribidi
+#%{_sbindir}/php-module-install install fribidi %{_sysconfdir}/php.ini
+#
+#%preun fribidi
+#if [ "$1" = "0" ]; then
+#	%{_sbindir}/php-module-install remove fribidi %{_sysconfdir}/php.ini
+#fi
 
 %post ftp
 %{_sbindir}/php-module-install install ftp %{_sysconfdir}/php.ini
@@ -1895,13 +1904,13 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove gmp %{_sysconfdir}/php.ini
 fi
 
-%post hyperwave
-%{_sbindir}/php-module-install install hyperwave %{_sysconfdir}/php.ini
-
-%preun hyperwave
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove hyperwave %{_sysconfdir}/php.ini
-fi
+#%post hyperwave
+#%{_sbindir}/php-module-install install hyperwave %{_sysconfdir}/php.ini
+#
+#%preun hyperwave
+#if [ "$1" = "0" ]; then
+#	%{_sbindir}/php-module-install remove hyperwave %{_sysconfdir}/php.ini
+#fi
 
 %post iconv
 %{_sbindir}/php-module-install install iconv %{_sysconfdir}/php.ini
@@ -1951,13 +1960,14 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove mbstring %{_sysconfdir}/php.ini
 fi
 
-%post mcal
-%{_sbindir}/php-module-install install mcal %{_sysconfdir}/php.ini
-
-%preun mcal
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove mcal %{_sysconfdir}/php.ini
-fi
+# Removed ?
+#%post mcal
+#%{_sbindir}/php-module-install install mcal %{_sysconfdir}/php.ini
+#
+#%preun mcal
+#if [ "$1" = "0" ]; then
+#	%{_sbindir}/php-module-install remove mcal %{_sysconfdir}/php.ini
+#fi
 
 %post mcrypt
 %{_sbindir}/php-module-install install mcrypt %{_sysconfdir}/php.ini
@@ -2073,13 +2083,13 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove oracle %{_sysconfdir}/php.ini
 fi
 
-%post overload
-%{_sbindir}/php-module-install install overload %{_sysconfdir}/php.ini
-
-%preun overload
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove overload %{_sysconfdir}/php.ini
-fi
+#%post overload
+#%{_sbindir}/php-module-install install overload %{_sysconfdir}/php.ini
+#
+#%preun overload
+#if [ "$1" = "0" ]; then
+#	%{_sbindir}/php-module-install remove overload %{_sysconfdir}/php.ini
+#fi
 
 %post pcntl
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
@@ -2139,13 +2149,13 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove pspell %{_sysconfdir}/php.ini
 fi
 
-%post qtdom
-%{_sbindir}/php-module-install install qtdom %{_sysconfdir}/php.ini
+#%post qtdom
+#%{_sbindir}/php-module-install install qtdom %{_sysconfdir}/php.ini
 
-%preun qtdom
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove qtdom %{_sysconfdir}/php.ini
-fi
+#%preun qtdom
+#if [ "$1" = "0" ]; then
+#	%{_sbindir}/php-module-install remove qtdom %{_sysconfdir}/php.ini
+#fi
 
 %post readline
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
@@ -2373,9 +2383,10 @@ fi
 %attr(755,root,root) %{extensionsdir}/cpdf.so
 %endif
 
-%files crack
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/crack.so
+# Removed
+#%files crack
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/crack.so
 
 %files ctype
 %defattr(644,root,root,755)
@@ -2387,9 +2398,10 @@ fi
 %attr(755,root,root) %{extensionsdir}/curl.so
 %endif
 
-%files db
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/db.so
+# Moved to PECL
+#%files db
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/db.so
 
 %files dba
 %defattr(644,root,root,755)
@@ -2407,11 +2419,11 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/dio.so
 
-%if %{with xml}
-%files domxml
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/domxml.so
-%endif
+#%if %{with xml}
+#%files domxml
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/domxml.so
+#%endif
 
 %if %{with fdf}
 %files fdf
@@ -2427,12 +2439,12 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/filepro.so
 
-%if %{with fribidi}
-%files fribidi
-%defattr(644,root,root,755)
-%doc ext/fribidi/{CREDITS,README}
-%attr(755,root,root) %{extensionsdir}/fribidi.so
-%endif
+#%if %{with fribidi}
+#%files fribidi
+#%defattr(644,root,root,755)
+#%doc ext/fribidi/{CREDITS,README}
+#%attr(755,root,root) %{extensionsdir}/fribidi.so
+#%endif
 
 %files ftp
 %defattr(644,root,root,755)
@@ -2450,9 +2462,9 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/gmp.so
 
-%files hyperwave
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/hyperwave.so
+#%files hyperwave
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/hyperwave.so
 
 %files iconv
 %defattr(644,root,root,755)
@@ -2487,9 +2499,10 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mbstring.so
 
-%files mcal
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/mcal.so
+# Removed ?
+#%files mcal
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/mcal.so
 
 %files mcrypt
 %defattr(644,root,root,755)
@@ -2562,9 +2575,9 @@ fi
 %attr(755,root,root) %{extensionsdir}/oracle.so
 %endif
 
-%files overload
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/overload.so
+#%files overload
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/overload.so
 
 %files pcntl
 %defattr(644,root,root,755)
@@ -2598,11 +2611,11 @@ fi
 %attr(755,root,root) %{extensionsdir}/pspell.so
 %endif
 
-%if %{with qtdom}
-%files qtdom
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/qtdom.so
-%endif
+#%if %{with qtdom}
+#%files qtdom
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/qtdom.so
+#%endif
 
 %files readline
 %defattr(644,root,root,755)
@@ -2673,11 +2686,11 @@ fi
 %attr(755,root,root) %{extensionsdir}/xmlrpc.so
 %endif
 
-%if %{with xslt}
-%files xslt
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/xslt.so
-%endif
+#%if %{with xslt}
+#%files xslt
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/xslt.so
+#%endif
 
 %if %{with yaz}
 %files yaz
@@ -2689,9 +2702,9 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/yp.so
 
-%files zip
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/zip.so
+#%files zip
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/zip.so
 
 %files zlib
 %defattr(644,root,root,755)
