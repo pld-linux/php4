@@ -49,6 +49,7 @@ Patch8:		%{name}-mailsecurity2.patch
 Patch9:		%{name}-oracle9.patch
 Patch10:	%{name}-no_%{name}_pcre_in_SAPI_c.patch
 Patch11:	%{name}-libpq_fs_h_path.patch
+Patch12:	%{name}-apache2.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -832,6 +833,7 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej.
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
+%patch12 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
