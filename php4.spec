@@ -3,22 +3,22 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache.
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache.
 Name:		php
 Version:	4.0.1pl2
-Release:	2
+Release:	3
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 License:	The PHP license (see "LICENSE" file included in distribution)
 Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.gz
 Source1:	FAQ.php
-Source2:	php.ini
+Source2:	%{name}.ini
 Source3:	zend.gif
 Source4:	http://www.php.net/distributions/manual.tar.gz
 Source5:	http://www.php.net/extra/number4.tar.gz
-Patch0:		php-imap.patch
-Patch1:		php-mysql-socket.patch
-Patch2:		php-mail.patch
-Patch3:		php-ldap.patch
-Patch4:		php-bcmath.patch
+Patch0:		%{name}-imap.patch
+Patch1:		%{name}-mysql-socket.patch
+Patch2:		%{name}-mail.patch
+Patch3:		%{name}-ldap.patch
+Patch4:		%{name}-bcmath.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -36,7 +36,7 @@ BuildRequires:	kaffe-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng >= 1.0.8
 BuildRequires:	libtiff-devel
-BuildRequires:	mm-devel
+BuildRequires:	mm-devel >= 1.1.3
 BuildRequires:	openldap-devel
 BuildRequires:	pam-devel
 BuildRequires:	pdflib-devel >= 3.0
@@ -379,8 +379,8 @@ Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
 
 %description session
-This is a dynamic shared object (DSO) for Apache that will add
-session support to PHP4.
+This is a dynamic shared object (DSO) for Apache that will add session
+support to PHP4.
 
 #%description session -l pl
 
@@ -427,11 +427,11 @@ support to PHP4.
 
 #%description imap -l pl
 
-
 %package doc
 Summary:	Online manual for PHP4
 Summary(pl):	Dokumentacja dla PHP4
 Group:		Networking/Daemons
+Group(pl):	Sieciowe/Serwery
 
 %description doc
 Comprehensive documentation for PHP4, viewable through your web
