@@ -323,8 +323,9 @@ Summary(ru):	Разделяемые библиотеки для php
 Summary(uk):	Б╕бл╕отеки сп╕льного використання для php
 Group:		Libraries
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
-Provides:	php-session = %{epoch}:%{version}-%{release}
 Provides:	php-common = %{epoch}:%{version}-%{release}
+Provides:	php-session = %{epoch}:%{version}-%{release}
+Obsoletes:	php-session < 3:4.2.1-2
 
 %description common
 Common files needed by both apache module and CGI.
