@@ -34,7 +34,7 @@ Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Summary(pt_BR):	A linguagem de script PHP
 Name:		php
 Version:	4.2.1
-Release:	4
+Release:	5
 Epoch:		3
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -67,6 +67,7 @@ Patch16:	%{name}-xmlrpc-includes.patch
 Patch17:	%{name}-build_modules.patch
 Patch18:	%{name}-sapi-ini-file.patch
 Patch19:	%{name}-apache2_broken_macro.patch
+Patch20:	%{name}-php_iconv_string_declaration.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -1158,6 +1159,7 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
 %patch17 -p1
 %patch18 -p1
 %patch19 -p1
+%patch20 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
