@@ -630,3 +630,32 @@ diff -burN php-4.3.9RC2.orig/ext/xslt/config.m4 php-4.3.9RC2/ext/xslt/config.m4
  
    AC_DEFINE(HAVE_XSLT, 1, [ ])
  fi
+--- php-4.3.9/ext/domxml/config.m4~	2002-10-30 17:42:36.000000000 +0000
++++ php-4.3.9/ext/domxml/config.m4	2004-10-09 06:00:17.484073560 +0000
+@@ -50,7 +50,7 @@
+ 
+   PHP_DOM_CHECK_VERSION
+ 
+-  if test -f $DOMXML_DIR/lib/libxml2.a -o -f $DOMXML_DIR/lib/libxml2.$SHLIB_SUFFIX_NAME ; then
++  if test -f $DOMXML_DIR/lib64/libxml2.a -o -f $DOMXML_DIR/lib64/libxml2.$SHLIB_SUFFIX_NAME; then
+     DOM_LIBNAME=xml2
+   else
+     DOM_LIBNAME=xml
+@@ -145,7 +145,7 @@
+     AC_MSG_ERROR(DOMXSLT requires DOMXML. Use --with-dom=<DIR>)
+   fi
+   
+-  if test -f $DOMXML_DIR/lib/libxml2.a -o -f $DOMXML_DIR/lib/libxml2.$SHLIB_SUFFIX_NAME ; then
++  if test -f $DOMXML_DIR/lib64/libxml2.a -o -f $DOMXML_DIR/lib64/libxml2.$SHLIB_SUFFIX_NAME ; then
+     DOM_LIBNAME=xml2
+   else
+     DOM_LIBNAME=xml
+@@ -154,7 +154,7 @@
+   PHP_ADD_LIBRARY_WITH_PATH($DOM_LIBNAME, $DOMXML_DIR/lib, DOMXML_SHARED_LIBADD)
+   PHP_ADD_INCLUDE($DOMXML_DIR/include$DOMXML_DIR_ADD)
+ 
+-  if test -f $DOMXML_DIR/lib/libxsltbreakpoint.a -o -f $DOMXML_DIR/lib/libxsltbreakpoint.$SHLIB_SUFFIX_NAME ; then
++  if test -f $DOMXML_DIR/lib64/libxsltbreakpoint.a -o -f $DOMXML_DIR/lib64/libxsltbreakpoint.$SHLIB_SUFFIX_NAME ; then
+     PHP_ADD_LIBRARY_WITH_PATH(xsltbreakpoint, $DOMXML_DIR/lib, DOMXML_SHARED_LIBADD)
+   fi
+ 
