@@ -1467,6 +1467,7 @@ Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
 Group:		Development/Languages/PHP
 Requires:	%{name}-pcre = %{epoch}:%{version}-%{release}
 Requires:	%{name}-xml = %{epoch}:%{version}-%{release}
+Provides:	php-pear = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-pear-additional_classes
 
 %description pear
