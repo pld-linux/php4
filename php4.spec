@@ -144,7 +144,7 @@ BuildRequires:	libjpeg-devel
 BuildRequires:	libltdl-devel >= 1.4
 BuildRequires:	libmcal-devel
 BuildRequires:	libmcrypt-devel >= 2.4.4
-BuildRequires:	libpng >= 1.0.8
+BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libtiff-devel
 BuildRequires:	libtool >= 1.4.3
 %{!?_without_xml:BuildRequires:	libxml2-devel >= 2.2.7}
