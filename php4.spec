@@ -7,20 +7,22 @@
 %endif
 
 # Conditional build:
-# _with_oracle	- with oracle support
-# _with_oci8	- with oci8 support
-# _with_java	- with Java support
-# _with_libcpdf	- with libcpdf support
-# _with_openssl	- with OpenSSL support
-# _with_wddx	- with WDDX support
-# _with_xslt	- with XSLT support
-# _without_imap	- without IMAP support
-# _without_ldap	- without LDAP support
-# _without_odbc	- without ODBC support
-# _without_snmp	- without SNMP support
-# _without_sablot - without sablot support
-# _without_recode - without recode support
-# _without_mm   - without mm support
+# _with_cpdf		- with cpdf extension module
+# _with_interbase	- with InterBase extension module
+# _with_java		- with Java extension module
+# _with_oci8		- with Oracle oci8 extension module
+# _with_openssl		- with OpenSSL extension module
+# _with_oracle		- with oracle extension module
+# _with_sybase_ct	- with Sybase-CT extension module
+# _without_domxslt	- without DOM XSLT/EXSLT support in DOM XML extension module
+# _without_imap		- without IMAP extension module
+# _without_ldap		- without LDAP extension module
+# _without_mm		- without mm support for session storage
+# _without_odbc		- without ODBC extension module
+# _without_snmp		- without SNMP extension module
+# _without_recode	- without recode extension module
+# _without_wddx		- without WDDX extension module
+# _without_xslt		- without XSLT extension module
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
@@ -36,8 +38,7 @@ Source2:	%{name}.ini
 Source3:	zend.gif
 Source4:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
 Source5:	%{name}-module-install
-Source6:	%{name}-xml_fix
-Source7:	%{name}-mod_php.conf
+Source6:	%{name}-mod_php.conf
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-mysql-socket.patch
@@ -46,6 +47,7 @@ Patch4:		%{name}-link-libs.patch
 Patch5:		%{name}-fastcgi.patch
 Patch6:		%{name}-no_%{name}_pcre_in_SAPI_c.patch
 Patch7:		%{name}-libpq_fs_h_path.patch
+Patch8:		%{name}-wddx-fix.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -58,26 +60,32 @@ BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel >= 3.1.17
 BuildRequires:	expat-devel
 BuildRequires:	flex
-BuildRequires:	gmp-devel
+%{?_with_sybase_ct:BuildRequires:	freetds-devel}
 BuildRequires:	freetype-devel >= 2.0
 BuildRequires:	gd-devel >= 2.0.1
 BuildRequires:	gdbm-devel
+BuildRequires:	gmp-devel
 %{!?_without_imap:BuildRequires: imap-devel >= 1:2001-0.BETA.200107022325.2 }
 # I think jdk is better for java
 # BuildRequires:	jdk
 %{?_with_java:BuildRequires:	kaffe-devel}
+%{?_with_cpdf:BuildRequires:	libcpdf-devel >= 2.00}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libltdl-devel >= 1.4
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	libpng >= 1.0.8
 BuildRequires:	libtiff-devel
-BuildRequires:	libtool >= 1.4.2-9
+BuildRequires:	libtool >= 0:1.4.2-9
 BuildRequires:	libxml2-devel >= 2.2.7
+%{!?_without_domxslt:BuildRequires:	libxslt >= 1.0.3}
 BuildRequires:	mhash-devel
 BuildRequires:	ming-devel >= 0.1.0
 %{!?_without_mm:BuildRequires:	mm-devel >= 1.1.3}
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
+%if %(expr %{?_with_openssl:1}%{!?_with_openssl:0} + %{!?_without_ldap:1}%{?_without_ldap:0})
+%{!?_without_openssl:BuildRequires:	openssl-devel >= 0.9.6a}
+%endif
 BuildRequires:	pam-devel
 BuildRequires:	pdflib-devel >= 4.0.0
 BuildRequires:	perl
@@ -85,19 +93,13 @@ BuildRequires:	pkgconfig
 BuildRequires:	postgresql-devel
 BuildRequires:  postgresql-backend-devel >= 7.2
 %{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
+%{!?_without_xslt:BuildRequires:	sablotron-devel}
 BuildRequires:	t1lib-devel
 %{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.3}
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 #BuildRequires:	fastcgi-devkit
-%if %(expr %{?_with_openssl:1}%{!?_with_openssl:0} + %{!?_without_ldap:1}%{?_without_ldap:0})
-%{!?_without_openssl:BuildRequires:	openssl-devel >= 0.9.6a}
-%endif
-%{?_with_libcpdf:BuildRequires:	libcpdf-devel >= 2.00}
-%{?_with_xslt:BuildRequires:	sablotron-devel}
-%{?_with_xslt:BuildRequires:	expat-devel}
-%{?_with_xslt:BuildRequires:	w3c-libwww-devel}
 # apache 1.3 vs apache 2.0
 %if %{_apache2}
 PreReq:		apache >= 2.0.35
@@ -140,12 +142,11 @@ non-connerciaux, qui rent facile la creation de pages web liees avec
 des bases de donnees. L'utilisation la plus commune de PHP est
 probablement en remplacement de scripts CGI. Le module mod_php permet
 au serveur web apache de comprendre et de traiter le langage PHP
-integre dans des pages web. Ce package contient PHP version
-%{version}. Si vous utilisez des applications qui utilisent
-specifiquement PHP/FI, vous devrez installer le module PHP/FI inclus
-dans le package mod_php. Si vous debutez avec PHP, vous devriez
-installer ce package. Vous aurez egalement besoin d'installer le
-serveur web Apache.
+integre dans des pages web. Ce package contient PHP version %{version}.
+Si vous utilisez des applications qui utilisent specifiquement PHP/FI,
+vous devrez installer le module PHP/FI inclus dans le package mod_php.
+Si vous debutez avec PHP, vous devriez installer ce package. Vous
+aurez egalement besoin dinstaller le serveur web Apache.
 
 %description -l pl
 PHP jest jêzykiem skryptowym, którego polecenia umieszcza siê w
@@ -177,481 +178,17 @@ Common files needed by both apache module and CGI.
 %description common -l pl
 Wspólne pliki dla modu³u apacha i programu CGI.
 
-%package mysql
-Summary:	MySQL database module for PHP
-Summary(pl):	Modu³ bazy danych MySQL dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description mysql
-This is a dynamic shared object (DSO) for Apache that will add MySQL
-database support to PHP. If you need back-end support for MySQL, you
-should install this package in addition to the main %{name} package.
-
-%description mysql -l pl
-Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych MySQL.
-
-%package pdf
-Summary:	libPDF module for PHP
-Summary(pl):	Modu³ do tworzenia plików PDF dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-PreReq:		pdflib
-
-%description pdf
-This is a dynamic shared object (DSO) for Apache that will add PDF
-support to PHP.
-
-%description pdf -l pl
-Modu³ PHP umo¿liwiaj±cy tworzenie plików PDF. Wykorzystuje bibliotekê
-pdflib.
-
-%package pgsql
-Summary:	PostgreSQL database module for PHP
-Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description pgsql
-This is a dynamic shared object (DSO) for Apache that will add
-PostgreSQL database support to PHP. If you need back-end support for
-PostgreSQL, you should install this package in addition to the main
-%{name} package.
-
-%description pgsql -l pl
-Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych PostgreSQL.
-
-%package oci8
-Summary:	Oracle 8 database module for PHP
-Summary(pl):	Modu³ bazy danych Oracle 8 dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-Autoreq:	false
-
-%description oci8
-This is a dynamic shared object (DSO) for Apache that will add Oracle
-8 database support to PHP. If you need back-end support for Oracle 8,
-you should install this package in addition to the main %{name}
-package.
-
-%description oci8 -l pl
-Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 8.
-
-%package oracle
-Summary:	Oracle 7 database module for PHP
-Summary(pl):	Modu³ bazy danych Oracle 7 dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-Autoreq:	false
-
-%description oracle
-This is a dynamic shared object (DSO) for Apache that will add Oracle
-7 database support to PHP. If you need back-end support for Oracle 7,
-you should install this package in addition to the main %{name}
-package.
-
-%description oracle -l pl
-Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 7.
-
-%package gd
-Summary:	GD extension module for PHP
-Summary:	Modu³ GD dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description gd
-This is a dynamic shared object (DSO) for Apache that will add GD
-support to PHP. You should install this package in addition to the
-main %{name} package if you want to create and manipulate images with
-PHP.
-
-%description gd -l pl
-Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki GD - do obróbki
-obrazków z poziomu PHP.
-
-%package java
-Summary:	Java extension module for PHP
-Summary(pl):	Modu³ Javy dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description java
-This is a dynamic shared object (DSO) for Apache that will add JAVA
-support to PHP. This extension provides a simple and effective means
-for creating and invoking methods on Java objects from PHP.
-
-%description java -l pl
-Modu³ PHP dodaj±cy wsparcie dla Javy. Umo¿liwia odwo³ywanie siê do
-obiektów Javy z poziomu PHP.
-
-%package xml
-Summary:	XML extension module for PHP
-Summary(pl):	Modu³ XML dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description xml
-This is a dynamic shared object (DSO) for Apache that will add XML
-support to PHP. This extension lets you create XML parsers and then
-define handlers for different XML events. If you want to be able to
-parse XML documents you should install this package in addition to the
-main %{name} package.
-
-%description xml -l pl
-Modu³ PHP umo¿liwiaj±cy parsowanie plików XML i obs³ugê zdarzeñ
-zwi±zanych z tymi plikami.
-
-%package dba
-Summary:	DBA extension module for PHP
-Summary(pl):	Modu³ DBA dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description dba
-This is a dynamic shared object (DSO) for Apache that will add
-flat-file databases (DBA) support to PHP.
-
-%description dba -l pl
-Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy do PHP
-wsparcie dla baz danych DBA.
-
-%package odbc
-Summary:	ODBC extension module for PHP
-Summary(pl):	Modu³ ODBC dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description odbc
-This is a dynamic shared object (DSO) for Apache that will add ODBC
-support to PHP.
-
-%description odbc -l pl
-Modu³ PHP ze wsparciem dla ODBC.
-
-%package calendar
-Summary:	Calendar extension module for PHP
-Summary(pl):	Modu³ funkcji kalendarza dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description calendar
-This is a dynamic shared object (DSO) for Apache that will add
-calendar support to PHP.
-
-%description calendar -l pl
-Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy do PHP
-wsparcie dla kalendarza.
-
-%package dbase
-Summary:	DBase extension module for PHP
-Summary(pl):	Modu³ DBase dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description dbase
-This is a dynamic shared object (DSO) for Apache that will add DBase
-support to PHP.
-
-%description dbase -l pl
-Modu³ PHP ze wsparciem dla DBase.
-
-%package filepro
-Summary:	FilePro extension module for PHP
-Summary(pl):	Modu³ FilePro dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description filepro
-This is a dynamic shared object (DSO) for Apache that will add FilePro
-support to PHP.
-
-%description filepro -l pl
-Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy do PHP
-wsparcie dla FilePro.
-
-%package posix
-Summary:	POSIX extension module for PHP
-Summary(pl):	Modu³ POSIX dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description posix
-This is a dynamic shared object (DSO) for Apache that will add POSIX
-functions support to PHP.
-
-%description posix -l pl
-Modu³ PHP umo¿liwiaj±cy korzystanie z funkcji POSIX.
-
-%package pcre
-Summary:	PCRE extension module for PHP
-Summary(pl):	Modu³ PCRE dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description pcre
-This is a dynamic shared object (DSO) for Apache that will add Perl
-Compatible Regular Expression support to PHP.
-
-%description pcre -l pl
-Modu³ PHP umo¿liwiaj±cy korzystanie z perlowych wyra¿eñ regularnych
-(Perl Compatible Regular Expressions)
-
-%package sysvsem
-Summary:	SysV sem extension module for PHP
-Summary(pl):	Modu³ SysV sem dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description sysvsem
-This is a dynamic shared object (DSO) for Apache that will add SysV
-semafores support to PHP.
-
-%description sysvsem -l pl
-Modu³ PHP umo¿liwiaj±cy korzystanie z semaforów SysV.
-
-%package sysvshm
-Summary:	SysV shm extension module for PHP
-Summary(pl):	Modu³ SysV shm dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description sysvshm
-This is a dynamic shared object (DSO) for Apache that will add SysV
-Shared Memory support to PHP.
-
-%description sysvshm -l pl
-Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej SysV.
-
-%package yp
-Summary:	NIS (yp) extension module for PHP
-Summary(pl):	Modu³ NIS (yp) dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description yp
-This is a dynamic shared object (DSO) for Apache that will add NIS
-(Yellow Pages) support to PHP.
-
-%description yp -l pl
-Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy do PHP
-wsparcie dla NIS (Yellow Pages).
-
-%package bcmath
-Summary:	bcmath extension module for PHP
-Summary(pl):	Modu³ bcmath dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description bcmath
-This is a dynamic shared object (DSO) for Apache that will add bc
-style precision math functions support to PHP.
-
-%description bcmath -l pl
-Modu³ PHP umo¿liwiaj±cy korzystanie z dok³adnych funkcji
-matematycznych takich jak w programie bc.
-
-%package ftp
-Summary:	FTP extension module for PHP
-Summary(pl):	Modu³ FTP dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description ftp
-This is a dynamic shared object (DSO) for Apache that will add FTP
-support to PHP.
-
-%description ftp -l pl
-Modu³ PHP dodaj±cy obs³ugê protoko³u FTP.
-
-%package zlib
-Summary:	Zlib extension module for PHP
-Summary(pl):	Modu³ zlib dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description zlib
-This is a dynamic shared object (DSO) for Apache that will add
-compression (zlib) support to PHP.
-
-%description zlib -l pl
-Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
-
-%package bzip2
-Summary:	Bzip2 extension module for PHP
-Summary(pl):	Modu³ bzip2 dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description bzip2
-This is a dynamic shared object (DSO) for Apache that will add
-compression (bzip2) support to PHP.
-
-%description bzip2 -l pl
-Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê bzip2).
-
-%package exif
-Summary:	exif extension module for PHP
-Summary(pl):	Modu³ exif dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description exif
-This is a dynamic shared object (DSO) for Apache that will add exif
-support to PHP.
-
-%description exif -l pl
-Modu³ PHP dodaj±cy obs³ugê plików EXIF.
-
-%package recode
-Summary:	recode extension module for PHP
-Summary(pl):	Modu³ recode dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-Requires:	recode >= 3.5d-3
-
-%description recode
-This is a dynamic shared object (DSO) for Apache that will add recode
-support to PHP.
-
-%description recode -l pl
-Modu³ PHP dodaj±cy mo¿liwo¶æ konwersji kodowania plików (poprzez
-bibliotekê recode).
-
-%package session
-Summary:	session extension module for PHP
-Summary(pl):	Modu³ session dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description session
-This is a dynamic shared object (DSO) for Apache that will add session
-support to PHP.
-
-%description session -l pl
-Modu³ PHP dodaj±cy obs³ugê sesji.
-
-%package gettext
-Summary:	gettext extension module for PHP
-Summary(pl):	Modu³ gettext dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description gettext
-This is a dynamic shared object (DSO) for Apache that will add gettext
-support to PHP.
-
-%description gettext -l pl
-Modu³ PHP dodaj±cy obs³ugê lokalizacji przez gettext.
-
-%package snmp
-Summary:	SNMP extension module for PHP
-Summary(pl):	Modu³ SNMP dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description snmp
-This is a dynamic shared object (DSO) for Apache that will add SNMP
-support to PHP.
-
-%description snmp -l pl
-Modu³ PHP dodaj±cy obs³ugê SNMP.
-
-%package imap
-Summary:	IMAP extension module for PHP
-Summary(pl):	Modu³ IMAP dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description imap
-This is a dynamic shared object (DSO) for Apache that will add IMAP
-support to PHP.
-
-%description imap -l pl
-Modu³ PHP dodaj±cy obs³ugê skrzynek IMAP.
-
-%package ldap
-Summary:	LDAP extension module for PHP
-Summary(pl):	Modu³ LDAP dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description ldap
-This is a dynamic shared object (DSO) for Apache that will add LDAP
-support to PHP.
-
-%description ldap -l pl
-Modu³ PHP dodaj±cy obs³ugê LDAP.
-
-%package sockets
-Summary:	sockets extension module for PHP
-Summary(pl):	Modu³ socket dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description sockets
-This is a dynamic shared object (DSO) for Apache that will add sockets
-support to PHP.
-
-%description sockets -l pl
-Modu³ PHP dodaj±cy obs³ugê gniazdek.
-
-%package mcrypt
-Summary:	mcrypt extension module for PHP
-Summary(pl):	Modu³ mcrypt dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description mcrypt
-This is a dynamic shared object (DSO) for Apache that will add mcrypt
-support to PHP.
-
-%description mcrypt -l pl
-Modu³ PHP dodaj±cy mo¿liwo¶æ szyfrowania poprzez bibliotekê mcrypt.
-
-%package mhash
-Summary:	mhash extension module for PHP
-Summary(pl):	Modu³ mhash dla PHP
-Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
-
-%description mhash
-This is a dynamic shared object (DSO) for Apache that will add mhash
-support to PHP.
-
-%description mhash -l pl
-Modu³ PHP udostêpniaj±cy funkcje mieszaj±ce z biblioteki mhash.
+%package devel
+Summary:	Files for PHP modules development
+Summary(pl):	Pliki do kompilacji modu³ów PHP
+Group:		Development/Languages/PHP
+Requires:	%{name}-common = %{version}
+
+%description devel
+Files for PHP modules development.
+
+%description devel -l pl
+Pliki potrzebne do kompilacji modu³ów PHP.
 
 %package doc
 Summary:	Online manual for PHP
@@ -681,28 +218,59 @@ PEAR - PHP Extension and Application Repository.
 PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
 Repozytorium Aplikacji.
 
-%package domxml
-Summary:	DOM XML module
-Summary(pl):	Modu³ DOM XML
-Group:		Development/Languages/PHP
+%package bcmath
+Summary:	bcmath extension module for PHP
+Summary(pl):	Modu³ bcmath dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
 
-%description domxml
-DOM XML module.
+%description bcmath
+This is a dynamic shared object (DSO) for Apache that will add bc
+style precision math functions support to PHP.
 
-%description domxml -l pl
-Modu³ DOM XML.
+%description bcmath -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z dok³adnych funkcji
+matematycznych takich jak w programie bc.
 
-%package devel
-Summary:	Files for PHP modules development
-Summary(pl):	Pliki do kompilacji modu³ów PHP
-Group:		Development/Languages/PHP
-Requires:	%{name}-common = %{version}
+%package bzip2
+Summary:	Bzip2 extension module for PHP
+Summary(pl):	Modu³ bzip2 dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
 
-%description devel
-Files for PHP modules development.
+%description bzip2
+This is a dynamic shared object (DSO) for Apache that will add
+compression (bzip2) support to PHP.
 
-%description devel -l pl
-Pliki potrzebne do kompilacji modu³ów PHP.
+%description bzip2 -l pl
+Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê bzip2).
+
+%package calendar
+Summary:	Calendar extension module for PHP
+Summary(pl):	Modu³ funkcji kalendarza dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description calendar
+This is a dynamic shared object (DSO) for Apache that will add
+calendar support to PHP.
+
+%description calendar -l pl
+Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy do PHP
+wsparcie dla kalendarza.
+
+%package cpdf
+Summary:	cpdf extension module for PHP
+Summary(pl):	Modu³ cpdf dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description cpdf
+This is a dynamic shared object (DSO) for Apache that will add libcpdf
+support to PHP.
+
+%description cpdf -l pl
+Modu³ PHP dodaj±cy obs³ugê biblioteki libcpdf.
 
 %package curl
 Summary:	curl extension module for PHP
@@ -716,40 +284,228 @@ support to PHP.
 %description curl -l pl
 Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki curl.
 
-%package xslt
-Summary:	xslt extension module for PHP
-Summary(pl):	Modu³ xslt dla PHP
+%package dba
+Summary:	DBA extension module for PHP
+Summary(pl):	Modu³ DBA dla PHP
 Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
+PreReq:		%{name}-common = %{version}
 
-%description xslt
-This is a dynamic shared object (DSO) for Apache that will add xslt
+%description dba
+This is a dynamic shared object (DSO) for Apache that will add
+flat-file databases (DBA) support to PHP.
+
+%description dba -l pl
+Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy do PHP
+wsparcie dla baz danych opartych na plikach (DBA).
+
+%package dbase
+Summary:	DBase extension module for PHP
+Summary(pl):	Modu³ DBase dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description dbase
+This is a dynamic shared object (DSO) for Apache that will add DBase
 support to PHP.
 
-%description xslt -l pl
-Modu³ PHP umo¿liwiaj±cy korzystanie z technologii xslt.
+%description dbase -l pl
+Modu³ PHP ze wsparciem dla DBase.
 
-%package wddx
-Summary:	wddx extension module for PHP
-Summary(pl):	Modu³ wddx dla PHP
+%package domxml
+Summary:	DOM XML extension module for PHP
+Summary(pl):	Modu³ DOM XML dla PHP
 Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
 
-%description wddx
-This is a dynamic shared object (DSO) for Apache that will add wddx
+%description domxml
+This is a dynamic shared object (DSO) for Apache that will add DOM XML
 support to PHP.
 
-%description wddx -l pl
-Modu³ PHP umo¿liwiaj±cy korzystanie z wddx.
+%description domxml -l pl
+Modu³ PHP dodaj±cy obs³ugê DOM XML.
+
+%package exif
+Summary:	exif extension module for PHP
+Summary(pl):	Modu³ exif dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description exif
+This is a dynamic shared object (DSO) for Apache that will add exif
+support to PHP.
+
+%description exif -l pl
+Modu³ PHP dodaj±cy obs³ugê plików EXIF.
+
+%package filepro
+Summary:	FilePro extension module for PHP
+Summary(pl):	Modu³ FilePro dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description filepro
+This is a dynamic shared object (DSO) for Apache that will add FilePro
+support to PHP.
+
+%description filepro -l pl
+Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy do PHP
+wsparcie dla FilePro.
+
+%package ftp
+Summary:	FTP extension module for PHP
+Summary(pl):	Modu³ FTP dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description ftp
+This is a dynamic shared object (DSO) for Apache that will add FTP
+support to PHP.
+
+%description ftp -l pl
+Modu³ PHP dodaj±cy obs³ugê protoko³u FTP.
+
+%package gd
+Summary:	GD extension module for PHP
+Summary:	Modu³ GD dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description gd
+This is a dynamic shared object (DSO) for Apache that will add GD
+support to PHP. You should install this package in addition to the
+main %{name} package if you want to create and manipulate images with
+PHP.
+
+%description gd -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki GD - do obróbki
+obrazków z poziomu PHP.
+
+%package gettext
+Summary:	gettext extension module for PHP
+Summary(pl):	Modu³ gettext dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description gettext
+This is a dynamic shared object (DSO) for Apache that will add gettext
+support to PHP.
+
+%description gettext -l pl
+Modu³ PHP dodaj±cy obs³ugê lokalizacji przez gettext.
+
+%package gmp
+Summary:	gmp extension module for PHP
+Summary(pl):	Modu³ gmp dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description gmp
+This is a dynamic shared object (DSO) for Apache that will add
+arbitrary length number support with GNU MP library to PHP.
+
+%description gmp -l pl
+Modu³ PHP umorzliwiaj±cy korzystanie z biblioteki gmp.
+
+%package iconv
+Summary:	iconv extension module for PHP
+Summary(pl):	Modu³ iconv dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description iconv
+This is a dynamic shared object (DSO) for Apache that will add iconv
+support to PHP.
+
+%description iconv -l pl
+Modu³ PHP dodaj±cy obs³ugê iconv.
+
+%package imap
+Summary:	IMAP extension module for PHP
+Summary(pl):	Modu³ IMAP dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description imap
+This is a dynamic shared object (DSO) for Apache that will add IMAP
+support to PHP.
+
+%description imap -l pl
+Modu³ PHP dodaj±cy obs³ugê skrzynek IMAP.
+
+%package interbase
+Summary:	Interbase database module for PHP
+Summary(pl):	Modu³ bazy danych Interbase dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+Autoreq:	false
+
+%description interbase
+This is a dynamic shared object (DSO) for Apache that will add
+InterBase database support to PHP. If you need back-end support for
+InterBase, you should install this package in addition to the main
+%{name} package.
+
+%description interbase -l pl
+Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych InterBase.
+
+%package java
+Summary:	Java extension module for PHP
+Summary(pl):	Modu³ Javy dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description java
+This is a dynamic shared object (DSO) for Apache that will add JAVA
+support to PHP. This extension provides a simple and effective means
+for creating and invoking methods on Java objects from PHP.
+
+%description java -l pl
+Modu³ PHP dodaj±cy wsparcie dla Javy. Umo¿liwia odwo³ywanie siê do
+obiektów Javy z poziomu PHP.
+
+%package ldap
+Summary:	LDAP extension module for PHP
+Summary(pl):	Modu³ LDAP dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description ldap
+This is a dynamic shared object (DSO) for Apache that will add LDAP
+support to PHP.
+
+%description ldap -l pl
+Modu³ PHP dodaj±cy obs³ugê LDAP.
+
+%package mcrypt
+Summary:	mcrypt extension module for PHP
+Summary(pl):	Modu³ mcrypt dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description mcrypt
+This is a dynamic shared object (DSO) for Apache that will add mcrypt
+support to PHP.
+
+%description mcrypt -l pl
+Modu³ PHP dodaj±cy mo¿liwo¶æ szyfrowania poprzez bibliotekê mcrypt.
+
+%package mhash
+Summary:	mhash extension module for PHP
+Summary(pl):	Modu³ mhash dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description mhash
+This is a dynamic shared object (DSO) for Apache that will add mhash
+support to PHP.
+
+%description mhash -l pl
+Modu³ PHP udostêpniaj±cy funkcje mieszaj±ce z biblioteki mhash.
 
 %package ming
 Summary:	ming extension module for PHP
 Summary(pl):	Modu³ ming dla PHP
 Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description ming
 This is a dynamic shared object (DSO) for Apache that will add ming
@@ -759,54 +515,156 @@ This is a dynamic shared object (DSO) for Apache that will add ming
 Modu³ PHP dodaj±cy obs³ugê plików Flash (.swf) poprzez bibliotekê
 ming.
 
-%package libcpdf
-Summary:	cpdf extension module for PHP
-Summary(pl):	Modu³ cpdf dla PHP
+%package mysql
+Summary:	MySQL database module for PHP
+Summary(pl):	Modu³ bazy danych MySQL dla PHP
 Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
+PreReq:		%{name}-common = %{version}
 
-%description libcpdf
-This is a dynamic shared object (DSO) for Apache that will add libcpdf
+%description mysql
+This is a dynamic shared object (DSO) for Apache that will add MySQL
+database support to PHP. If you need back-end support for MySQL, you
+should install this package in addition to the main %{name} package.
+
+%description mysql -l pl
+Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych MySQL.
+
+%package oci8
+Summary:	Oracle 8 database module for PHP
+Summary(pl):	Modu³ bazy danych Oracle 8 dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+Autoreq:	false
+
+%description oci8
+This is a dynamic shared object (DSO) for Apache that will add Oracle
+8 database support to PHP. If you need back-end support for Oracle 8,
+you should install this package in addition to the main %{name}
+package.
+
+%description oci8 -l pl
+Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 8.
+
+%package odbc
+Summary:	ODBC extension module for PHP
+Summary(pl):	Modu³ ODBC dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+Requires:	unixODBC >= 2.1.1-3
+
+%description odbc
+This is a dynamic shared object (DSO) for Apache that will add ODBC
 support to PHP.
 
-%description libcpdf -l pl
-Modu³ PHP dodaj±cy obs³ugê libcpdf.
+%description odbc -l pl
+Modu³ PHP ze wsparciem dla ODBC.
 
-%package iconv
-Summary:	iconv extension module for PHP
-Summary(pl):	Modu³ iconv dla PHP
+%package oracle
+Summary:	Oracle 7 database module for PHP
+Summary(pl):	Modu³ bazy danych Oracle 7 dla PHP
 Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
+PreReq:		%{name}-common = %{version}
+Autoreq:	false
 
-%description iconv
-This is a dynamic shared object (DSO) for Apache that will add iconv
+%description oracle
+This is a dynamic shared object (DSO) for Apache that will add Oracle
+7 database support to PHP. If you need back-end support for Oracle 7,
+you should install this package in addition to the main %{name}
+package.
+
+%description oracle -l pl
+Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 7.
+
+%package pcre
+Summary:	PCRE extension module for PHP
+Summary(pl):	Modu³ PCRE dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description pcre
+This is a dynamic shared object (DSO) for Apache that will add Perl
+Compatible Regular Expression support to PHP.
+
+%description pcre -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z perlowych wyra¿eñ regularnych
+(Perl Compatible Regular Expressions)
+
+%package pdf
+Summary:	libPDF module for PHP
+Summary(pl):	Modu³ do tworzenia plików PDF dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+PreReq:		pdflib
+
+%description pdf
+This is a dynamic shared object (DSO) for Apache that will add PDF
 support to PHP.
 
-%description iconv -l pl
-Modu³ PHP dodaj±cy obs³ugê iconv.
+%description pdf -l pl
+Modu³ PHP umo¿liwiaj±cy tworzenie plików PDF. Wykorzystuje bibliotekê
+pdflib.
 
-%package gmp
-Summary:	gmp extension module for PHP
-Summary(pl):	Modu³ gmp dla PHP
+%package pgsql
+Summary:	PostgreSQL database module for PHP
+Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP
 Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
+PreReq:		%{name}-common = %{version}
 
-%description gmp
+%description pgsql
 This is a dynamic shared object (DSO) for Apache that will add
-arbitrary length number support with GNU MP library to PHP.
+PostgreSQL database support to PHP. If you need back-end support for
+PostgreSQL, you should install this package in addition to the main
+%{name} package.
 
-%description gmp -l pl
-Modu³ PHP umorzliwiaj±cy korzystanie z biblioteki gmp.
+%description pgsql -l pl
+Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych PostgreSQL.
+
+%package posix
+Summary:	POSIX extension module for PHP
+Summary(pl):	Modu³ POSIX dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description posix
+This is a dynamic shared object (DSO) for Apache that will add POSIX
+functions support to PHP.
+
+%description posix -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z funkcji POSIX.
+
+%package recode
+Summary:	recode extension module for PHP
+Summary(pl):	Modu³ recode dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+Requires:	recode >= 3.5d-3
+
+%description recode
+This is a dynamic shared object (DSO) for Apache that will add recode
+support to PHP.
+
+%description recode -l pl
+Modu³ PHP dodaj±cy mo¿liwo¶æ konwersji kodowania plików (poprzez
+bibliotekê recode).
+
+%package session
+Summary:	session extension module for PHP
+Summary(pl):	Modu³ session dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description session
+This is a dynamic shared object (DSO) for Apache that will add session
+support to PHP.
+
+%description session -l pl
+Modu³ PHP dodaj±cy obs³ugê sesji.
 
 %package shmop
 Summary:	Shared Memory Operations extension module for PHP
 Summary(pl):	Modu³ shmop dla PHP
 Group:		Libraries
-Requires(post):	%{name}-common = %{version}
-Requires(preun):	%{name}-common = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description shmop
 This is a dynamic shared object (DSO) for Apache that will add
@@ -814,6 +672,141 @@ Shared Memory Operations support to PHP.
 
 %description shmop -l pl
 Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej.
+
+%package snmp
+Summary:	SNMP extension module for PHP
+Summary(pl):	Modu³ SNMP dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description snmp
+This is a dynamic shared object (DSO) for Apache that will add SNMP
+support to PHP.
+
+%description snmp -l pl
+Modu³ PHP dodaj±cy obs³ugê SNMP.
+
+%package sockets
+Summary:	sockets extension module for PHP
+Summary(pl):	Modu³ socket dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description sockets
+This is a dynamic shared object (DSO) for Apache that will add sockets
+support to PHP.
+
+%description sockets -l pl
+Modu³ PHP dodaj±cy obs³ugê gniazdek.
+
+%package sybase-ct
+Summary:	Sybase-CT extension module for PHP
+Summary(pl):	Modu³ Sybase-CT dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description sybase-ct
+This is a dynamic shared object (DSO) for Apache that will add
+Sybase database support through CT-lib to PHP.
+
+%description sybase-ct -l pl
+Modu³ PHP dodaj±cy obs³ugê baz danych Sybase poprzez CT-lib.
+
+%package sysvsem
+Summary:	SysV sem extension module for PHP
+Summary(pl):	Modu³ SysV sem dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description sysvsem
+This is a dynamic shared object (DSO) for Apache that will add SysV
+semafores support to PHP.
+
+%description sysvsem -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z semaforów SysV.
+
+%package sysvshm
+Summary:	SysV shm extension module for PHP
+Summary(pl):	Modu³ SysV shm dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description sysvshm
+This is a dynamic shared object (DSO) for Apache that will add SysV
+Shared Memory support to PHP.
+
+%description sysvshm -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej SysV.
+
+%package wddx
+Summary:	wddx extension module for PHP
+Summary(pl):	Modu³ wddx dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description wddx
+This is a dynamic shared object (DSO) for Apache that will add wddx
+support to PHP.
+
+%description wddx -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z wddx.
+
+%package xml
+Summary:	XML extension module for PHP
+Summary(pl):	Modu³ XML dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description xml
+This is a dynamic shared object (DSO) for Apache that will add XML
+support to PHP. This extension lets you create XML parsers and then
+define handlers for different XML events. If you want to be able to
+parse XML documents you should install this package in addition to the
+main %{name} package.
+
+%description xml -l pl
+Modu³ PHP umo¿liwiaj±cy parsowanie plików XML i obs³ugê zdarzeñ
+zwi±zanych z tymi plikami.
+
+%package xslt
+Summary:	xslt extension module for PHP
+Summary(pl):	Modu³ xslt dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description xslt
+This is a dynamic shared object (DSO) for Apache that will add xslt
+support to PHP.
+
+%description xslt -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z technologii xslt.
+
+%package yp
+Summary:	NIS (yp) extension module for PHP
+Summary(pl):	Modu³ NIS (yp) dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description yp
+This is a dynamic shared object (DSO) for Apache that will add NIS
+(Yellow Pages) support to PHP.
+
+%description yp -l pl
+Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy do PHP
+wsparcie dla NIS (Yellow Pages).
+
+%package zlib
+Summary:	Zlib extension module for PHP
+Summary(pl):	Modu³ zlib dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description zlib
+This is a dynamic shared object (DSO) for Apache that will add
+compression (zlib) support to PHP.
+
+%description zlib -l pl
+Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
 
 %prep
 %setup -q
@@ -825,6 +818,7 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
@@ -851,6 +845,7 @@ for i in cgi apxs ; do
 	--%{!?debug:dis}%{?debug:en}able-debug \
 	--enable-bcmath=shared \
 	--enable-calendar=shared \
+	--disable-cli \
 	--enable-dba=shared \
 	--enable-exif=shared \
 	--enable-ftp=shared \
@@ -866,21 +861,22 @@ for i in cgi apxs ; do
 	--enable-trans-sid \
 	--enable-safe-mode \
 	--enable-sockets=shared \
-	--enable-yp=shared \
 	--enable-ucd-snmp-hack \
+	%{!?_without_wddx:--enable-wddx=shared} \
 	--enable-xml=shared \
-	--with-expat-dir=/usr \
-	%{?_with_xslt:--enable-xslt=shared} \
+	%{!?_without_xslt:--enable-xslt=shared} \
+	--enable-yp=shared \
 	--with-bz2=shared \
-	%{?_with_libcpdf:--with-cpdflib=shared} \
+	%{?_with_cpdf:--with-cpdflib=shared} \
 	--with-ctype=shared \
 	--with-curl=shared \
 	--without-db2 \
 	--with-db3 \
 	--with-dbase=shared \
-	--with-iconv=shared \
 	--with-dom=shared \
-	--with-dom-xslt=shared \
+	%{!?_without_libxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
+	--with-expat-dir=shared,/usr \
+	--with-iconv=shared \
 	--with-filepro=shared \
 	--with-freetype-dir=shared \
 	--with-gettext=shared \
@@ -889,11 +885,12 @@ for i in cgi apxs ; do
 	--with-gmp=shared \
 	--with-hyperwave \
 	%{!?_without_imap:--with-imap=shared --with-imap-ssl} \
+	%{?_with_interbase:--with-interbase=shared} \
 	%{?_with_java:--with-java} \
-	--with-jpeg-dir=%{_includedir} \
+	--with-jpeg-dir=shared,/usr \
 	%{!?_without_ldap:--with-ldap=shared} \
 	--with-mcrypt=shared \
-	--with-mysql=shared,%{_prefix} \
+	--with-mysql=shared,/usr \
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-mhash=shared \
 	--with-ming=shared \
@@ -901,30 +898,27 @@ for i in cgi apxs ; do
 	%{!?_without_openssl:--with-openssl} \
 	%{?_with_oracle:--with-oracle=shared} \
 	%{?_with_oci8:--with-oci8=shared} \
-	--with-pear=%{peardir} \
 	--with-pcre-regex=shared \
 	--with-pdflib=shared \
+	--with-pear=%{peardir} \
 	--with-pgsql=shared,%{_prefix} \
-	--with-png-dir=%{_includedir} \
+	--with-png-dir=shared,/usr \
 	%{!?_without_recode:--with-recode=shared} \
 	--with-regex=php \
-	%{!?_without_sablot:--with-sablot=/usr/lib} \
+	--with-sablot-js=shared,no \
 	%{!?_without_snmp:--with-snmp=shared} \
+	%{?_with_sybase_ct:--with-sybase-ct=shared,/usr} \
 	--with-t1lib=shared \
+	--with-tiff-dir=shared,/usr \
 	%{!?_without_odbc:--with-unixODBC=shared} \
-	%{?_with_wddx:--enable-wddx=shared} \
-	--with-zlib=shared \
-	--with-zlib-dir=shared \
 	--without-xmlrpc \
-	%{?_with_xslt:--with-xslt-sablot=shared} \
-	--disable-cli
+	%{!?_without_xslt:--with-xslt-sablot=shared} \
+	--with-zlib=shared \
+	--with-zlib-dir=shared
 done
 
 # TODO --with-pspell=/usr,shared (pspell missing)
 #	--with-qtdom=shared
-
-rm -f ext/xml/libs.mk
-install %{SOURCE6} ext/xml/libs.mk
 
 %{__make}
 %{__make} CFLAGS="%{rpmcflags} -DDISCARD_PATH=1" -C sapi/cgi
@@ -958,7 +952,7 @@ install .libs/php $RPM_BUILD_ROOT%{_bindir}/php
 install %{SOURCE2}		$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 install %{SOURCE3} php.gif	$RPM_BUILD_ROOT/home/httpd/icons
 install %{SOURCE5} $RPM_BUILD_ROOT/%{_sbindir}
-install %{SOURCE7} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
+install %{SOURCE6} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
 
 install %{SOURCE1} .
 gzip -9nf CODING_STANDARDS CREDITS \
@@ -966,7 +960,7 @@ gzip -9nf CODING_STANDARDS CREDITS \
 	Zend/ZEND_CHANGES README.SELF-CONTAINED-EXTENSIONS README.EXT_SKEL
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+#rm -rf $RPM_BUILD_ROOT
 
 %post
 %if ! %{_apache2}
@@ -998,8 +992,8 @@ if [ "$1" = "0" ]; then
 fi
 %endif
 
-%post common -p /sbin/ldconfig
-%postun common -p /sbin/ldconfig
+%post	common -p /sbin/ldconfig
+%postun	common -p /sbin/ldconfig
 
 %post bcmath
 %{_sbindir}/php-module-install install bcmath %{_sysconfdir}/php.ini
@@ -1009,12 +1003,36 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove bcmath %{_sysconfdir}/php.ini
 fi
 
+%post bzip2
+%{_sbindir}/php-module-install install bz2 %{_sysconfdir}/php.ini
+
+%preun bzip2
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove bz2 %{_sysconfdir}/php.ini
+fi
+
 %post calendar
 %{_sbindir}/php-module-install install calendar %{_sysconfdir}/php.ini
 
 %preun calendar
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove calendar %{_sysconfdir}/php.ini
+fi
+
+%post cpdf
+%{_sbindir}/php-module-install install libcpdf %{_sysconfdir}/php.ini
+
+%preun cpdf
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove libcpdf %{_sysconfdir}/php.ini
+fi
+
+%post curl
+%{_sbindir}/php-module-install install curl %{_sysconfdir}/php.ini
+
+%preun curl
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove curl %{_sysconfdir}/php.ini
 fi
 
 %post dba
@@ -1031,6 +1049,14 @@ fi
 %preun dbase
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove dbase %{_sysconfdir}/php.ini
+fi
+
+%post domxml
+%{_sbindir}/php-module-install install domxml %{_sysconfdir}/php.ini
+
+%preun domxml
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove domxml %{_sysconfdir}/php.ini
 fi
 
 %post exif
@@ -1073,7 +1099,22 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove gettext %{_sysconfdir}/php.ini
 fi
 
-%if %{?_without_imap:0}%{!?_without_imap:1}
+%post gmp
+%{_sbindir}/php-module-install install gmp %{_sysconfdir}/php.ini
+
+%preun gmp
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove gmp %{_sysconfdir}/php.ini
+fi
+
+%post iconv
+%{_sbindir}/php-module-install install iconv %{_sysconfdir}/php.ini
+
+%preun iconv
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove iconv %{_sysconfdir}/php.ini
+fi
+
 %post imap
 %{_sbindir}/php-module-install install imap %{_sysconfdir}/php.ini
 
@@ -1081,9 +1122,15 @@ fi
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove imap %{_sysconfdir}/php.ini
 fi
-%endif
 
-%if %{?_with_java:1}%{!?_with_java:0}
+%post interbase
+%{_sbindir}/php-module-install install interbase %{_sysconfdir}/php.ini
+
+%preun interbase
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove interbase %{_sysconfdir}/php.ini
+fi
+	
 %post java
 %{_sbindir}/php-module-install install libphp_java %{_sysconfdir}/php.ini
 
@@ -1091,9 +1138,7 @@ fi
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove libphp_java %{_sysconfdir}/php.ini
 fi
-%endif
 
-%if %{?_without_ldap:0}%{!?_without_ldap:1}
 %post ldap
 %{_sbindir}/php-module-install install ldap %{_sysconfdir}/php.ini
 
@@ -1101,7 +1146,6 @@ fi
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove ldap %{_sysconfdir}/php.ini
 fi
-%endif
 
 %post mcrypt
 %{_sbindir}/php-module-install install mcrypt %{_sysconfdir}/php.ini
@@ -1119,6 +1163,14 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove mhash %{_sysconfdir}/php.ini
 fi
 
+%post ming
+%{_sbindir}/php-module-install install ming %{_sysconfdir}/php.ini
+
+%preun ming
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove ming %{_sysconfdir}/php.ini
+fi
+
 %post mysql
 %{_sbindir}/php-module-install install mysql %{_sysconfdir}/php.ini
 
@@ -1127,23 +1179,6 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove mysql %{_sysconfdir}/php.ini
 fi
 
-%post pdf
-%{_sbindir}/php-module-install install pdf %{_sysconfdir}/php.ini
-
-%preun pdf
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove pdf %{_sysconfdir}/php.ini
-fi
-
-%preun domxml
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove domxml %{_sysconfdir}/php.ini
-fi
-
-%post domxml
-%{_sbindir}/php-module-install install domxml %{_sysconfdir}/php.ini
-
-%if %{?_with_oci8:1}%{!?_with_oci8:0}
 %post oci8
 %{_sbindir}/php-module-install install oci8 %{_sysconfdir}/php.ini
 
@@ -1151,9 +1186,7 @@ fi
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove oci8 %{_sysconfdir}/php.ini
 fi
-%endif
 
-%if %{?_without_odbc:0}%{!?_without_odbc:1}
 %post odbc
 %{_sbindir}/php-module-install install odbc %{_sysconfdir}/php.ini
 
@@ -1161,9 +1194,7 @@ fi
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove odbc %{_sysconfdir}/php.ini
 fi
-%endif
 
-%if %{?_with_oracle:1}%{!?_with_oracle:0}
 %post oracle
 %{_sbindir}/php-module-install install oracle %{_sysconfdir}/php.ini
 
@@ -1171,7 +1202,6 @@ fi
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove oracle %{_sysconfdir}/php.ini
 fi
-%endif
 
 %post pcre
 %{_sbindir}/php-module-install install pcre %{_sysconfdir}/php.ini
@@ -1179,6 +1209,14 @@ fi
 %preun pcre
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove pcre %{_sysconfdir}/php.ini
+fi
+
+%post pdf
+%{_sbindir}/php-module-install install pdf %{_sysconfdir}/php.ini
+
+%preun pdf
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove pdf %{_sysconfdir}/php.ini
 fi
 
 %post pgsql
@@ -1197,7 +1235,6 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove posix %{_sysconfdir}/php.ini
 fi
 
-%if %{?_without_recode:0}%{!?_without_recode:1}
 %post recode
 %{_sbindir}/php-module-install install recode %{_sysconfdir}/php.ini
 
@@ -1205,7 +1242,6 @@ fi
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove recode %{_sysconfdir}/php.ini
 fi
-%endif
 
 %post session
 %{_sbindir}/php-module-install install session %{_sysconfdir}/php.ini
@@ -1215,7 +1251,14 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove session %{_sysconfdir}/php.ini
 fi
 
-%if %{?_without_snmp:0}%{!?_without_snmp:1}
+%post shmop
+%{_sbindir}/php-module-install install shmop %{_sysconfdir}/php.ini
+
+%preun shmop
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove shmop %{_sysconfdir}/php.ini
+fi
+
 %post snmp
 %{_sbindir}/php-module-install install snmp %{_sysconfdir}/php.ini
 
@@ -1223,7 +1266,6 @@ fi
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove snmp %{_sysconfdir}/php.ini
 fi
-%endif
 
 %post sockets
 %{_sbindir}/php-module-install install sockets %{_sysconfdir}/php.ini
@@ -1231,6 +1273,14 @@ fi
 %preun sockets
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove sockets %{_sysconfdir}/php.ini
+fi
+
+%post sybase-ct
+%{_sbindir}/php-module-install install sybase_ct %{_sysconfdir}/php.ini
+
+%preun sybase-ct
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove sybase_ct %{_sysconfdir}/php.ini
 fi
 
 %post sysvsem
@@ -1249,12 +1299,28 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove sysvshm %{_sysconfdir}/php.ini
 fi
 
+%post wddx
+%{_sbindir}/php-module-install install wddx %{_sysconfdir}/php.ini
+
+%preun wddx
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove wddx %{_sysconfdir}/php.ini
+fi
+
 %post xml
 %{_sbindir}/php-module-install install xml %{_sysconfdir}/php.ini
 
 %preun xml
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove xml %{_sysconfdir}/php.ini
+fi
+
+%post xslt
+%{_sbindir}/php-module-install install xslt %{_sysconfdir}/php.ini
+
+%preun xslt
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove xslt %{_sysconfdir}/php.ini
 fi
 
 %post yp
@@ -1271,84 +1337,6 @@ fi
 %preun zlib
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove zlib %{_sysconfdir}/php.ini
-fi
-
-%post bzip2
-%{_sbindir}/php-module-install install bz2 %{_sysconfdir}/php.ini
-
-%preun bzip2
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove bz2 %{_sysconfdir}/php.ini
-fi
-
-%post curl
-%{_sbindir}/php-module-install install curl %{_sysconfdir}/php.ini
-
-%preun curl
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove curl %{_sysconfdir}/php.ini
-fi
-
-%post ming
-%{_sbindir}/php-module-install install ming %{_sysconfdir}/php.ini
-
-%preun ming
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove ming %{_sysconfdir}/php.ini
-fi
-
-%if %{?_with_xslt:1}%{!?_with_xslt:0}
-%post xslt
-%{_sbindir}/php-module-install install xslt %{_sysconfdir}/php.ini
-
-%preun xslt
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove xslt %{_sysconfdir}/php.ini
-fi
-%endif
-
-%if %{?_with_wddx:1}%{!?_with_wddx:0}
-%post wddx
-%{_sbindir}/php-module-install install wddx %{_sysconfdir}/php.ini
-
-%preun wddx
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove wddx %{_sysconfdir}/php.ini
-fi
-%endif
-
-%if %{?_with_libcpdf:1}%{!?_with_libcpdf:0}
-%post libcpdf
-%{_sbindir}/php-module-install install libcpdf %{_sysconfdir}/php.ini
-
-%preun libcpdf
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove libcpdf %{_sysconfdir}/php.ini
-fi
-%endif
-
-%post iconv
-%{_sbindir}/php-module-install install iconv %{_sysconfdir}/php.ini
-
-%preun iconv
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove iconv %{_sysconfdir}/php.ini
-fi
-
-%post gmp
-%{_sbindir}/php-module-install install gmp %{_sysconfdir}/php.ini
-
-%preun gmp
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove gmp %{_sysconfdir}/php.ini
-fi
-
-%post shmop
-%{_sbindir}/php-module-install install shmop %{_sysconfdir}/php.ini
-
-%preun shmop
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove shmop %{_sysconfdir}/php.ini
 fi
 
 %files
@@ -1385,46 +1373,36 @@ fi
 %attr(755,root,root) %{_bindir}/phpize
 %attr(755,root,root) %{_bindir}/php-config
 
-%files domxml
+%files doc
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/domxml.so
+%doc manual/*
 
 %files pear
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/pear
 %{peardir}
 
-%files mysql
+%files bcmath
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/mysql.so
+%attr(755,root,root) %{extensionsdir}/bcmath.so
 
-%files pdf
+%files bzip2
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/pdf.so
+%attr(755,root,root) %{extensionsdir}/bz2.so
 
-%files pgsql
+%files calendar
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/pgsql.so
+%attr(755,root,root) %{extensionsdir}/calendar.so
 
-%if %{?_with_oracle:1}%{!?_with_oracle:0}
-%files oracle
+%if %{?_with_cpdf:1}%{!?_with_cpdf:0}
+%files cpdf
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/oracle.so
+%attr(755,root,root) %{extensionsdir}/cpdf.so
 %endif
 
-%if %{?_with_oci8:1}%{!?_with_oci8:0}
-%files oci8
+%files curl
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/oci8.so
-%endif
-
-%files gd
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/gd.so
-
-%files xml
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/xml.so
+%attr(755,root,root) %{extensionsdir}/curl.so
 
 %files dba
 %defattr(644,root,root,755)
@@ -1434,67 +1412,37 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/dbase.so
 
-%files filepro
+%files domxml
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/filepro.so
-
-%files pcre
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/pcre.so
-
-%files posix
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/posix.so
-
-%files sysvsem
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/sysvsem.so
-
-%files sysvshm
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/sysvshm.so
-
-%files yp
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/yp.so
-
-%files calendar
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/calendar.so
-
-%files bcmath
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/bcmath.so
-
-%files ftp
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/ftp.so
-
-%files zlib
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/zlib.so
-
-%files bzip2
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/bz2.so
+%attr(755,root,root) %{extensionsdir}/domxml.so
 
 %files exif
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/exif.so
 
-%if %{?_without_recode:0}%{!?_without_recode:1}
-%files recode
+%files filepro
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/recode.so
-%endif
+%attr(755,root,root) %{extensionsdir}/filepro.so
 
-#%files session
-#%defattr(644,root,root,755)
-#%attr(755,root,root) %{extensionsdir}/session.so
+%files ftp
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/ftp.so
+
+%files gd
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/gd.so
 
 %files gettext
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/gettext.so
+
+%files gmp
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/gmp.so
+
+%files iconv
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/iconv.so
 
 %if %{?_without_imap:0}%{!?_without_imap:1}
 %files imap
@@ -1502,10 +1450,10 @@ fi
 %attr(755,root,root) %{extensionsdir}/imap.so
 %endif
 
-%if %{?_without_snmp:0}%{!?_without_snmp:1}
-%files snmp
+%if %{?_with_interbase:1}%{!?_with_interbase:0}
+%files interbase
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/snmp.so
+%attr(755,root,root) %{extensionsdir}/interbase.so
 %endif
 
 %if %{?_with_java:1}%{!?_with_java:0}
@@ -1520,10 +1468,6 @@ fi
 %attr(755,root,root) %{extensionsdir}/ldap.so
 %endif
 
-%files sockets
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/sockets.so
-
 %files mcrypt
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mcrypt.so
@@ -1532,50 +1476,106 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mhash.so
 
+%files ming
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/ming.so
+
+%files mysql
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/mysql.so
+
+%if %{?_with_oci8:1}%{!?_with_oci8:0}
+%files oci8
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/oci8.so
+%endif
+
 %if %{?_without_odbc:0}%{!?_without_odbc:1}
 %files odbc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/odbc.so
 %endif
 
-%files doc
+%if %{?_with_oracle:1}%{!?_with_oracle:0}
+%files oracle
 %defattr(644,root,root,755)
-%doc manual/*
-
-%files curl
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/curl.so
-
-%files ming
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/ming.so
-
-%if %{?_with_xslt:1}%{!?_with_xslt:0}
-%files xslt
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/xslt.so
+%attr(755,root,root) %{extensionsdir}/oracle.so
 %endif
 
-%if %{?_with_wddx:1}%{!?_with_wddx:0}
+%files pcre
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/pcre.so
+
+%files pdf
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/pdf.so
+
+%files pgsql
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/pgsql.so
+
+%files posix
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/posix.so
+
+%if %{?_without_recode:0}%{!?_without_recode:1}
+%files recode
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/recode.so
+%endif
+
+#%files session
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/session.so
+
+%files shmop
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/shmop.so
+
+%if %{?_without_snmp:0}%{!?_without_snmp:1}
+%files snmp
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/snmp.so
+%endif
+
+%files sockets
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/sockets.so
+
+%if %{?_with_sybase_ct:1}%{!?_with_sybase_ct:0}
+%files sybase-ct
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/sybase_ct.so
+%endif
+
+%files sysvsem
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/sysvsem.so
+
+%files sysvshm
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/sysvshm.so
+
+%if %{?_without_wddx:0}%{!?_without_wddx:1}
 %files wddx
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/wddx.so
 %endif
 
-%if %{?_with_libcpdf:1}%{!?_with_libcpdf:0}
-%files libcpdf
+%files xml
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/cpdf.so
+%attr(755,root,root) %{extensionsdir}/xml.so
+
+%if %{?_without_xslt:0}%{!?_without_xslt:1}
+%files xslt
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/xslt.so
 %endif
 
-%files iconv
+%files yp
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/iconv.so
+%attr(755,root,root) %{extensionsdir}/yp.so
 
-%files gmp
+%files zlib
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/gmp.so
-
-%files shmop
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/shmop.so
+%attr(755,root,root) %{extensionsdir}/zlib.so
