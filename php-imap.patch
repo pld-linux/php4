@@ -1,6 +1,6 @@
---- php-4.0RC2/ext/imap/php_imap.c.wiget	Tue May  2 02:44:23 2000
-+++ php-4.0RC2/ext/imap/php_imap.c	Thu May 11 03:30:48 2000
-@@ -386,25 +386,23 @@
+--- php-4.0.5/ext/imap/php_imap.c.wiget	Tue Apr 24 16:17:41 2001
++++ php-4.0.5/ext/imap/php_imap.c	Fri May  4 13:07:19 2001
+@@ -428,28 +428,28 @@
  
  
  #if 1
@@ -19,13 +19,18 @@
  	mail_link(&mbxdriver);       /* link in the mbx driver */
  	mail_link(&tenexdriver);     /* link in the tenex driver */
  	mail_link(&mtxdriver);       /* link in the mtx driver */
++#endif
 -#ifndef PHP_WIN32
++#if 0
  	mail_link(&mmdfdriver);      /* link in the mmdf driver */
  	mail_link(&newsdriver);      /* link in the news driver */
  	mail_link(&philedriver);     /* link in the phile driver */
--	auth_link(&auth_log);        /* link in the log authenticator */
++#endif
+ 	auth_link(&auth_log);        /* link in the log authenticator */
+ #ifdef  HAVE_IMAP_SSL
+ 	ssl_onceonlyinit ();
+ 	auth_link (&auth_ssl);       /* link in the ssl authenticator */
+-#endif
  #endif
-+	auth_link(&auth_log);        /* link in the log authenticator */
  	mail_link(&dummydriver);     /* link in the dummy driver */
  #else
- 	/* link in the c-client mail and auth drivers */

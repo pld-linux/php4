@@ -1,54 +1,7 @@
---- php4-4.0.4final.orig/Makefile.in
-+++ php4-4.0.4final/Makefile.in
-@@ -1,4 +1,4 @@
--
-+DESTDIR =
- ZEND_DIR = $(srcdir)/Zend
- SUBDIRS = Zend main ext sapi $(TSRM_DIR) $(REGEX_DIR) . $(PEAR_DIR)
- 
-@@ -32,7 +32,7 @@
- 
- install-sapi:
- 	@$(LIBTOOL) --silent --mode=install cp libphp4.la $(phptempdir)/libphp4.la >/dev/null 2>&1
--	-@$(mkinstalldirs) $(bindir)
-+	-@$(mkinstalldirs) $(DESTDIR)$(bindir)
- 	-@if test ! -r $(phptempdir)/libphp4.$(SHLIB_SUFFIX_NAME); then \
- 		for i in 0.0.0 0.0 0; do \
- 			if test -r $(phptempdir)/libphp4.$(SHLIB_SUFFIX_NAME).$$i; then \
-@@ -45,10 +45,10 @@
- 
- install-modules:
- 	@test -d modules && \
--	$(mkinstalldirs) $(moduledir) && \
-+	$(mkinstalldirs) $(DESTDIR)$(moduledir) && \
- 	echo "installing shared modules into $(moduledir)" && \
- 	rm -f modules/*.la && \
--	cp modules/* $(moduledir) >/dev/null 2>&1 || true
-+	cp modules/* $(DESTDIR)$(moduledir) >/dev/null 2>&1 || true
- 
- install-su: install-modules
- 	(cd pear && $(MAKE) install)
---- php4-4.0.4final.orig/pear/Makefile.in
-+++ php4-4.0.4final/pear/Makefile.in
-@@ -17,6 +17,7 @@
- 	File \
- 	HTML \
- 	Mail \
-+	Math \
- 	Net \
- 	Payment \
- 	PEAR \
-@@ -45,6 +46,8 @@
- 	Mail.php \
- 	Mail/sendmail.php \
- 	Mail/smtp.php \
-+	Math/Fraction.php \
-+	Math/Util.php \
- 	Net/SMTP.php \
- 	Net/Socket.php \
- 	PEAR/Installer.php \
-@@ -52,24 +55,24 @@
- 	XML/Parser.php
+--- php-4.0.5/pear/Makefile.in.wiget	Mon Mar 12 20:35:28 2001
++++ php-4.0.5/pear/Makefile.in	Fri May  4 13:12:17 2001
+@@ -94,24 +94,24 @@
+ 	XML/RPC.php
  
  install-data-local: PEAR.php
 -	@if $(mkinstalldirs) $(peardir); then \
@@ -78,8 +31,8 @@
  
  BUILD_FILES = \
  	pear/pear.m4 \
-@@ -89,13 +92,13 @@
- bin_PROGRAMS = phpize php-config pear
+@@ -131,15 +131,15 @@
+ bin_SCRIPTS = phpize php-config pear
  
  install-build:
 -	$(mkinstalldirs) $(phpbuilddir) $(bindir) && \
@@ -88,15 +41,17 @@
 +	(cd $(top_srcdir) && cp $(BUILD_FILES) $(DESTDIR)$(phpbuilddir))
  
  install-programs:
--	$(INSTALL) -m 755 $(srcdir)/phpextdist $(bindir)/phpextdist
-+	$(INSTALL) -m 755 $(srcdir)/phpextdist $(DESTDIR)$(bindir)/phpextdist
- 	for prog in $(bin_PROGRAMS); do \
--		$(INSTALL) -m 755 $$prog $(bindir)/$$prog; \
-+		$(INSTALL) -m 755 $$prog $(DESTDIR)$(bindir)/$$prog; \
+ 	for prog in $(bin_SCRIPTS); do \
+-		$(INSTALL) -m 755 scripts/$$prog $(bindir)/$$prog; \
++		$(INSTALL) -m 755 scripts/$$prog $(DESTDIR)$(bindir)/$$prog; \
+ 	done; \
+ 	for prog in phpextdist; do \
+-		$(INSTALL) -m 755 $(srcdir)/scripts/$$prog $(bindir)/$$prog; \
++		$(INSTALL) -m 755 $(srcdir)/scripts/$$prog $(DESTDIR)$(bindir)/$$prog; \
  	done
  
  HEADER_DIRS = \
-@@ -111,13 +114,13 @@
+@@ -155,13 +155,13 @@
  
  install-headers:
  	-@for i in $(HEADER_DIRS); do \
@@ -113,4 +68,33 @@
  	done
  
  Makefile: Makefile.in $(top_builddir)/config.status
-
+--- php-4.0.5/Makefile.in.wiget	Tue Mar 20 19:15:10 2001
++++ php-4.0.5/Makefile.in	Fri May  4 13:09:20 2001
+@@ -1,4 +1,4 @@
+-
++DESTDIR =
+ ZEND_DIR = $(srcdir)/Zend
+ SUBDIRS = Zend main ext sapi $(TSRM_DIR) $(REGEX_DIR) . $(PEAR_DIR)
+ 
+@@ -32,7 +32,7 @@
+ 
+ install-sapi:
+ 	@$(LIBTOOL) --silent --mode=install cp libphp4.la $(phptempdir)/libphp4.la >/dev/null 2>&1
+-	-@$(mkinstalldirs) $(bindir)
++	-@$(mkinstalldirs) $(DESTDIR)$(bindir)
+ 	-@if test ! -r $(phptempdir)/libphp4.$(SHLIB_SUFFIX_NAME); then \
+ 		for i in 0.0.0 0.0 0; do \
+ 			if test -r $(phptempdir)/libphp4.$(SHLIB_SUFFIX_NAME).$$i; then \
+@@ -45,10 +45,10 @@
+ 
+ install-modules:
+ 	@test -d modules && \
+-	$(mkinstalldirs) $(moduledir) && \
++	$(mkinstalldirs) $(DESTDIR)$(moduledir) && \
+ 	echo "installing shared modules into $(moduledir)" && \
+ 	rm -f modules/*.la && \
+-	cp modules/* $(moduledir) >/dev/null 2>&1 || true
++	cp modules/* $(DESTDIR)$(moduledir) >/dev/null 2>&1 || true
+ 
+ install-su: install-modules
+ 	(cd pear && $(MAKE) install)
