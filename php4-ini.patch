@@ -174,7 +174,7 @@
  ;         You can use the script in the ext/session dir for that purpose.
  ; NOTE 2: See the section on garbage collection below if you choose to
  ;         use subdirectories for session storage
--session.save_path = /tmp
+-;session.save_path = /tmp
 +; NOTE 3: you may need to override this setting for cli or cgi SAPIs,
 +;         to allow running them as user other than http
 +session.save_path = /var/run/php
