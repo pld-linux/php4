@@ -57,9 +57,9 @@ serveur web Apache.
 
 %description -l pl
 PHP jest jêzykiem skryptowym, którego polecenia umieszcza siê w plikach
-HTML.  Pakiet ten zawiera modu³ przeznaczony dla serwera HTTP (jak np.
+HTML. Pakiet ten zawiera modu³ przeznaczony dla serwera HTTP (jak np.
 Apache), który interpretuje te polecenia.  Umo¿liwia to tworzenie
-dynamicznie stron WWW.  Spora czê¶æ sk³adni PHP zapo¿yczona zosta³a
+dynamicznie stron WWW. Spora czê¶æ sk³adni PHP zapo¿yczona zosta³a
 z jêzyków: C, Java i Perl.
 
 %package mysql
@@ -75,6 +75,8 @@ This is a dynamic shared object (DSO) for Apache that will add MySQL
 database support to PHP4.  If you need back-end support for MySQL,
 you should install this package in addition to the main %{name} package.
 
+%description mysql -l pl
+
 %package gd
 Summary:	GD extension module for PHP4
 Summary:	Modu³ GD dla PHP4
@@ -85,7 +87,8 @@ Requires: 	%{name} = %{version}
 
 %description gd
 This is a dynamic shared object (DSO) for Apache that will add GD
-support to PHP4.
+support to PHP4. You should install this package in addition to the main
+%{name} package if you want to create and manipulate images with PHP.
 
 %description gd -l pl
 
@@ -98,6 +101,10 @@ Group(pl):	Biblioteki
 Requires: 	%{name} = %{version}
 
 %description java
+This is a dynamic shared object (DSO) for Apache that will add JAVA
+support to PHP4. This extension provides a simple and effective means
+for creating and invoking methods on Java objects from PHP.
+
 %description java -l pl
 
 %package xml
@@ -109,6 +116,12 @@ Group(pl):	Biblioteki
 Requires: 	%{name} = %{version}
 
 %description xml
+This is a dynamic shared object (DSO) for Apache that will add XML
+support to PHP4. This extension lets you create XML parsers and then
+define handlers for different XML events. If you want to be able to parse
+XML documents you should install this package in addition to the main 
+%{name} package.
+
 %description xml -l pl
 
 %prep
