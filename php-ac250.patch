@@ -114,8 +114,8 @@
    PHP_EXTENSION(yp, $ext_shared)
  
    case "$host_alias" in
---- php-4.0.6/acinclude.m4.wiget	Sun Jun 10 21:52:56 2001
-+++ php-4.0.6/acinclude.m4	Fri Jul  6 09:26:10 2001
+--- php-4.1.1/acinclude.m4.wiget	Sun Jun 10 21:52:56 2001
++++ php-4.1.1/acinclude.m4	Fri Jul  6 09:26:10 2001
 @@ -351,7 +351,7 @@
    AC_SUBST($1)
  ])
@@ -134,19 +134,6 @@
    $SHELL $srcdir/build/fastgen.sh $srcdir $ac_cv_mkdir_p $BSD_MAKEFILE $1
  ])
  
-@@ -798,12 +798,6 @@
-   PHP_FAST_OUTPUT($ext_builddir/Makefile)
- ])
- 
--PHP_SUBST(EXT_SUBDIRS)
--PHP_SUBST(EXT_STATIC)
--PHP_SUBST(EXT_SHARED)
--PHP_SUBST(EXT_LIBS)
--PHP_SUBST(EXT_LTLIBS)
--
- dnl
- dnl Solaris requires main code to be position independent in order
- dnl to let shared objects find symbols.  Weird.  Ugly.
 @@ -914,6 +908,7 @@
  dnl ## This macro can be used several times.
  AC_DEFUN(PHP_OUTPUT,[
@@ -155,18 +142,6 @@
  ])
  
  AC_DEFUN(PHP_DECLARED_TIMEZONE,[
-@@ -954,11 +949,6 @@
-   fi
- ])
- 
--AC_DEFUN(AC_ADD_LIBPATH, [indir([PHP_ADD_LIBPATH])])
--AC_DEFUN(AC_ADD_LIBRARY, [indir([PHP_ADD_LIBRARY])])
--AC_DEFUN(AC_ADD_LIBRARY_WITH_PATH, [indir([PHP_ADD_LIBRARY_WITH_PATH])])
--AC_DEFUN(AC_ADD_INCLUDE, [indir([PHP_ADD_INCLUDE])])
--
- AC_DEFUN(PHP_FOPENCOOKIE,[
- 	AC_CHECK_FUNC(fopencookie, [ have_glibc_fopencookie=yes ])
- 
 --- php-4.0.6/configure.in.wiget	Fri Jul  6 08:37:53 2001
 +++ php-4.0.6/configure.in	Fri Jul  6 09:32:15 2001
 @@ -5,7 +5,7 @@
@@ -260,3 +235,14 @@
  dnl ## Local Variables:
  dnl ## tab-width: 4
  dnl ## End:
+--- php-4.1.1/ext/imap/config.m4.orig	Tue Aug  7 18:18:04 2001
++++ php-4.1.1/ext/imap/config.m4	Sat Jan 19 13:50:24 2002
+@@ -133,7 +133,7 @@
+       #endif
+     ],[
+       AC_DEFINE(HAVE_IMAP2001, 1, [ ])
+-    ],[ ])
++    ],[:])
+     CPPFLAGS=$old_CPPFLAGS
+ 
+     AC_CHECK_LIB(pam, pam_start) 
