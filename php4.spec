@@ -155,6 +155,7 @@ BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	zziplib-devel
 #BuildRequires:	fastcgi-devkit
+BuildConflicts:	mysql-devel >= 4
 # apache 1.3 vs apache 2.0
 %if %{_apache2}
 PreReq:		apache >= 2.0.40
