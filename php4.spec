@@ -36,7 +36,6 @@
 %bcond_without	odbc		# without ODBC extension module
 %bcond_without	openssl		# without OpenSSL support and OpenSSL extension (module)
 %bcond_without	pcre		# without PCRE extension module
-%bcond_without	pdf		# without PDF extension module
 %bcond_without	pgsql		# without PostgreSQL extension module
 %bcond_without	pspell		# without pspell extension module
 %bcond_without	recode		# without recode extension module
@@ -76,14 +75,14 @@ Summary(ru):	PHP ÷ÅÒÓÉÉ 5 -- ÑÚÙË ÐÒÅÐÒÏÃÅÓÓÉÒÏ×ÁÎÉÑ HTML-ÆÁÊÌÏ×, ×ÙÐÏÌÎÑÅÍÙÊ ÎÁ
 Summary(uk):	PHP ÷ÅÒÓ¦§ 5 -- ÍÏ×Á ÐÒÅÐÒÏÃÅÓÕ×ÁÎÎÑ HTML-ÆÁÊÌ¦×, ×ÉËÏÎÕ×ÁÎÁ ÎÁ ÓÅÒ×ÅÒ¦
 Name:		php
 Version:	5.0.0
-%define _pre	RC2
+%define _pre	RC3
 Release:	0.%{_pre}.1
 Epoch:		3
 Group:		Libraries
 License:	PHP
 #Source0:	http://www.php.net/distributions/%{name}-%{version}%{_pre}.tar.bz2
 Source0:	http://pl2.php.net/distributions/%{name}-%{version}%{_pre}.tar.bz2
-# Source0-md5:	99e056269c2e3eac7e934755c60c44b7
+# Source0-md5:	aa24589d3c173052998792e4a6d255fa
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -114,6 +113,7 @@ Patch19:	%{name}-no_pear_install.patch
 Patch20:	%{name}-zlib.patch
 Patch21:	%{name}-sybase-fix.patch
 Patch22:	%{name}-mssql-fix.patch
+Patch23:	%{name}-mnogosearch-fix.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -167,7 +167,6 @@ BuildRequires:	ncurses-devel
 BuildRequires:	openssl-devel >= 0.9.7c
 %endif
 BuildRequires:	pam-devel
-%{?with_pdf:BuildRequires:	pdflib-devel >= 4.0.0}
 BuildRequires:	%{__perl}
 %{?with_msession:BuildRequires:	phoenix-devel}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
@@ -1015,21 +1014,6 @@ Compatible Regular Expression support.
 Modu³ PHP umo¿liwiaj±cy korzystanie z perlowych wyra¿eñ regularnych
 (Perl Compatible Regular Expressions)
 
-%package pdf
-Summary:	PDF creation module module for PHP
-Summary(pl):	Modu³ do tworzenia plików PDF dla PHP
-Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}
-Requires:	%{name}-common = %{epoch}:%{version}
-
-%description pdf
-This is a dynamic shared object (DSO) for PHP that will add PDF
-support through pdflib.
-
-%description pdf -l pl
-Modu³ PHP umo¿liwiaj±cy tworzenie plików PDF. Wykorzystuje bibliotekê
-pdflib.
-
 %package pgsql
 Summary:	PostgreSQL database module for PHP
 Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP
@@ -1460,6 +1444,7 @@ cp php.ini-dist php.ini
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
+%patch23 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
@@ -1558,7 +1543,6 @@ for i in fcgi cgi cli apxs ; do
 	%{?with_openssl:--with-openssl=shared} \
 	%{?with_oracle:--with-oracle=shared} \
 	%{!?with_pcre:--without-pcre-regex}%{?with_pcre:--with-pcre-regex=shared} \
-	%{?with_pdf:--with-pdflib=shared} \
 	--with-pear=%{php_pear_dir} \
 	%{!?with_pgsql:--without-pgsql}%{?with_pgsql:--with-pgsql=shared,/usr} \
 	--with-png-dir=/usr \
@@ -2035,14 +2019,6 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove pcre %{_sysconfdir}/php.ini
 fi
 
-%post pdf
-%{_sbindir}/php-module-install install pdf %{_sysconfdir}/php.ini
-
-%preun pdf
-if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove pdf %{_sysconfdir}/php.ini
-fi
-
 %post pgsql
 %{_sbindir}/php-module-install install pgsql %{_sysconfdir}/php.ini
 
@@ -2475,12 +2451,6 @@ fi
 %files pcre
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pcre.so
-%endif
-
-%if %{with pdf}
-%files pdf
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/pdf.so
 %endif
 
 %if %{with pgsql}
