@@ -14,7 +14,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.4pl1
-Release:	0.6
+Release:	0.7
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -35,7 +35,8 @@ Patch5:		%{name}-no_libnsl.patch
 Patch6:		%{name}-DESTDIR.patch
 Patch7:		%{name}-gd-shared.patch
 Patch8:		%{name}-apache-fixes.patch
-#Patch9:		%{name}-system-expat.patch
+Patch9:		%{name}-system-expat.patch
+Patch10:	%{name}-quotes.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -675,7 +676,7 @@ Files for PHP modules development.
 %patch7 -p1
 %patch8 -p1
 #%patch9 -p1
-
+%patch10 -p1
 
 %build
 CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
