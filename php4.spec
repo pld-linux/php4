@@ -3,6 +3,7 @@
 %include	/usr/lib/rpm/macros.php
 
 %define	_apache2	%(rpm -q apache-devel 2> /dev/null | grep -Eq '\\-2\\.[0-9]+\\.' && echo 1 || echo 0)
+%define		apxs		/usr/sbin/apxs
 
 %if %{_apache2}
 %define _without_recode 1
