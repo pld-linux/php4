@@ -2,11 +2,11 @@
 #   oracle - with oracle support 
 #   oci8   - with oci8 support
 #	
-Summary:	The PHP HTML-embedded scripting language for use with Apache.
-Summary(fr):	Le langage de script embarque-HTML PHP pour Apache.
-Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache.
+Summary:	The PHP HTML-embedded scripting language for use with Apache
+Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
+Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
-Version:	4.0.3pl1
+Version:	4.0.4
 Release:	1
 Epoch:		1
 Group:		Libraries
@@ -102,8 +102,8 @@ tworzenie dynamicznie stron WWW. Spora czê¶æ sk³adni PHP zapo¿yczona
 zosta³a z jêzyków: C, Java i Perl.
 
 %package mysql
-Summary:	MySQL database module for PHP4
-Summary(pl):	Modu³ bazy danych MySQL dla PHP4
+Summary:	MySQL database module for PHP
+Summary(pl):	Modu³ bazy danych MySQL dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -112,16 +112,16 @@ Requires:	%{name} = %{version}
 
 %description mysql
 This is a dynamic shared object (DSO) for Apache that will add MySQL
-database support to PHP4. If you need back-end support for MySQL, you
+database support to PHP. If you need back-end support for MySQL, you
 should install this package in addition to the main %{name} package.
 
 %description mysql -l pl
-Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych MySQL.
+Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych MySQL.
 
 
 %package pgsql
-Summary:	PostgreSQL database module for PHP4
-Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP4
+Summary:	PostgreSQL database module for PHP
+Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -130,16 +130,16 @@ Requires:	%{name} = %{version}
 
 %description pgsql
 This is a dynamic shared object (DSO) for Apache that will add
-PostgreSQL database support to PHP4. If you need back-end support for
+PostgreSQL database support to PHP. If you need back-end support for
 PostgreSQL, you should install this package in addition to the main
 %{name} package.
 
 %description pgsql -l pl
-Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych PostgreSQL.
+Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych PostgreSQL.
 
 %package oci8
-Summary:	Oracle 8 database module for PHP4
-Summary(pl):	Modu³ bazy danych Oracle 8 dla PHP4
+Summary:	Oracle 8 database module for PHP
+Summary(pl):	Modu³ bazy danych Oracle 8 dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -149,16 +149,16 @@ Autoreq:	false
 
 %description oci8
 This is a dynamic shared object (DSO) for Apache that will add Oracle
-8 database support to PHP4. If you need back-end support for Oracle 8,
+8 database support to PHP. If you need back-end support for Oracle 8,
 you should install this package in addition to the main %{name}
 package.
 
 %description oci8 -l pl
-Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych Oracle 8. }
+Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 8. }
 
 %package oracle
-Summary:	Oracle 7 database module for PHP4
-Summary(pl):	Modu³ bazy danych Oracle 7 dla PHP4
+Summary:	Oracle 7 database module for PHP
+Summary(pl):	Modu³ bazy danych Oracle 7 dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -168,16 +168,16 @@ Autoreq:	false
 
 %description oracle
 This is a dynamic shared object (DSO) for Apache that will add Oracle
-7 database support to PHP4. If you need back-end support for Oracle 7,
+7 database support to PHP. If you need back-end support for Oracle 7,
 you should install this package in addition to the main %{name}
 package.
 
 %description oracle -l pl
-Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych Oracle 7. }
+Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 7. }
 
 %package gd
-Summary:	GD extension module for PHP4
-Summary:	Modu³ GD dla PHP4
+Summary:	GD extension module for PHP
+Summary:	Modu³ GD dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -186,15 +186,15 @@ Requires:	%{name} = %{version}
 
 %description gd
 This is a dynamic shared object (DSO) for Apache that will add GD
-support to PHP4. You should install this package in addition to the
+support to PHP. You should install this package in addition to the
 main %{name} package if you want to create and manipulate images with
 PHP.
 
 %description gd -l pl
 
 %package java
-Summary:	Java extension module for PHP4
-Summary(pl):	Modu³ Javy dla PHP4
+Summary:	Java extension module for PHP
+Summary(pl):	Modu³ Javy dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -203,14 +203,14 @@ Requires:	%{name} = %{version}
 
 %description java
 This is a dynamic shared object (DSO) for Apache that will add JAVA
-support to PHP4. This extension provides a simple and effective means
+support to PHP. This extension provides a simple and effective means
 for creating and invoking methods on Java objects from PHP.
 
 %description java -l pl
 
 %package xml
-Summary:	XML extension module for PHP4
-Summary(pl):	Modu³ XML dla PHP4
+Summary:	XML extension module for PHP
+Summary(pl):	Modu³ XML dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -219,7 +219,7 @@ Requires:	%{name} = %{version}
 
 %description xml
 This is a dynamic shared object (DSO) for Apache that will add XML
-support to PHP4. This extension lets you create XML parsers and then
+support to PHP. This extension lets you create XML parsers and then
 define handlers for different XML events. If you want to be able to
 parse XML documents you should install this package in addition to the
 main %{name} package.
@@ -227,8 +227,8 @@ main %{name} package.
 #%description xml -l pl
 
 %package dba
-Summary:	DBA extension module for PHP4
-Summary(pl):	Modu³ DBA dla PHP4
+Summary:	DBA extension module for PHP
+Summary(pl):	Modu³ DBA dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -237,13 +237,13 @@ Requires:	%{name} = %{version}
 
 %description dba
 This is a dynamic shared object (DSO) for Apache that will add
-flat-file databases (DBA) support to PHP4.
+flat-file databases (DBA) support to PHP.
 
 #%description dba -l pl
 
 %package calendar
-Summary:	Calendar extension module for PHP4
-Summary(pl):	Modu³ funkcji kalendarza dla PHP4
+Summary:	Calendar extension module for PHP
+Summary(pl):	Modu³ funkcji kalendarza dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -252,13 +252,13 @@ Requires:	%{name} = %{version}
 
 %description calendar
 This is a dynamic shared object (DSO) for Apache that will add
-calendar support to PHP4.
+calendar support to PHP.
 
 #%description calendar -l pl
 
 %package dbase
-Summary:	DBase extension module for PHP4
-Summary(pl):	Modu³ DBase dla PHP4
+Summary:	DBase extension module for PHP
+Summary(pl):	Modu³ DBase dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -267,13 +267,13 @@ Requires:	%{name} = %{version}
 
 %description dbase
 This is a dynamic shared object (DSO) for Apache that will add DBase
-support to PHP4.
+support to PHP.
 
 #%description dbase -l pl
 
 %package filepro
-Summary:	FilePro extension module for PHP4
-Summary(pl):	Modu³ FilePro dla PHP4
+Summary:	FilePro extension module for PHP
+Summary(pl):	Modu³ FilePro dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -282,13 +282,13 @@ Requires:	%{name} = %{version}
 
 %description filepro
 This is a dynamic shared object (DSO) for Apache that will add FilePro
-support to PHP4.
+support to PHP.
 
 #%description filepro -l pl
 
 %package posix
-Summary:	POSIX extension module for PHP4
-Summary(pl):	Modu³ POSIX dla PHP4
+Summary:	POSIX extension module for PHP
+Summary(pl):	Modu³ POSIX dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -297,13 +297,13 @@ Requires:	%{name} = %{version}
 
 %description posix
 This is a dynamic shared object (DSO) for Apache that will add POSIX
-functions support to PHP4.
+functions support to PHP.
 
 #%description posix -l pl
 
 %package pcre
-Summary:	PCRE extension module for PHP4
-Summary(pl):	Modu³ PCRE dla PHP4
+Summary:	PCRE extension module for PHP
+Summary(pl):	Modu³ PCRE dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -312,13 +312,13 @@ Requires:	%{name} = %{version}
 
 %description pcre
 This is a dynamic shared object (DSO) for Apache that will add Perl
-Compatible Regular Expression support to PHP4.
+Compatible Regular Expression support to PHP.
 
 #%description pcre -l pl
 
 %package sysvsem
-Summary:	SysV sem extension module for PHP4
-Summary(pl):	Modu³ SysV sem dla PHP4
+Summary:	SysV sem extension module for PHP
+Summary(pl):	Modu³ SysV sem dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -327,13 +327,13 @@ Requires:	%{name} = %{version}
 
 %description sysvsem
 This is a dynamic shared object (DSO) for Apache that will add SysV
-semafores support to PHP4.
+semafores support to PHP.
 
 #%description sysvsem -l pl
 
 %package sysvshm
-Summary:	SysV shm extension module for PHP4
-Summary(pl):	Modu³ SysV shm dla PHP4
+Summary:	SysV shm extension module for PHP
+Summary(pl):	Modu³ SysV shm dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -342,13 +342,13 @@ Requires:	%{name} = %{version}
 
 %description sysvshm
 This is a dynamic shared object (DSO) for Apache that will add SysV
-Shared Memory support to PHP4.
+Shared Memory support to PHP.
 
 #%description sysvshm -l pl
 
 %package yp
-Summary:	NIS (yp) extension module for PHP4
-Summary(pl):	Modu³ NIS (yp) dla PHP4
+Summary:	NIS (yp) extension module for PHP
+Summary(pl):	Modu³ NIS (yp) dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -357,13 +357,13 @@ Requires:	%{name} = %{version}
 
 %description yp
 This is a dynamic shared object (DSO) for Apache that will add NIS
-(Yellow Pages) support to PHP4.
+(Yellow Pages) support to PHP.
 
 #%description yp -l pl
 
 %package bcmath
-Summary:	bcmath extension module for PHP4
-Summary(pl):	Modu³ bcmath dla PHP4
+Summary:	bcmath extension module for PHP
+Summary(pl):	Modu³ bcmath dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -372,13 +372,13 @@ Requires:	%{name} = %{version}
 
 %description bcmath
 This is a dynamic shared object (DSO) for Apache that will add bc
-style precision math functions support to PHP4.
+style precision math functions support to PHP.
 
 #%description bcmath -l pl
 
 %package ftp
-Summary:	FTP extension module for PHP4
-Summary(pl):	Modu³ FTP dla PHP4
+Summary:	FTP extension module for PHP
+Summary(pl):	Modu³ FTP dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -387,13 +387,13 @@ Requires:	%{name} = %{version}
 
 %description ftp
 This is a dynamic shared object (DSO) for Apache that will add FTP
-support to PHP4.
+support to PHP.
 
 #%description ftp -l pl
 
 %package zlib
-Summary:	Zlib extension module for PHP4
-Summary(pl):	Modu³ zlib dla PHP4
+Summary:	Zlib extension module for PHP
+Summary(pl):	Modu³ zlib dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -402,13 +402,13 @@ Requires:	%{name} = %{version}
 
 %description zlib
 This is a dynamic shared object (DSO) for Apache that will add
-commpresion (zlib) support to PHP4.
+commpresion (zlib) support to PHP.
 
 #%description zlib -l pl
 
 %package exif
-Summary:	exifextension module for PHP4
-Summary(pl):	Modu³ exif dla PHP4
+Summary:	exifextension module for PHP
+Summary(pl):	Modu³ exif dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -417,13 +417,13 @@ Requires:	%{name} = %{version}
 
 %description exif
 This is a dynamic shared object (DSO) for Apache that will add exif
-support to PHP4.
+support to PHP.
 
 #%description exif -l pl
 
 %package recode
-Summary:	recodeextension module for PHP4
-Summary(pl):	Modu³ recode dla PHP4
+Summary:	recodeextension module for PHP
+Summary(pl):	Modu³ recode dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -432,13 +432,13 @@ Requires:	%{name} = %{version}
 
 %description recode
 This is a dynamic shared object (DSO) for Apache that will add recode
-support to PHP4.
+support to PHP.
 
 #%description recode -l pl
 
 %package session
-Summary:	sessionextension module for PHP4
-Summary(pl):	Modu³ session dla PHP4
+Summary:	sessionextension module for PHP
+Summary(pl):	Modu³ session dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -447,13 +447,13 @@ Requires:	%{name} = %{version}
 
 %description session
 This is a dynamic shared object (DSO) for Apache that will add session
-support to PHP4.
+support to PHP.
 
 #%description session -l pl
 
 %package gettext
-Summary:	gettextextension module for PHP4
-Summary(pl):	Modu³ gettext dla PHP4
+Summary:	gettextextension module for PHP
+Summary(pl):	Modu³ gettext dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -462,14 +462,14 @@ Requires:	%{name} = %{version}
 
 %description gettext
 This is a dynamic shared object (DSO) for Apache that will add gettext
-support to PHP4.
+support to PHP.
 
 #%description gettext -l pl
 
 
 %package snmp
-Summary:	snmpextension module for PHP4
-Summary(pl):	Modu³ snmp dla PHP4
+Summary:	snmpextension module for PHP
+Summary(pl):	Modu³ snmp dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -478,13 +478,13 @@ Requires:	%{name} = %{version}
 
 %description snmp
 This is a dynamic shared object (DSO) for Apache that will add snmp
-support to PHP4.
+support to PHP.
 
 #%description snmp -l pl
 
 %package imap
-Summary:	imapextension module for PHP4
-Summary(pl):	Modu³ imap dla PHP4
+Summary:	imapextension module for PHP
+Summary(pl):	Modu³ imap dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -493,13 +493,13 @@ Requires:	%{name} = %{version}
 
 %description imap
 This is a dynamic shared object (DSO) for Apache that will add imap
-support to PHP4.
+support to PHP.
 
 #%description imap -l pl
 
 %package ldap
-Summary:	LDAP extension module for PHP4
-Summary(pl):	Modu³ LDAP dla PHP4
+Summary:	LDAP extension module for PHP
+Summary(pl):	Modu³ LDAP dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -508,13 +508,13 @@ Requires:	%{name} = %{version}
 
 %description ldap
 This is a dynamic shared object (DSO) for Apache that will add LDAP
-support to PHP4.
+support to PHP.
 
 #%description ldap -l pl
 
 %package sockets
-Summary:	sockets extension module for PHP4
-Summary(pl):	Modu³ socket dla PHP4
+Summary:	sockets extension module for PHP
+Summary(pl):	Modu³ socket dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -523,13 +523,13 @@ Requires:	%{name} = %{version}
 
 %description sockets
 This is a dynamic shared object (DSO) for Apache that will add sockets
-support to PHP4.
+support to PHP.
 
 #%description sockets -l pl
 
 %package mcrypt
-Summary:	mcrypt extension module for PHP4
-Summary(pl):	Modu³ mcrypt dla PHP4
+Summary:	mcrypt extension module for PHP
+Summary(pl):	Modu³ mcrypt dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -538,23 +538,23 @@ Requires:	%{name} = %{version}
 
 %description mcrypt
 This is a dynamic shared object (DSO) for Apache that will add mcrypt
-support to PHP4.
+support to PHP.
 
 #%description mcrypt -l pl
 
 %package doc
-Summary:	Online manual for PHP4
-Summary(pl):	Dokumentacja dla PHP4
+Summary:	Online manual for PHP
+Summary(pl):	Dokumentacja dla PHP
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
 Group(pl):	Sieciowe/Serwery
 
 %description doc
-Comprehensive documentation for PHP4, viewable through your web
+Comprehensive documentation for PHP, viewable through your web
 server, too!
 
 %description doc -l pl
-Dokumentacja dla pakietu PHP4. Mo¿na j± równie¿ ogl±daæ poprzez serwer
+Dokumentacja dla pakietu PHP. Mo¿na j± równie¿ ogl±daæ poprzez serwer
 WWW.
 
 %prep
