@@ -17,6 +17,7 @@ URL:		http://www.php.net/
 BuildRequires:	apache-devel
 BuildRequires:	zlib-devel
 BuildRequires:	mysql-devel >= 3.22.30-2
+BuildRequires:	gd-devel
 Requires:	apache >= 1.3.9
 Prereq:		/usr/sbin/apxs
 BuildRoot:	/tmp/%{name}-%{version}-root
@@ -73,7 +74,7 @@ database support to PHP4.  If you need back-end support for MySQL,
 you should install this package in addition to the main %{name} package.
 
 %package gd
-Summary:	GD extension module fot PHP4
+Summary:	GD extension module for PHP4
 Summary:	Modu³ GD dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
