@@ -2086,6 +2086,14 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove shmop %{_sysconfdir}/php.ini
 fi
 
+%post simplexml
+%{_sbindir}/php-module-install install simplexml %{_sysconfdir}/php.ini
+
+%preun simplexml
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove simplexml %{_sysconfdir}/php.ini
+fi
+
 %post snmp
 %{_sbindir}/php-module-install install snmp %{_sysconfdir}/php.ini
 
@@ -2100,6 +2108,14 @@ fi
 %preun sockets
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove sockets %{_sysconfdir}/php.ini
+fi
+
+%post sqlite
+%{_sbindir}/php-module-install install sqlite %{_sysconfdir}/php.ini
+
+%preun sqlite
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove sqlite %{_sysconfdir}/php.ini
 fi
 
 %post sybase
@@ -2498,6 +2514,12 @@ fi
 %files sockets
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/sockets.so
+
+%if %{with sqlite}
+%files sqlite
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/sqlite.so
+%endif
 
 %if %{with sybase}
 %files sybase
