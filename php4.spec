@@ -1348,7 +1348,7 @@ EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf
 %{__libtoolize}
 %{__aclocal}
-%{__autoconf)
+%{__autoconf}
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
 for i in cgi cli apxs ; do
 %configure \
