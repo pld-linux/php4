@@ -17,7 +17,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.1.2
-Release:	0.9
+Release:	1
 Epoch:		1
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -828,7 +828,8 @@ rm libphp4.la ; %{__make} libphp4.la
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} \
 		$RPM_BUILD_ROOT/home/httpd/icons \
-		$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}}
+		$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
+		$RPM_BUILD_ROOT/var/run/php
 
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
@@ -1207,13 +1208,11 @@ fi
 
 %dir %{_sysconfdir}
 %attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
+%attr(730,root,http) %dir %verify(not group mode) /var/run/php
 
 /home/httpd/icons/*
-
 %attr(755,root,root) %{_sbindir}/*
-
 %attr(755,root,root) %{_libdir}/libphp_common*.so.*.*.*
-
 %dir %{extensionsdir}
 
 %files devel
