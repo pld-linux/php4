@@ -74,13 +74,13 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
-Version:	4.3.10
-Release:	6.3%{?with_hardened:hardened}
+Version:	4.3.11
+Release:	0.1%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
-# Source0-md5:	7e56824dae9679c59a8234eb848aa542
+# Source0-md5:	fbc67d240812136a9842bc1f2a217b7a
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source3:	%{name}-module-install
@@ -89,8 +89,8 @@ Source5:	%{name}-cgi-fcgi.ini
 Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Source8:	%{name}-cli.ini
-Source9:	http://www.hardened-php.net/hardened-php-%{version}-0.2.5.patch.gz
-# Source9-md5:	4330fa3d2addf6e8f9920d54eeda1b78
+Source9:	http://www.hardened-php.net/hardened-php-4.3.10-0.2.6.patch.gz
+# Source9-md5:	0072677fefb4ed8900f2db0a6b317572
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-xml-expat-fix.patch
@@ -98,7 +98,6 @@ Patch3:		%{name}-mail.patch
 Patch4:		%{name}-link-libs.patch
 Patch5:		%{name}-libpq_fs_h_path.patch
 Patch6:		%{name}-wddx-fix.patch
-Patch7:		%{name}-cpdf-fix.patch
 Patch8:		%{name}-hyperwave-fix.patch
 Patch9:		%{name}-xslt-gcc33.patch
 Patch10:	%{name}-java-norpath.patch
@@ -114,7 +113,7 @@ Patch19:	%{name}-xmlrpc-fix.patch
 Patch20:	%{name}-libtool.patch
 Patch21:	%{name}-allow-db31.patch
 Patch22:	%{name}-threads-acfix.patch
-Patch23:	%{name}-tsrmlsfetchgcc2.patch
+Patch23:	%{name}-gmp.patch
 Patch24:	%{name}-qt.patch
 Patch25:	%{name}-no_pear_install.patch
 Patch26:	%{name}-zlib.patch
@@ -348,9 +347,7 @@ Group:		Libraries
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
 Provides:	php-common = %{epoch}:%{version}-%{release}
 Provides:	php-session = %{epoch}:%{version}-%{release}
-Provides:	php-openssl = %{epoch}:%{version}-%{release}
 Obsoletes:	php-session < 3:4.2.1-2
-Obsoletes:	php-openssl < 3:4.3.9-2.2
 
 %description common
 Common files needed by both apache module and CGI.
@@ -1576,7 +1573,6 @@ ModuЁ PHP umo©liwiaj╠cy u©ywanie kompresji zlib.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
 %patch8 -p1
 # Not really needed?
 #%patch9 -p1
@@ -1719,7 +1715,7 @@ for i in fcgi cgi cli apxs ; do
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-ncurses=shared \
 	%{?with_oci8:--with-oci8=shared} \
-	%{?with_openssl:--with-openssl=/usr} \
+	%{?with_openssl:--with-openssl=shared,/usr} \
 	%{?with_oracle:--with-oracle=shared} \
 	%{!?with_pcre:--without-pcre-regex}%{?with_pcre:--with-pcre-regex=shared} \
 	%{?with_pdf:--with-pdflib=shared} \
@@ -2683,11 +2679,11 @@ fi
 %attr(755,root,root) %{extensionsdir}/odbc.so
 %endif
 
-#%if %{with openssl}
-#%files openssl
-#%defattr(644,root,root,755)
-#%attr(755,root,root) %{extensionsdir}/openssl.so
-#%endif
+%if %{with openssl}
+%files openssl
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/openssl.so
+%endif
 
 %if %{with oracle}
 %files oracle
