@@ -1,0 +1,12 @@
+--- php-4.3.3RC3/ext/qtdom/config.m4.orig	2002-11-18 06:06:37.000000000 +0100
++++ php-4.3.3RC3/ext/qtdom/config.m4	2003-08-16 15:32:42.664499856 +0200
+@@ -11,6 +11,9 @@
+       if test -f $QTDIR/include/qdom.h; then
+         QTDOM_LIBDIR=$QTDIR/lib
+         QTDOM_INCDIR=$QTDIR/include
++      elif test -f /usr/include/qt/qdom.h; then
++        QTDOM_LIBDIR=/usr/lib
++        QTDOM_INCDIR=/usr/include/qt
+       elif test -f /usr/lib/qt2/include/qdom.h; then
+         QTDOM_LIBDIR=/usr/lib
+         QTDOM_INCDIR=/usr/lib/qt2/include
