@@ -70,8 +70,9 @@ Source0:	http://downloads.php.net/ilia/php-%{version}.tar.bz2
 # Source0-md5:	b799bbb330da60324d972641baab693c
 Source1:	FAQ.%{name}
 Source2:	zend.gif
-Source4:	%{name}-module-install
-Source5:	%{name}-mod_php.conf
+Source3:	%{name}-module-install
+Source4:	%{name}-mod_php.conf
+Source5:	%{name}-cgi-fcgi.ini
 Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Source8:	%{name}-cli.ini
@@ -195,10 +196,10 @@ Requires(post,preun):	%{apxs}
 Requires(post,preun):	%{__perl}
 %endif
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+Provides:	php = %{epoch}:%{version}-%{release}
 Obsoletes:	phpfi
 Obsoletes:	apache-mod_php
-Provides:	php = %{epoch}:%{version}-%{release}
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/php4
 %define		extensionsdir	%{_libdir}/php4
@@ -317,7 +318,8 @@ Summary(ru):	Ú¡⁄ƒ≈Ã—≈ÕŸ≈ ¬…¬Ã…œ‘≈À… ƒÃ— php
 Summary(uk):	‚¶¬Ã¶œ‘≈À… ”–¶ÃÿŒœ«œ ◊…Àœ“…”‘¡ŒŒ— ƒÃ— php
 Group:		Libraries
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-session <= %{epoch}:%{version}-%{release}
+# useless, php4 never had -session separated
+#Obsoletes:	%{name}-session <= %{epoch}:%{version}-%{release}
 
 %description common
 Common files needed by both apache module and CGI.
@@ -340,10 +342,9 @@ Summary(pt_BR):	Arquivos de desenvolvimento para PHP
 Summary(ru):	¡À≈‘ “¡⁄“¡¬œ‘À… ƒÃ— –œ”‘“œ≈Œ…— “¡”€…“≈Œ…  PHP4
 Summary(uk):	¡À≈‘ “œ⁄“œ¬À… ƒÃ— –œ¬’ƒœ◊… “œ⁄€…“≈Œÿ PHP4
 Group:		Development/Languages/PHP
+Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	autoconf
 Requires:	automake
-Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-pear-devel
 Conflicts:	php-devel
 
 %description devel
@@ -398,8 +399,8 @@ Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 
 %description bzip2
-This is a dynamic shared object (DSO) for PHP that will add
-bzip2 compression support to PHP.
+This is a dynamic shared object (DSO) for PHP that will add bzip2
+compression support to PHP.
 
 %description bzip2 -l pl
 Modu≥ PHP umoøliwiaj±cy uøywanie kompresji bzip2.
@@ -585,8 +586,8 @@ Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 
 %description exif
-This is a dynamic shared object (DSO) for PHP that will add EXIF
-tags support in image files.
+This is a dynamic shared object (DSO) for PHP that will add EXIF tags
+support in image files.
 
 %description exif -l pl
 Modu≥ PHP dodaj±cy obs≥ugÍ znacznikÛw EXIF w plikach obrazkÛw.
@@ -659,7 +660,7 @@ Summary:	GD extension module for PHP
 Summary(pl):	Modu≥ GD dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	%{name}-common = %{epoch}:%{version}
+Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	gd >= 2.0.28-2
 Requires:	gd(gif)
 Provides:	%{name}-gd(gif) = %{epoch}:%{version}-%{release}
@@ -812,8 +813,8 @@ Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 
 %description mbstring
-This is a dynamic shared object (DSO) for PHP that will add
-multibyte string support.
+This is a dynamic shared object (DSO) for PHP that will add multibyte
+string support.
 
 %description mbstring -l pl
 Modu≥ PHP dodaj±cy obs≥ugÍ ci±gÛw znakÛw wielobajtowych.
@@ -938,7 +939,8 @@ This is a dynamic shared object (DSO) for PHP that will add MS SQL
 databases support through FreeTDS library.
 
 %description mssql -l pl
-Modu≥ PHP dodaj±cy obs≥ugÍ baz danych MS SQL poprzez bibliotekÍ FreeTDS.
+Modu≥ PHP dodaj±cy obs≥ugÍ baz danych MS SQL poprzez bibliotekÍ
+FreeTDS.
 
 %package mysql
 Summary:	MySQL database module for PHP
@@ -1469,7 +1471,6 @@ Group:		Development/Languages/PHP
 Requires:	%{name}-pcre = %{epoch}:%{version}-%{release}
 Requires:	%{name}-xml = %{epoch}:%{version}-%{release}
 Provides:	php-pear = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-pear-additional_classes
 
 %description pear
 PEAR - PHP Extension and Application Repository.
@@ -1536,7 +1537,11 @@ sed -i -e 's#apr-config#apr-1-config#g' sapi/apache*/*.m4
 sed -i -e 's#apu-config#apu-1-config#g' sapi/apache*/*.m4
 
 %build
+%if %{_apache2}
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include `%{_bindir}/apr-1-config --cppflags --includes` `%{_bindir}/apu-1-config --includes`"
+%else
+CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
+%endif
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf --force
 %{__libtoolize}
@@ -1709,13 +1714,12 @@ ln -sf php.cgi $RPM_BUILD_ROOT%{_bindir}/php
 %{?with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{extensionsdir}}
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
-for i in %{SOURCE6} %{SOURCE7} %{SOURCE8}; do
+for i in %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE8}; do
  install $i $RPM_BUILD_ROOT%{_sysconfdir}/$(basename $i|sed -e "s@php4@php@g")
 done
-install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi-fcgi.ini
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{httpdir}/icons
-install %{SOURCE4} $RPM_BUILD_ROOT%{_sbindir}
-install %{SOURCE5} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php4.conf
+install %{SOURCE3} $RPM_BUILD_ROOT%{_sbindir}
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php4.conf
 
 install %{SOURCE1} .
 
@@ -1737,7 +1741,6 @@ done
 ln -sf php4.cgi $RPM_BUILD_ROOT%{_bindir}/php4
 rm -f $RPM_BUILD_ROOT%{_bindir}/php
 mv -f $RPM_BUILD_ROOT%{_mandir}/man1/php{,4}.1
-
 
 %clean
 rm -rf $RPM_BUILD_ROOT
