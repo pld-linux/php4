@@ -1,0 +1,51 @@
+--- php-4.2.3/ext/dba/config.m4.orig	Thu Apr 18 14:31:19 2002
++++ php-4.2.3/ext/dba/config.m4	Tue Dec 24 14:28:32 2002
+@@ -176,6 +176,34 @@
+ AC_MSG_CHECKING(for Berkeley DB3 support)
+ AC_DBA_STD_RESULT
+ 
++AC_ARG_WITH(db4,
++[  --with-db4[=DIR]        Include Berkeley DB4 support],[
++  if test "$withval" != "no"; then
++    for i in /usr/local /usr /usr/local/BerkeleyDB.4.1 $withval; do
++      if test -f "$i/include/db.h" ; then
++        THIS_PREFIX=$i
++	DB4_EXTRA=db.h
++      fi
++    done
++
++    if test -n "$DB4_EXTRA"; then
++      AC_DEFINE_UNQUOTED(DB3_INCLUDE_FILE, "$DB4_EXTRA", [ ])
++    fi
++
++    for LIB in db db-4 db4; do
++      PHP_TEMP_LDFLAGS(-L$THIS_PREFIX/lib,[
++      AC_CHECK_LIB($LIB, db_create, [AC_DEFINE(DBA_DB3,1,[ ]) THIS_LIBS=$LIB])
++      ])
++    done
++
++    PHP_DBA_STD_ASSIGN
++    PHP_DBA_STD_CHECK
++    PHP_DBA_STD_ATTACH
++  fi
++])
++AC_MSG_CHECKING(for Berkeley DB4 support)
++AC_DBA_STD_RESULT
++
+ AC_ARG_WITH(dbm,
+ [  --with-dbm[=DIR]        Include DBM support],[
+   if test "$withval" != "no"; then
+--- php-4.2.3/ext/dba/dba_db3.c.orig	Thu Apr 18 14:31:19 2002
++++ php-4.2.3/ext/dba/dba_db3.c	Tue Dec 24 14:52:20 2002
+@@ -74,7 +74,11 @@
+ 	}
+ 
+ 	if (db_create(&dbp, NULL, 0) == 0 &&
++#if (DB_VERSION_MAJOR > 4) || (DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR >= 1)
++			dbp->open(dbp, NULL, info->path, NULL, type, gmode, filemode) == 0) {
++#else
+ 			dbp->open(dbp, info->path, NULL, type, gmode, filemode) == 0) {
++#endif
+ 		dba_db3_data *data;
+ 
+ 		data = malloc(sizeof(*data));

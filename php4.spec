@@ -15,8 +15,8 @@
 %endif
 
 # Conditional build:
-# _with_db3		- with DB3 support, if not - requires db.
-# _with_interbase	- with InterBase extension module	(BR: proprietary libs)
+# _with_db3		- use db3 packages instead of db (4.x) for Berkeley DB support
+# _with_interbase_inst	- use InterBase install., not Firebird	(BR: proprietary libs)
 # _with_java		- with Java extension module		(BR: jdk)
 # _with_oci8		- with Oracle oci8 extension module	(BR: proprietary libs)
 # _with_oracle		- with oracle extension module		(BR: proprietary libs)
@@ -26,6 +26,7 @@
 # _without_domxslt	- without DOM XSLT/EXSLT support in DOM XML extension module
 # _without_gif		- build GD extension module with gd library without GIF support
 # _without_imap		- without IMAP extension module
+# _without_interbase	- without InterBase extension module
 # _without_ldap		- without LDAP extension module
 # _without_mhash	- without mhash extension module
 # _without_ming		- without ming extension module
@@ -90,8 +91,10 @@ Patch20:	%{name}-ini.patch
 Patch21:	%{name}-acam.patch
 Patch22:	%{name}-xmlrpc-fix.patch
 Patch23:	%{name}-iconv-bug18039.patch
+Patch24:	%{name}-db4.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
+%{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird-devel}}
 BuildRequires:	apache-devel
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	automake >= 1.4d
@@ -101,7 +104,7 @@ BuildRequires:	cracklib-devel >= 2.7-15
 %{!?_without_curl:BuildRequires:	curl-devel}
 BuildRequires:	cyrus-sasl-devel
 %{?_with_db3:BuildRequires:	db3-devel}
-%{!?_with_db3:BuildRequires:	db-devel}
+%{!?_with_db3:BuildRequires:	db-devel >= 4.0}
 %if %(expr %{?_without_xml:0}%{!?_without_xml:1} + %{?_without_xmlrpc:0}%{!?_without_xmlrpc:1})
 BuildRequires:	expat-devel
 %endif
@@ -160,9 +163,9 @@ PreReq:		apache >= 2.0.40
 %else
 PreReq:		apache(EAPI) < 2.0.0
 PreReq:		apache(EAPI) >= 1.3.9
+Requires(post,preun):	%{apxs}
+Requires(post,preun):	perl
 %endif
-PreReq:		perl
-PreReq:		/usr/sbin/apxs
 PreReq:		%{name}-common = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	phpfi
@@ -652,21 +655,19 @@ Modu³ PHP dodaj±cy obs³ugê skrzynek IMAP.
 Um módulo para aplicações PHP que usam IMAP.
 
 %package interbase
-Summary:	Interbase database module for PHP
-Summary(pl):	Modu³ bazy danych Interbase dla PHP
+Summary:	InterBase/Firebird database module for PHP
+Summary(pl):	Modu³ bazy danych InterBase/Firebird dla PHP
 Group:		Libraries
 Requires(post,preun):%{name}-common = %{version}
 Requires:	%{name}-common = %{version}
-Autoreq:	false
+%{?_with_interbase_inst:Autoreq:	false}
 
 %description interbase
 This is a dynamic shared object (DSO) for Apache that will add
-InterBase database support to PHP. If you need back-end support for
-InterBase, you should install this package in addition to the main
-%{name} package.
+InterBase and Firebird database support to PHP.
 
 %description interbase -l pl
-Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych InterBase.
+Modu³ PHP umo¿liwiaj±cy dostêp do baz danych InterBase i Firebird.
 
 %package java
 Summary:	Java extension module for PHP
@@ -1341,27 +1342,28 @@ cp php.ini-dist php.ini
 %patch21 -p1
 %patch22 -p1
 %patch23 -p1
+%patch24 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE3} | tar -xf - -C manual
 
 %build
-CFLAGS="%{rpmcflags} -DEAPI=1 -I%{_prefix}/X11R6/include"
+CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf
 %{__libtoolize}
 %{__aclocal}
 autoconf
 #for i in cgi fastcgi apxs ; do
-PROG_SENDMAIL="%{_libdir}/sendmail"; export PROG_SENDMAIL
+PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
 for i in cgi apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
-	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=%{_prefix}` \
+	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=/usr` \
 %if %{_apache2}
-	`[ $i = apxs ] && echo --with-apxs2=%{_sbindir}/apxs` \
+	`[ $i = apxs ] && echo --with-apxs2=%{apxs}` \
 %else
-	`[ $i = apxs ] && echo --with-apxs=%{_sbindir}/apxs` \
+	`[ $i = apxs ] && echo --with-apxs=%{apxs}` \
 %endif
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
@@ -1399,8 +1401,7 @@ for i in cgi apxs ; do
 	%{!?_without_cpdf:--with-cpdflib=shared} \
 	--with-crack=shared \
 	%{?_without_curl:--without-curl}%{!?_without_curl:--with-curl=shared} \
-	--without-db2 \
-	%{?_with_db3:--with-db3} \
+	%{?_with_db3:--with-db3}%{!?_with_db3:--with-db4} \
 	--with-dbase=shared \
 	--with-dom=shared \
 	%{!?_without_domxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
@@ -1418,7 +1419,7 @@ for i in cgi apxs ; do
 	--with-gmp=shared \
 	--with-hyperwave=shared \
 	%{!?_without_imap:--with-imap=shared --with-imap-ssl} \
-	%{?_with_interbase:--with-interbase=shared} \
+	%{!?_without_interbase:--with-interbase=shared%{!?_with_interbase_inst:,/usr}} \
 	%{?_with_java:--with-java=/usr/lib/java} \
 	--with-jpeg-dir=shared,/usr \
 	%{!?_without_ldap:--with-ldap=shared} \
@@ -2141,7 +2142,7 @@ fi
 %attr(755,root,root) %{extensionsdir}/imap.so
 %endif
 
-%if %{?_with_interbase:1}%{!?_with_interbase:0}
+%if %{?_without_interbase:0}%{!?_without_interbase:1}
 %files interbase
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/interbase.so
