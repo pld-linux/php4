@@ -6,17 +6,18 @@
 # Conditional build:
 %bcond_without	db3		# do not use db3 packages instead of db (4.x) for Berkeley DB support
 %bcond_with	fdf		# with FDF (PDF forms) module		(BR:proprietary lib)
+%bcond_with	fribidi		# with FriBiDi extension module
+%bcond_with	interbase	# with InterBase extension module
 %bcond_with	interbase_inst	# use InterBase install., not Firebird	(BR:proprietary libs)
 %bcond_with	java		# with Java extension module		(BR:jdk)
 %bcond_with	oci8		# with Oracle oci8 extension module	(BR:proprietary libs)
 %bcond_with	oracle		# with oracle extension module		(BR:proprietary libs)
+%bcond_with	qtdom		# with QT DOM extension module
 %bcond_without	cpdf		# without cpdf extension module
 %bcond_without	curl		# without CURL extension module
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
-%bcond_with	fribidi		# with FriBiDi extension module
 %bcond_without	gif		# build GD extension module with gd library without GIF support
 %bcond_without	imap		# without IMAP extension module
-%bcond_with	interbase	# with InterBase extension module
 %bcond_without	ldap		# without LDAP extension module
 %bcond_without	mhash		# without mhash extension module
 %bcond_without	ming		# without ming extension module
@@ -31,7 +32,6 @@
 %bcond_without	pgsql		# without PostgreSQL extension module
 %bcond_without	pspell		# without pspell extension module
 %bcond_without	recode		# without recode extension module
-%bcond_with	qtdom		# with QT DOM extension module
 %bcond_without	snmp		# without SNMP extension module
 %bcond_without	sybase		# without Sybase and Sybase-CT extension modules
 %bcond_without	wddx		# without WDDX extension module
@@ -65,7 +65,7 @@ Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сер
 Name:		php
 Version:	4.3.8
 %define	_rc	%{nil}
-Release:	0.1
+Release:	0.2
 Epoch:		3
 Group:		Libraries
 License:	PHP
