@@ -8,16 +8,16 @@
 %include	/usr/lib/rpm/macros.php
 
 %define	_apache2	%(rpm -q apache-devel 2> /dev/null | grep -Eq '\\-2\\.[0-9]+\\.' && echo 1 || echo 0)
-%define		apxs		/usr/sbin/apxs
+%define	apxs		/usr/sbin/apxs
 
 %if %{_apache2}
-%define _without_recode 1
-%define _without_mm 1
+%define	_without_recode	1
+%define	_without_mm	1
 %endif
 
 %ifnarch %{ix86}
-%define _without_interbase 1
-%define _without_msession 1
+%define	_without_interbase	1
+%define	_without_msession	1
 %endif
 
 # Conditional build:
@@ -127,10 +127,10 @@ BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0
 BuildRequires:	gd-devel >= 2.0.1
 %{!?_without_gif:BuildRequires:	gd-devel(gif)}
-%{?_without_gif:BuildConflicts: gd-devel(gif)}
+%{?_without_gif:BuildConflicts:	gd-devel(gif)}
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
-%{!?_without_imap:BuildRequires: imap-devel >= 1:2001-0.BETA.200107022325.2 }
+%{!?_without_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2 }
 %{?_with_java:BuildRequires:	jdk >= 1.1}
 %{!?_without_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
 BuildRequires:	libjpeg-devel
@@ -147,7 +147,7 @@ BuildRequires:	libtool >= 1.4.3
 %{!?_without_mm:BuildRequires:	mm-devel >= 1.3.0}
 %{!?_without_mnogosearch:BuildRequires:	mnogosearch-devel >= 3.2.6}
 BuildRequires:	mysql-devel >= 3.23.32
-%{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
+%{!?_without_ldap:BuildRequires:	openldap-devel >= 2.0}
 %if %(expr %{?_without_openssl:0}%{!?_without_openssl:1} + %{?_without_ldap:0}%{!?_without_ldap:1})
 BuildRequires:	openssl-devel >= 0.9.7
 %endif
@@ -163,8 +163,8 @@ BuildRequires:	rpm-php-pearprov >= 4.0.2-100
 BuildRequires:	rpmbuild(macros) >= 1.120
 %{!?_without_xslt:BuildRequires:	sablotron-devel >= 0.96}
 BuildRequires:	t1lib-devel
-%{!?_without_snmp:BuildRequires: net-snmp-devel >= 5.0.7}
-%{!?_without_odbc:BuildRequires: unixODBC-devel}
+%{!?_without_snmp:BuildRequires:	net-snmp-devel >= 5.0.7}
+%{!?_without_odbc:BuildRequires:	unixODBC-devel}
 %{!?_without_xmlrpc:BuildRequires:	xmlrpc-epi-devel}
 %{!?_without_yaz:BuildRequires:	yaz-devel >= 1.9}
 BuildRequires:	zip
