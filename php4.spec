@@ -3,15 +3,15 @@
 %include	/usr/lib/rpm/macros.php
 
 %define	_apache2	%(rpm -q apache-devel 2> /dev/null | grep -Eq '\\-2\\.[0-9]+\\.' && echo 1 || echo 0)
-%define		apxs		/usr/sbin/apxs
+%define	apxs		/usr/sbin/apxs
 
 %if %{_apache2}
-%define _without_recode 1
-%define _without_mm 1
+%define	_without_recode		1
+%define	_without_mm		1
 %endif
 
 %ifnarch %{ix86}
-%define _without_msession 1
+%define	_without_msession	1
 %endif
 
 # Conditional build:
@@ -53,7 +53,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.2.3
-Release:	9
+Release:	10
 Epoch:		3
 Group:		Libraries
 License:	PHP
