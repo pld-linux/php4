@@ -1,7 +1,7 @@
-diff -burN php-5.0.3RC2.orig/acinclude.m4 php-5.0.3RC2/acinclude.m4
---- php-5.0.3RC2.orig/acinclude.m4	2004-12-13 11:25:23.854667632 +0100
-+++ php-5.0.3RC2/acinclude.m4	2004-12-13 11:26:08.477883872 +0100
-@@ -1625,6 +1625,9 @@
+diff -burN php-5.0.4RC1.orig/acinclude.m4 php-5.0.4RC1/acinclude.m4
+--- php-5.0.4RC1.orig/acinclude.m4	2005-03-15 18:21:05.158404416 +0100
++++ php-5.0.4RC1/acinclude.m4	2005-03-15 18:22:03.101595712 +0100
+@@ -1723,6 +1723,9 @@
        if test -r $i/lib/libssl.a -o -r $i/lib/libssl.$SHLIB_SUFFIX_NAME; then
          OPENSSL_LIBDIR=$i/lib
        fi
@@ -11,9 +11,9 @@ diff -burN php-5.0.3RC2.orig/acinclude.m4 php-5.0.3RC2/acinclude.m4
        test -n "$OPENSSL_INCDIR" && test -n "$OPENSSL_LIBDIR" && break
      done
  
-diff -burN php-5.0.3RC2.orig/ext/cpdf/config.m4 php-5.0.3RC2/ext/cpdf/config.m4
---- php-5.0.3RC2.orig/ext/cpdf/config.m4	2004-12-13 11:25:21.724991392 +0100
-+++ php-5.0.3RC2/ext/cpdf/config.m4	2004-12-13 11:26:08.485882656 +0100
+diff -burN php-5.0.4RC1.orig/ext/cpdf/config.m4 php-5.0.4RC1/ext/cpdf/config.m4
+--- php-5.0.4RC1.orig/ext/cpdf/config.m4	2005-03-15 18:21:04.537498808 +0100
++++ php-5.0.4RC1/ext/cpdf/config.m4	2005-03-15 18:23:06.693928208 +0100
 @@ -4,7 +4,7 @@
    AC_ARG_WITH(jpeg-dir,
    [  --with-jpeg-dir[=DIR]     CPDF: Set the path to libjpeg install prefix.],[
@@ -60,34 +60,36 @@ diff -burN php-5.0.3RC2.orig/ext/cpdf/config.m4 php-5.0.3RC2/ext/cpdf/config.m4
      ])
    ],)
  ])
-@@ -59,12 +59,12 @@
- 
-       PHP_CHECK_LIBRARY(cpdf, cpdf_open, [
-         PHP_ADD_INCLUDE($CPDFLIB_INCLUDE)
--        PHP_ADD_LIBRARY_WITH_PATH(cpdf, $i/lib, CPDF_SHARED_LIBADD)
-+        PHP_ADD_LIBRARY_WITH_PATH(cpdf, $i/lib64, CPDF_SHARED_LIBADD)
-         AC_DEFINE(HAVE_CPDFLIB,1,[Whether you have cpdflib])
-       ], [
-         AC_MSG_ERROR([Cpdflib module requires cpdflib >= 2.])
+@@ -65,13 +65,13 @@
+         ], [
+           AC_MSG_ERROR([Cpdflib module requires cpdflib >= 2.])
+         ], [
+-          -L$i/lib $CPDF_SHARED_LIBADD
++          -L$i/lib64 $CPDF_SHARED_LIBADD
+         ])
        ], [
 -        -L$i/lib $CPDF_SHARED_LIBADD
 +        -L$i/lib64 $CPDF_SHARED_LIBADD
        ])
+ 
+-      PHP_ADD_LIBRARY_WITH_PATH($cpdf_libname, $i/lib, CPDF_SHARED_LIBADD)
++      PHP_ADD_LIBRARY_WITH_PATH($cpdf_libname, $i/lib64, CPDF_SHARED_LIBADD)
+       PHP_ADD_INCLUDE($CPDFLIB_INCLUDE)
+       AC_DEFINE(HAVE_CPDFLIB,1,[Whether you have cpdflib])
        break
-     fi
-diff -burN php-5.0.3RC2.orig/ext/dba/config.m4 php-5.0.3RC2/ext/dba/config.m4
---- php-5.0.3RC2.orig/ext/dba/config.m4	2004-12-13 11:25:21.641004160 +0100
-+++ php-5.0.3RC2/ext/dba/config.m4	2004-12-13 11:26:08.493881440 +0100
+diff -burN php-5.0.4RC1.orig/ext/dba/config.m4 php-5.0.4RC1/ext/dba/config.m4
+--- php-5.0.4RC1.orig/ext/dba/config.m4	2005-03-15 18:21:04.484506864 +0100
++++ php-5.0.4RC1/ext/dba/config.m4	2005-03-15 18:22:03.103595408 +0100
 @@ -21,7 +21,7 @@
  dnl Assign INCLUDE/LFLAGS from PREFIX
- AC_DEFUN(PHP_DBA_STD_ASSIGN,[
+ AC_DEFUN([PHP_DBA_STD_ASSIGN],[
    if test -n "$THIS_PREFIX" && test "$THIS_PREFIX" != "/usr"; then
 -    THIS_LFLAGS=$THIS_PREFIX/lib
 +    THIS_LFLAGS=$THIS_PREFIX/lib64
    fi
  ])
  
-@@ -121,7 +121,7 @@
+@@ -120,7 +120,7 @@
          AC_DEFINE_UNQUOTED(GDBM_INCLUDE_FILE, "$THIS_INCLUDE", [ ])
          AC_DEFINE(DBA_GDBM, 1, [ ]) 
          THIS_LIBS=gdbm
@@ -96,7 +98,7 @@ diff -burN php-5.0.3RC2.orig/ext/dba/config.m4 php-5.0.3RC2/ext/dba/config.m4
      fi
      
      PHP_DBA_STD_ASSIGN
-@@ -153,7 +153,7 @@
+@@ -152,7 +152,7 @@
            AC_DEFINE_UNQUOTED(NDBM_INCLUDE_FILE, "$THIS_INCLUDE", [ ])
            AC_DEFINE(DBA_NDBM, 1, [ ]) 
            THIS_LIBS=$LIB
@@ -105,9 +107,9 @@ diff -burN php-5.0.3RC2.orig/ext/dba/config.m4 php-5.0.3RC2/ext/dba/config.m4
          if test -n "$THIS_LIBS"; then
            break
          fi
-@@ -171,8 +171,8 @@
+@@ -170,8 +170,8 @@
  dnl parameters(version, library list, function)
- AC_DEFUN(PHP_DBA_DB_CHECK,[
+ AC_DEFUN([PHP_DBA_DB_CHECK],[
    for LIB in $2; do
 -    if test -f $THIS_PREFIX/lib/lib$LIB.a -o -f $THIS_PREFIX/lib/lib$LIB.$SHLIB_SUFFIX_NAME; then
 -      PHP_TEMP_LDFLAGS(-L$THIS_PREFIX/lib, -l$LIB,[
@@ -116,7 +118,7 @@ diff -burN php-5.0.3RC2.orig/ext/dba/config.m4 php-5.0.3RC2/ext/dba/config.m4
          AC_TRY_LINK([
  #include "$THIS_INCLUDE"
          ],[
-@@ -367,7 +367,7 @@
+@@ -366,7 +366,7 @@
            fi
            AC_DEFINE(DBA_DBM, 1, [ ]) 
            THIS_LIBS=$LIB
@@ -125,7 +127,7 @@ diff -burN php-5.0.3RC2.orig/ext/dba/config.m4 php-5.0.3RC2/ext/dba/config.m4
          if test -n "$THIS_LIBS"; then
            break
          fi
-@@ -409,7 +409,7 @@
+@@ -408,7 +408,7 @@
            AC_DEFINE_UNQUOTED(CDB_INCLUDE_FILE, "$THIS_INCLUDE", [ ])
            AC_DEFINE(DBA_CDB, 1, [ ]) 
            THIS_LIBS=$LIB
@@ -134,9 +136,9 @@ diff -burN php-5.0.3RC2.orig/ext/dba/config.m4 php-5.0.3RC2/ext/dba/config.m4
          if test -n "$THIS_LIBS"; then
            break
          fi
-diff -burN php-5.0.3RC2.orig/ext/gd/config.m4 php-5.0.3RC2/ext/gd/config.m4
---- php-5.0.3RC2.orig/ext/gd/config.m4	2004-12-13 11:25:21.629005984 +0100
-+++ php-5.0.3RC2/ext/gd/config.m4	2004-12-13 11:26:08.497880832 +0100
+diff -burN php-5.0.4RC1.orig/ext/gd/config.m4 php-5.0.4RC1/ext/gd/config.m4
+--- php-5.0.4RC1.orig/ext/gd/config.m4	2005-03-15 18:21:04.469509144 +0100
++++ php-5.0.4RC1/ext/gd/config.m4	2005-03-15 18:22:03.104595256 +0100
 @@ -51,7 +51,7 @@
    if test "$PHP_JPEG_DIR" != "no"; then
  
@@ -242,7 +244,7 @@ diff -burN php-5.0.3RC2.orig/ext/gd/config.m4 php-5.0.3RC2/ext/gd/config.m4
      ])
    fi
  ])
-@@ -363,7 +363,7 @@
+@@ -365,7 +365,7 @@
    done
  
  dnl Library path
@@ -251,42 +253,10 @@ diff -burN php-5.0.3RC2.orig/ext/gd/config.m4 php-5.0.3RC2/ext/gd/config.m4
      test -f "$PHP_GD/$i/libgd.$SHLIB_SUFFIX_NAME" -o -f "$PHP_GD/$i/libgd.a" && GD_LIB="$PHP_GD/$i"
    done
  
-diff -burN php-5.0.3RC2.orig/ext/imap/config.m4 php-5.0.3RC2/ext/imap/config.m4
---- php-5.0.3RC2.orig/ext/imap/config.m4	2004-12-13 11:25:21.735989720 +0100
-+++ php-5.0.3RC2/ext/imap/config.m4	2004-12-13 11:26:08.503879920 +0100
-@@ -59,7 +59,7 @@
-     fi
- 
-     for i in $SEARCH_PATHS; do
--      if test -f $i/lib/libkrb5.a || test -f $i/lib/libkrb5.$SHLIB_SUFFIX_NAME; then
-+      if test -f $i/lib64/libkrb5.a || test -f $i/lib64/libkrb5.$SHLIB_SUFFIX_NAME; then
-         PHP_KERBEROS_DIR=$i
-         break
-       fi
-@@ -72,7 +72,7 @@
-       ])
-     fi
-     AC_DEFINE(HAVE_IMAP_KRB,1,[ ])
--    PHP_ADD_LIBPATH($PHP_KERBEROS_DIR/lib, IMAP_SHARED_LIBADD)
-+    PHP_ADD_LIBPATH($PHP_KERBEROS_DIR/lib64, IMAP_SHARED_LIBADD)
-     PHP_ADD_LIBRARY(gssapi_krb5, 1, IMAP_SHARED_LIBADD)
-     PHP_ADD_LIBRARY(krb5, 1, IMAP_SHARED_LIBADD)
-     PHP_ADD_LIBRARY(k5crypto, 1, IMAP_SHARED_LIBADD)
-@@ -104,11 +104,11 @@
-   AC_MSG_CHECKING([whether SSL libraries are needed for c-client])
- 
-   if test "$PHP_IMAP_SSL" != "no"; then
--    AC_MSG_RESULT([$PHP_IMAP_SSL/lib])
-+    AC_MSG_RESULT([$PHP_IMAP_SSL/lib64])
-     AC_DEFINE(HAVE_IMAP_SSL,1,[ ])
-     PHP_ADD_LIBRARY_DEFER(ssl,    1, IMAP_SHARED_LIBADD)
-     PHP_ADD_LIBRARY_DEFER(crypto, 1, IMAP_SHARED_LIBADD)
--    PHP_ADD_LIBPATH($PHP_IMAP_SSL/lib, IMAP_SHARED_LIBADD)
-+    PHP_ADD_LIBPATH($PHP_IMAP_SSL/lib64, IMAP_SHARED_LIBADD)
-   else
-     AC_MSG_RESULT(no)
-   fi
-@@ -166,13 +166,13 @@
+diff -burN php-5.0.4RC1.orig/ext/imap/config.m4 php-5.0.4RC1/ext/imap/config.m4
+--- php-5.0.4RC1.orig/ext/imap/config.m4	2005-03-15 18:21:04.545497592 +0100
++++ php-5.0.4RC1/ext/imap/config.m4	2005-03-15 18:22:03.105595104 +0100
+@@ -148,13 +148,13 @@
  
      if test -r "$IMAP_DIR/c-client/c-client.a"; then
        ln -s "$IMAP_DIR/c-client/c-client.a" "$IMAP_DIR/c-client/libc-client.a" >/dev/null 2>&1
@@ -303,9 +273,9 @@ diff -burN php-5.0.3RC2.orig/ext/imap/config.m4 php-5.0.3RC2/ext/imap/config.m4
        IMAP_LIB_CHK(c-client)
      done
  
-diff -burN php-5.0.3RC2.orig/ext/ldap/config.m4 php-5.0.3RC2/ext/ldap/config.m4
---- php-5.0.3RC2.orig/ext/ldap/config.m4	2004-12-13 11:25:21.741988808 +0100
-+++ php-5.0.3RC2/ext/ldap/config.m4	2004-12-13 11:26:08.506879464 +0100
+diff -burN php-5.0.4RC1.orig/ext/ldap/config.m4 php-5.0.4RC1/ext/ldap/config.m4
+--- php-5.0.4RC1.orig/ext/ldap/config.m4	2005-03-15 18:21:04.551496680 +0100
++++ php-5.0.4RC1/ext/ldap/config.m4	2005-03-15 18:22:03.107594800 +0100
 @@ -6,15 +6,15 @@
    if test -f $1/include/ldap.h; then
      LDAP_DIR=$1
@@ -325,9 +295,9 @@ diff -burN php-5.0.3RC2.orig/ext/ldap/config.m4 php-5.0.3RC2/ext/ldap/config.m4
    fi
  ])
  
-diff -burN php-5.0.3RC2.orig/ext/ming/config.m4 php-5.0.3RC2/ext/ming/config.m4
---- php-5.0.3RC2.orig/ext/ming/config.m4	2004-12-13 11:25:21.747987896 +0100
-+++ php-5.0.3RC2/ext/ming/config.m4	2004-12-13 11:26:08.519877488 +0100
+diff -burN php-5.0.4RC1.orig/ext/ming/config.m4 php-5.0.4RC1/ext/ming/config.m4
+--- php-5.0.4RC1.orig/ext/ming/config.m4	2005-03-15 18:21:04.555496072 +0100
++++ php-5.0.4RC1/ext/ming/config.m4	2005-03-15 18:22:03.108594648 +0100
 @@ -9,7 +9,7 @@
    AC_CHECK_LIB(m, sin)
  
@@ -335,9 +305,9 @@ diff -burN php-5.0.3RC2.orig/ext/ming/config.m4 php-5.0.3RC2/ext/ming/config.m4
 -    if test -f $i/lib/libming.$SHLIB_SUFFIX_NAME -o -f $i/lib/libming.a; then
 +    if test -f $i/lib64/libming.$SHLIB_SUFFIX_NAME -o -f $i/lib64/libming.a; then
        MING_DIR=$i
+       break
      fi
-   done
-@@ -33,11 +33,11 @@
+@@ -34,11 +34,11 @@
    ],[
      AC_MSG_ERROR([Ming library 0.2a or greater required.])
    ],[
@@ -351,9 +321,9 @@ diff -burN php-5.0.3RC2.orig/ext/ming/config.m4 php-5.0.3RC2/ext/ming/config.m4
  
    AC_MSG_CHECKING([for destroySWFBlock])
    AC_TRY_RUN([
-diff -burN php-5.0.3RC2.orig/ext/mssql/config.m4 php-5.0.3RC2/ext/mssql/config.m4
---- php-5.0.3RC2.orig/ext/mssql/config.m4	2004-12-13 11:25:21.898964944 +0100
-+++ php-5.0.3RC2/ext/mssql/config.m4	2004-12-13 11:26:58.696249520 +0100
+diff -burN php-5.0.4RC1.orig/ext/mssql/config.m4 php-5.0.4RC1/ext/mssql/config.m4
+--- php-5.0.4RC1.orig/ext/mssql/config.m4	2005-03-15 18:21:04.646482240 +0100
++++ php-5.0.4RC1/ext/mssql/config.m4	2005-03-15 18:22:03.108594648 +0100
 @@ -32,12 +32,12 @@
      fi
    fi  
@@ -370,9 +340,9 @@ diff -burN php-5.0.3RC2.orig/ext/mssql/config.m4 php-5.0.3RC2/ext/mssql/config.m
  
    PHP_ADD_INCLUDE($MSSQL_INCDIR)
    PHP_ADD_LIBRARY_WITH_PATH(sybdb, $MSSQL_LIBDIR, MSSQL_SHARED_LIBADD)
-diff -burN php-5.0.3RC2.orig/ext/mysql/config.m4 php-5.0.3RC2/ext/mysql/config.m4
---- php-5.0.3RC2.orig/ext/mysql/config.m4	2004-12-13 11:25:21.901964488 +0100
-+++ php-5.0.3RC2/ext/mysql/config.m4	2004-12-13 11:26:08.524876728 +0100
+diff -burN php-5.0.4RC1.orig/ext/mysql/config.m4 php-5.0.4RC1/ext/mysql/config.m4
+--- php-5.0.4RC1.orig/ext/mysql/config.m4	2005-03-15 18:21:04.649481784 +0100
++++ php-5.0.4RC1/ext/mysql/config.m4	2005-03-15 18:22:03.109594496 +0100
 @@ -17,7 +17,7 @@
      /var/run/mysqld/mysqld.sock \
      /var/tmp/mysql.sock \
@@ -403,9 +373,9 @@ diff -burN php-5.0.3RC2.orig/ext/mysql/config.m4 php-5.0.3RC2/ext/mysql/config.m
      else
        PHP_ADD_LIBRARY(z,, MYSQL_SHARED_LIBADD)
        PHP_CHECK_LIBRARY(mysqlclient, mysql_errno, [], [
-diff -burN php-5.0.3RC2.orig/ext/pgsql/config.m4 php-5.0.3RC2/ext/pgsql/config.m4
---- php-5.0.3RC2.orig/ext/pgsql/config.m4	2004-12-13 11:25:21.913962664 +0100
-+++ php-5.0.3RC2/ext/pgsql/config.m4	2004-12-13 11:26:08.526876424 +0100
+diff -burN php-5.0.4RC1.orig/ext/pgsql/config.m4 php-5.0.4RC1/ext/pgsql/config.m4
+--- php-5.0.4RC1.orig/ext/pgsql/config.m4	2005-03-15 18:21:04.658480416 +0100
++++ php-5.0.4RC1/ext/pgsql/config.m4	2005-03-15 18:22:03.109594496 +0100
 @@ -44,7 +44,7 @@
          fi
        done
@@ -415,9 +385,9 @@ diff -burN php-5.0.3RC2.orig/ext/pgsql/config.m4 php-5.0.3RC2/ext/pgsql/config.m
          if test -f "$i/$j/libpq.so" || test -f "$i/$j/libpq.a"; then 
            PGSQL_LIBDIR=$i/$j
          fi
-diff -burN php-5.0.3RC2.orig/ext/xml/config.m4 php-5.0.3RC2/ext/xml/config.m4
---- php-5.0.3RC2.orig/ext/xml/config.m4	2004-12-13 11:25:21.716992608 +0100
-+++ php-5.0.3RC2/ext/xml/config.m4	2004-12-13 11:26:08.528876120 +0100
+diff -burN php-5.0.4RC1.orig/ext/xml/config.m4 php-5.0.4RC1/ext/xml/config.m4
+--- php-5.0.4RC1.orig/ext/xml/config.m4	2005-03-15 18:21:04.530499872 +0100
++++ php-5.0.4RC1/ext/xml/config.m4	2005-03-15 18:22:03.110594344 +0100
 @@ -30,7 +30,7 @@
    dnl
    if test "$PHP_LIBEXPAT_DIR" != "no"; then
@@ -436,9 +406,9 @@ diff -burN php-5.0.3RC2.orig/ext/xml/config.m4 php-5.0.3RC2/ext/xml/config.m4
      AC_DEFINE(HAVE_LIBEXPAT, 1, [ ])
    fi
  
-diff -burN php-5.0.3RC2.orig/ext/xmlrpc/config.m4 php-5.0.3RC2/ext/xmlrpc/config.m4
---- php-5.0.3RC2.orig/ext/xmlrpc/config.m4	2004-12-13 11:25:22.261909768 +0100
-+++ php-5.0.3RC2/ext/xmlrpc/config.m4	2004-12-13 11:26:08.532875512 +0100
+diff -burN php-5.0.4RC1.orig/ext/xmlrpc/config.m4 php-5.0.4RC1/ext/xmlrpc/config.m4
+--- php-5.0.4RC1.orig/ext/xmlrpc/config.m4	2005-03-15 18:21:04.902443328 +0100
++++ php-5.0.4RC1/ext/xmlrpc/config.m4	2005-03-15 18:22:03.110594344 +0100
 @@ -23,9 +23,9 @@
  
    testval=no
@@ -459,9 +429,9 @@ diff -burN php-5.0.3RC2.orig/ext/xmlrpc/config.m4 php-5.0.3RC2/ext/xmlrpc/config
 +  PHP_ADD_LIBRARY_WITH_PATH(xmlrpc, $XMLRPC_DIR/lib64, XMLRPC_SHARED_LIBADD)
  fi
  
-diff -burN php-5.0.3RC2.orig/php.ini php-5.0.3RC2/php.ini
---- php-5.0.3RC2.orig/php.ini	2004-12-13 11:25:23.870665200 +0100
-+++ php-5.0.3RC2/php.ini	2004-12-13 11:26:08.538874600 +0100
+diff -burN php-5.0.4RC1.orig/php.ini php-5.0.4RC1/php.ini
+--- php-5.0.4RC1.orig/php.ini	2005-03-15 18:21:05.162403808 +0100
++++ php-5.0.4RC1/php.ini	2005-03-15 18:22:03.111594192 +0100
 @@ -514,7 +514,7 @@
  user_dir =
  
@@ -471,9 +441,9 @@ diff -burN php-5.0.3RC2.orig/php.ini php-5.0.3RC2/php.ini
  
  ; Whether or not to enable the dl() function.  The dl() function does NOT work
  ; properly in multithreaded servers, such as IIS or Zeus, and is automatically
-diff -burN php-5.0.3RC2.orig/scripts/Makefile.frag php-5.0.3RC2/scripts/Makefile.frag
---- php-5.0.3RC2.orig/scripts/Makefile.frag	2004-12-13 11:25:23.782678576 +0100
-+++ php-5.0.3RC2/scripts/Makefile.frag	2004-12-13 11:26:08.544873688 +0100
+diff -burN php-5.0.4RC1.orig/scripts/Makefile.frag php-5.0.4RC1/scripts/Makefile.frag
+--- php-5.0.4RC1.orig/scripts/Makefile.frag	2005-03-15 18:21:05.145406392 +0100
++++ php-5.0.4RC1/scripts/Makefile.frag	2005-03-15 18:22:03.112594040 +0100
 @@ -4,7 +4,7 @@
  #
  
