@@ -1351,7 +1351,7 @@ handlers for different XML events.
 
 %description xml -l pl
 Modu³ PHP umo¿liwiaj±cy parsowanie plików XML i obs³ugê zdarzeñ
-zwi±zanych z tymi plikami. Pozwala on tworzyæ analizatory XML i
+zwi±zanych z tymi plikami. Pozwala on tworzyæ analizatory XML-a i
 nastêpnie definiowaæ procedury obs³ugi dla ró¿nych zdarzeñ XML.
 
 %package xmlrpc
