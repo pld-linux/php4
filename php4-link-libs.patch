@@ -28,7 +28,7 @@
  
  if test "$php_no_nsl_checks" != "yes"; then
  
-+AC_CHECK_FUNC(gethostname, [ ], [
++AC_CHECK_FUNC(gethostname,[true], [
  AC_CHECK_LIB(nsl, gethostname, [
   PHP_ADD_LIBRARY(nsl)
   AC_DEFINE(HAVE_LIBNSL,1,[ ]) ],[
