@@ -18,17 +18,4 @@
    EXT_PROGRAM_LDADD="$EXT_PROGRAM_LDADD $FASTCGIPATH/lib/libfcgi.a"
    INSTALL_IT="\$(INSTALL) -m 0755 $SAPI_PROGRAM \$(bindir)/$SAPI_FASTCGI"
    RESULT="yes"
---- php-4.0.6/sapi/fastcgi/fastcgi.c.wiget	Fri May  4 11:49:14 2001
-+++ php-4.0.6/sapi/fastcgi/fastcgi.c	Wed Jul  4 23:09:36 2001
-@@ -200,6 +200,11 @@
- 	struct stat st;
- 	char *pi = getenv( "PATH_INFO" );
- 	char *pt = getenv( "PATH_TRANSLATED" );
-+
-+	if (!pi)
-+		pi = getenv( "SCRIPT_NAME" );
-+	if (!pt)
-+		pt = getenv( "SCRIPT_FILENAME" );
- 	path_info = strdup( pi );
- 
- 	SG(request_info).request_method = getenv("REQUEST_METHOD");
+

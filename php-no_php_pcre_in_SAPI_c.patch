@@ -1,7 +1,7 @@
-diff -Nur php-4.1.2.orig/main/SAPI.c php-4.1.2/main/SAPI.c
---- php-4.1.2.orig/main/SAPI.c	Mon Jan 14 14:43:03 2002
-+++ php-4.1.2/main/SAPI.c	Wed Feb 27 15:21:13 2002
-@@ -25,9 +25,6 @@
+diff -urN php-4_2_0RC3.org/main/SAPI.c php-4_2_0RC3/main/SAPI.c
+--- php-4_2_0RC3.org/main/SAPI.c	Sat Apr 13 01:18:30 2002
++++ php-4_2_0RC3/main/SAPI.c	Sat Apr 13 01:38:42 2002
+@@ -27,9 +27,6 @@
  #include "SAPI.h"
  #include "ext/standard/php_string.h"
  #include "ext/standard/pageinfo.h"
@@ -11,7 +11,7 @@ diff -Nur php-4.1.2.orig/main/SAPI.c php-4.1.2/main/SAPI.c
  #ifdef ZTS
  #include "TSRM.h"
  #endif
-@@ -448,65 +445,8 @@
+@@ -465,65 +462,8 @@
  			} else if (!STRCASECMP(header_line, "WWW-Authenticate")) { /* HTTP Authentication */
  				int newlen;
  				char *result, *newheader;
@@ -55,7 +55,7 @@ diff -Nur php-4.1.2.orig/main/SAPI.c php-4.1.2/main/SAPI.c
 -								efree(result);
 -								conv_len = sprintf(conv_temp," realm=\"%ld\"",myuid);		
 -								result = emalloc(ptr_len+conv_len+1);
--								result_len = ptr_len + conv_len;
+-								result_len = ptr_len+conv_len;
 -								memcpy(result, ptr, ptr_len);	
 -								memcpy(result+ptr_len, conv_temp, conv_len);
 -								*(result+ptr_len+conv_len) = '\0';
@@ -72,12 +72,12 @@ diff -Nur php-4.1.2.orig/main/SAPI.c php-4.1.2/main/SAPI.c
 -					efree(result);
 -					efree(Z_STRVAL_P(repl_temp));
 -					efree(repl_temp);
--				}
+-				} 
 -#else
  				if(PG(safe_mode)) {
  					myuid = php_getuid();
  					result = emalloc(32);
-@@ -517,7 +457,6 @@
+@@ -534,7 +474,6 @@
  					sapi_header.header_len = newlen;
  					efree(result);
  				} 

@@ -1,0 +1,12 @@
+--- php-4.2.0/ext/session/config.m4.orig	Fri Nov 30 19:59:56 2001
++++ php-4.2.0/ext/session/config.m4	Wed May  1 22:25:30 2002
+@@ -22,7 +22,9 @@
+   PHP_ADD_LIBRARY_WITH_PATH(mm, $MM_DIR/lib, SESSION_SHARED_LIBADD)
+   PHP_ADD_INCLUDE($MM_DIR/include)
+   AC_DEFINE(HAVE_LIBMM, 1, [Whether you have libmm])
++  if test "$ext_shared" = "no"; then
+   PHP_MODULE_PTR(phpext_ps_mm_ptr)
++  fi
+ fi
+ 
+ if test "$PHP_SESSION" != "no"; then
