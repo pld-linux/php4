@@ -1,5 +1,5 @@
 #
-%define	_apache2	%(rpm -q apache-devel | grep -Eq '\-2\.[0-9]+\.' 2> /dev/null ; echo $?)
+%define	_apache2	%(if rpm -q apache-devel | grep -Eq '\-2\.[0-9]+\.' 2> /dev/null ; then echo 1; else echo 0; fi)
 
 %if %{_apache2}
 %define _without_recode 1
@@ -50,6 +50,7 @@ Patch9:		%{name}-oracle9.patch
 Patch10:	%{name}-no_%{name}_pcre_in_SAPI_c.patch
 Patch11:	%{name}-libpq_fs_h_path.patch
 Patch12:	%{name}-apache2.patch
+Patch13:	%{name}-pdflib4.0.2.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -834,6 +835,7 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
@@ -850,7 +852,11 @@ for i in cgi apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
 	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=%{_prefix}` \
-	`[ $i = apxs ] && echo --with-apxs%{?_apache2:2}=%{_sbindir}/apxs` \
+%if %{_apache2}	
+	`[ $i = apxs ] && echo --with-apxs2=%{_sbindir}/apxs` \
+%else
+	`[ $i = apxs ] && echo --with-apxs=%{_sbindir}/apxs` \
+%endif	
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
@@ -920,7 +926,7 @@ for i in cgi apxs ; do
 	%{?_with_wddx:--enable-wddx=shared} \
 	--with-zlib=shared \
 	--with-zlib-dir=shared \
-	--with-xml=shared \
+	--without-xmlrpc \
 	%{?_with_xslt:--with-xslt-sablot=shared}
 done
 
