@@ -1,0 +1,11 @@
+--- php-4.1.1/ext/pgsql/php_pgsql.h~    Mon Feb 25 15:16:28 2002
++++ php-4.1.1/ext/pgsql/php_pgsql.h     Mon Feb 25 15:16:28 2002
+@@ -35,7 +35,7 @@
+ #define INV_WRITE            0x00020000
+ #define INV_READ             0x00040000
+ #else
+-#include <libpq/libpq-fs.h>
++#include <postgresql/server/libpq/libpq-fs.h>
+ #endif
+
+ #ifdef PHP_WIN32
