@@ -905,7 +905,7 @@ EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf
 libtoolize --copy --force
 aclocal
-autoconf
+%{__autoconf}
 #for i in cgi fastcgi apxs ; do
 for i in cgi apxs ; do
 %configure \
