@@ -750,7 +750,7 @@ for i in cgi apxs ; do
 	--enable-shmop=shared \
 	--enable-session \
 	--enable-exif=shared \
-	--with-regex=system \
+	--with-regex=php \
 	--with-gettext=shared \
 	%{!?_without_ldap:--with-ldap=shared} \
 	--with-mysql=shared,/usr \
