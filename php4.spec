@@ -995,21 +995,6 @@ support to PHP.
 Modu³ PHP umo¿liwiaj±cy tworzenie plików PDF. Wykorzystuje bibliotekê
 pdflib.
 
-%package pear
-Summary:	PEAR - PHP Extension and Application Repository
-Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
-Group:		Development/Languages/PHP
-Requires:	%{name}-pcre = %{version}
-Requires:	%{name}-xml = %{version}
-Obsoletes:	%{name}-pear-additional_classes
-
-%description pear
-PEAR - PHP Extension and Application Repository.
-
-%description pear -l pl
-PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
-Repozytorium Aplikacji.
-
 %package pgsql
 Summary:	PostgreSQL database module for PHP
 Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP
@@ -1307,6 +1292,21 @@ compression (zlib) support to PHP.
 
 %description zlib -l pl
 Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
+
+%package pear
+Summary:	PEAR - PHP Extension and Application Repository
+Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
+Group:		Development/Languages/PHP
+Requires:	%{name}-pcre = %{version}
+Requires:	%{name}-xml = %{version}
+Obsoletes:	%{name}-pear-additional_classes
+
+%description pear
+PEAR - PHP Extension and Application Repository.
+
+%description pear -l pl
+PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
+Repozytorium Aplikacji.
 
 
 %prep
@@ -2272,19 +2272,6 @@ fi
 %attr(755,root,root) %{extensionsdir}/pdf.so
 %endif
 
-%files pear
-%defattr(644,root,root,755)
-%dir %{php_pear_dir}
-%dir %{php_pear_dir}/Archive
-%dir %{php_pear_dir}/Console
-%dir %{php_pear_dir}/Crypt
-%dir %{php_pear_dir}/HTML
-%dir %{php_pear_dir}/HTML/Template
-%dir %{php_pear_dir}/Image
-%dir %{php_pear_dir}/Net
-%dir %{php_pear_dir}/Science
-%dir %{php_pear_dir}/XML
-
 %if %{!?_without_pgsql:1}%{?_without_pgsql:0}
 %files pgsql
 %defattr(644,root,root,755)
@@ -2379,3 +2366,16 @@ fi
 %files zlib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/zlib.so
+
+%files pear
+%defattr(644,root,root,755)
+%dir %{php_pear_dir}
+%dir %{php_pear_dir}/Archive
+%dir %{php_pear_dir}/Console
+%dir %{php_pear_dir}/Crypt
+%dir %{php_pear_dir}/HTML
+%dir %{php_pear_dir}/HTML/Template
+%dir %{php_pear_dir}/Image
+%dir %{php_pear_dir}/Net
+%dir %{php_pear_dir}/Science
+%dir %{php_pear_dir}/XML
