@@ -62,7 +62,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.9
-Release:	2.1
+Release:	2.2
 Epoch:		0
 Group:		Libraries
 License:	PHP
@@ -1713,7 +1713,7 @@ for i in fcgi cgi cli apxs ; do
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-ncurses=shared \
 	%{?with_oci8:--with-oci8=shared} \
-	%{?with_openssl:--with-openssl=shared,/usr} \
+	%{?with_openssl:--with-openssl=/usr} \
 	%{?with_oracle:--with-oracle=shared} \
 	%{!?with_pcre:--without-pcre-regex}%{?with_pcre:--with-pcre-regex=shared} \
 	%{?with_pdf:--with-pdflib=shared} \
@@ -2686,11 +2686,11 @@ fi
 %attr(755,root,root) %{extensionsdir}/odbc.so
 %endif
 
-%if %{with openssl}
-%files openssl
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/openssl.so
-%endif
+#%if %{with openssl}
+#%files openssl
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/openssl.so
+#%endif
 
 %if %{with oracle}
 %files oracle
