@@ -65,14 +65,15 @@ Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сер
 Name:		php
 Version:	5.0.0
 %define _pre	b3
-Release:	3
+Release:	0.1
 Epoch:		3
 Group:		Libraries
 License:	PHP
 #Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
 #Source0:	http://downloads.php.net/ilia/%{name}-%{version}.tar.bz2
+# See this dumb scheme? It makes rpm think Source0 filename is mirror. Gosh.
 #Source0:	http://www.php.net/get/%{name}-%{version}%{_pre}.tar.bz2/from/this/mirror
-Source0:	%{name}-%{version}%{_pre}.tar.bz2
+Source0:	http://mamut.pld-linux.org/~adamg/%{name}-%{version}%{_pre}.tar.bz2
 # Source0-md5:	91957dae6b1a1dbdb386a92a3227d5d6
 Source1:	FAQ.%{name}
 Source2:	zend.gif
@@ -1475,7 +1476,8 @@ php-pear-* (php-pear-PEAR, php-pear-Archive_Tar, itp).
 
 %prep
 %setup -q -n %{name}-%{version}%{_pre}
-#%patch0 -p1
+# Patch0 updated
+%patch0 -p1
 %patch1 -p1
 #%patch2 -p1
 %patch3 -p1
@@ -2324,7 +2326,7 @@ fi
 %if %{_apache2}
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php.conf
 %endif
-%attr(755,root,root) %{_libdir}/apache/libphp4.so
+%attr(755,root,root) %{_libdir}/apache/libphp5.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 
 %files cgi
