@@ -1256,7 +1256,7 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 %patch21 -p1
 %patch22 -p1
 cp php.ini-dist php.ini
-%patch23
+%patch23 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE3} | tar -xf - -C manual
