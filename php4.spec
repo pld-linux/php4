@@ -35,8 +35,9 @@ Patch5:		%{name}-no_libnsl.patch
 Patch6:		%{name}-DESTDIR.patch
 Patch7:		%{name}-gd-shared.patch
 Patch8:		%{name}-apache-fixes.patch
-#Patch9:		%{name}-system-expat.patch
+#Patch9:	%{name}-system-expat.patch
 Patch10:	%{name}-quotes.patch
+Patch11:	%{name}-session-path.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -130,7 +131,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description mysql
 This is a dynamic shared object (DSO) for Apache that will add MySQL
@@ -148,7 +149,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description pgsql
 This is a dynamic shared object (DSO) for Apache that will add
@@ -167,7 +168,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 Autoreq:	false
 
 %description oci8
@@ -187,7 +188,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 Autoreq:	false
 
 %description oracle
@@ -207,7 +208,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description gd
 This is a dynamic shared object (DSO) for Apache that will add GD
@@ -216,8 +217,8 @@ main %{name} package if you want to create and manipulate images with
 PHP.
 
 %description gd -l pl
-Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki GD - do obróbki obrazków
-z poziomu PHP.
+Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki GD - do obróbki
+obrazków z poziomu PHP.
 
 %package java
 Summary:	Java extension module for PHP
@@ -227,7 +228,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description java
 This is a dynamic shared object (DSO) for Apache that will add JAVA
@@ -246,7 +247,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description xml
 This is a dynamic shared object (DSO) for Apache that will add XML
@@ -267,7 +268,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description dba
 This is a dynamic shared object (DSO) for Apache that will add
@@ -283,11 +284,11 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description odbc
-This is a dynamic shared object (DSO) for Apache that will add
-ODBC support to PHP.
+This is a dynamic shared object (DSO) for Apache that will add ODBC
+support to PHP.
 
 %description odbc -l pl
 Modu³ PHP ze wsparciem dla ODBC.
@@ -300,7 +301,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description calendar
 This is a dynamic shared object (DSO) for Apache that will add
@@ -316,7 +317,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description dbase
 This is a dynamic shared object (DSO) for Apache that will add DBase
@@ -333,7 +334,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description filepro
 This is a dynamic shared object (DSO) for Apache that will add FilePro
@@ -349,7 +350,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description posix
 This is a dynamic shared object (DSO) for Apache that will add POSIX
@@ -366,7 +367,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description pcre
 This is a dynamic shared object (DSO) for Apache that will add Perl
@@ -384,7 +385,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description sysvsem
 This is a dynamic shared object (DSO) for Apache that will add SysV
@@ -401,7 +402,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description sysvshm
 This is a dynamic shared object (DSO) for Apache that will add SysV
@@ -418,7 +419,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description yp
 This is a dynamic shared object (DSO) for Apache that will add NIS
@@ -434,15 +435,15 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description bcmath
 This is a dynamic shared object (DSO) for Apache that will add bc
 style precision math functions support to PHP.
 
 %description bcmath -l pl
-Modu³ PHP umo¿liwiaj±cy korzystanie z dok³adnych funkcji matematycznych
-takich jak w programie bc.
+Modu³ PHP umo¿liwiaj±cy korzystanie z dok³adnych funkcji
+matematycznych takich jak w programie bc.
 
 %package ftp
 Summary:	FTP extension module for PHP
@@ -452,7 +453,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description ftp
 This is a dynamic shared object (DSO) for Apache that will add FTP
@@ -468,7 +469,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description zlib
 This is a dynamic shared object (DSO) for Apache that will add
@@ -485,7 +486,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description exif
 This is a dynamic shared object (DSO) for Apache that will add exif
@@ -501,7 +502,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description recode
 This is a dynamic shared object (DSO) for Apache that will add recode
@@ -517,7 +518,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description session
 This is a dynamic shared object (DSO) for Apache that will add session
@@ -533,7 +534,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description gettext
 This is a dynamic shared object (DSO) for Apache that will add gettext
@@ -549,7 +550,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description snmp
 This is a dynamic shared object (DSO) for Apache that will add snmp
@@ -565,7 +566,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description imap
 This is a dynamic shared object (DSO) for Apache that will add imap
@@ -581,7 +582,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description ldap
 This is a dynamic shared object (DSO) for Apache that will add LDAP
@@ -597,7 +598,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description sockets
 This is a dynamic shared object (DSO) for Apache that will add sockets
@@ -613,7 +614,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description mcrypt
 This is a dynamic shared object (DSO) for Apache that will add mcrypt
@@ -629,7 +630,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:	%{name} = %{version}
+PreReq:		%{name} = %{version}
 
 %description mhash
 This is a dynamic shared object (DSO) for Apache that will add mhash
@@ -645,8 +646,8 @@ Group(de):	Netzwerkwesen/Server
 Group(pl):	Sieciowe/Serwery
 
 %description doc
-Comprehensive documentation for PHP, viewable through your web
-server, too!
+Comprehensive documentation for PHP, viewable through your web server,
+too!
 
 %description doc -l pl
 Dokumentacja dla pakietu PHP. Mo¿na j± równie¿ ogl±daæ poprzez serwer
@@ -661,10 +662,15 @@ PEAR.
 
 %package devel
 Summary:	Files for PHP modules development
+Summary(pl):	Pliki do kompilacji modu³ów PHP
 Group:		Development/Languages/PHP
+Requires:	%{name} = %{version}
 
 %description devel
 Files for PHP modules development.
+
+%description devel -l pl
+Pliki potrzebne do kompilacji modu³ów PHP.
 
 %prep
 %setup  -q
@@ -677,6 +683,7 @@ Files for PHP modules development.
 %patch8 -p1
 #%patch9 -p1
 %patch10 -p1
+%patch11 -p1
 
 %build
 CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
