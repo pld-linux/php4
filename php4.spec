@@ -1808,9 +1808,10 @@ cp -f Zend/LICENSE{,.Zend}
 # Directories created for pear:
 install -d $RPM_BUILD_ROOT%{php_pear_dir}/{Archive,Console,Crypt,HTML/Template,Image,Net,Science,XML}
 
-%ifarch amd64
-ln -sf ../../lib/php/build $RPM_BUILD_ROOT%{_libdir}/php/build
-%endif
+# Is it really needed? Breaks installation of php4-devel (when replacing php-devel)
+#%%ifarch amd64
+#ln -sf ../../lib/php/build $RPM_BUILD_ROOT%{_libdir}/php/build
+#%%endif
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.la
 
@@ -2490,9 +2491,10 @@ fi
 %{_libdir}/libphp_common.la
 %{_includedir}/php
 %{_libdir}/php/build
-%ifarch amd64
-%{_ulibdir}/php/build
-%endif
+# Is it really needed? Breaks installation of php4-devel (when replacing php-devel)
+#%ifarch amd64
+#%{_ulibdir}/php/build
+#%endif
 
 %files bcmath
 %defattr(644,root,root,755)
