@@ -15,9 +15,9 @@
 +		}
 +		PUTS("This server is using PLD Linux.");
 +		if (PG(html_errors))
-+			PUTS("<br />More information at <a href=\"http://www.pld.org.pl/\">http://www.pld.org.pl/</a>.<br />\n");
++			PUTS("<br />More information at <a href=\"http://www.pld-linux.org/\">http://www.pld-linux.org/</a>.<br />\n");
 +		else
-+			PUTS("\nMore information at http://www.pld.org.pl/.\n");
++			PUTS("\nMore information at http://www.pld-linux.org/.\n");
 +		php_info_print_box_end();
  		efree(php_uname);
  	}
