@@ -721,7 +721,6 @@ Pliki potrzebne do kompilacji modu³ów PHP.
 CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 ./buildconf
 %configure \
-	--enable-force-cgi-redirect \
 	--enable-discard-path \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
