@@ -2465,7 +2465,7 @@ fi
 
 %dir %{_sysconfdir}
 %attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
-%attr(730,root,http) %dir %verify(not group mode) /var/run/php
+%attr(770,root,http) %dir %verify(not group mode) /var/run/php
 
 %{httpdir}/icons/*
 %attr(755,root,root) %{_sbindir}/*
