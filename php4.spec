@@ -107,6 +107,7 @@ Patch28:	%{name}-sybase-fix.patch
 Patch29:	%{name}-mssql-fix.patch
 Patch30:	%{name}-lib64.patch
 Patch31:	%{name}-mnogosearch-fix.patch
+Patch32:	%{name}-stupidapache_version.patch 
 #Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1526,9 +1527,11 @@ cp php.ini-dist php.ini
 %patch30 -p1
 %endif
 %patch31 -p1
+%patch32
 
 # new apr
 sed -i -e 's#apr-config#apr-1-config#g' sapi/apache*/*.m4
+sed -i -e 's#apu-config#apu-1-config#g' sapi/apache*/*.m4
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include `%{_bindir}/apr-1-config --cppflags --includes` `%{_bindir}/apu-1-config --includes`"
