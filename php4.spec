@@ -62,13 +62,13 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.10
-%define	_suf	RC1
+%define	_suf	RC2
 Release:	0.%{_suf}
 Epoch:		0
 Group:		Libraries
 License:	PHP
 Source0:	http://downloads.php.net/ilia/php-%{version}%{_suf}.tar.bz2
-# Source0-md5:	d0172a795aebe8a66ee17b6a546ac459
+# Source0-md5:	3376fc167b6a9bc18e0a0dec5d252d46
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source3:	%{name}-module-install
