@@ -134,6 +134,7 @@ BuildRequires:	expat-devel
 %{?with_fam:BuildRequires:	fam-devel}
 %endif
 %{?with_fdf:BuildRequires:	fdftk-devel}
+BuildRequires:	fcgi-devel
 BuildRequires:	flex
 %if %{with mssql} || %{with sybase}
 BuildRequires:	freetds-devel
@@ -185,7 +186,6 @@ BuildRequires:	t1lib-devel
 %{?with_xmlrpc:BuildRequires:	xmlrpc-epi-devel}
 %{?with_yaz:BuildRequires:	yaz-devel >= 1.9}
 BuildRequires:	zlib-devel >= 1.0.9
-#BuildRequires:	fcgi-devel
 # apache 1.3 vs apache 2.0
 %if %{_apache2}
 BuildRequires:  apr-devel >= 1:0.9.4-1
@@ -271,6 +271,19 @@ PHP4 - це мова написання скрипт╕в, що вбудовуються в HTML-код. PHP
 Цей пакет м╕стить самодостатню (CGI) верс╕ю ╕нтерпретатора мови. Ви
 ма╓те також встановити пакет %{name}-common. Якщо вам потр╕бен
 ╕нтерпретатор PHP в якост╕ модуля apache, встанов╕ть пакет apache-php.
+
+%package fcgi
+Summary:	PHP as FastCGI program
+Summary(pl):	PHP jako program FastCGI
+Group:		Development/Languages/PHP
+PreReq:		%{name}-common = %{epoch}:%{version}
+Provides:	php-program = %{epoch}:%{version}-%{release}
+
+%description fcgi
+PHP as FastCGI program.
+
+%description fcgi -l pl
+PHP jako program FastCGI.
 
 %package cgi
 Summary:	PHP as CGI program
@@ -1315,7 +1328,7 @@ handlers for different XML events.
 
 %description xml -l pl
 ModuЁ PHP umo©liwiaj╠cy parsowanie plikСw XML i obsЁugЙ zdarzeЯ
-zwi╠zanych z tymi plikami. Pozwala on tworzyФ analizatory XML i
+zwi╠zanych z tymi plikami. Pozwala on tworzyФ analizatory XML-a i
 nastЙpnie definiowaФ procedury obsЁugi dla rС©nych zdarzeЯ XML.
 
 %package xmlrpc
@@ -1458,7 +1471,7 @@ EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 %{__aclocal}
 %{__autoconf}
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
-for i in cgi cli apxs ; do
+for i in fcgi cgi cli apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
 	`[ $i = cli ] && echo --disable-cgi` \
@@ -1586,16 +1599,21 @@ done
 %{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}/apache'|" libphp5.la
 %{__perl} -pi -e 's|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |' libphp5.la
 
+# for fcgi: -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0
+# -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1(die) -DHAVE_SYS_PARAM_H=1
+# -DPHP_FASTCGI=1 -DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1
+
+%{__make} sapi/cgi/php -f Makefile.fcgi \
+	CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0 -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1 -DHAVE_SYS_PARAM_H=1 -DPHP_FASTCGI=1 -DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1"
+cp -r sapi/cgi sapi/fcgi
+rm -rf sapi/cgi/.libs sapi/cgi/*.lo
+
 # notes:
 # -DENABLE_CHROOT_FUNC=1 (cgi,fcgi) is used in ext/standard/dir.c (libphp_common)
 # -DPHP_WRITE_STDOUT is used also for cli, but not set by its config.m4
 
 %{__make} sapi/cgi/php -f Makefile.cgi \
 	CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=1 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0 -DPHP_WRITE_STDOUT=1"
-
-# for fcgi: -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0
-# -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1(die) -DHAVE_SYS_PARAM_H=1
-# -DPHP_FASTCGI=1 -DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -1607,7 +1625,7 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
-	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp5.la $RPM_BUILD_ROOT%{_libdir}/apache ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi" \
+	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp5.la $RPM_BUILD_ROOT%{_libdir}/apache ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi ; \$(LIBTOOL) --mode=install install sapi/fcgi/php $RPM_BUILD_ROOT%{_bindir}/php.fcgi" \
 	INSTALL_CLI="\$(LIBTOOL) --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php.cli"
 
 # ToDo:
@@ -2211,6 +2229,10 @@ fi
 %endif
 %attr(755,root,root) %{_libdir}/apache/libphp5.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
+
+%files fcgi
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/php.fcgi
 
 %files cgi
 %defattr(644,root,root,755)
