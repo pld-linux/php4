@@ -1,9 +1,0 @@
-diff -Naur php-4.1.2.orig/ext/skeleton/create_stubs php-4.1.2/ext/skeleton/create_stubs
---- php-4.1.2.orig/ext/skeleton/create_stubs	Fri May 31 11:50:08 2002
-+++ php-4.1.2/ext/skeleton/create_stubs	Fri May 31 11:52:00 2002
-@@ -1,4 +1,4 @@
--#!/usr/bin/awk -f
-+#!/bin/awk -f
- 
- function gobble(s, x)
- {
