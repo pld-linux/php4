@@ -16,7 +16,7 @@ Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
 BuildRequires:	zlib-devel
-BuildRequires:	mysql-devel
+BuildRequires:	mysql-devel >= 3.22.30-2
 Requires:	apache >= 1.3.9
 Prereq:		/usr/sbin/apxs
 BuildRoot:	/tmp/%{name}-%{version}-root
