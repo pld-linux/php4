@@ -16,7 +16,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.6
-Release:	9
+Release:	10
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
