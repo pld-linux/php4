@@ -77,7 +77,7 @@ Summary(ru):	PHP Версии 5 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 5 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	5.0.0
-Release:	1
+Release:	2
 Epoch:		3
 Group:		Libraries
 License:	PHP
