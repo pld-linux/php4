@@ -21,16 +21,22 @@
 # _with_oracle		- with oracle extension module		(BR: proprietary libs)
 # _with_pcntl		- with pcntl extension module		(problems: SEGV on exit)
 # _without_cpdf		- without cpdf extension module
+# _without_curl		- without CURL extension module
 # _without_domxslt	- without DOM XSLT/EXSLT support in DOM XML extension module
 # _without_gif		- build GD extension module with gd library without GIF support
 # _without_imap		- without IMAP extension module
 # _without_ldap		- without LDAP extension module
+# _without_mhash	- without mhash extension module
+# _without_ming		- without ming extension module
 # _without_mm		- without mm support for session storage
+# _without_mnogosearch	- without mnogosearch extension module
 # _without_msession	- without msession extension module
 # _without_odbc		- without ODBC extension module
 # _without_openssl	- without OpenSSL support and OpenSSL extension module
 # _without_pcre		- without PCRE extension module
 # _without_pdf		- without PDF extension module
+# _without_pspell	- without pspell extension module
+# _without_psql		- without PostgreSQL extension module
 # _without_snmp		- without SNMP extension module
 # _without_recode	- without recode extension module
 # _without_sybase_ct	- without Sybase-CT extension module
@@ -38,13 +44,6 @@
 # _without_xml		- without XML extension module
 # _without_xmlrpc	- without XML-RPC extension module
 # _without_xslt		- without XSLT extension module
-#
-# _without_curl		- wihtout CURL support 
-# _without_psql		- without PostgreSQL support
-# _without_ming		-
-# _without_mhash	-
-# _without_mnogosearch	-
-# _without_pspell	-
 
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
