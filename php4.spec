@@ -41,6 +41,11 @@
 #
 # _without_curl		- wihtout CURL support 
 # _without_psql		- without PostgreSQL support
+# _without_ming		-
+# _without_mhash	-
+# _without_mnogosearch	-
+# _without_pspell	-
+
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
@@ -117,10 +122,10 @@ BuildRequires:	libtiff-devel
 BuildRequires:	libtool >= 0:1.4.2-9
 %{!?_without_xml:BuildRequires:	libxml2-devel >= 2.2.7}
 %{!?_without_domxslt:BuildRequires:	libxslt-devel >= 1.0.3}
-BuildRequires:	mhash-devel
-BuildRequires:	ming-devel >= 0.1.0
+%{!?_without_mhash:BuildRequires:	mhash-devel}
+%{!?_without_ming:BuildRequires:	ming-devel >= 0.1.0}
 %{!?_without_mm:BuildRequires:	mm-devel >= 1.1.3}
-BuildRequires:	mnogosearch-devel >= 3.2.6
+%{!?_without_mnogosearch:BuildRequires:	mnogosearch-devel >= 3.2.6}
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
 %if %(expr %{?_without_openssl:0}%{!?_without_openssl:1} + %{?_without_ldap:0}%{!?_without_ldap:1})
@@ -132,7 +137,7 @@ BuildRequires:	perl
 %{!?_without_msession:BuildRequires:	phoenix-devel}
 %{!?_without_psql:BuildRequires:	postgresql-devel}
 %{!?_without_psql:BuildRequires:	postgresql-backend-devel >= 7.2}
-BuildRequires:	pspell-devel
+%{!?_without_pspell:BuildRequires:	pspell-devel}
 %{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-80
 %{!?_without_xslt:BuildRequires:	sablotron-devel}
@@ -1354,10 +1359,10 @@ for i in cgi apxs ; do
 	%{!?_without_ldap:--with-ldap=shared} \
 	--with-mcal=shared,/usr \
 	--with-mcrypt=shared \
-	--with-mhash=shared \
-	--with-ming=shared \
+	%{!?_without_mhash:--with-mhash=shared} \
+	%{!?_without_ming:--with-ming=shared} \
 	%{!?_without_mm:--with-mm} \
-	--with-mnogosearch=shared,/usr \
+	%{?_without_mnogosearch:--without-mnogosearch}%{!?_without_mnogosearch:--with-mnogosearch=shared,/usr} \
 	%{!?_without_msession:--with-msession=shared}%{?_without_msession:--without-msession} \
 	--with-mysql=shared,/usr \
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
@@ -1369,7 +1374,7 @@ for i in cgi apxs ; do
 	--with-pear=%{php_pear_dir} \
 	%{?_without_psql:--without-pgsql}%{!?_without_psql:--with-pgsql=shared,/usr} \
 	--with-png-dir=shared,/usr \
-	--with-pspell=shared \
+	%{!?_without_pspell:--with-pspell=shared} \
 	%{!?_without_recode:--with-recode=shared} \
 	--with-regex=php \
 	--with-sablot-js=shared,no \
@@ -2102,17 +2107,23 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mcrypt.so
 
+%if %{!?_without_mhash:1}%{?_without_mhash:0}
 %files mhash
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mhash.so
+%endif
 
+%if %{!?_without_ming:1}%{?_without_ming:0}
 %files ming
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/ming.so
+%endif
 
+%if %{!?_without_mnogosearch:1}%{?_without_mnogosearch:0}
 %files mnogosearch
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mnogosearch.so
+%endif
 
 %if %{?_without_msession:0}%{!?_without_msession:1}
 %files msession
@@ -2180,9 +2191,11 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/posix.so
 
+%if %{!?_without_pspell:1}%{?_without_pspell:0}
 %files pspell
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pspell.so
+%endif
 
 %if %{?_without_recode:0}%{!?_without_recode:1}
 %files recode
