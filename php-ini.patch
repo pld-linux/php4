@@ -37,8 +37,8 @@
 +; If you use constants in your value, and these constants belong to a
 +; dynamically loaded extension (either a PHP extension or a Zend extension),
 +; you may only use these constants *after* the line that loads the extension.
-+ 
-+ 
++
++
 +; Below is the list of settings changed from default as specified in
 +; php.ini-recommended. These settings make PHP more secure and encourage
 +; cleaner coding.
@@ -80,7 +80,7 @@
 +; performance, but NOT applied in default php.ini in PLD (since they are
 +; not needed for security or may cause problems with some applications
 +; more likely than above).
-+ 
++
 +; - output_buffering = 4096        [Performance]
 +;     Set a 4KB output buffer.  Enabling output buffering typically results in less
 +;     writes, and sometimes less packets sent on the wire, which can often lead to
