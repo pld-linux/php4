@@ -15,23 +15,28 @@
 %endif
 
 # Conditional build:
-# _with_cpdf		- with cpdf extension module
-# _with_interbase	- with InterBase extension module
-# _with_java		- with Java extension module
-# _with_oci8		- with Oracle oci8 extension module
-# _with_oracle		- with oracle extension module
-# _with_sybase_ct	- with Sybase-CT extension module
+# _with_interbase	- with InterBase extension module	(BR: proprietary libs)
+# _with_java		- with Java extension module		(BR: jdk)
+# _with_oci8		- with Oracle oci8 extension module	(BR: proprietary libs)
+# _with_oracle		- with oracle extension module		(BR: proprietary libs)
+# _with_pcntl		- with pcntl extension module		(problems: SEGV on exit)
+# _without_cpdf		- without cpdf extension module
 # _without_domxslt	- without DOM XSLT/EXSLT support in DOM XML extension module
+# _without_gif		- build GD extension module with gd library without GIF support
 # _without_imap		- without IMAP extension module
 # _without_ldap		- without LDAP extension module
 # _without_mm		- without mm support for session storage
 # _without_msession	- without msession extension module
 # _without_odbc		- without ODBC extension module
 # _without_openssl	- without OpenSSL support and OpenSSL extension module
+# _without_pcre		- without PCRE extension module
 # _without_pdf		- without PDF extension module
 # _without_snmp		- without SNMP extension module
 # _without_recode	- without recode extension module
+# _without_sybase_ct	- without Sybase-CT extension module
 # _without_wddx		- without WDDX extension module
+# _without_xml		- without XML extension module
+# _without_xmlrpc	- without XML-RPC extension module
 # _without_xslt		- without XSLT extension module
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
@@ -41,7 +46,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.2.3
-Release:	0.1
+Release:	1
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -59,7 +64,7 @@ Patch2:		%{name}-mysql-socket.patch
 Patch3:		%{name}-mail.patch
 Patch4:		%{name}-link-libs.patch
 Patch5:		%{name}-fastcgi.patch
-Patch6:		%{name}-no_php_pcre_in_SAPI_c.patch
+#Patch6:		%{name}-no_php_pcre_in_SAPI_c.patch
 Patch7:		%{name}-libpq_fs_h_path.patch
 Patch8:		%{name}-wddx-fix.patch
 Patch9:		%{name}-cpdf-fix.patch
@@ -76,11 +81,11 @@ Patch19:	%{name}-pear-cosmetic.patch
 Patch20:	%{name}-mnogosearch.patch
 Patch21:	%{name}-ini.patch
 Patch22:	%{name}-acam.patch
+Patch23:	%{name}-xmlrpc-fix.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
-BuildRequires:	autoconf >= 2.52
-%{?_with_sybase_ct:BuildRequires:	autoconf >= 2.53}
+BuildRequires:	autoconf >= 2.53
 BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
 BuildRequires:	bzip2-devel
@@ -88,16 +93,19 @@ BuildRequires:	cracklib-devel >= 2.7-15
 BuildRequires:	curl-devel
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel >= 3.1.17
+%if %(expr %{?_without_xml:0}%{!?_without_xml:1} + %{?_without_xmlrpc:0}%{!?_without_xmlrpc:1})
 BuildRequires:	expat-devel
+%endif
 BuildRequires:	flex
-%{?_with_sybase_ct:BuildRequires:	freetds-devel}
+%{!?_without_sybase_ct:BuildRequires:	freetds-devel}
 BuildRequires:	freetype-devel >= 2.0
 BuildRequires:	gd-devel >= 2.0.1
+%{!?_without_gif:BuildRequires:	gd-devel(gif)}
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
 %{!?_without_imap:BuildRequires: imap-devel >= 1:2001-0.BETA.200107022325.2 }
 %{?_with_java:BuildRequires:	jdk >= 1.1}
-%{?_with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
+%{!?_without_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libltdl-devel >= 1.4
 BuildRequires:	libmcal-devel
@@ -105,7 +113,7 @@ BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	libpng >= 1.0.8
 BuildRequires:	libtiff-devel
 BuildRequires:	libtool >= 0:1.4.2-9
-BuildRequires:	libxml2-devel >= 2.2.7
+%{!?_without_xml:BuildRequires:	libxml2-devel >= 2.2.7}
 %{!?_without_domxslt:BuildRequires:	libxslt-devel >= 1.0.3}
 BuildRequires:	mhash-devel
 BuildRequires:	ming-devel >= 0.1.0
@@ -129,7 +137,7 @@ BuildRequires:	rpm-php-pearprov >= 4.0.2-80
 BuildRequires:	t1lib-devel
 %{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.3}
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
-BuildRequires:	xmlrpc-epi-devel
+%{!?_without_xmlrpc:BuildRequires:	xmlrpc-epi-devel}
 BuildRequires:	yaz-devel
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
@@ -528,6 +536,7 @@ Summary:	GD extension module for PHP
 Summary:	ModuЁ GD dla PHP
 Group:		Libraries
 PreReq:		%{name}-common = %{version}
+%{!?_without_gif:Provides:	%{name}-gd(gif) = %{epoch}:%{version}}
 
 %description gd
 This is a dynamic shared object (DSO) for Apache that will add GD
@@ -858,7 +867,7 @@ Uwaga: to jest moduЁ eksperymentalny.
 Summary:	Process Control extension module for PHP
 Summary(pl):	ModuЁ Process Control dla PHP
 Group:		Libraries
-PreReq:		%{name}-common = %{version}
+PreReq:		%{name}-cgi = %{version}
 
 %description pcntl
 This is a dynamic shared object (DSO) for Apache that will add process
@@ -1238,7 +1247,7 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
+#%patch6 -p1
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
@@ -1258,6 +1267,7 @@ cp php.ini-dist php.ini
 # for ac2.53b/am1.6b - AC_LANG_CXX has AM_CONDITIONAL, so cannot be invoked
 # conditionally...
 %patch22 -p1
+%patch23 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE3} | tar -xf - -C manual
@@ -1296,7 +1306,7 @@ for i in cgi apxs ; do
 	--enable-magic-quotes \
 	--enable-mbstring=shared --disable-mbstr-enc-trans --enable-mbregex \
 	--enable-overload=shared \
-	--disable-pcntl \
+	%{?_with_pcntl:--enable-pcntl=shared}%{!?_with_pcntl:--disable-pcntl} \
 	--enable-posix=shared \
 	--enable-session \
 	--enable-shared \
@@ -1309,11 +1319,11 @@ for i in cgi apxs ; do
 	--enable-sockets=shared \
 	--enable-ucd-snmp-hack \
 	%{!?_without_wddx:--enable-wddx=shared} \
-	--enable-xml=shared \
+	%{?_without_xml:--disable-xml}%{!?_without_xml:--enable-xml=shared} \
 	%{!?_without_xslt:--enable-xslt=shared} \
 	--enable-yp=shared \
 	--with-bz2=shared \
-	%{?_with_cpdf:--with-cpdflib=shared} \
+	%{!?_without_cpdf:--with-cpdflib=shared} \
 	--with-crack=shared \
 	--with-curl=shared \
 	--without-db2 \
@@ -1321,7 +1331,11 @@ for i in cgi apxs ; do
 	--with-dbase=shared \
 	--with-dom=shared \
 	%{!?_without_domxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
+%if %(expr %{?_without_xml:0}%{!?_without_xml:1} + %{?_without_xmlrpc:0}%{!?_without_xmlrpc:1})
 	--with-expat-dir=shared,/usr \
+%else
+	--without-expat-dir \
+%endif
 	--with-iconv=shared \
 	--with-filepro=shared \
 	--with-freetype-dir=shared \
@@ -1332,7 +1346,7 @@ for i in cgi apxs ; do
 	--with-hyperwave=shared \
 	%{!?_without_imap:--with-imap=shared --with-imap-ssl} \
 	%{?_with_interbase:--with-interbase=shared} \
-	%{?_with_java:--with-java} \
+	%{?_with_java:--with-java=/usr/lib/java} \
 	--with-jpeg-dir=shared,/usr \
 	%{!?_without_ldap:--with-ldap=shared} \
 	--with-mcal=shared,/usr \
@@ -1347,7 +1361,7 @@ for i in cgi apxs ; do
 	%{?_with_oci8:--with-oci8=shared} \
 	%{!?_without_openssl:--with-openssl=shared} \
 	%{?_with_oracle:--with-oracle=shared} \
-	--with-pcre-regex=shared \
+	%{?_without_pcre:--without-pcre-regex}%{!?_without_pcre:--with-pcre-regex=shared} \
 	%{!?_without_pdf:--with-pdflib=shared} \
 	--with-pear=%{php_pear_dir} \
 	--with-pgsql=shared,/usr \
@@ -1357,11 +1371,11 @@ for i in cgi apxs ; do
 	--with-regex=php \
 	--with-sablot-js=shared,no \
 	%{!?_without_snmp:--with-snmp=shared} \
-	%{?_with_sybase_ct:--with-sybase-ct=shared,/usr} \
+	%{!?_without_sybase_ct:--with-sybase-ct=shared,/usr} \
 	--with-t1lib=shared \
 	--with-tiff-dir=shared,/usr \
 	%{!?_without_odbc:--with-unixODBC=shared} \
-	--with-xmlrpc=shared,/usr \
+	%{?_without_xmlrpc:--without-xmlrpc}%{!?_without_xmlrpc:--with-xmlrpc=shared,/usr} \
 	%{!?_without_xslt:--with-xslt-sablot=shared} \
 	--with-yaz=shared \
 	--with-zip=shared \
@@ -1373,7 +1387,7 @@ done
 # --enable-session=shared
 # %{?_without_mm:--with-mm=shared,no}%{!?_without_mm:--with-mm=shared}
 
-# TODO --with-pspell=/usr,shared (pspell missing)
+# TODO:
 #	--with-qtdom=shared
 
 %{__make}
@@ -1748,11 +1762,11 @@ if [ "$1" = "0" ]; then
 fi
 
 %post pcntl
-%{_sbindir}/php-module-install install pcntl %{_sysconfdir}/php.ini
+%{_sbindir}/php-module-install install pcntl %{_sysconfdir}/php-cgi.ini
 
 %preun pcntl
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove pcntl %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
 fi
 
 %post pcre
@@ -1976,7 +1990,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/calendar.so
 
-%if %{?_with_cpdf:1}%{!?_with_cpdf:0}
+%if %{?_without_cpdf:0}%{!?_without_cpdf:1}
 %files cpdf
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/cpdf.so
@@ -2133,14 +2147,17 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/overload.so
 
-# disabled in 4.2.0 - it segfaults
-#%files pcntl
-#%defattr(644,root,root,755)
-#%attr(755,root,root) %{extensionsdir}/pcntl.so
+%if %{?_with_pcntl:1}%{!?_with_pcntl:0}
+%files pcntl
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/pcntl.so
+%endif
 
+%if %{?_without_pcre:0}%{!?_without_pcre:1}
 %files pcre
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pcre.so
+%endif
 
 %if %{?_without_pdf:0}%{!?_without_pdf:1}
 %files pdf
@@ -2185,7 +2202,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/sockets.so
 
-%if %{?_with_sybase_ct:1}%{!?_with_sybase_ct:0}
+%if %{?_without_sybase_ct:0}%{!?_without_sybase_ct:1}
 %files sybase-ct
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/sybase_ct.so
@@ -2205,13 +2222,17 @@ fi
 %attr(755,root,root) %{extensionsdir}/wddx.so
 %endif
 
+%if %{?_without_xml:0}%{!?_without_xml:1}
 %files xml
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/xml.so
+%endif
 
+%if %{?_without_xmlrpc:0}%{!?_without_xmlrpc:1}
 %files xmlrpc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/xmlrpc.so
+%endif
 
 %if %{?_without_xslt:0}%{!?_without_xslt:1}
 %files xslt

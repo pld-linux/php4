@@ -1,0 +1,21 @@
+--- php-4.2.3/ext/xmlrpc/config.m4.orig	Sat Sep  7 20:49:15 2002
++++ php-4.2.3/ext/xmlrpc/config.m4	Sat Sep  7 21:05:25 2002
+@@ -29,6 +29,7 @@
+   for i in /usr /usr/local $PHP_EXPAT_DIR $XMLRPC_DIR; do
+     if test -f $i/lib/libexpat.a -o -f $i/lib/libexpat.$SHLIB_SUFFIX_NAME; then
+       AC_DEFINE(HAVE_LIBEXPAT2,1,[ ])
++      ext_shared=$xmlrpc_ext_shared
+       PHP_ADD_LIBRARY_WITH_PATH(expat, $i/lib, XMLRPC_SHARED_LIBADD)
+       PHP_ADD_INCLUDE($i/include)
+       testval=yes
+@@ -87,8 +87,9 @@
+     AC_MSG_ERROR(Please reinstall the XMLRPC-EPI distribution)
+   fi
+ 
++  ext_shared=$xmlrpc_ext_shared
+   PHP_ADD_INCLUDE($XMLRPC_DIR)
+-  PHP_ADD_LIBRARY_WITH_PATH(xmlrpc, $XMLRPC_DIR/lib, XMLRPC_SHARED_LIBADD)
++  PHP_ADD_LIBRARY_WITH_PATH(xmlrpc, $PHP_XMLRPC/lib, XMLRPC_SHARED_LIBADD)
+   
+ fi
+ 
