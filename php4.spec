@@ -35,12 +35,12 @@ Source4:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
 Source5:	%{name}-module-install
 #Patch0:		%{name}-imap.patch
 #Patch1:		%{name}-mysql-socket.patch
-Patch2:		%{name}-mail.patch
+#Patch2:		%{name}-mail.patch
 #Patch3:		%{name}-link-libs.patch
-Patch4:		%{name}-session-path.patch
+#Patch4:		%{name}-session-path.patch
 #Patch5:		%{name}-am_ac_lt.patch
-Patch6:		%{name}-fastcgi.patch
-Patch7:		%{name}-shared.patch
+#Patch6:		%{name}-fastcgi.patch
+#Patch7:		%{name}-shared.patch
 #Patch8:		%{name}-ac250.patch
 #Patch9:		%{name}-pearinstall.patch
 Patch10:	%{name}-pldlogo.patch
@@ -56,6 +56,7 @@ BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
 BuildRequires:	bzip2-devel
 BuildRequires:	curl-devel
+BuildRequires:  cyrus-sasl-devel
 BuildRequires:	db3-devel >= 3.1.17
 BuildRequires:	flex
 BuildRequires:	gmp-devel
@@ -964,12 +965,12 @@ ming.
 %setup  -q
 #%patch0 -p1
 #%patch1 -p1
-%patch2 -p1
+#%patch2 -p1
 #%patch3 -p1
-%patch4 -p1 
+#%patch4 -p1 
 #%patch5 -p1
-%patch6 -p1
-%patch7 -p1
+#%patch6 -p1
+#%patch7 -p1
 #%patch8 -p1
 #%patch9 -p1
 %patch10 -p1
