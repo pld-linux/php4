@@ -26,7 +26,8 @@
 # _without_mm		- without mm support for session storage
 # _without_msession	- without msession extension module
 # _without_odbc		- without ODBC extension module
-# _without_openssl	- with OpenSSL support
+# _without_openssl	- without OpenSSL support and OpenSSL extension module
+# _without_pdf		- without PDF extension module
 # _without_snmp		- without SNMP extension module
 # _without_recode	- without recode extension module
 # _without_wddx		- without WDDX extension module
@@ -116,10 +117,9 @@ BuildRequires:	mysql-devel >= 3.23.32
 BuildRequires:	openssl-devel >= 0.9.6a
 %endif
 BuildRequires:	pam-devel
-BuildRequires:	pdflib-devel >= 4.0.0
+%{!?_without_pdf:BuildRequires:	pdflib-devel >= 4.0.0}
 BuildRequires:	perl
 %{!?_without_msession:BuildRequires:	phoenix-devel}
-BuildRequires:	pkgconfig
 BuildRequires:	postgresql-devel
 BuildRequires:	postgresql-backend-devel >= 7.2
 BuildRequires:	pspell-devel
@@ -1347,7 +1347,7 @@ for i in cgi apxs ; do
 	%{!?_without_openssl:--with-openssl=shared} \
 	%{?_with_oracle:--with-oracle=shared} \
 	--with-pcre-regex=shared \
-	--with-pdflib=shared \
+	%{!?_without_pdf:--with-pdflib=shared} \
 	--with-pear=%{php_pear_dir} \
 	--with-pgsql=shared,/usr \
 	--with-png-dir=shared,/usr \
@@ -2141,9 +2141,11 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pcre.so
 
+%if %{?_without_pdf:0}%{!?_without_pdf:1}
 %files pdf
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pdf.so
+%endif
 
 %files pgsql
 %defattr(644,root,root,755)
