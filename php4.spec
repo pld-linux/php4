@@ -75,14 +75,13 @@ Summary(ru):	PHP Версии 5 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 5 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	5.0.0
-%define _pre	RC3
-Release:	0.%{_pre}.1
+Release:	0.1
 Epoch:		3
 Group:		Libraries
 License:	PHP
 #Source0:	http://www.php.net/distributions/%{name}-%{version}%{_pre}.tar.bz2
-Source0:	http://pl2.php.net/distributions/%{name}-%{version}%{_pre}.tar.bz2
-# Source0-md5:	aa24589d3c173052998792e4a6d255fa
+Source0:	http://pl2.php.net/distributions/%{name}-%{version}.tar.bz2
+# Source0-md5:	562b7ad1e903248bbe77884cb904b8b7
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -1417,7 +1416,7 @@ PEAR/*.php), dostarczanych z PHP, zainstaluj odpowiednie pakiety
 php-pear-* (php-pear-PEAR, php-pear-Archive_Tar, itp).
 
 %prep
-%setup -q -n %{name}-%{version}%{_pre}
+%setup -q
 %patch0 -p1
 %patch1 -p1
 #%patch2 -p1
