@@ -102,7 +102,7 @@ Patch23:	%{name}-threads-acfix.patch
 Patch24:	%{name}-tsrmlsfetchgcc2.patch
 Patch25:	%{name}-mnogosearch-php-extension-1.68.patch
 Patch26:	%{name}-pear-install.patch
-Patch26:	%{name}-zlib.patch
+Patch27:	%{name}-zlib.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird-devel}}
