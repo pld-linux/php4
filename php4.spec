@@ -11,7 +11,6 @@
 # - fix building of mono, sybase extensions
 # - test if php.cgi segfaults after ctrl+d when overload.so is loaded
 # - build simplexml as shared (now it's static)
-# - link with new built libphp*.so instead of system one
 #
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
@@ -79,7 +78,7 @@ Summary(ru):	PHP Версии 5 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 5 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	5.0.0
-Release:	0.1
+Release:	1
 Epoch:		3
 Group:		Libraries
 License:	PHP
