@@ -1477,7 +1477,7 @@ rm libphp4.la ; %{__make} libphp4.la
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} \
-	$RPM_BUILD_ROOT/home/httpd/icons \
+	$RPM_BUILD_ROOT/home/services/httpd/icons \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/run/php \
 	$RPM_BUILD_ROOT/etc/httpd/httpd.conf
@@ -1492,7 +1492,7 @@ install .libs/php $RPM_BUILD_ROOT%{_bindir}/php
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 install %{SOURCE6} %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}
-install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/httpd/icons
+install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/httpd/icons
 install %{SOURCE4} $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE5} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
 
@@ -2034,7 +2034,7 @@ fi
 %attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
 %attr(730,root,http) %dir %verify(not group mode) /var/run/php
 
-/home/httpd/icons/*
+/home/services/httpd/icons/*
 %attr(755,root,root) %{_sbindir}/*
 %attr(755,root,root) %{_libdir}/libphp_common*.so.*.*.*
 %dir %{extensionsdir}
