@@ -14,6 +14,7 @@
 %endif
 
 %ifnarch %{ix86}
+%define _without_interbase 1
 %define _without_msession 1
 %endif
 
