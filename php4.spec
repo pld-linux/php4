@@ -59,7 +59,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.3.0
-Release:	0.7
+Release:	1
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1450,6 +1450,8 @@ for i in cgi cli apxs ; do
 	--with-zlib-dir=shared,/usr
 
 cp -f Makefile Makefile.$i
+# left for debugging purposes
+cp -f main/php_config.h php_config.h.$i
 done
 
 # for now session_mm doesn't work with shared session module...
@@ -1473,8 +1475,6 @@ perl -pi -e "s|^(relink_command=.* -rpath )[^ ]*/libs |\1%{_libdir}/apache |" li
 %{__make} sapi/cgi/php -f Makefile.cgi \
 	CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=1 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0 -DPHP_WRITE_STDOUT=1"
 
-%{__make} sapi/cli/php -f Makefile.cli
-
 # for fcgi: -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0
 # -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1(die) -DHAVE_SYS_PARAM_H=1
 # -DPHP_FASTCGI=1 -DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1
@@ -1487,9 +1487,10 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 	$RPM_BUILD_ROOT/var/run/php \
 	$RPM_BUILD_ROOT/etc/httpd/httpd.conf
 
-%{__make} install install-build install-programs install-headers install-pear \
+%{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
-	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi ; \$(LIBTOOL) --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php.cli"
+	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi" \
+	INSTALL_CLI="\$(LIBTOOL) --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php.cli"
 
 # compatibility (/usr/bin/php used to be CGI SAPI)
 ln -sf php.cgi $RPM_BUILD_ROOT%{_bindir}/php
@@ -2350,9 +2351,11 @@ fi
 %attr(755,root,root) %{extensionsdir}/xslt.so
 %endif
 
+%if 0%{!?_without_yaz:1}
 %files yaz
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/yaz.so
+%endif
 
 %files yp
 %defattr(644,root,root,755)
