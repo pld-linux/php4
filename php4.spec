@@ -14,7 +14,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.4pl1
-Release:	10
+Release:	11
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -63,7 +63,7 @@ BuildRequires:	pam-devel
 BuildRequires:	pdflib-devel >= 3.0
 #BuildRequires:	libxml-devel >= 2.0.0
 BuildRequires:	postgresql-devel
-BuildRequires:	recode-devel >= 3.5
+BuildRequires:	recode-devel >= 3.5d-3
 BuildRequires:	t1lib-devel
 %{!?bcond_off_odbc:BuildRequires: unixODBC-devel}
 BuildRequires:	zlib-devel >= 1.0.9
@@ -135,10 +135,10 @@ Group(pl):	Biblioteki
 PreReq:		%{name}-common = %{version}
 
 %description cgi
-PHP as CGI program
+PHP as CGI program.
 
 %description cgi -l pl
-PHP jako program CGI
+PHP jako program CGI.
 
 %package common
 Summary:	Common files nneded by both apache module and CGI
@@ -150,10 +150,10 @@ Group(fr):	Librairies
 Group(pl):	Biblioteki
 
 %description common
-Common files nneded by both apache module and CGI
+Common files needed by both apache module and CGI.
 
 %description common -l pl
-Wspólne pliki dla modu³u apacha i programu CGI
+Wspólne pliki dla modu³u apacha i programu CGI.
 
 %package mysql
 Summary:	MySQL database module for PHP
@@ -535,6 +535,7 @@ Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:		%{name}-common = %{version}
+Requires:	recode >= 3.5d-3
 
 %description recode
 This is a dynamic shared object (DSO) for Apache that will add recode
@@ -860,7 +861,7 @@ mv php php.cgi
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} \
-		$RPM_BUILD_ROOT/home/httpd/html/{icons,docs,docs/php4-doc} \
+		$RPM_BUILD_ROOT/home/httpd/icons \
 		$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}}
 
 %{__make} install \
@@ -874,11 +875,12 @@ install php.cgi $RPM_BUILD_ROOT%{_bindir}/php
 #install modules/*.so	$RPM_BUILD_ROOT%{_pkglibdir}/php
 
 install %{SOURCE2}		$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
-install %{SOURCE3} php4.gif	$RPM_BUILD_ROOT/home/httpd/html/icons
+install %{SOURCE3} php4.gif	$RPM_BUILD_ROOT/home/httpd/icons
 install %{SOURCE5} $RPM_BUILD_ROOT/%{_sbindir}
 
-tar zxf %{SOURCE4} -C $RPM_BUILD_ROOT/home/httpd/html/docs/php4-doc
-ln -s manual.html $RPM_BUILD_ROOT/home/httpd/html/docs/php4-doc/index.html
+mkdir manual
+tar zxf %{SOURCE4} -C manual
+ln -s manual.html manual/index.html
 
 install %{SOURCE1} .
 gzip -9nf CODING_STANDARDS CREDITS FUNCTION_LIST.txt \
@@ -1174,11 +1176,12 @@ rm -rf $RPM_BUILD_ROOT
 %doc {CODING_STANDARDS,CREDITS,FUNCTION_LIST.txt,Zend/ZEND_CHANGES}.gz
 %doc {LICENSE,Zend/LICENSE,EXTENSIONS,NEWS,TODO*}.gz  
 %doc {README.EXT_SKEL,README.SELF-CONTAINED-EXTENSIONS}.gz
+%doc manual
 
 %dir %{_sysconfdir}
 %attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
 
-/home/httpd/html/icons/*
+/home/httpd/icons/*
 
 %attr(755,root,root) %{_sbindir}/*
 
@@ -1347,4 +1350,4 @@ rm -rf $RPM_BUILD_ROOT
 
 %files doc
 %defattr(644,root,root,755)
-/home/httpd/html/docs/php4-doc
+%doc manual/*
