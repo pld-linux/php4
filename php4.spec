@@ -727,6 +727,7 @@ WWW.
 %package pear
 Summary:	PEAR
 Group:		Development/Languages/PHP
+Group(pl):	Programowanie/Jêzyki/PHP
 
 %description pear
 PEAR.
@@ -734,6 +735,7 @@ PEAR.
 %package domxml
 Summary:        XML
 Group:          Development/Languages/PHP
+Group(pl):	Programowanie/Jêzyki/PHP
 
 %description domxml
 XML.
@@ -742,6 +744,7 @@ XML.
 Summary:	Files for PHP modules development
 Summary(pl):	Pliki do kompilacji modu³ów PHP
 Group:		Development/Languages/PHP
+Group(pl):	Programowanie/Jêzyki/PHP
 Requires:	%{name}-common = %{version}
 
 %description devel
