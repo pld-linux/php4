@@ -1699,7 +1699,7 @@ for i in fcgi cgi cli apxs ; do
 	--with-hyperwave=shared \
 	%{?with_imap:--with-imap=shared --with-imap-ssl} \
 	%{?with_interbase:--with-interbase=shared%{!?with_interbase_inst:,/usr}} \
-	%{?with_java:--with-java=/usr/lib/java} \
+	%{?with_java:--with-java=%{_libdir}/java} \
 	--with-jpeg-dir=shared,/usr \
 	%{?with_ldap:--with-ldap=shared} \
 	--with-mcal=shared,/usr \
