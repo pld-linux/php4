@@ -16,7 +16,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.6
-Release:	4
+Release:	9
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -34,18 +34,16 @@ Patch0:		%{name}-imap.patch
 Patch1:		%{name}-mysql-socket.patch
 Patch2:		%{name}-mail.patch
 Patch3:		%{name}-link-libs.patch
-#Patch4:		%{name}-DESTDIR.patch
-#Patch5:		%{name}-gd-shared.patch
-Patch6:		%{name}-session-path.patch
-#Patch7:		%{name}-libtool_version_check_fix.patch
-#Patch8:		%{name}-pdflib.patch
-Patch9:		%{name}-am_ac_lt.patch
-Patch10:	%{name}-fastcgi.patch
-Patch11:	%{name}-shared.patch
-Patch12:	%{name}-ac250.patch
-Patch13:	%{name}-pearinstall.patch
-#Patch14:	%{name}-linking.patch
-Patch15:	%{name}-pldlogo.patch
+Patch4:		%{name}-session-path.patch
+Patch5:		%{name}-am_ac_lt.patch
+Patch6:		%{name}-fastcgi.patch
+Patch7:		%{name}-shared.patch
+Patch8:		%{name}-ac250.patch
+Patch9:		%{name}-pearinstall.patch
+Patch10:	%{name}-pldlogo.patch
+Patch11:	%{name}-libxml2.patch
+Patch12:	%{name}-mailsecurity2.patch
+Patch13:	%{name}-ZVAL.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -53,6 +51,7 @@ BuildRequires:	zip
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	perl
+BuildRequires:	pkgconfig
 BuildRequires:	db3-devel >= 3.1.17
 BuildRequires:	freetype-devel >= 2.0
 BuildRequires:	gd-devel >= 2.0.1
@@ -765,39 +764,39 @@ support to PHP.
 %description curl -l pl
 Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki curl.
 
-#%package xslt
-#Summary:	xslt extension module for PHP
-#Summary(pl):	Modu³ xslt dla PHP
-#Group:		Libraries
-#Group(de):	Libraries
-#Group(es):	Bibliotecas
-#Group(fr):	Librairies
-#Group(pl):	Biblioteki
-#PreReq:		%{name}-common = %{version}
+%package xslt
+Summary:	xslt extension module for PHP
+Summary(pl):	Modu³ xslt dla PHP
+Group:		Libraries
+Group(de):	Libraries
+Group(es):	Bibliotecas
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+PreReq:		%{name}-common = %{version}
 #
-#%description xslt
-#This is a dynamic shared object (DSO) for Apache that will add xslt
-#support to PHP.
-#
-#%description xslt -l pl
-#Modu³ PHP umo¿liwiaj±cy korzystanie z technologii xslt.
+%description xslt
+This is a dynamic shared object (DSO) for Apache that will add xslt
+support to PHP.
 
-#%package wddx
-#Summary:	wddx extension module for PHP
-#Summary(pl):	Modu³ wddx dla PHP
-#Group:		Libraries
-#Group(de):	Libraries
-#Group(es):	Bibliotecas
-#Group(fr):	Librairies
-#Group(pl):	Biblioteki
-#PreReq:		%{name}-common = %{version}
-#
-#%description wddx
-#This is a dynamic shared object (DSO) for Apache that will add wddx
-#support to PHP.
-#
-#%description wddx -l pl
-#Modu³ PHP umo¿liwiaj±cy korzystanie z wddx.
+%description xslt -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z technologii xslt.
+
+%package wddx
+Summary:	wddx extension module for PHP
+Summary(pl):	Modu³ wddx dla PHP
+Group:		Libraries
+Group(de):	Libraries
+Group(es):	Bibliotecas
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+PreReq:		%{name}-common = %{version}
+
+%description wddx
+This is a dynamic shared object (DSO) for Apache that will add wddx
+support to PHP.
+
+%description wddx -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z wddx.
 
 %prep
 %setup  -q
@@ -805,14 +804,16 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki curl.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch6 -p1 
+%patch4 -p1 
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
-#%patch14 -p1
-%patch15 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
