@@ -11,7 +11,6 @@
 # _with_interbase	- with InterBase extension module
 # _with_java		- with Java extension module
 # _with_oci8		- with Oracle oci8 extension module
-# _with_openssl		- with OpenSSL extension module
 # _with_oracle		- with oracle extension module
 # _with_sybase_ct	- with Sybase-CT extension module
 # _without_domxslt	- without DOM XSLT/EXSLT support in DOM XML extension module
@@ -19,6 +18,7 @@
 # _without_ldap		- without LDAP extension module
 # _without_mm		- without mm support for session storage
 # _without_odbc		- without ODBC extension module
+# _without_openssl	- with OpenSSL support
 # _without_snmp		- without SNMP extension module
 # _without_recode	- without recode extension module
 # _without_wddx		- without WDDX extension module
@@ -48,6 +48,7 @@ Patch5:		%{name}-fastcgi.patch
 Patch6:		%{name}-no_%{name}_pcre_in_SAPI_c.patch
 Patch7:		%{name}-libpq_fs_h_path.patch
 Patch8:		%{name}-wddx-fix.patch
+Patch9:		%{name}-cpdf-fix.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -69,7 +70,7 @@ BuildRequires:	gmp-devel
 # I think jdk is better for java
 # BuildRequires:	jdk
 %{?_with_java:BuildRequires:	kaffe-devel}
-%{?_with_cpdf:BuildRequires:	libcpdf-devel >= 2.00}
+%{?_with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libltdl-devel >= 1.4
 BuildRequires:	libmcrypt-devel >= 2.4.4
@@ -83,8 +84,8 @@ BuildRequires:	ming-devel >= 0.1.0
 %{!?_without_mm:BuildRequires:	mm-devel >= 1.1.3}
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
-%if %(expr %{?_with_openssl:1}%{!?_with_openssl:0} + %{!?_without_ldap:1}%{?_without_ldap:0})
-%{!?_without_openssl:BuildRequires:	openssl-devel >= 0.9.6a}
+%if %(expr %{?_without_openssl:0}%{?_without_openssl:1} + %{!?_without_ldap:1}%{?_without_ldap:0})
+BuildRequires:	openssl-devel >= 0.9.6a
 %endif
 BuildRequires:	pam-devel
 BuildRequires:	pdflib-devel >= 4.0.0
@@ -819,6 +820,7 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
@@ -960,7 +962,7 @@ gzip -9nf CODING_STANDARDS CREDITS \
 	Zend/ZEND_CHANGES README.SELF-CONTAINED-EXTENSIONS README.EXT_SKEL
 
 %clean
-#rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 %post
 %if ! %{_apache2}
