@@ -18,7 +18,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.6
-Release:	14
+Release:	15
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -1205,6 +1205,7 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove ftp %{_sysconfdir}/php.ini
 fi
 
+%post gd
 %{_sbindir}/php-module-install install gd %{_sysconfdir}/php.ini
 
 %preun gd
