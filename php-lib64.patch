@@ -1,6 +1,19 @@
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/cpdf/config.m4 php-4.3.4/ext/cpdf/config.m4
---- php-4.3.4.orig/ext/cpdf/config.m4	2004-12-30 21:22:11.000000000 +0100
-+++ php-4.3.4/ext/cpdf/config.m4	2004-12-31 14:16:24.084622784 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/acinclude.m4 php-4.3.5/acinclude.m4
+--- php-4.3.5.orig/acinclude.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/acinclude.m4	2004-04-14 11:42:40.000000000 +0200
+@@ -1629,6 +1629,9 @@
+       if test -r $i/lib/libssl.a -o -r $i/lib/libssl.$SHLIB_SUFFIX_NAME; then
+         OPENSSL_LIBDIR=$i/lib
+       fi
++      if test -r $i/lib64/libssl.a -o -r $i/lib64/libssl.$SHLIB_SUFFIX_NAME; then
++        OPENSSL_LIBDIR=$i/lib64
++      fi
+       test -n "$OPENSSL_INCDIR" && test -n "$OPENSSL_LIBDIR" && break
+     done
+ 
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/cpdf/config.m4 php-4.3.5/ext/cpdf/config.m4
+--- php-4.3.5.orig/ext/cpdf/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/cpdf/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -4,7 +4,7 @@
    AC_ARG_WITH(jpeg-dir,
    [  --with-jpeg-dir[=DIR]     CPDF: Set the path to libjpeg install prefix.],[
@@ -62,9 +75,9 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/cpdf/config.m4 php-4.3.4/ext/c
          ])
          break
        fi
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/crack/config.m4 php-4.3.4/ext/crack/config.m4
---- php-4.3.4.orig/ext/crack/config.m4	2003-10-01 04:53:54.000000000 +0200
-+++ php-4.3.4/ext/crack/config.m4	2004-12-31 14:16:24.084622784 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/crack/config.m4 php-4.3.5/ext/crack/config.m4
+--- php-4.3.5.orig/ext/crack/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/crack/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -7,7 +7,7 @@
  
  if test "$PHP_CRACK" != "no"; then
@@ -74,9 +87,9 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/crack/config.m4 php-4.3.4/ext/
      test -f $i/libcrack.$SHLIB_SUFFIX_NAME -o -f $i/libcrack.a && CRACK_LIBDIR=$i && break
    done
  
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/dba/config.m4 php-4.3.4/ext/dba/config.m4
---- php-4.3.4.orig/ext/dba/config.m4	2004-12-30 21:22:12.000000000 +0100
-+++ php-4.3.4/ext/dba/config.m4	2004-12-31 14:16:24.084622784 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/dba/config.m4 php-4.3.5/ext/dba/config.m4
+--- php-4.3.5.orig/ext/dba/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/dba/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -18,7 +18,7 @@
  dnl Assign INCLUDE/LFLAGS from PREFIX
  AC_DEFUN(PHP_DBA_STD_ASSIGN,[
@@ -133,9 +146,9 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/dba/config.m4 php-4.3.4/ext/db
          if test -n "$THIS_LIBS"; then
            break
          fi
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/gd/config.m4 php-4.3.4/ext/gd/config.m4
---- php-4.3.4.orig/ext/gd/config.m4	2003-10-01 04:53:57.000000000 +0200
-+++ php-4.3.4/ext/gd/config.m4	2004-12-31 14:16:24.085622632 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/gd/config.m4 php-4.3.5/ext/gd/config.m4
+--- php-4.3.5.orig/ext/gd/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/gd/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -51,7 +51,7 @@
    if test "$PHP_JPEG_DIR" != "no"; then
  
@@ -241,7 +254,7 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/gd/config.m4 php-4.3.4/ext/gd/
      ])
    fi
  ])
-@@ -358,7 +358,7 @@
+@@ -359,7 +359,7 @@
    done
  
  dnl Library path
@@ -250,9 +263,9 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/gd/config.m4 php-4.3.4/ext/gd/
      test -f "$PHP_GD/$i/libgd.$SHLIB_SUFFIX_NAME" -o -f "$PHP_GD/$i/libgd.a" && GD_LIB="$PHP_GD/$i"
    done
  
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/imap/config.m4 php-4.3.4/ext/imap/config.m4
---- php-4.3.4.orig/ext/imap/config.m4	2003-10-03 07:25:35.000000000 +0200
-+++ php-4.3.4/ext/imap/config.m4	2004-12-31 14:16:24.085622632 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/imap/config.m4 php-4.3.5/ext/imap/config.m4
+--- php-4.3.5.orig/ext/imap/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/imap/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -71,7 +71,7 @@
      fi
  
@@ -285,7 +298,7 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/imap/config.m4 php-4.3.4/ext/i
    else
      AC_MSG_RESULT(no)
    fi
-@@ -169,13 +169,13 @@
+@@ -178,13 +178,13 @@
  
      if test -r "$IMAP_DIR/c-client/c-client.a"; then
        ln -s "$IMAP_DIR/c-client/c-client.a" "$IMAP_DIR/c-client/libc-client.a" >/dev/null 2>&1
@@ -302,9 +315,9 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/imap/config.m4 php-4.3.4/ext/i
        IMAP_LIB_CHK(c-client)
      done
  
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/ldap/config.m4 php-4.3.4/ext/ldap/config.m4
---- php-4.3.4.orig/ext/ldap/config.m4	2003-07-01 02:02:29.000000000 +0200
-+++ php-4.3.4/ext/ldap/config.m4	2004-12-31 14:16:24.086622480 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/ldap/config.m4 php-4.3.5/ext/ldap/config.m4
+--- php-4.3.5.orig/ext/ldap/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/ldap/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -6,15 +6,15 @@
    if test -f $1/include/ldap.h; then
      LDAP_DIR=$1
@@ -324,9 +337,9 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/ldap/config.m4 php-4.3.4/ext/l
    fi
  ])
  
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/mcal/config.m4 php-4.3.4/ext/mcal/config.m4
---- php-4.3.4.orig/ext/mcal/config.m4	2004-12-30 21:22:11.000000000 +0100
-+++ php-4.3.4/ext/mcal/config.m4	2004-12-31 14:16:24.086622480 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/mcal/config.m4 php-4.3.5/ext/mcal/config.m4
+--- php-4.3.5.orig/ext/mcal/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/mcal/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -19,7 +19,7 @@
      fi
    done
@@ -336,9 +349,9 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/mcal/config.m4 php-4.3.4/ext/m
      if test -r "$i/libmcal.so" -o -r "$i/libmcal.a"; then
        MCAL_LIBRARY=$i
      fi
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/ming/config.m4 php-4.3.4/ext/ming/config.m4
---- php-4.3.4.orig/ext/ming/config.m4	2003-07-11 09:48:33.000000000 +0200
-+++ php-4.3.4/ext/ming/config.m4	2004-12-31 14:16:24.086622480 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/ming/config.m4 php-4.3.5/ext/ming/config.m4
+--- php-4.3.5.orig/ext/ming/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/ming/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -9,7 +9,7 @@
    AC_CHECK_LIB(m, sin)
  
@@ -362,9 +375,9 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/ming/config.m4 php-4.3.4/ext/m
  
    AC_MSG_CHECKING([for destroySWFBlock])
    AC_TRY_RUN([
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/mssql/config.m4 php-4.3.4/ext/mssql/config.m4
---- php-4.3.4.orig/ext/mssql/config.m4	2004-12-30 21:22:12.000000000 +0100
-+++ php-4.3.4/ext/mssql/config.m4	2004-12-31 14:16:24.086622480 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/mssql/config.m4 php-4.3.5/ext/mssql/config.m4
+--- php-4.3.5.orig/ext/mssql/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/mssql/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -32,12 +32,12 @@
      fi
    fi  
@@ -381,9 +394,9 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/mssql/config.m4 php-4.3.4/ext/
  
    PHP_ADD_INCLUDE($MSSQL_INCDIR)
    PHP_ADD_LIBRARY_WITH_PATH(sybdb, $MSSQL_LIBDIR, MSSQL_SHARED_LIBADD)
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/mysql/config.m4 php-4.3.4/ext/mysql/config.m4
---- php-4.3.4.orig/ext/mysql/config.m4	2004-12-30 21:22:12.000000000 +0100
-+++ php-4.3.4/ext/mysql/config.m4	2004-12-31 14:16:24.087622328 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/mysql/config.m4 php-4.3.5/ext/mysql/config.m4
+--- php-4.3.5.orig/ext/mysql/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/mysql/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -22,7 +22,7 @@
      /var/run/mysqld/mysqld.sock \
      /var/tmp/mysql.sock \
@@ -393,7 +406,7 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/mysql/config.m4 php-4.3.4/ext/
      /var/mysql/mysql.sock \
      /usr/local/mysql/var/mysql.sock \
      /Private/tmp/mysql.sock \
-@@ -114,7 +114,7 @@
+@@ -115,7 +115,7 @@
  
    MYSQL_MODULE_TYPE=external
  
@@ -402,7 +415,7 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/mysql/config.m4 php-4.3.4/ext/
      MYSQL_LIB_CHK($i)
    done
  
-@@ -129,9 +129,9 @@
+@@ -130,9 +130,9 @@
        PHP_CHECK_LIBRARY(mysqlclient, mysql_error, [], [
          AC_MSG_ERROR([mysql configure failed. Please check config.log for more information.])
        ], [
@@ -414,9 +427,9 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/mysql/config.m4 php-4.3.4/ext/
      else
        PHP_ADD_LIBRARY(z,, MYSQL_SHARED_LIBADD)
        PHP_CHECK_LIBRARY(mysqlclient, mysql_errno, [], [
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/pdf/config.m4 php-4.3.4/ext/pdf/config.m4
---- php-4.3.4.orig/ext/pdf/config.m4	2003-07-14 05:58:47.000000000 +0200
-+++ php-4.3.4/ext/pdf/config.m4	2004-12-31 14:16:24.087622328 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/pdf/config.m4 php-4.3.5/ext/pdf/config.m4
+--- php-4.3.5.orig/ext/pdf/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/pdf/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -40,11 +40,11 @@
    if test "$PHP_JPEG_DIR" != "no"; then
      PHP_CHECK_LIBRARY(jpeg,jpeg_read_header, 
@@ -486,9 +499,9 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/pdf/config.m4 php-4.3.4/ext/pd
          ])
        else
          AC_MSG_ERROR([pdflib.h not found! Check the path passed to --with-pdflib=<PATH>. PATH should be the install prefix directory.])
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/pgsql/config.m4 php-4.3.4/ext/pgsql/config.m4
---- php-4.3.4.orig/ext/pgsql/config.m4	2002-06-26 15:07:40.000000000 +0200
-+++ php-4.3.4/ext/pgsql/config.m4	2004-12-31 14:16:24.087622328 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/pgsql/config.m4 php-4.3.5/ext/pgsql/config.m4
+--- php-4.3.5.orig/ext/pgsql/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/pgsql/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -29,7 +29,7 @@
        fi
      done
@@ -498,9 +511,9 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/pgsql/config.m4 php-4.3.4/ext/
        if test -f "$i/$j/libpq.so" || test -f "$i/$j/libpq.a"; then 
          PGSQL_LIBDIR=$i/$j
        fi
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/xml/config.m4 php-4.3.4/ext/xml/config.m4
---- php-4.3.4.orig/ext/xml/config.m4	2004-12-30 21:22:11.000000000 +0100
-+++ php-4.3.4/ext/xml/config.m4	2004-12-31 14:17:25.224328136 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/xml/config.m4 php-4.3.5/ext/xml/config.m4
+--- php-4.3.5.orig/ext/xml/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/xml/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -31,7 +31,7 @@
      PHP_NEW_EXTENSION(xml, xml.c, $ext_shared)
  
@@ -519,9 +532,9 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/xml/config.m4 php-4.3.4/ext/xm
      PHP_SUBST(XML_SHARED_LIBADD)
    fi
  fi
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/xmlrpc/config.m4 php-4.3.4/ext/xmlrpc/config.m4
---- php-4.3.4.orig/ext/xmlrpc/config.m4	2004-12-30 21:22:12.000000000 +0100
-+++ php-4.3.4/ext/xmlrpc/config.m4	2004-12-31 14:17:55.650702624 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/xmlrpc/config.m4 php-4.3.5/ext/xmlrpc/config.m4
+--- php-4.3.5.orig/ext/xmlrpc/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/xmlrpc/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -23,9 +23,9 @@
  
    testval=no
@@ -541,9 +554,9 @@ diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/xmlrpc/config.m4 php-4.3.4/ext
 -  PHP_ADD_LIBRARY_WITH_PATH(xmlrpc, $XMLRPC_DIR/lib, XMLRPC_SHARED_LIBADD)
 +  PHP_ADD_LIBRARY_WITH_PATH(xmlrpc, $XMLRPC_DIR/lib64, XMLRPC_SHARED_LIBADD)
  fi
-diff -durN -x '*~' -x '*.orig' php-4.3.4.orig/ext/xslt/config.m4 php-4.3.4/ext/xslt/config.m4
---- php-4.3.4.orig/ext/xslt/config.m4	2004-12-30 21:22:11.000000000 +0100
-+++ php-4.3.4/ext/xslt/config.m4	2004-12-31 14:18:15.714652440 +0100
+diff -durN -x '*~' -x '*.orig' php-4.3.5.orig/ext/xslt/config.m4 php-4.3.5/ext/xslt/config.m4
+--- php-4.3.5.orig/ext/xslt/config.m4	2004-04-14 11:29:51.000000000 +0200
++++ php-4.3.5/ext/xslt/config.m4	2004-04-14 11:41:13.000000000 +0200
 @@ -98,10 +98,10 @@
  
      found_expat=no
