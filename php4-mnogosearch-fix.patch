@@ -8,7 +8,7 @@ diff -burN php-4.3.9RC2.orig/ext/mnogosearch/config.m4 php-4.3.9RC2/ext/mnogosea
 +    MNOGOSEARCH_CFLAGS="-DNOT_USED_OR_REPLACED"
      
 -    PHP_NEW_EXTENSION(mnogosearch, php_mnogo.c, $ext_shared)
-+    PHP_SUBST(MNOGOSEARCH_CLFAGS)
++    PHP_SUBST(MNOGOSEARCH_CFLAGS)
 +    PHP_NEW_EXTENSION(mnogosearch, php_mnogo.c, $ext_shared,, $MNOGOSEARCH_CFLAGS)
      PHP_SUBST(MNOGOSEARCH_SHARED_LIBADD)
      
