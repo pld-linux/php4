@@ -1,0 +1,59 @@
+diff -ur php-4.0.5/configure.in php-4.0.5.lib/configure.in
+--- php-4.0.5/configure.in	Sun May 20 04:22:15 2001
++++ php-4.0.5.lib/configure.in	Sun May 20 03:37:26 2001
+@@ -230,12 +230,14 @@
+ 
+ if test "$php_no_nsl_checks" != "yes"; then
+ 
+-AC_CHECK_LIB(nsl, gethostname, [
+- AC_ADD_LIBRARY(nsl)
+- AC_DEFINE(HAVE_LIBNSL,1,[ ]) ],[
+- AC_CHECK_LIB(nsl, gethostbyaddr, [
++AC_CHECK_FUNC(gethostname, [ ], [
++ AC_CHECK_LIB(nsl, gethostname, [
+   AC_ADD_LIBRARY(nsl)
+-  AC_DEFINE(HAVE_LIBNSL,1,[ ]) ], [])
++  AC_DEFINE(HAVE_LIBNSL,1,[ ]) ],[
++  AC_CHECK_LIB(nsl, gethostbyaddr, [
++   AC_ADD_LIBRARY(nsl)
++   AC_DEFINE(HAVE_LIBNSL,1,[ ]) ], [])
++ ])
+ ])
+ 
+ fi
+diff -ur php-4.0.5/ext/bz2/Makefile.in php-4.0.5.lib/ext/bz2/Makefile.in
+--- php-4.0.5/ext/bz2/Makefile.in	Wed Oct 18 20:32:21 2000
++++ php-4.0.5.lib/ext/bz2/Makefile.in	Sun May 20 04:08:29 2001
+@@ -3,5 +3,6 @@
+ LTLIBRARY_NAME        = libbz2.la
+ LTLIBRARY_SOURCES     = bz2.c
+ LTLIBRARY_SHARED_NAME = bz2.la
++LTLIBRARY_SHARED_LIBADD = $(BZ2_SHARED_LIBADD)
+ 
+ include $(top_srcdir)/build/dynlib.mk
+diff -ur php-4.0.5/ext/yp/Makefile.in php-4.0.5.lib/ext/yp/Makefile.in
+--- php-4.0.5/ext/yp/Makefile.in	Tue May  2 03:21:26 2000
++++ php-4.0.5.lib/ext/yp/Makefile.in	Sun May 20 04:05:18 2001
+@@ -2,5 +2,6 @@
+ LTLIBRARY_NAME    = libyp.la
+ LTLIBRARY_SOURCES = yp.c
+ LTLIBRARY_SHARED_NAME = yp.la
++LTLIBRARY_SHARED_LIBADD = $(NSL_SHARED_LIBADD)
+ 
+ include $(top_srcdir)/build/dynlib.mk
+diff -ur php-4.0.5/ext/yp/config.m4 php-4.0.5.lib/ext/yp/config.m4
+--- php-4.0.5/ext/yp/config.m4	Tue May  2 03:21:26 2000
++++ php-4.0.5.lib/ext/yp/config.m4	Sun May 20 04:18:43 2001
+@@ -6,8 +6,11 @@
+ [  --enable-yp             Include YP support])
+ 
+ if test "$PHP_YP" != "no"; then
++  PHP_SUBST(NSL_SHARED_LIBADD)
++  AC_ADD_LIBRARY_WITH_PATH(nsl, /usr/lib, NSL_SHARED_LIBADD)
++  AC_CHECK_LIB(nsl, yp_match, [AC_DEFINE(HAVE_YP,1,[ ])], [AC_MSG_ERROR(YP module requires libnsl)],)
+-  AC_DEFINE(HAVE_YP,1,[ ])
+   PHP_EXTENSION(yp, $ext_shared)
++
+   case "$host_alias" in
+   *solaris*)
+     AC_DEFINE(SOLARIS_YP,1,[ ]) ;;
