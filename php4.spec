@@ -1473,7 +1473,7 @@ done
 # fix install paths, avoid evil rpaths
 %{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
 %{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}/apache'|" libphp4.la
-%{__perl} -pi -e "s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |" libphp4.la
+%{__perl} -pi -e 's|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |' libphp4.la
 
 # notes:
 # -DENABLE_CHROOT_FUNC=1 (cgi,fcgi) is used in ext/standard/dir.c (libphp_common)
