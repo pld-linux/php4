@@ -1285,7 +1285,7 @@ CFLAGS="%{rpmcflags} -DEAPI=1 -I%{_prefix}/X11R6/include"
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf
 %{__libtoolize}
-aclocal
+%{__aclocal}
 autoconf
 #for i in cgi fastcgi apxs ; do
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
