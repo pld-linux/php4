@@ -33,7 +33,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.2.1
-Release:	2
+Release:	2.1
 Epoch:		3
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -44,6 +44,8 @@ Source3:	zend.gif
 Source4:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
 Source5:	%{name}-module-install
 Source6:	%{name}-mod_php.conf
+Source7:	%{name}-cgi.ini
+Source8:	%{name}-apache.ini
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-mysql-socket.patch
@@ -62,6 +64,7 @@ Patch14:	%{name}-mcal-shared-lib.patch
 Patch15:	%{name}-msession-shared-lib.patch
 Patch16:	%{name}-xmlrpc-includes.patch
 Patch17:	%{name}-build_modules.patch
+Patch18:	%{name}-sapi-ini-file.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -1115,6 +1118,7 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
 %patch15 -p1
 %patch16 -p1
 %patch17 -p1
+%patch18 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
@@ -1260,6 +1264,8 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 install .libs/php $RPM_BUILD_ROOT%{_bindir}/php
 
 install %{SOURCE2}		$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
+install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}
+install %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}
 install %{SOURCE3} php.gif	$RPM_BUILD_ROOT/home/httpd/icons
 install %{SOURCE5} $RPM_BUILD_ROOT/%{_sbindir}
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
@@ -1782,10 +1788,12 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php.conf
 %endif
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 
 %files cgi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/php
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cgi.ini
 
 %files common
 %defattr(644,root,root,755)
