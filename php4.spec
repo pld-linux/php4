@@ -28,7 +28,7 @@ Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Summary(pt_BR):	A linguagem de script PHP
 Name:		php
 Version:	4.1.2
-Release:	5
+Release:	6
 Epoch:		1
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -93,7 +93,7 @@ BuildRequires:	postgresql-devel
 BuildRequires:	postgresql-backend-devel >= 7.2
 %{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	t1lib-devel
-%{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.3}
+%{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.5}
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
