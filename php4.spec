@@ -59,7 +59,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.3.0
-Release:	0.1
+Release:	0.5
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -75,34 +75,26 @@ Source8:	%{name}-cli.ini
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-xml-expat-fix.patch
-#Patch2:		%{name}-mysql-socket.patch
 Patch3:		%{name}-mail.patch
 Patch4:		%{name}-link-libs.patch
-#Patch5:		%{name}-fastcgi.patch
-Patch6:		%{name}-libpq_fs_h_path.patch
-Patch7:		%{name}-wddx-fix.patch
-Patch8:		%{name}-cpdf-fix.patch
-#Patch9:		%{name}-session-fix-shared.patch
-Patch10:	%{name}-hyperwave-fix.patch
-Patch11:	%{name}-odbc-fix.patch
-#Patch11:	%{name}-openssl-for-ext-only.patch
-Patch12:	%{name}-java-norpath.patch
-Patch13:	%{name}-mcal-shared-lib.patch
-Patch14:	%{name}-msession-shared-lib.patch
-Patch15:	%{name}-build_modules.patch
-Patch16:	%{name}-sapi-ini-file.patch
-Patch17:	%{name}-dl-zlib.patch
-Patch18:	%{name}-dl-pcre.patch
-Patch19:	%{name}-session-unregister.patch
-#Patch17:	%{name}-%{name}_iconv_string_declaration.patch
-#Patch18:	%{name}-pear-cosmetic.patch
-#Patch19:	%{name}-mnogosearch.patch
-Patch20:	%{name}-ini.patch
-Patch21:	%{name}-acam.patch
-Patch22:	%{name}-xmlrpc-fix.patch
-Patch23:	%{name}-libtool.patch
-#Patch23:	%{name}-iconv-bug18039.patch
-Patch24:	%{name}-db4.patch
+Patch5:		%{name}-libpq_fs_h_path.patch
+Patch6:		%{name}-wddx-fix.patch
+Patch7:		%{name}-cpdf-fix.patch
+Patch8:		%{name}-hyperwave-fix.patch
+Patch9:		%{name}-odbc-fix.patch
+Patch10:	%{name}-java-norpath.patch
+Patch11:	%{name}-mcal-shared-lib.patch
+Patch12:	%{name}-msession-shared-lib.patch
+Patch13:	%{name}-build_modules.patch
+Patch14:	%{name}-sapi-ini-file.patch
+Patch15:	%{name}-dl-zlib.patch
+Patch16:	%{name}-dl-pcre.patch
+Patch17:	%{name}-session-unregister.patch
+Patch18:	%{name}-ini.patch
+Patch19:	%{name}-acam.patch
+Patch20:	%{name}-xmlrpc-fix.patch
+Patch21:	%{name}-libtool.patch
+Patch22:	%{name}-db4.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird-devel}}
@@ -1352,38 +1344,30 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 %setup -q
 %patch0 -p1
 %patch1 -p1
-#%patch2 -p1	-- obsolete
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-#%patch5 -p1	-- obsolete (fastcgi interface changed)
+%patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
-#%patch9 -p1	-- obsolete
+%patch9 -p1
 %patch10 -p1
 %patch11 -p1
-#%patch11 -p1	-- obsolete (openssl used also in common part)
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
 %patch17 -p1
-%patch18 -p1
-%patch19 -p1
-#%patch17 -p1	-- obsolete
-#%patch18 -p1	-- obsolete? - no such file
-#%patch19 -p1	-- obsolete
 cp php.ini-dist php.ini
-%patch20 -p1
+%patch18 -p1
 # for ac2.53b/am1.6b - AC_LANG_CXX has AM_CONDITIONAL, so cannot be invoked
 # conditionally...
+%patch19 -p1
+%patch20 -p1
 %patch21 -p1
 %patch22 -p1
-%patch23 -p1
-#%patch23 -p1	-- obsolete
-%patch24 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE3} | tar -xf - -C manual
