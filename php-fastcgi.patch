@@ -1,0 +1,29 @@
+--- php-4.0.5/sapi/fastcgi/config.m4~	Tue Mar 20 19:13:20 2001
++++ php-4.0.5/sapi/fastcgi/config.m4	Sun May  6 19:40:08 2001
+@@ -7,10 +7,10 @@
+         FASTCGIPATH=$withval
+   fi
+   test -f "$FASTCGIPATH/lib/libfcgi.a" || AC_MSG_ERROR(Unable to find libfcgi.a in $FASTCGIPATH/lib)
+-  test -f "$FASTCGIPATH/include/fastcgi.h" || AC_MSG_ERROR(Unable to find fastcgi.h in $FASTCGIPATH/include)
++  test -f "$FASTCGIPATH/include/fastcgi/fastcgi.h" || AC_MSG_ERROR(Unable to find fastcgi.h in $FASTCGIPATH/include)
+   PHP_SAPI=fastcgi
+   PHP_LIBS=$FASTCGIPATH/lib/libfcgi.a
+-  AC_ADD_INCLUDE($FASTCGIPATH/include)
++  AC_ADD_INCLUDE($FASTCGIPATH/include/fastcgi)
+   EXT_PROGRAM_LDADD="$EXT_PROGRAM_LDADD $FASTCGIPATH/lib/libfcgi.a"
+   INSTALL_IT="\$(INSTALL) -m 0755 $SAPI_PROGRAM \$(bindir)/$SAPI_FASTCGI"
+   RESULT="yes"
+--- php-4.0.5/sapi/fastcgi/fastcgi.c~	Tue Mar 27 18:29:45 2001
++++ php-4.0.5/sapi/fastcgi/fastcgi.c	Sun May  6 22:21:50 2001
+@@ -197,6 +197,11 @@
+ 	struct stat st;
+ 	char *pi = getenv( "PATH_INFO" );
+ 	char *pt = getenv( "PATH_TRANSLATED" );
++
++	if (!pi)
++		pi = getenv( "SCRIPT_NAME" );
++	if (!pt)
++		pt = getenv( "SCRIPT_FILENAME" );
+ 	path_info = strdup( pi );
+ 
+ 	SG(request_info).request_method = getenv("REQUEST_METHOD");
