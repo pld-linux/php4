@@ -1,0 +1,57 @@
+--- php-4.3.1/TSRM/threads.m4.orig	Wed Feb 19 15:57:09 2003
++++ php-4.3.1/TSRM/threads.m4	Wed Feb 19 15:57:42 2003
+@@ -108,7 +108,6 @@
+ else
+   save_CFLAGS=$CFLAGS
+   save_LIBS=$LIBS
+-  PTHREADS_ASSIGN_VARS
+   PTHREADS_CHECK_COMPILE
+   LIBS=$save_LIBS
+   CFLAGS=$save_CFLAGS
+@@ -126,9 +125,10 @@
+         break
+       fi
+     done
++    pthreads_working=
+   fi
+-fi
+ ])
++fi
+ 
+ AC_CACHE_CHECK(for pthreads_lib, ac_cv_pthreads_lib,[
+ ac_cv_pthreads_lib=
+@@ -155,6 +155,7 @@
+ dnl
+ dnl
+ AC_DEFUN(PTHREADS_ASSIGN_VARS,[
++if test "$pthreads_assign_done" != "yes" ; then
+ if test -n "$ac_cv_pthreads_lib"; then
+   LIBS="$LIBS -l$ac_cv_pthreads_lib"
+ fi
+@@ -163,4 +164,6 @@
+ if test -n "$ac_cv_pthreads_cflags"; then
+   CFLAGS="$CFLAGS $ac_cv_pthreads_cflags"
+ fi
++pthreads_assign_done="yes"
++fi
+ ])dnl
+--- php-4.3.4/TSRM/tsrm.m4.orig	2003-10-03 07:25:30.000000000 +0200
++++ php-4.3.4/TSRM/tsrm.m4	2003-12-16 23:36:50.274455176 +0100
+@@ -68,7 +68,6 @@
+ ])
+ 
+ sinclude(threads.m4)
+-sinclude(TSRM/threads.m4)
+ 
+ AC_DEFUN(TSRM_CHECK_PTHREADS,[
+ 		
+--- php-4.3.4/configure.in.orig	2003-12-16 23:38:01.000000000 +0100
++++ php-4.3.4/configure.in	2003-12-16 23:41:38.479641328 +0100
+@@ -204,6 +204,7 @@
+ 
+ sinclude(Zend/acinclude.m4)
+ sinclude(Zend/Zend.m4)
++sinclude(TSRM/threads.m4)
+ sinclude(TSRM/tsrm.m4)
+ 
+ 

@@ -1,0 +1,40 @@
+--- php-4.3.3RC3/ext/db/config.m4.orig	2002-11-15 17:37:51.000000000 +0100
++++ php-4.3.3RC3/ext/db/config.m4	2003-08-16 16:08:12.152768432 +0200
+@@ -5,10 +5,10 @@
+ # Checks for libraries.
+ # Prefer gdbm, Berkeley DB and ndbm/dbm, in that order
+ AC_DEFUN(AC_PREFERRED_DB_LIB,[
+-  AC_CHECK_LIB(gdbm, gdbm_open,[AC_DEFINE(GDBM,1, [Whether you have GDBM]) DBM_TYPE=gdbm; DBM_LIB=-lgdbm],
++  AC_CHECK_LIB(gdbm, gdbm_open,[AC_DEFINE(GDBM,1, [Whether you have GDBM]) DBM_TYPE=gdbm; DBM_LIB=gdbm],
+   [AC_CHECK_LIB(c, dbm_open,[AC_DEFINE(NDBM,1,[ ]) DBM_TYPE=ndbm; DBM_LIB=],
+-   [AC_CHECK_LIB(dbm, dbm_open,[AC_DEFINE(NDBM,1,[ ]) DBM_TYPE=ndbm; DBM_LIB=-ldbm],
+-    [AC_CHECK_LIB(db, dbm_open,[AC_DEFINE(NDBM,1, [Whether you have NDBM]) DBM_TYPE=ndbm; DBM_LIB=-ldb],
++   [AC_CHECK_LIB(dbm, dbm_open,[AC_DEFINE(NDBM,1,[ ]) DBM_TYPE=ndbm; DBM_LIB=dbm],
++    [AC_CHECK_LIB(db, dbm_open,[AC_DEFINE(NDBM,1, [Whether you have NDBM]) DBM_TYPE=ndbm; DBM_LIB=db],
+      [DBM_TYPE=""])
+     ])
+    ])
+@@ -32,7 +32,7 @@
+ 
+   AC_PREFERRED_DB_LIB
+ 
+-  if test "$DBM_LIB" = "-lgdbm"; then
++  if test "$DBM_LIB" = "gdbm"; then
+     AC_CHECK_HEADER(gdbm.h, [ GDBM_INCLUDE="" ], [ 
+       AC_MSG_RESULT("Try /usr/local/include/gdbm.h"); 
+       AC_CHECK_HEADER(/usr/local/include/gdbm.h, [ GDBM_INCLUDE=-I/usr/local/include ],[
+@@ -49,10 +49,11 @@
+     ])
+   fi
+ 
++  PHP_NEW_EXTENSION(db, db.c, $ext_shared)
++  PHP_SUBST(DB_SHARED_LIBADD)
+   if test -n "$DBM_LIB"; then
+-    INCLUDES="$INCLUDES $GDBM_INCLUDE"
+-    EXTRA_LIBS="$EXTRA_LIBS $DBM_LIB"
++    PHP_ADD_INCLUDE($GDBM_INCLUDE)
++    PHP_ADD_LIBRARY_WITH_PATH($DBM_LIB, , DB_SHARED_LIBADD)
+   fi
+ 
+-  PHP_NEW_EXTENSION(db, db.c)
+ fi

@@ -1,0 +1,11 @@
+--- php-4.3.0/ext/pgsql/php_pgsql.h~    Mon Feb 25 15:16:28 2002
++++ php-4.3.0/ext/pgsql/php_pgsql.h     Mon Feb 25 15:16:28 2002
+@@ -43,7 +43,7 @@
+ #define PHPAPI __declspec(dllimport)
+ #endif
+ #else
+-#include <libpq/libpq-fs.h>
++#include <postgresql/server/libpq/libpq-fs.h>
+ #endif
+ 
+ #ifdef HAVE_PG_CONFIG_H

@@ -1,0 +1,12 @@
+diff -burN php-4.3.5RC1.orig/configure.in php-4.3.5RC1/configure.in
+--- php-4.3.5RC1.orig/configure.in	2004-02-05 10:28:06.283736312 +0100
++++ php-4.3.5RC1/configure.in	2004-02-05 10:31:29.388859640 +0100
+@@ -1138,7 +1138,7 @@
+ CXXFLAGS="$CXXFLAGS $standard_libtool_flag"
+ 
+ all_targets='$(OVERALL_TARGET) $(PHP_MODULES) $(PHP_CLI_TARGET)'
+-install_targets="$install_modules $install_pear install-build install-headers install-programs"
++install_targets="$install_modules install-build install-headers install-programs"
+ 
+ case $PHP_SAPI in
+   cgi)
