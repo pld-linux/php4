@@ -40,7 +40,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.2.2
-Release:	4
+Release:	5
 Epoch:		3
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -2259,7 +2259,6 @@ fi
 %defattr(644,root,root,755)
 %attr(644,root,root) %{php_pear_dir}/Crypt/HCEMD5.php
 %attr(644,root,root) %{php_pear_dir}/Date/Calc.php
-%attr(644,root,root) %{php_pear_dir}/Date/Human.php
 %attr(644,root,root) %{php_pear_dir}/File/Passwd.php
 %attr(644,root,root) %{php_pear_dir}/HTML/Form.php
 %attr(644,root,root) %{php_pear_dir}/HTML/IT*.php
