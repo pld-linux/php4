@@ -1,33 +1,6 @@
-Only in php-4.0RC1/ext/standard/: .libs
-Only in php-4.0RC1/ext/standard/: Makefile
-Only in php-4.0RC1/ext/standard/: array.lo
-Only in php-4.0RC1/ext/standard/: assert.lo
-Only in php-4.0RC1/ext/standard/: base64.lo
-Only in php-4.0RC1/ext/standard/: basic_functions.lo
-Only in php-4.0RC1/ext/standard/: browscap.lo
-Only in php-4.0RC1/ext/standard/: crypt.lo
-Only in php-4.0RC1/ext/standard/: cyr_convert.lo
-Only in php-4.0RC1/ext/standard/: datetime.lo
-Only in php-4.0RC1/ext/standard/: dir.lo
-Only in php-4.0RC1/ext/standard/: dl.lo
-Only in php-4.0RC1/ext/standard/: dns.lo
-Only in php-4.0RC1/ext/standard/: exec.lo
-Only in php-4.0RC1/ext/standard/: file.lo
-Only in php-4.0RC1/ext/standard/: filestat.lo
-Only in php-4.0RC1/ext/standard/: flock_compat.lo
-Only in php-4.0RC1/ext/standard/: formatted_print.lo
-Only in php-4.0RC1/ext/standard/: fsock.lo
-Only in php-4.0RC1/ext/standard/: head.lo
-Only in php-4.0RC1/ext/standard/: html.lo
-Only in php-4.0RC1/ext/standard/: image.lo
-Only in php-4.0RC1/ext/standard/: info.lo
-Only in php-4.0RC1/ext/standard/: iptc.lo
-Only in php-4.0RC1/ext/standard/: lcg.lo
-Only in php-4.0RC1/ext/standard/: libstandard.la
-Only in php-4.0RC1/ext/standard/: link.lo
-diff -ru php-4.0RC1.old/ext/standard/mail.c php-4.0RC1/ext/standard/mail.c
---- php-4.0RC1.old/ext/standard/mail.c	Mon Mar  6 21:37:11 2000
-+++ php-4.0RC1/ext/standard/mail.c	Tue Apr  4 03:13:33 2000
+diff -urN php-4.2.3.org/ext/standard/mail.c php-4.2.3/ext/standard/mail.c
+--- php-4.2.3.org/ext/standard/mail.c	Tue Oct 29 21:35:04 2002
++++ php-4.2.3/ext/standard/mail.c	Tue Oct 29 21:33:03 2002
 @@ -21,6 +21,8 @@
  #include <stdlib.h>
  #include <ctype.h>
@@ -35,10 +8,21 @@ diff -ru php-4.0RC1.old/ext/standard/mail.c php-4.0RC1/ext/standard/mail.c
 +#include <syslog.h>
 +#include <string.h>
  #include "php.h"
+ #include "ext/standard/info.h"
  #if !defined(PHP_WIN32)
- #include "build-defs.h"
-@@ -112,8 +114,12 @@
- 	sendmail = popen(sendmail_path, "w");
+@@ -37,6 +39,10 @@
+ #include "safe_mode.h"
+ #include "exec.h"
+ 
++#include "zend_operators.h"
++
++#include "zend_globals.h"
++
+ #if HAVE_SENDMAIL
+ #ifdef PHP_WIN32
+ #include "win32/sendmail.h"
+@@ -166,8 +172,42 @@
+ 		efree (sendmail_cmd);
  
  	if (sendmail) {
 -		fprintf(sendmail, "To: %s\n", to);
@@ -49,27 +33,36 @@ diff -ru php-4.0RC1.old/ext/standard/mail.c php-4.0RC1/ext/standard/mail.c
 +		if ((subject != NULL) && (strlen(subject)!=0)) {
 +			fprintf(sendmail, "Subject: %s\n", subject);
 +		}
++
++		TSRMLS_FETCH();
++		
++		if (PG(http_globals)[TRACK_VARS_SERVER]) {
++			zval **remote_addr, **server_name, **server_port,
++				**request_uri, **http_user_agent;
++			
++			if (zend_hash_find(PG(http_globals)[TRACK_VARS_SERVER]->value.ht, "REMOTE_ADDR", sizeof("REMOTE_ADDR"), (void **) &remote_addr)==SUCCESS) {
++				convert_to_string_ex(remote_addr);
++				fprintf(sendmail, "HTTP-Posting-Client: %s\n", Z_STRVAL_PP(remote_addr));
++			}
++			if (zend_hash_find(PG(http_globals)[TRACK_VARS_SERVER]->value.ht, "SERVER_NAME", sizeof("SERVER_NAME"), (void **) &server_name)==SUCCESS) {
++				convert_to_string_ex(server_name);
++				fprintf(sendmail, "HTTP-Posting-URI: %s", Z_STRVAL_PP(server_name));
++				if (zend_hash_find(PG(http_globals)[TRACK_VARS_SERVER]->value.ht, "SERVER_PORT", sizeof("SERVER_PORT"), (void **) &server_port)==SUCCESS) {
++					convert_to_string_ex(server_port);
++					fprintf(sendmail, ":%s", Z_STRVAL_PP(server_port));
++				}	
++				if (zend_hash_find(PG(http_globals)[TRACK_VARS_SERVER]->value.ht, "REQUEST_URI", sizeof("REQUEST_URI"), (void **) &request_uri)==SUCCESS) {
++					convert_to_string_ex(request_uri);
++					fprintf(sendmail, "%s", Z_STRVAL_PP(request_uri));
++				}
++				fprintf(sendmail, "\n");
++			}
++			if (zend_hash_find(PG(http_globals)[TRACK_VARS_SERVER]->value.ht, "HTTP_USER_AGENT", sizeof("HTTP_USER_AGENT"), (void **) &http_user_agent)==SUCCESS) {
++				convert_to_string_ex(http_user_agent);
++					fprintf(sendmail, "HTTP-Posting-User-Agent: %s\n", Z_STRVAL_PP(http_user_agent));
++			}
++		}
++
  		if (headers != NULL) {
  			fprintf(sendmail, "%s\n", headers);
  		}
-Only in php-4.0RC1/ext/standard/: mail.c~
-Only in php-4.0RC1/ext/standard/: mail.lo
-Only in php-4.0RC1/ext/standard/: math.lo
-Only in php-4.0RC1/ext/standard/: md5.lo
-Only in php-4.0RC1/ext/standard/: metaphone.lo
-Only in php-4.0RC1/ext/standard/: microtime.lo
-Only in php-4.0RC1/ext/standard/: output.lo
-Only in php-4.0RC1/ext/standard/: pack.lo
-Only in php-4.0RC1/ext/standard/: pageinfo.lo
-Only in php-4.0RC1/ext/standard/: parsedate.lo
-Only in php-4.0RC1/ext/standard/: quot_print.lo
-Only in php-4.0RC1/ext/standard/: rand.lo
-Only in php-4.0RC1/ext/standard/: reg.lo
-Only in php-4.0RC1/ext/standard/: soundex.lo
-Only in php-4.0RC1/ext/standard/: string.lo
-Only in php-4.0RC1/ext/standard/: syslog.lo
-Only in php-4.0RC1/ext/standard/: type.lo
-Only in php-4.0RC1/ext/standard/: uniqid.lo
-Only in php-4.0RC1/ext/standard/: url.lo
-Only in php-4.0RC1/ext/standard/: url_scanner.lo
-Only in php-4.0RC1/ext/standard/: var.lo
