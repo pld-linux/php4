@@ -72,21 +72,35 @@ This is a dynamic shared object (DSO) for Apache that will add MySQL
 database support to PHP4.  If you need back-end support for MySQL,
 you should install this package in addition to the main %{name} package.
 
+%package gd
+Summary:	GD extension module fot PHP4
+Summary:	Modu³ GD dla PHP4
+Group:		Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Requires: 	%{name} = %{version}
+
+%description gd
+
+%description gd -l pl
+
 %prep
 %setup -q 
 
 %build
+LDFLAGS=""; export LDFLAGS
 ./buildconf
 %configure \
 	--with-apxs=%{_sbindir}/apxs \
 	--with-config-file-path=%{_sysconfdir}/httpd \
 	--enable-safe-mode \
 	--with-exec-dir=%{_bindir} \
-	--disable-debug \
+	--enable-debug \
 	--with-zlib \
 	--enable-magic-quotes \
 	--enable-track-vars \
-	--without-gd \
+	--with-gd=shared \
+	--with-regex=system \
 	--with-gettext \
 	--with-mysql=shared \
 	--enable-shared 
@@ -95,16 +109,19 @@ make
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_pkglibdir},%{_sysconfdir}/httpd} \
+install -d $RPM_BUILD_ROOT{%{_pkglibdir}/php,%{_sysconfdir}/httpd} \
 		$RPM_BUILD_ROOT/home/httpd/html/icons
 
+
 install .libs/*.so	$RPM_BUILD_ROOT%{_pkglibdir}
-install modules/*.so	$RPM_BUILD_ROOT%{_pkglibdir}
+install modules/*.so	$RPM_BUILD_ROOT%{_pkglibdir}/php
 
 install %{SOURCE2}		$RPM_BUILD_ROOT%{_sysconfdir}/httpd/php.ini
 install %{SOURCE3} php4.gif	$RPM_BUILD_ROOT/home/httpd/html/icons
 
-strip --strip-unneeded	$RPM_BUILD_ROOT%{_pkglibdir}/*.so
+strip --strip-unneeded	\
+	$RPM_BUILD_ROOT%{_pkglibdir}/*.so \
+	$RPM_BUILD_ROOT%{_pkglibdir}/php/*.so
 
 install  %{SOURCE1}	.
 gzip -9nf CODING_STANDARDS CREDITS FAQ* ChangeLog FUNCTION_LIST.txt \
@@ -135,10 +152,18 @@ rm -rf $RPM_BUILD_ROOT
 %doc {MAINTAINERS,MODULES_STATUS,NEWS,TODO*}.gz  
 
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/*
+%dir %{_pkglibdir}/php
+
+#%attr(755,root,root) %{_libdir}/apache/php/*.so
+
 /home/httpd/html/icons/*
 
 %attr(755,root,root) %{_pkglibdir}/libphp4.so
 
 %files mysql
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/mysql.so
+%attr(755,root,root) %{_pkglibdir}/php/mysql.so
+
+%files gd
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_pkglibdir}/php/gd.so
