@@ -30,7 +30,7 @@
 %bcond_without	pcre		# without PCRE extension module
 %bcond_without	pdf		# without PDF extension module
 %bcond_without	pgsql		# without PostgreSQL extension module
-%bcond_without	aspell		# without pspell extension module
+%bcond_without	pspell		# without pspell extension module
 %bcond_without	recode		# without recode extension module
 %bcond_without	qtdom		# without QT DOM extension module
 %bcond_without	snmp		# without SNMP extension module
