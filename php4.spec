@@ -14,7 +14,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.5
-Release:	0.5
+Release:	0.6
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -1175,7 +1175,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files mysql
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/mysql.*
+%attr(755,root,root) %{extensionsdir}/mysql.so
 
 %files pgsql
 %defattr(644,root,root,755)
