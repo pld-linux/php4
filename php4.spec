@@ -65,7 +65,7 @@ Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сер
 Name:		php
 Version:	4.3.4
 %define		_rc	RC2
-Release:	0.%{_rc}
+Release:	0.%{_rc}.1
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -113,7 +113,6 @@ Icon:		php4.gif
 URL:		http://www.php.net/
 %{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird-devel}}
 BuildRequires:	apache-devel
-BuildRequires:	apr-devel
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
@@ -183,6 +182,7 @@ BuildRequires:	zziplib-devel
 #BuildRequires:	fcgi-devel
 # apache 1.3 vs apache 2.0
 %if %{_apache2}
+BuildRequires:  apr-devel >= 1:0.9.4-1
 PreReq:		apache >= 2.0.40
 Requires:	apache(modules-api) = %{apache_modules_api}
 %else
