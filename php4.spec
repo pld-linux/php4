@@ -13,8 +13,8 @@ Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
-Version:	4.0.5
-Release:	3
+Version:	4.0.6
+Release:	0.1
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -28,18 +28,19 @@ Source2:	%{name}.ini
 Source3:	zend.gif
 Source4:	http://www.php.net/distributions/manual.tar.gz
 Source5:	php-module-install
-Patch0:		%{name}-imap.patch
+#Patch0:		%{name}-imap.patch
 Patch1:		%{name}-mysql-socket.patch
 Patch2:		%{name}-mail.patch
 Patch3:		%{name}-link-libs.patch
-Patch4:		%{name}-DESTDIR.patch
-Patch5:		%{name}-gd-shared.patch
+#Patch4:		%{name}-DESTDIR.patch
+#Patch5:		%{name}-gd-shared.patch
 Patch6:		%{name}-session-path.patch
-Patch7:		%{name}-libtool_version_check_fix.patch
-Patch8:		%{name}-pdflib.patch
+#Patch7:		%{name}-libtool_version_check_fix.patch
+#Patch8:		%{name}-pdflib.patch
 Patch9:		%{name}-am_ac_lt.patch
 Patch10:	%{name}-fastcgi.patch
 Patch11:	%{name}-shared.patch
+Patch12:	%{name}-ac250.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -50,7 +51,7 @@ BuildRequires:	db3-devel >= 3.1.17
 BuildRequires:	freetype1-devel
 BuildRequires:	gd-devel >= 1.8.3
 BuildRequires:	gdbm-devel
-%{!?_without_imap:BuildRequires: imap-devel >= 4.7b-1}
+%{!?_without_imap:BuildRequires: imap-devel >= 1:2001-0.BETA }
 # I think jdk is better for java
 # BuildRequires:	jdk
 %{?_with_java:BuildRequires:	kaffe-devel}
@@ -712,18 +713,14 @@ Pliki potrzebne do kompilacji modu³ów PHP.
 
 %prep
 %setup  -q
-%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
 %patch6 -p1 
-%patch7 -p1
-%patch8 -p1
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
+%patch12 -p1 -b .wiget
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
@@ -819,7 +816,7 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 		$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}}
 
 %{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT \
+	INSTALL_ROOT=$RPM_BUILD_ROOT \
 	INSTALL_IT="install libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache/ ; install libs/libphp_common*.so.*.*.* $RPM_BUILD_ROOT%{_libdir}"
 
 install .libs/php $RPM_BUILD_ROOT%{_bindir}/php
