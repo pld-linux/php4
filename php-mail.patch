@@ -1,6 +1,5 @@
-diff -urN php-4.2.3.org/ext/standard/mail.c php-4.2.3/ext/standard/mail.c
---- php-4.2.3.org/ext/standard/mail.c	Tue Oct 29 21:35:04 2002
-+++ php-4.2.3/ext/standard/mail.c	Tue Oct 29 21:33:03 2002
+--- php-4.3.0/ext/standard/mail.c.orig	Fri Nov 29 12:15:43 2002
++++ php-4.3.0/ext/standard/mail.c	Thu Jan  2 12:37:54 2003
 @@ -21,6 +21,8 @@
  #include <stdlib.h>
  #include <ctype.h>
@@ -9,22 +8,21 @@ diff -urN php-4.2.3.org/ext/standard/mail.c php-4.2.3/ext/standard/mail.c
 +#include <string.h>
  #include "php.h"
  #include "ext/standard/info.h"
- #if !defined(PHP_WIN32)
-@@ -37,6 +39,10 @@
+ 
+@@ -36,6 +38,9 @@
  #include "safe_mode.h"
  #include "exec.h"
  
 +#include "zend_operators.h"
-+
 +#include "zend_globals.h"
 +
  #if HAVE_SENDMAIL
  #ifdef PHP_WIN32
  #include "win32/sendmail.h"
-@@ -166,8 +172,42 @@
- 		efree (sendmail_cmd);
- 
- 	if (sendmail) {
+@@ -196,8 +201,42 @@
+ 			return 0;
+ 		}
+ #endif
 -		fprintf(sendmail, "To: %s\n", to);
 -		fprintf(sendmail, "Subject: %s\n", subject);
 +		TSRMLS_FETCH();

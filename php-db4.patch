@@ -35,17 +35,3 @@
  AC_ARG_WITH(dbm,
  [  --with-dbm[=DIR]        Include DBM support],[
    if test "$withval" != "no"; then
---- php-4.2.3/ext/dba/dba_db3.c.orig	Thu Apr 18 14:31:19 2002
-+++ php-4.2.3/ext/dba/dba_db3.c	Tue Dec 24 14:52:20 2002
-@@ -74,7 +74,11 @@
- 	}
- 
- 	if (db_create(&dbp, NULL, 0) == 0 &&
-+#if (DB_VERSION_MAJOR > 4) || (DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR >= 1)
-+			dbp->open(dbp, NULL, info->path, NULL, type, gmode, filemode) == 0) {
-+#else
- 			dbp->open(dbp, info->path, NULL, type, gmode, filemode) == 0) {
-+#endif
- 		dba_db3_data *data;
- 
- 		data = malloc(sizeof(*data));

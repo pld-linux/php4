@@ -1,28 +1,27 @@
-diff -urN php-4.2.1RC2.org/ext/standard/info.c php-4.2.1RC2/ext/standard/info.c
---- php-4.2.1RC2.org/ext/standard/info.c	Sat May 11 20:49:24 2002
-+++ php-4.2.1RC2/ext/standard/info.c	Sat May 11 20:49:40 2002
-@@ -229,7 +229,20 @@
- 		php_printf("This program makes use of the Zend Scripting Language Engine:<br />");
- 		php_html_puts(zend_version, strlen(zend_version) TSRMLS_CC);
+--- php-4.3.0/ext/standard/info.c.orig	Thu Nov 14 22:17:00 2002
++++ php-4.3.0/ext/standard/info.c	Thu Jan  2 12:19:36 2003
+@@ -478,6 +478,21 @@
+ 		PUTS(PG(html_errors)?"<br />":"\n");
+ 		PUTS(zend_version);
  		php_info_print_box_end();
--		efree(php_uname);
-+	        /* PLD Linux */
-+                php_info_print_box_start(0);
-+                if (expose_php) {
-+                  PUTS("<a href=\"http://www.pld.org.pl/\"><img src=\"");
-+                  if (SG(request_info).request_uri) {
-+                    PUTS(SG(request_info).request_uri);
-+                  }
-+                  PUTS("?="PLD_LOGO_GUID"\" border=\"0\" align=\"right\" alt=\"PLD logo\"></a>\n");
-+                }
-+                php_printf("This server is using PLD Linux. <BR>");
-+                php_printf("More information at <a href=\"http://www.pld.org.pl/\">http://www.pld.org.pl/</a>.");
-+                php_printf("</BR>\n");
-+                php_info_print_box_end(); 
-+                efree(php_uname);
++		/* PLD Linux */
++		php_info_print_box_start(0);
++		if (expose_php && PG(html_errors)) {
++			PUTS("<a href=\"http://www.pld.org.pl/\"><img src=\"");
++			if (SG(request_info).request_uri) {
++				PUTS(SG(request_info).request_uri);
++			}
++			PUTS("?="PLD_LOGO_GUID"\" border=\"0\" align=\"right\" alt=\"PLD logo\"></a>\n");
++		}
++		PUTS("This server is using PLD Linux.");
++		if (PG(html_errors))
++			PUTS("<br />More information at <a href=\"http://www.pld.org.pl/\">http://www.pld.org.pl/</a>.<br />\n");
++		else
++			PUTS("\nMore information at http://www.pld.org.pl/.\n");
++		php_info_print_box_end();
+ 		efree(php_uname);
  	}
  
- 	if ((flag & PHP_INFO_CREDITS) && expose_php) {	
 diff -urN php-4.2.1RC2.org/ext/standard/info.h php-4.2.1RC2/ext/standard/info.h
 --- php-4.2.1RC2.org/ext/standard/info.h	Sat May 11 20:49:24 2002
 +++ php-4.2.1RC2/ext/standard/info.h	Sat May 11 20:49:40 2002
@@ -34,13 +33,12 @@ diff -urN php-4.2.1RC2.org/ext/standard/info.h php-4.2.1RC2/ext/standard/info.h
  
  PHP_FUNCTION(phpversion);
  PHP_FUNCTION(phpinfo);
-diff -urN php-4.2.1RC2.org/main/logos.h php-4.2.1RC2/main/logos.h
---- php-4.2.1RC2.org/main/logos.h	Sat May 11 20:49:24 2002
-+++ php-4.2.1RC2/main/logos.h	Sat May 11 20:50:32 2002
-@@ -1057,3 +1057,127 @@
- 	  4,   0,  59,   0  };
- 
- 
+--- php-4.3.0.org/main/logos.h	Sat May 11 20:49:24 2002
++++ php-4.3.0/main/logos.h	Sat May 11 20:50:32 2002
+@@ -1503,1 +1503,127 @@
+ 	249, 249, 207, 233,   5,   4,   0,  59 };
++
++
 +unsigned char pld_logo[] = {
 + 	137,  80,  78,  71,  13,  10,  26,  10,   0,   0,
 + 	  0,  13,  73,  72,  68,  82,   0,   0,   0,  80,
