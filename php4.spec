@@ -159,7 +159,7 @@ BuildRequires:	mysql-devel >= 3.23.32
 BuildRequires:	ncurses-devel
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.0}
 %if %{with openssl} || %{with ldap}
-BuildRequires:	openssl-devel >= 0.9.7c
+BuildRequires:	openssl-devel >= 0.9.7d
 %endif
 BuildRequires:	pam-devel
 %{?with_pdf:BuildRequires:	pdflib-devel >= 4.0.0}
