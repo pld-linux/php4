@@ -40,8 +40,8 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
-Version:	4.2.2
-Release:	8
+Version:	4.2.3
+Release:	0.1
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -69,15 +69,13 @@ Patch12:	%{name}-openssl-for-ext-only.patch
 Patch13:	%{name}-java-fix.patch
 Patch14:	%{name}-mcal-shared-lib.patch
 Patch15:	%{name}-msession-shared-lib.patch
-Patch16:	%{name}-xmlrpc-includes.patch
-Patch17:	%{name}-build_modules.patch
-Patch18:	%{name}-sapi-ini-file.patch
-Patch19:	%{name}-apache2_broken_macro.patch
-Patch20:	%{name}-php_iconv_string_declaration.patch
-Patch21:	%{name}-pear-cosmetic.patch
-Patch22:	%{name}-mnogosearch.patch
-Patch23:	%{name}-ini.patch
-Patch24:	%{name}-acam.patch
+Patch16:	%{name}-build_modules.patch
+Patch17:	%{name}-sapi-ini-file.patch
+Patch18:	%{name}-php_iconv_string_declaration.patch
+Patch19:	%{name}-pear-cosmetic.patch
+Patch20:	%{name}-mnogosearch.patch
+Patch21:	%{name}-ini.patch
+Patch22:	%{name}-acam.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -1255,13 +1253,11 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 %patch18 -p1
 %patch19 -p1
 %patch20 -p1
-%patch21 -p1
-%patch22 -p1
 cp php.ini-dist php.ini
-%patch23 -p1
+%patch21 -p1
 # for ac2.53b/am1.6b - AC_LANG_CXX has AM_CONDITIONAL, so cannot be invoked
 # conditionally...
-%patch24 -p1
+%patch22 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE3} | tar -xf - -C manual
