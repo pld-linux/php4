@@ -77,7 +77,7 @@ Summary(ru):	PHP Версии 5 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 5 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	5.0.0
-Release:	2
+Release:	3
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -117,6 +117,7 @@ Patch22:	%{name}-mssql-fix.patch
 Patch23:	%{name}-mnogosearch-fix.patch
 Patch24:	%{name}-nohttpd.patch
 Patch25:	%{name}-lib64.patch
+Patch26:	%{name}-phpize.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1452,9 +1453,15 @@ cp php.ini-dist php.ini
 %ifarch amd64
 %patch25 -p1
 %endif
+%patch26 -p1
 
 # conflict seems to be resolved by recode patches
 rm -f ext/recode/config9.m4
+
+# fix lib path in phpize
+cd scripts/
+sed 's,lib/php,%{_lib}/php,' phpize.in > phpize.in.tmp
+mv -f phpize.in.tmp phpize.in
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
