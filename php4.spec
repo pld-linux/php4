@@ -70,7 +70,8 @@ Patch19:	%{name}-apache2_broken_macro.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
-BuildRequires:	autoconf >= 1.4
+BuildRequires:	autoconf >= 2.52
+%{?_with_sybase_ct:BuildRequires:	autoconf >= 2.53}
 BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
 BuildRequires:	bzip2-devel
