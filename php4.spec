@@ -40,15 +40,16 @@
 # _without_openssl	- without OpenSSL support and OpenSSL extension module
 # _without_pcre		- without PCRE extension module
 # _without_pdf		- without PDF extension module
-# _without_pspell	- without pspell extension module
 # _without_pgsql	- without PostgreSQL extension module
-# _without_snmp		- without SNMP extension module
+# _without_pspell	- without pspell extension module
 # _without_recode	- without recode extension module
+# _without_snmp		- without SNMP extension module
 # _without_sybase_ct	- without Sybase-CT extension module
 # _without_wddx		- without WDDX extension module
-# _without_xml		- without XML extension module
 # _without_xmlrpc	- without XML-RPC extension module
+# _without_xml		- without XML extension module
 # _without_xslt		- without XSLT extension module
+# _without_yaz		- without YAZ extension module
 
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
@@ -103,7 +104,7 @@ BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
 BuildRequires:	bzip2-devel
 BuildRequires:	cracklib-devel >= 2.7-15
-%{!?_without_curl:BuildRequires:	curl-devel}
+%{!?_without_curl:BuildRequires:	curl-devel >= 7.9.8 }
 BuildRequires:	cyrus-sasl-devel
 %{?_with_db3:BuildRequires:	db3-devel}
 %{!?_with_db3:BuildRequires:	db-devel >= 4.0}
@@ -153,7 +154,7 @@ BuildRequires:	t1lib-devel
 %{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.6}
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
 %{!?_without_xmlrpc:BuildRequires:	xmlrpc-epi-devel}
-BuildRequires:	yaz-devel >= 1.9
+%{!?_without_yaz:BuildRequires:	yaz-devel >= 1.9}
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	zziplib-devel
@@ -1443,7 +1444,7 @@ for i in cgi cli apxs ; do
 	%{!?_without_odbc:--with-unixODBC=shared} \
 	%{?_without_xmlrpc:--without-xmlrpc}%{!?_without_xmlrpc:--with-xmlrpc=shared,/usr} \
 	%{!?_without_xslt:--with-xslt-sablot=shared} \
-	--with-yaz=shared \
+	%{!?_without_yaz:--with-yaz=shared} \
 	--with-zip=shared \
 	--with-zlib=shared \
 	--with-zlib-dir=shared,/usr
