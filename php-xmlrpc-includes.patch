@@ -1,0 +1,30 @@
+--- php-4.2.1/ext/xmlrpc/config.m4.orig	Tue Mar 26 01:15:29 2002
++++ php-4.2.1/ext/xmlrpc/config.m4	Tue May 14 17:48:54 2002
+@@ -57,12 +57,18 @@
+ 
+   if test -r $PHP_XMLRPC/include/xmlrpc.h; then
+     XMLRPC_DIR=$PHP_XMLRPC
++    XMLRPC_INC=$$XMLRPC_DIR/include
+   else
+     AC_MSG_CHECKING(for XMLRPC-EPI in default path)
+     for i in /usr/local /usr; do
+       if test -r $i/include/xmlrpc.h; then
+         XMLRPC_DIR=$i
++	XMLRPC_INC=$i/include
+         AC_MSG_RESULT(found in $i)
++      elif test -r $i/include/xmlrpc-epi/xmlrpc.h; then
++	XMLRPC_DIR=$i
++	XMLRPC_INC=$i/include/xmlrpc-epi
++	AC_MSG_RESULT([found in $i, includes in $i/include/xmlrpc-rpi])
+       fi
+     done
+   fi
+@@ -72,7 +78,7 @@
+     AC_MSG_ERROR(Please reinstall the XMLRPC-EPI distribution)
+   fi
+ 
+-  PHP_ADD_INCLUDE($XMLRPC_DIR/include)
++  PHP_ADD_INCLUDE($XMLRPC_INC)
+   PHP_ADD_LIBRARY_WITH_PATH(xmlrpc, $XMLRPC_DIR/lib, XMLRPC_SHARED_LIBADD)
+   
+ fi
