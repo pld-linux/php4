@@ -1165,7 +1165,7 @@ bzip2 -dc %{SOURCE4} | tar -xf - -C manual
 CFLAGS="%{rpmcflags} -DEAPI=1 -I%{_prefix}/X11R6/include"
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf
-libtoolize --copy --force
+%{__libtoolize}
 aclocal
 autoconf
 #for i in cgi fastcgi apxs ; do
