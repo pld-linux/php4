@@ -14,7 +14,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.4pl1
-Release:	9
+Release:	10
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -45,7 +45,7 @@ BuildRequires:	zip
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	db3-devel >= 3.1.17
-BuildRequires:	freetype-devel
+BuildRequires:	freetype1-devel
 BuildRequires:	gd-devel >= 1.8.3
 BuildRequires:	gdbm-devel
 %{!?bcond_off_imap:BuildRequires: imap-devel >= 4.7b-1}
@@ -668,7 +668,7 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add mhash
 support to PHP.
 
-#%description mcrypt -l pl
+#%description mhash -l pl
 
 %package doc
 Summary:	Online manual for PHP
@@ -718,7 +718,7 @@ Pliki potrzebne do kompilacji modu³ów PHP.
 %patch11 -p1
 
 %build
-CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
+CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
 ./buildconf
 %configure \
 	--enable-discard-path \
@@ -1175,6 +1175,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc {LICENSE,Zend/LICENSE,EXTENSIONS,NEWS,TODO*}.gz  
 %doc {README.EXT_SKEL,README.SELF-CONTAINED-EXTENSIONS}.gz
 
+%dir %{_sysconfdir}
 %attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
 
 /home/httpd/html/icons/*
