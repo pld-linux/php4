@@ -1,0 +1,73 @@
+diff -Naur php-4.1.2.orig/ext/ext_skel php-4.1.2/ext/ext_skel
+--- php-4.1.2.orig/ext/ext_skel	Fri May 31 11:10:30 2002
++++ php-4.1.2/ext/ext_skel	Fri May 31 11:52:10 2002
+@@ -65,8 +65,8 @@
+   givup "Directory $extname already exists."
+ fi
+ 
+-test -f ext_skel || givup "ext_skel must be in the current directory"
+-test -d skeleton || givup "subdirectory skeleton does not exist or is not directory"
++#test -f ext_skel || givup "ext_skel must be in the current directory"
++test -d /usr/include/php/ext/skeleton || givup "/usr/include/php/ext/skeleton does not exist or is not directory"
+ 
+ if echo '\c' | grep -s c >/dev/null 2>&1
+ then
+@@ -84,7 +84,7 @@
+ fi
+ 
+ if test -n "$proto"; then
+-  cat $proto | awk -v extname=$extname -v stubs=$stubs -v stubfile=$stubfile -v xml=$xml -v full_xml=$full_xml -v i_know_what_to_do_shut_up_i_dont_need_your_help_mode=$no_help -f ./skeleton/create_stubs
++  cat $proto | awk -v extname=$extname -v stubs=$stubs -v stubfile=$stubfile -v xml=$xml -v full_xml=$full_xml -v i_know_what_to_do_shut_up_i_dont_need_your_help_mode=$no_help -f /usr/include/php/ext/skeleton/create_stubs
+ fi
+ 
+ if test -z "$stubs"; then
+@@ -198,7 +198,7 @@
+     echo '/^[[:space:]]*\/\*/,/^[[:space:]]*\*\//D' >> sedscript
+ fi
+ 
+-sed -f sedscript <../skeleton/skeleton.c > $extname.c
++sed -f sedscript </usr/include/php/ext/skeleton/skeleton.c > $extname.c
+ 
+ 
+ $ECHO_N " php_$extname.h$ECHO_C"
+@@ -216,26 +216,26 @@
+     echo 's/^\/\*.*\*\/$//' >> sedscript
+     echo '/^[[:space:]]*\/\*/,/^[[:space:]]*\*\//D' >> sedscript
+ fi
+-sed -f sedscript <../skeleton/php_skeleton.h > php_$extname.h
++sed -f sedscript </usr/include/php/ext/skeleton/php_skeleton.h > php_$extname.h
+ 
+ $ECHO_N " CREDITS$ECHO_C"
+ echo "s/extname/$extname/g" > sedscript
+-sed -f sedscript <../skeleton/CREDITS > CREDITS
++sed -f sedscript </usr/include/php/ext/skeleton/CREDITS > CREDITS
+ 
+ $ECHO_N " EXPERIMENTAL$ECHO_C"
+ echo "s/extname/$extname/g" > sedscript
+-sed -f sedscript <../skeleton/EXPERIMENTAL > EXPERIMENTAL
++sed -f sedscript </usr/include/php/ext/skeleton/EXPERIMENTAL > EXPERIMENTAL
+ 
+ $ECHO_N " tests/001.phpt$ECHO_C"
+ mkdir tests || givup "Cannot create tests directory"
+ chmod 755 tests
+-sed -f sedscript <../skeleton/tests/001.phpt > tests/001.phpt
++sed -f sedscript </usr/include/php/ext/skeleton/tests/001.phpt > tests/001.phpt
+ 
+ if test -z "$stubs" && test -z "$no_help"; then
+   $ECHO_N " $extname.php$ECHO_C"
+   sed \
+     -e "s/extname/$extname/g" \
+-    <../skeleton/skeleton.php \
++    </usr/include/php/ext/skeleton/skeleton.php \
+     > $extname.php
+ fi
+ 
+diff -Naur php-4.1.2.orig/ext/skeleton/create_stubs php-4.1.2/ext/skeleton/create_stubs
+--- php-4.1.2.orig/ext/skeleton/create_stubs	Fri May 31 11:50:08 2002
++++ php-4.1.2/ext/skeleton/create_stubs	Fri May 31 11:52:00 2002
+@@ -1,4 +1,4 @@
+-#!/usr/bin/awk -f
++#!/bin/awk -f
+ 
+ function gobble(s, x)
+ {
