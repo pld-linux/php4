@@ -1,25 +1,9 @@
---- php-4.2.0/ext/wddx/Makefile.in.orig	Wed May  1 17:42:43 2002
-+++ php-4.2.0/ext/wddx/Makefile.in	Wed May  1 17:53:04 2002
-@@ -1,5 +1,9 @@
- 
- LTLIBRARY_NAME    = libwddx.la
- LTLIBRARY_SOURCES = wddx.c
-+LTLIBRARY_DEPENDENCIES  = $(EXPAT_INTERNAL_LIBADD)
-+LTLIBRARY_LIBADD        = $(LTLIBRARY_DEPENDENCIES)
-+LTLIBRARY_SHARED_NAME = wddx.la
-+LTLIBRARY_SHARED_LIBADD = $(EXPAT_SHARED_LIBADD)
- 
- include $(top_srcdir)/build/dynlib.mk
---- php-4.2.0/ext/wddx/wddx.c.orig	Thu May  2 03:21:31 2002
-+++ php-4.2.0/ext/wddx/wddx.c	Thu May  2 03:21:17 2002
-@@ -124,6 +124,10 @@
- };
- /* }}} */
- 
-+#ifdef COMPILE_DL_WDDX
-+ZEND_GET_MODULE(wddx)
-+#endif
-+
- /* {{{ wddx_stack_init
-  */	
- static int wddx_stack_init(wddx_stack *stack)
+--- php-4.3.0/ext/wddx/config.m4.orig	Tue Mar 12 17:37:42 2002
++++ php-4.3.0/ext/wddx/config.m4	Thu Jan  2 21:00:50 2003
+@@ -12,4 +12,6 @@
+   fi
+   AC_DEFINE(HAVE_WDDX, 1, [ ])
+   PHP_NEW_EXTENSION(wddx, wddx.c, $ext_shared)
++  WDDX_SHARED_LIBADD="-lexpat"
++  PHP_SUBST(WDDX_SHARED_LIBADD)
+ fi

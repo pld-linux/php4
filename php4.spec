@@ -1,11 +1,10 @@
 #
 # TODO:
-# - cannot find libexpat for XML module,
-#   with --with-expat-dir=/usr finds, but xmlrpc is built as static
-# - libphp4.so is linked with -lnsl
-# - msession.so isn't linked with -lphoenix
-# - odbc.so isn't linked with -lodbc*
-# - wddx.so isn't linked with anything except libc
+# - odbc.so isn't linked with -lodbc* (shared odbc is broken in config.m4)
+# - BUILD!!! (shared patch, libphp_common, SAPIs)
+# - fastcgi option in cgi SAPI?
+# - add cli SAPI?
+# - check/update "experimental" in descriptions
 #
 # Automatic pear requirements finding:
 %include	/usr/lib/rpm/macros.php
@@ -77,9 +76,10 @@ Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
+Patch2:		%{name}-xml-expat-fix.patch
 #Patch2:		%{name}-mysql-socket.patch
 Patch3:		%{name}-mail.patch
-#Patch4:		%{name}-link-libs.patch
+Patch4:		%{name}-link-libs.patch
 #Patch5:		%{name}-fastcgi.patch
 Patch6:		%{name}-libpq_fs_h_path.patch
 Patch7:		%{name}-wddx-fix.patch
@@ -1219,6 +1219,7 @@ Summary(pl):	Modu³ yaz dla PHP
 Group:		Libraries
 Requires(post,preun):%{name}-common = %{version}
 Requires:	%{name}-common = %{version}
+Requires:	yaz >= 1.9
 
 %description yaz
 This is a dynamic shared object (DSO) for Apache that will add yaz
@@ -1326,11 +1327,12 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 #%patch0 -p1	-- needs update!
 %patch1 -p1
 #%patch2 -p1	-- obsolete
+%patch2 -p1
 %patch3 -p1
-#%patch4 -p1	-- seems obsolete
-#%patch5 -p1	-- obsolete (fastcgi SAPI removed)
+%patch4 -p1
+#%patch5 -p1	-- obsolete (fastcgi interface changed)
 %patch6 -p1
-#%patch7 -p1	-- partially obsolete, the rest to check (too many changes)
+%patch7 -p1
 %patch8 -p1
 #%patch9 -p1	-- obsolete
 %patch10 -p1
@@ -1422,7 +1424,7 @@ for i in cgi apxs ; do
 	--with-filepro=shared \
 	--with-freetype-dir=shared \
 	--with-gettext=shared \
-	--with-gd=shared \
+	--with-gd=shared,/usr \
 	--with-gdbm \
 	--with-gmp=shared \
 	--with-hyperwave=shared \
