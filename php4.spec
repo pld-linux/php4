@@ -75,14 +75,13 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.11
-%define		_suf	RC2
-Release:	0.%{_suf}.1%{?with_hardened:hardened}
+%define		_suf	%{nil}
+Release:	0.1%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
-#Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
-Source0:	http://downloads.php.net/ilia/php-%{version}%{_suf}.tar.bz2
-# Source0-md5:	87873fc4dd7a85a0bf669693f9a66108
+Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
+# Source0-md5:	fbc67d240812136a9842bc1f2a217b7a
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source3:	%{name}-module-install
@@ -91,8 +90,8 @@ Source5:	%{name}-cgi-fcgi.ini
 Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Source8:	%{name}-cli.ini
-#Source9:	http://www.hardened-php.net/hardened-php-%{version}-0.2.5.patch.gz
-# Source9-md5:	4330fa3d2addf6e8f9920d54eeda1b78
+Source9:	http://www.hardened-php.net/hardened-php-4.3.10-0.2.6.patch.gz
+# Source9-md5:	0072677fefb4ed8900f2db0a6b317572
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-xml-expat-fix.patch
