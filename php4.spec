@@ -9,6 +9,7 @@
 #    - ircg,
 #   These extensions BuildRequires proprietary libraries...
 # - fix building of mono, sybase and sqlite extensions
+# - test if php cgi segfaults after ctrl+d when overload.so is loaded
 #
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
@@ -72,17 +73,14 @@ Summary(ru):	PHP Версии 5 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 5 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	5.0.0
-%define _pre	b3
+%define _pre	RC1
 Release:	0.%{_pre}.1
 Epoch:		3
 Group:		Libraries
 License:	PHP
-#Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
-#Source0:	http://downloads.php.net/ilia/%{name}-%{version}.tar.bz2
-# See this dumb scheme? It makes rpm think Source0 filename is mirror. Gosh.
-#Source0:	http://www.php.net/get/%{name}-%{version}%{_pre}.tar.bz2/from/this/mirror
-Source0:	http://mamut.pld-linux.org/~adamg/%{name}-%{version}%{_pre}.tar.bz2
-# Source0-md5:	bc9dfe2083564a749b88dd7ce7ed1a59
+#Source0:	http://www.php.net/distributions/%{name}-%{version}%{_pre}.tar.bz2
+Source0:	http://pl2.php.net/distributions/%{name}-%{version}%{_pre}.tar.bz2
+# Source0-md5:	7896bb1fb85247e2514b9faa5084ced7
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -113,7 +111,6 @@ Patch19:	%{name}-no_pear_install.patch
 Patch20:	%{name}-zlib.patch
 Patch21:	%{name}-sybase-fix.patch
 Patch22:	%{name}-mssql-fix.patch
-Patch23:	%{name}-db42.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1460,7 +1457,6 @@ cp php.ini-dist php.ini
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
-%patch23 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
@@ -1638,6 +1634,7 @@ ln -sf php.cgi $RPM_BUILD_ROOT%{_bindir}/php
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 install %{SOURCE6} %{SOURCE7} %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}
+install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi-fcgi.ini
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{httpdir}/icons
 install %{SOURCE4} $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE5} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
@@ -2232,6 +2229,7 @@ fi
 %files fcgi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/php.fcgi
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cgi-fcgi.ini
 
 %files cgi
 %defattr(644,root,root,755)
