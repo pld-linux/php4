@@ -113,8 +113,7 @@ Patch29:	%{name}-sybase-fix.patch
 Patch30:	%{name}-mssql-fix.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
-%{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird}}
-%{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird-devel}}
+%{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 BuildRequires:	apache-devel
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	automake >= 1.4d
