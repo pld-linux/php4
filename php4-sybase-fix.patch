@@ -8,3 +8,29 @@
    AC_CHECK_LIB(dnet_stub, dnet_addr,
       [ PHP_ADD_LIBRARY_WITH_PATH(dnet_stub,,SYBASE_SHARED_LIBADD)
          AC_DEFINE(HAVE_LIBDNET_STUB,1,[ ])
+--- php-4.3.3/ext/sybase/php_sybase_db.c.orig	Tue Aug  5 18:02:37 2003
++++ php-4.3.3/ext/sybase/php_sybase_db.c	Tue Aug 26 10:20:37 2003
+@@ -143,6 +143,7 @@
+ static int php_sybase_error_handler(DBPROCESS *dbproc,int severity,int dberr,
+ 										int oserr,char *dberrstr,char *oserrstr)
+ {
++	TSRMLS_FETCH();
+ 	if (severity >= php_sybase_module.min_error_severity) {
+ 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Sybase error:  %s (severity %d)",dberrstr,severity);
+ 	}
+@@ -154,6 +155,7 @@
+ 										int severity,char *msgtext,char *srvname,
+ 										char *procname,DBUSMALLINT line)
+ {
++	TSRMLS_FETCH();
+ 	if (severity >= php_sybase_module.min_message_severity) {
+ 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Sybase message:  %s (severity %d)",msgtext,severity);
+ 	}
+@@ -746,6 +748,7 @@
+ 				Z_STRVAL_P(result) = res_buf;
+ 				Z_TYPE_P(result) = IS_STRING;
+ 			} else {
++				TSRMLS_FETCH();
+ 				php_error_docref(NULL TSRMLS_CC, E_WARNING,"Sybase:  column %d has unknown data type (%d)", offset, coltype(offset));
+ 				ZVAL_FALSE(result);
+ 			}
