@@ -14,7 +14,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.4pl1
-Release:	11
+Release:	12
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -67,7 +67,7 @@ BuildRequires:	recode-devel >= 3.5d-3
 BuildRequires:	t1lib-devel
 %{!?bcond_off_odbc:BuildRequires: unixODBC-devel}
 BuildRequires:	zlib-devel >= 1.0.9
-%{!?bcond_off_snmp:BuildRequires: ucd-snmp-devel >= 4.1}
+%{!?bcond_off_snmp:BuildRequires: ucd-snmp-devel >= 4.2.1}
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	mhash-devel
 BuildRequires:	bzip2-devel
@@ -81,6 +81,7 @@ Prereq:		perl
 Prereq:		/usr/sbin/apxs
 PreReq:		%{name}-common = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+Obsoletes:	phpfi
 
 %define		_sysconfdir	/etc/php
 # check ZEND_MODULE_API_NO in  Zend/modules.h
