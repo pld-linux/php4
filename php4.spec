@@ -6,6 +6,10 @@
 %define _without_mm 1
 %endif
 
+%ifnarch %{ix86}
+%define _without_msession 1
+%endif
+
 # Conditional build:
 # _with_cpdf		- with cpdf extension module
 # _with_interbase	- with InterBase extension module
@@ -17,6 +21,7 @@
 # _without_imap		- without IMAP extension module
 # _without_ldap		- without LDAP extension module
 # _without_mm		- without mm support for session storage
+# _without_msession	- without msession extension module
 # _without_odbc		- without ODBC extension module
 # _without_openssl	- with OpenSSL support
 # _without_snmp		- without SNMP extension module
@@ -98,7 +103,7 @@ BuildRequires:	openssl-devel >= 0.9.6a
 BuildRequires:	pam-devel
 BuildRequires:	pdflib-devel >= 4.0.0
 BuildRequires:	perl
-BuildRequires:	phoenix-devel
+%{!?_without_msession:BuildRequires:	phoenix-devel}
 BuildRequires:	pkgconfig
 BuildRequires:	postgresql-devel
 BuildRequires:  postgresql-backend-devel >= 7.2
@@ -1192,7 +1197,7 @@ for i in cgi apxs ; do
 	--with-ming=shared \
 	%{?_without_mm:--with-mm=shared,no}%{!?_without_mm:--with-mm=shared} \
 	--with-mnogosearch=shared,/usr \
-	--with-msession=shared \
+	%{!?_without_msession:--with-msession=shared} \
 	--with-mysql=shared,/usr \
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	%{?_with_oci8:--with-oci8=shared} \
@@ -1942,9 +1947,11 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mnogosearch.so
 
+%if %{?_without_msession:0}%{!?_without_msession:1}
 %files msession
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/msession.so
+%endif
 
 %files mysql
 %defattr(644,root,root,755)
