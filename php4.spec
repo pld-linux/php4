@@ -1534,6 +1534,7 @@ for i in fcgi cgi cli apxs ; do
 %else
 	`[ $i = apxs ] && echo --with-apxs=%{apxs}` \
 %endif
+	--enable-experimental-zts \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
