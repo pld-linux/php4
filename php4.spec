@@ -107,6 +107,7 @@ BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0
 BuildRequires:	gd-devel >= 2.0.1
 %{!?_without_gif:BuildRequires:	gd-devel(gif)}
+%{?_without_gif:BuildConflicts: gd-devel(gif)}
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
 %{!?_without_imap:BuildRequires: imap-devel >= 1:2001-0.BETA.200107022325.2 }
