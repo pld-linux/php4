@@ -62,14 +62,14 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.3.3
-%define		_rc	RC2
+%define		_rc	RC3
 Release:	0.%{_rc}.1
 Epoch:		3
 Group:		Libraries
 License:	PHP
 #Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
 Source0:	http://downloads.php.net/ilia/%{name}-%{version}%{_rc}.tar.bz2
-# Source0-md5:	bc8cda0bd523c653d0900a460117c2af
+# Source0-md5:	3dd83add4dbcd5233b32cffda7732b7b
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -118,6 +118,7 @@ BuildRequires:	cracklib-devel >= 2.7-15
 BuildRequires:	cyrus-sasl-devel
 %{?_with_db3:BuildRequires:	db3-devel >= 3.1}
 %{!?_with_db3:BuildRequires:	db-devel >= 4.0}
+BuildRequires:	elfutils-devel
 %if %(expr %{?_without_xml:0}%{!?_without_xml:1} + %{?_without_xmlrpc:0}%{!?_without_xmlrpc:1})
 BuildRequires:	expat-devel
 %endif
