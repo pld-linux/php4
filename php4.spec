@@ -201,7 +201,7 @@ Obsoletes:	apache-mod_php
 
 %define		_sysconfdir	/etc/php
 %define		extensionsdir	%{_libdir}/php
-%define		httpdir		/home/services/httpd
+%define		httpdir		/home/httpd
 %define		_ulibdir	%{_prefix}/lib
 
 %description
@@ -1740,13 +1740,11 @@ install %{SOURCE1} .
 
 cp -f Zend/LICENSE{,.Zend}
 
-# Directories created for pear:
-install -d $RPM_BUILD_ROOT%{php_pear_dir}/{Archive,Console,Crypt,HTML/Template,Image,Net,Science,XML}
-
 %ifarch amd64
 ln -sf ../../lib/%{name}/build $RPM_BUILD_ROOT%{_libdir}/%{name}/build
 %endif
 
+mkdir $RPM_BUILD_ROOT%{php_pear_dir}/{Auth,Science,HTML/Template}
 rm -f $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.la
 
 %clean
