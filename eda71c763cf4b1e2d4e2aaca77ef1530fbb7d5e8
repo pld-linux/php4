@@ -1,0 +1,4 @@
+
+- added gd subpackage
+- compile with system regexp
+- install php extension modules in %%{_pkglibdir}/php
