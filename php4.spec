@@ -2,13 +2,13 @@ Summary:	The PHP HTML-embedded scripting language for use with Apache.
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache.
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache.
 Name:		php
-Version:	4.0RC1
+Version:	4.0RC2
 Release:	2
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 License: The PHP license (see "LICENSE" file included in distribution)
-Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.gz
+Source0:	ftp://ftp.php.net/pub/version4/downloads/%{name}-%{version}.tar.gz
 Source1:	FAQ.php
 Source2:	php.ini
 Source3:	zend.gif
@@ -222,7 +222,7 @@ strip --strip-unneeded	\
 	$RPM_BUILD_ROOT%{_pkglibdir}/php/*.so
 
 install %{SOURCE1} .
-gzip -9nf CODING_STANDARDS CREDITS ChangeLog FUNCTION_LIST.txt \
+gzip -9nf CODING_STANDARDS CREDITS FUNCTION_LIST.txt \
       MAINTAINERS MODULES_STATUS NEWS TODO* LICENSE Zend/LICENSE \
       Zend/ZEND_CHANGES
 
@@ -355,7 +355,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc {CODING_STANDARDS,CREDITS,ChangeLog,FUNCTION_LIST.txt,Zend/ZEND_CHANGES}.gz
+%doc {CODING_STANDARDS,CREDITS,FUNCTION_LIST.txt,Zend/ZEND_CHANGES}.gz
 %doc {LICENSE,Zend/LICENSE,MAINTAINERS,MODULES_STATUS,NEWS,TODO*}.gz  
 
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/*
