@@ -74,6 +74,7 @@ Patch18:	%{name}-sapi-ini-file.patch
 Patch19:	%{name}-apache2_broken_macro.patch
 Patch20:	%{name}-php_iconv_string_declaration.patch
 Patch21:	%{name}-pear-cosmetic.patch
+Patch22:	%{name}-mnogosearch.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -108,7 +109,7 @@ BuildRequires:	libxml2-devel >= 2.2.7
 BuildRequires:	mhash-devel
 BuildRequires:	ming-devel >= 0.1.0
 %{!?_without_mm:BuildRequires:	mm-devel >= 1.1.3}
-BuildRequires:	mnogosearch-devel < 3.2.5
+BuildRequires:	mnogosearch-devel >= 3.2.6
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
 %if %(expr %{?_without_openssl:0}%{!?_without_openssl:1} + %{?_without_ldap:0}%{!?_without_ldap:1})
@@ -1253,6 +1254,7 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
+%patch22 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
