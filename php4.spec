@@ -1605,7 +1605,9 @@ cp php.ini-dist php.ini
 %patch30 -p1
 %endif
 %patch31 -p1
+%if %{_apache2}
 %patch32
+%endif
 %patch33 -p1
 
 # new apr
