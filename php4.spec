@@ -54,6 +54,7 @@ Patch11:	%{name}-libpq_fs_h_path.patch
 Patch12:	%{name}-apache2.patch
 Patch13:	%{name}-pdflib4.0.2.patch
 Patch14:	%{name}-build_modules.patch
+Patch15:	%{name}-4.1.2-dom-xslt-patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -897,6 +898,7 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
+%patch15 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
