@@ -1,16 +1,11 @@
---- php/pear/php.ini.orig	Wed Jun 18 14:11:24 2003
-+++ php/pear/php.ini	Wed Jun 18 14:04:21 2003
-@@ -0,0 +1,2 @@
-+extension_dir=modules
-+extension=pcre.so
 --- php/pear/Makefile.frag.orig	Wed Jun 18 14:15:02 2003
 +++ php/pear/Makefile.frag	Wed Jun 18 14:15:07 2003
 @@ -3,7 +3,7 @@
  peardir=$(PEAR_INSTALLDIR)
  
  # Skip all php.ini files altogether
--PEAR_INSTALL_FLAGS = -n -dsafe_mode=0
-+PEAR_INSTALL_FLAGS = -c $(top_builddir)/pear -dsafe_mode=0
+-PEAR_INSTALL_FLAGS = -n -dshort_open_tag=0 -dsafe_mode=0
++PEAR_INSTALL_FLAGS = -c $(top_builddir)/pear -dshort_open_tag=0 -dsafe_mode=0
  
  install-pear-installer: $(top_builddir)/sapi/cli/php
  	@$(top_builddir)/sapi/cli/php $(PEAR_INSTALL_FLAGS) $(srcdir)/install-pear.php $(srcdir)/package-*.xml

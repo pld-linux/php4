@@ -4,8 +4,8 @@
    PHP_WITH_SHARED
    if test "$withval" != "no"; then
      cpdf_withval=$withval
--    PHP_NEW_EXTENSION(cpdf, cpdf.c, $ext_shared)
-+    PHP_NEW_EXTENSION(cpdf, cpdf.c, $shared)
+-    PHP_NEW_EXTENSION(cpdf, cpdf.c, $ext_shared,, \\$(GDLIB_CFLAGS))
++    PHP_NEW_EXTENSION(cpdf, cpdf.c, $shared,, \\$(GDLIB_CFLAGS))
 +    ext_shared=$shared
      PHP_SUBST(CPDF_SHARED_LIBADD)
      CPDF_JPEG_TEST
