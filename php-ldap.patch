@@ -1,0 +1,11 @@
+--- php-4.0RC2/ext/ldap/config.m4.wiget	Thu Dec 30 15:49:17 1999
++++ php-4.0RC2/ext/ldap/config.m4	Thu May 11 05:50:12 2000
+@@ -43,7 +43,7 @@
+ 		LDAP_PTHREAD=
+ 	fi
+ 
+-	if test -f $LDAP_LIBDIR/liblber.a; then
++	if test -f $LDAP_LIBDIR/liblber.so; then
+ 		LDAP_LIBS="-lldap -llber"
+         AC_ADD_LIBRARY(ldap)
+         AC_ADD_LIBRARY(lber,1)

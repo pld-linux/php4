@@ -1,0 +1,75 @@
+Only in php-4.0RC1/ext/standard/: .libs
+Only in php-4.0RC1/ext/standard/: Makefile
+Only in php-4.0RC1/ext/standard/: array.lo
+Only in php-4.0RC1/ext/standard/: assert.lo
+Only in php-4.0RC1/ext/standard/: base64.lo
+Only in php-4.0RC1/ext/standard/: basic_functions.lo
+Only in php-4.0RC1/ext/standard/: browscap.lo
+Only in php-4.0RC1/ext/standard/: crypt.lo
+Only in php-4.0RC1/ext/standard/: cyr_convert.lo
+Only in php-4.0RC1/ext/standard/: datetime.lo
+Only in php-4.0RC1/ext/standard/: dir.lo
+Only in php-4.0RC1/ext/standard/: dl.lo
+Only in php-4.0RC1/ext/standard/: dns.lo
+Only in php-4.0RC1/ext/standard/: exec.lo
+Only in php-4.0RC1/ext/standard/: file.lo
+Only in php-4.0RC1/ext/standard/: filestat.lo
+Only in php-4.0RC1/ext/standard/: flock_compat.lo
+Only in php-4.0RC1/ext/standard/: formatted_print.lo
+Only in php-4.0RC1/ext/standard/: fsock.lo
+Only in php-4.0RC1/ext/standard/: head.lo
+Only in php-4.0RC1/ext/standard/: html.lo
+Only in php-4.0RC1/ext/standard/: image.lo
+Only in php-4.0RC1/ext/standard/: info.lo
+Only in php-4.0RC1/ext/standard/: iptc.lo
+Only in php-4.0RC1/ext/standard/: lcg.lo
+Only in php-4.0RC1/ext/standard/: libstandard.la
+Only in php-4.0RC1/ext/standard/: link.lo
+diff -ru php-4.0RC1.old/ext/standard/mail.c php-4.0RC1/ext/standard/mail.c
+--- php-4.0RC1.old/ext/standard/mail.c	Mon Mar  6 21:37:11 2000
++++ php-4.0RC1/ext/standard/mail.c	Tue Apr  4 03:13:33 2000
+@@ -21,6 +21,8 @@
+ #include <stdlib.h>
+ #include <ctype.h>
+ #include <stdio.h>
++#include <syslog.h>
++#include <string.h>
+ #include "php.h"
+ #if !defined(PHP_WIN32)
+ #include "build-defs.h"
+@@ -112,8 +114,12 @@
+ 	sendmail = popen(sendmail_path, "w");
+ 
+ 	if (sendmail) {
+-		fprintf(sendmail, "To: %s\n", to);
+-		fprintf(sendmail, "Subject: %s\n", subject);
++		if ((to != NULL) && (strlen(to)!=0)) { 
++			fprintf(sendmail, "To: %s\n", to);
++		}
++		if ((subject != NULL) && (strlen(subject)!=0)) {
++			fprintf(sendmail, "Subject: %s\n", subject);
++		}
+ 		if (headers != NULL) {
+ 			fprintf(sendmail, "%s\n", headers);
+ 		}
+Only in php-4.0RC1/ext/standard/: mail.c~
+Only in php-4.0RC1/ext/standard/: mail.lo
+Only in php-4.0RC1/ext/standard/: math.lo
+Only in php-4.0RC1/ext/standard/: md5.lo
+Only in php-4.0RC1/ext/standard/: metaphone.lo
+Only in php-4.0RC1/ext/standard/: microtime.lo
+Only in php-4.0RC1/ext/standard/: output.lo
+Only in php-4.0RC1/ext/standard/: pack.lo
+Only in php-4.0RC1/ext/standard/: pageinfo.lo
+Only in php-4.0RC1/ext/standard/: parsedate.lo
+Only in php-4.0RC1/ext/standard/: quot_print.lo
+Only in php-4.0RC1/ext/standard/: rand.lo
+Only in php-4.0RC1/ext/standard/: reg.lo
+Only in php-4.0RC1/ext/standard/: soundex.lo
+Only in php-4.0RC1/ext/standard/: string.lo
+Only in php-4.0RC1/ext/standard/: syslog.lo
+Only in php-4.0RC1/ext/standard/: type.lo
+Only in php-4.0RC1/ext/standard/: uniqid.lo
+Only in php-4.0RC1/ext/standard/: url.lo
+Only in php-4.0RC1/ext/standard/: url_scanner.lo
+Only in php-4.0RC1/ext/standard/: var.lo
