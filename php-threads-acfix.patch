@@ -35,3 +35,23 @@
 +pthreads_assign_done="yes"
 +fi
  ])dnl
+--- php-4.3.4/TSRM/tsrm.m4.orig	2003-10-03 07:25:30.000000000 +0200
++++ php-4.3.4/TSRM/tsrm.m4	2003-12-16 23:36:50.274455176 +0100
+@@ -68,7 +68,6 @@
+ ])
+ 
+ sinclude(threads.m4)
+-sinclude(TSRM/threads.m4)
+ 
+ AC_DEFUN(TSRM_CHECK_PTHREADS,[
+ 		
+--- php-4.3.4/configure.in.orig	2003-12-16 23:38:01.000000000 +0100
++++ php-4.3.4/configure.in	2003-12-16 23:41:38.479641328 +0100
+@@ -204,6 +204,7 @@
+ 
+ sinclude(Zend/acinclude.m4)
+ sinclude(Zend/Zend.m4)
++sinclude(TSRM/threads.m4)
+ sinclude(TSRM/tsrm.m4)
+ 
+ 
