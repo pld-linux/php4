@@ -64,24 +64,23 @@ Patch2:		%{name}-mysql-socket.patch
 Patch3:		%{name}-mail.patch
 Patch4:		%{name}-link-libs.patch
 Patch5:		%{name}-fastcgi.patch
-#Patch6:		%{name}-no_php_pcre_in_SAPI_c.patch
-Patch7:		%{name}-libpq_fs_h_path.patch
-Patch8:		%{name}-wddx-fix.patch
-Patch9:		%{name}-cpdf-fix.patch
-Patch10:	%{name}-session-fix-shared.patch
-Patch11:	%{name}-hyperwave-fix.patch
-Patch12:	%{name}-openssl-for-ext-only.patch
-Patch13:	%{name}-java-fix.patch
-Patch14:	%{name}-mcal-shared-lib.patch
-Patch15:	%{name}-msession-shared-lib.patch
-Patch16:	%{name}-build_modules.patch
-Patch17:	%{name}-sapi-ini-file.patch
-Patch18:	%{name}-php_iconv_string_declaration.patch
-Patch19:	%{name}-pear-cosmetic.patch
-Patch20:	%{name}-mnogosearch.patch
-Patch21:	%{name}-ini.patch
-Patch22:	%{name}-acam.patch
-Patch23:	%{name}-xmlrpc-fix.patch
+Patch6:		%{name}-libpq_fs_h_path.patch
+Patch7:		%{name}-wddx-fix.patch
+Patch8:		%{name}-cpdf-fix.patch
+Patch9:		%{name}-session-fix-shared.patch
+Patch10:	%{name}-hyperwave-fix.patch
+Patch11:	%{name}-openssl-for-ext-only.patch
+Patch12:	%{name}-java-fix.patch
+Patch13:	%{name}-mcal-shared-lib.patch
+Patch14:	%{name}-msession-shared-lib.patch
+Patch15:	%{name}-build_modules.patch
+Patch16:	%{name}-sapi-ini-file.patch
+Patch17:	%{name}-php_iconv_string_declaration.patch
+Patch18:	%{name}-pear-cosmetic.patch
+Patch19:	%{name}-mnogosearch.patch
+Patch20:	%{name}-ini.patch
+Patch21:	%{name}-acam.patch
+Patch22:	%{name}-xmlrpc-fix.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -1247,7 +1246,7 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-#%patch6 -p1
+%patch6 -p1
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
@@ -1261,13 +1260,12 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 %patch17 -p1
 %patch18 -p1
 %patch19 -p1
-%patch20 -p1
 cp php.ini-dist php.ini
-%patch21 -p1
+%patch20 -p1
 # for ac2.53b/am1.6b - AC_LANG_CXX has AM_CONDITIONAL, so cannot be invoked
 # conditionally...
+%patch21 -p1
 %patch22 -p1
-%patch23 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE3} | tar -xf - -C manual
