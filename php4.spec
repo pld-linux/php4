@@ -49,7 +49,6 @@ Patch8:		%{name}-ac250.patch
 Patch9:		%{name}-mailsecurity2.patch
 Patch10:	%{name}-oracle9.patch
 Patch11:	%{name}-no_php_pcre_in_SAPI_c.patch
-
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -106,6 +105,7 @@ Prereq:		%{_sbindir}/apxs
 PreReq:		%{name}-common = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	phpfi
+Obsoletes:	apache-mod_php
 
 %define		_sysconfdir	/etc/php
 %define 	extensionsdir %{_libdir}/php
