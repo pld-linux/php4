@@ -13,8 +13,8 @@ Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
-Version:	4.0.4pl1
-Release:	13
+Version:	4.0.5
+Release:	0.1
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -34,11 +34,8 @@ Patch2:		%{name}-mail.patch
 Patch5:		%{name}-no_libnsl.patch
 Patch6:		%{name}-DESTDIR.patch
 Patch7:		%{name}-gd-shared.patch
-Patch8:		%{name}-apache-fixes.patch
-#Patch9:	%{name}-system-expat.patch
-Patch10:	%{name}-quotes.patch
-Patch11:	%{name}-session-path.patch
-Patch12:	%{name}-libtool_version_check_fix.patch
+Patch8:		%{name}-session-path.patch
+Patch9:		%{name}-libtool_version_check_fix.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -62,7 +59,7 @@ BuildRequires:	mm-devel >= 1.1.3
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?bcond_off_ldap:BuildRequires: openldap-devel >= 2.0}
 BuildRequires:	pam-devel
-BuildRequires:	pdflib-devel >= 3.0
+BuildRequires:	pdflib-devel >= 3.03-3
 #BuildRequires:	libxml-devel >= 2.0.0
 BuildRequires:	postgresql-devel
 BuildRequires:	recode-devel >= 3.5d-3
@@ -87,7 +84,7 @@ Obsoletes:	phpfi
 
 %define		_sysconfdir	/etc/php
 # check ZEND_MODULE_API_NO in  Zend/modules.h
-%define 	extensionsdir 	%{_libdir}/php/extensions/no-debug-non-zts-20001214
+%define 	extensionsdir %{_libdir}/php/extensions/no-debug-non-zts-20001222
 
 %description
 PHP is an HTML-embedded scripting language. PHP attempts to make it
@@ -716,11 +713,8 @@ Pliki potrzebne do kompilacji modu³ów PHP.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
-#%patch9 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
+%patch8 -p1 
+%patch9 -p1
 
 %build
 libtoolize --copy --force
