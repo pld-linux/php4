@@ -181,7 +181,7 @@ BuildRequires:	zziplib-devel
 BuildRequires:	fcgi-devel
 # apache 1.3 vs apache 2.0
 %if %{_apache2}
-BuildRequires:  apr-devel >= 1:0.9.4-1
+BuildRequires:	apr-devel >= 1:0.9.4-1
 PreReq:		apache >= 2.0.40
 Requires:	apache(modules-api) = %{apache_modules_api}
 %else
@@ -2033,7 +2033,7 @@ fi
 
 %preun mssql
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove mssql %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove mssql %{_sysconfdir}/php.ini
 fi
 
 %post mysql
