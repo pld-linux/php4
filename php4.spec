@@ -7,7 +7,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.4
-Release:	1.1
+Release:	2
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -63,6 +63,7 @@ BuildRequires:	curl-devel
 BuildRequires:	openssl-devel >= 0.9.6
 %endif
 Requires:	apache(EAPI) >= 1.3.9
+Prereq:		perl
 Prereq:		/usr/sbin/apxs
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
