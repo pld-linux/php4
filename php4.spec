@@ -2,7 +2,6 @@
 # TODO:
 # - make sure that session-unregister patch is no longer needed
 #   (any crash reports related to session modules?)
-# - mnogosearch extension doesn't build with mnogosearch 3.2.25+
 #
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
