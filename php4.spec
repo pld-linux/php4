@@ -66,7 +66,7 @@ BuildRequires:	recode-devel >= 3.5d-3
 BuildRequires:	t1lib-devel
 %{!?bcond_off_odbc:BuildRequires: unixODBC-devel}
 BuildRequires:	zlib-devel >= 1.0.9
-%{!?bcond_off_snmp:BuildRequires: ucd-snmp-devel >= 4.2.1}
+%{!?bcond_off_snmp:BuildRequires: ucd-snmp-devel >= 4.2.1-8}
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	mhash-devel
 BuildRequires:	bzip2-devel
