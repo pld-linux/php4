@@ -166,7 +166,7 @@ BuildRequires:	libtool >= 1.4.3
 %{?with_mnogosearch:BuildRequires:	mnogosearch-devel >= 3.2.6}
 %{?with_mono:BuildRequires:	mono-devel}
 BuildRequires:	mysql-devel >= 4.0.0
-BuildRequires:	ncurses-devel
+BuildRequires:	ncurses-ext-devel
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.0}
 %if %{with openssl} || %{with ldap}
 BuildRequires:	openssl-devel >= 0.9.7d
