@@ -1,12 +1,3 @@
---- php-4.0.6/ext/bz2/Makefile.in.wiget	Wed Oct 18 20:32:21 2000
-+++ php-4.0.6/ext/bz2/Makefile.in	Wed Jul  4 22:44:51 2001
-@@ -3,5 +3,6 @@
- LTLIBRARY_NAME        = libbz2.la
- LTLIBRARY_SOURCES     = bz2.c
- LTLIBRARY_SHARED_NAME = bz2.la
-+LTLIBRARY_SHARED_LIBADD = $(BZ2_SHARED_LIBADD)
- 
- include $(top_srcdir)/build/dynlib.mk
 --- php-4.0.6/ext/yp/Makefile.in.wiget	Tue May  2 03:21:26 2000
 +++ php-4.0.6/ext/yp/Makefile.in	Wed Jul  4 22:44:51 2001
 @@ -2,5 +2,6 @@
@@ -16,8 +7,8 @@
 +LTLIBRARY_SHARED_LIBADD = $(NSL_SHARED_LIBADD)
  
  include $(top_srcdir)/build/dynlib.mk
---- php-4.0.6/ext/yp/config.m4.wiget	Tue May  2 03:21:26 2000
-+++ php-4.0.6/ext/yp/config.m4	Wed Jul  4 22:44:51 2001
+--- php-4.1.1/ext/yp/config.m4.wiget	Tue May  2 03:21:26 2000
++++ php-4.1.1/ext/yp/config.m4	Wed Jul  4 22:44:51 2001
 @@ -6,8 +6,11 @@
  [  --enable-yp             Include YP support])
  
@@ -28,7 +19,7 @@
 +  AC_CHECK_LIB(nsl, yp_match, [AC_DEFINE(HAVE_YP,1,[ ])], [AC_MSG_ERROR(YP module requires libnsl)],)
    PHP_EXTENSION(yp, $ext_shared)
 +
-   case "$host_alias" in
+   case $host_alias in
    *solaris*)
      AC_DEFINE(SOLARIS_YP,1,[ ]) ;;
 --- php-4.0.6/configure.in.wiget	Wed Jun 20 22:12:59 2001
