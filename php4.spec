@@ -15,6 +15,7 @@
 %endif
 
 # Conditional build:
+# _with_db3		- with DB3 support, if not - requires db.
 # _with_interbase	- with InterBase extension module	(BR: proprietary libs)
 # _with_java		- with Java extension module		(BR: jdk)
 # _with_oci8		- with Oracle oci8 extension module	(BR: proprietary libs)
@@ -53,7 +54,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.2.3
-Release:	8
+Release:	9
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -99,7 +100,8 @@ BuildRequires:	bzip2-devel
 BuildRequires:	cracklib-devel >= 2.7-15
 %{!?_without_curl:BuildRequires:	curl-devel}
 BuildRequires:	cyrus-sasl-devel
-BuildRequires:	db3-devel >= 3.1.17
+%{?_with_db3:BuildRequires:	db3-devel}
+%{!?_with_db3:BuildRequires:	db-devel}
 %if %(expr %{?_without_xml:0}%{!?_without_xml:1} + %{?_without_xmlrpc:0}%{!?_without_xmlrpc:1})
 BuildRequires:	expat-devel
 %endif
@@ -1398,7 +1400,7 @@ for i in cgi apxs ; do
 	--with-crack=shared \
 	%{?_without_curl:--without-curl}%{!?_without_curl:--with-curl=shared} \
 	--without-db2 \
-	--with-db3 \
+	%{?_with_db3:--with-db3} \
 	--with-dbase=shared \
 	--with-dom=shared \
 	%{!?_without_domxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
