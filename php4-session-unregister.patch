@@ -15,8 +15,8 @@
  			ret = 0;
  			break;
 -		}	
-+		} else if((ps_modules[i]->name != NULL) && (ptr->name != NULL) && 
-+				!strcasecmp(ps_modules[i]->name, ptr->name)) {
++		} else if((ps_modules[i]->s_name != NULL) && (ptr->s_name != NULL) && 
++				!strcasecmp(ps_modules[i]->s_name, ptr->s_name)) {
 +			/* avoid double registration */
 +			ret = 0;
 +			break;
@@ -32,7 +32,7 @@
 +	int i;
 +
 +	for (i = 0; i < MAX_MODULES; i++) {
-+		if (ps_modules[i] && ps_modules[i]->name && !strcasecmp(ps_modules[i]->name, name)) {
++		if (ps_modules[i] && ps_modules[i]->s_name && !strcasecmp(ps_modules[i]->s_name, name)) {
 +			ps_modules[i] = 0;
 +			ret = 0;
 +			break;
