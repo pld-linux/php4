@@ -2490,10 +2490,12 @@ fi
 %attr(755,root,root) %{_libdir}/libphp_common.so
 %{_libdir}/libphp_common.la
 %{_includedir}/php
-%{_libdir}/php/build
 # Is it really needed? Breaks installation of php4-devel (when replacing php-devel)
+##%{_libdir}/php/build
 #%ifarch amd64
-#%{_ulibdir}/php/build
+# same on all arch
+# shouldn't it be %%{_libdir} on amd64?
+%{_ulibdir}/php/build
 #%endif
 
 %files bcmath
