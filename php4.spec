@@ -229,6 +229,7 @@ Summary:	PEAR - PHP Extension and Application Repository
 Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
 Group:		Development/Languages/PHP
 Requires:	%{name}-cgi = %{version}
+Requires:	%{name}-pcre = %{version}
 Requires:	%{name}-xml = %{version}
 
 %description pear
