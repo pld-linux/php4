@@ -3,22 +3,21 @@
 # _with_oracle  - with oracle support 
 # _with_oci8    - with oci8 support
 # _with_java    - with Java support
+# _with_libcpdf - with libcpdf support
 # _with_openssl - with OpenSSL support
 # _with_wddx    - with WDDX support
 # _with_xslt    - with XSLT support
-# _with_libcpdf	- with libcpdf support
 # _without_imap   - without IMAP support
 # _without_ldap   - without LDAP support
 # _without_odbc   - without ODBC support
 # _without_snmp   - without SNMP support
 # _without_sablot - without sablot support
-#
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
-Version:	4.0.6
-Release:	15
+Version:	4.1.1
+Release:	1
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -30,26 +29,24 @@ Group(ru):	âÉÂÌÉÏÔÅËÉ
 Group(uk):	â¦ÂÌ¦ÏÔÅËÉ
 License:	The PHP license (see "LICENSE" file included in distribution)
 Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.gz
-Source1:	FAQ.php
+Source1:	FAQ.%{name}
 Source2:	%{name}.ini
 Source3:	zend.gif
-Source4:	http://www.php.net/distributions/manual/php_manual_en.tar.bz2
-Source5:	php-module-install
-Patch0:		%{name}-imap.patch
-Patch1:		%{name}-mysql-socket.patch
-Patch2:		%{name}-mail.patch
-Patch3:		%{name}-link-libs.patch
-Patch4:		%{name}-session-path.patch
-Patch5:		%{name}-am_ac_lt.patch
-Patch6:		%{name}-fastcgi.patch
-Patch7:		%{name}-shared.patch
+Source4:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
+Source5:	%{name}-module-install
+Patch0:		%{name}-shared.patch
+Patch1:		%{name}-pldlogo.patch
+Patch2:		%{name}-mysql-socket.patch
+Patch3:		%{name}-mail.patch
+Patch4:		%{name}-link-libs.patch
+Patch5:		%{name}-session-path.patch
+Patch6:		%{name}-am_ac_lt.patch
+Patch7:		%{name}-fastcgi.patch
 Patch8:		%{name}-ac250.patch
-Patch9:		%{name}-pearinstall.patch
-Patch10:	%{name}-pldlogo.patch
-Patch11:	%{name}-libxml2.patch
-Patch12:	%{name}-mailsecurity2.patch
-Patch13:	%{name}-ZVAL.patch
-Patch14:	%{name}-oracle9.patch
+Patch9:		%{name}-mailsecurity2.patch
+Patch10:	%{name}-oracle9.patch
+Patch11:	%{name}-%{version}-no_php_pcre_in_SAPI_c.patch
+
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -58,6 +55,7 @@ BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
 BuildRequires:	bzip2-devel
 BuildRequires:	curl-devel
+BuildRequires:  cyrus-sasl-devel
 BuildRequires:	db3-devel >= 3.1.17
 BuildRequires:	flex
 BuildRequires:	gmp-devel
@@ -93,12 +91,12 @@ BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 #BuildRequires:	fastcgi-devkit
 %if %(expr %{?_with_openssl:1}%{!?_with_openssl:0} + %{!?_without_ldap:1}%{?_without_ldap:0})
-BuildRequires:	openssl-devel >= 0.9.6a
+%{!?_without_openssl:BuildRequires:	openssl-devel >= 0.9.6a}
 %endif
+%{?_with_libcpdf:BuildRequires:	libcpdf-devel >= 2.00}
 %{?_with_xslt:BuildRequires:	sablotron-devel}
 %{?_with_xslt:BuildRequires:	expat-devel}
 %{?_with_xslt:BuildRequires:	w3c-libwww-devel}
-%{?_with_libcpdf:BuildRequires:	libcpdf-devel >= 2.00}
 Prereq:		apache(EAPI) >= 1.3.9
 Prereq:		perl
 Prereq:		%{_sbindir}/apxs
@@ -481,7 +479,6 @@ functions support to PHP.
 
 %description posix -l pl
 Modu³ PHP umo¿liwiaj±cy korzystanie z funkcji POSIX.
-
 %package pcre
 Summary:	PCRE extension module for PHP
 Summary(pl):	Modu³ PCRE dla PHP
@@ -856,9 +853,9 @@ PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
 Repozytorium Aplikacji.
 
 %package domxml
-Summary:        DOM XML module
+Summary:	DOM XML module
 Summary(pl):	Modu³ DOM XML
-Group:          Development/Languages/PHP
+Group:		Development/Languages/PHP
 Group(de):	Entwicklung/Sprachen/PHP
 Group(pl):	Programowanie/Jêzyki/PHP
 
@@ -989,7 +986,7 @@ Modu³ PHP dodaj±cy obs³ugê libcpdf.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1 
+%patch4 -p1
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
@@ -997,15 +994,11 @@ Modu³ PHP dodaj±cy obs³ugê libcpdf.
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
 
 %build
-CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
+CFLAGS="%{rpmcflags} -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf
 libtoolize --copy --force
@@ -1015,76 +1008,76 @@ autoconf
 for i in cgi apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
-	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=/usr` \
+	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=%{_prefix}` \
 	`[ $i = apxs ] && echo --with-apxs=%{_sbindir}/apxs` \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
-	--disable-debug \
-	--enable-magic-quotes \
-	--enable-shared \
-	--enable-track-vars \
-	--enable-safe-mode \
-	--enable-trans-sid \
-	--enable-sysvsem=shared \
-	--enable-sysvshm=shared \
-	--enable-shmop=shared \
-	--enable-session \
-	--enable-exif=shared \
-	--with-regex=php \
-	--with-gettext=shared \
-	%{!?_without_ldap:--with-ldap=shared} \
-	--with-mysql=shared,/usr \
-	--with-mysql-sock=/var/lib/mysql/mysql.sock \
-	--with-gd=shared \
-	--with-jpeg-dir=shared \
-	--with-zlib-dir=shared \
-	--with-png-dir=shared \
-	--enable-gd-native-ttf \
-	--with-freetype-dir=shared \
-	--with-t1lib=shared \
-	--with-dbase=shared \
-	--with-filepro=shared \
-	--enable-ftp=shared \
-	--with-hyperwave \
-	--with-pdflib=shared \
-	%{?_with_libcpdf:--with-cpdflib=shared} \
-	%{?_with_java:--with-java} \
-	--with-pgsql=shared,/usr \
-	%{!?_without_imap:--with-imap=shared --with-imap-ssl} \
+	--%{!?debug:dis}%{?debug:en}able-debug \
 	--enable-bcmath=shared \
 	--enable-calendar=shared \
-	--with-mm \
-	--with-pcre-regex=shared \
-	--enable-posix=shared \
-	--with-recode=shared \
-	--enable-ucd-snmp-hack \
 	--enable-dba=shared \
-	%{!?_without_snmp:--with-snmp=shared} \
-	--with-gdbm \
-	--with-db3 \
-	--enable-yp=shared \
-	--with-xml=shared \
-	--enable-xml=shared \
-	--with-zlib=shared \
-	--with-mcrypt=shared \
+	--enable-exif=shared \
+	--enable-ftp=shared \
+	--enable-gd-native-ttf \
+	--enable-magic-quotes \
+	--enable-posix=shared \
+	--enable-session \
+	--enable-shared \
+	--enable-shmop=shared \
+	--enable-sysvsem=shared \
+	--enable-sysvshm=shared \
+	--enable-track-vars \
+	--enable-trans-sid \
+	--enable-safe-mode \
 	--enable-sockets=shared \
+	--enable-yp=shared \
+	--enable-ucd-snmp-hack \
+	--enable-xml=shared \
+	%{?_with_xslt:--enable-xslt=shared} \
 	--with-bz2=shared \
+	%{?_with_libcpdf:--with-cpdflib=shared} \
 	--with-ctype=shared \
-	--with-mhash=shared \
 	--with-curl=shared \
+	--without-db2 \
+	--with-db3 \
+	--with-dbase=shared \
+	--with-dom=shared \
+	--with-filepro=shared \
+	--with-freetype-dir=shared \
+	--with-gettext=shared \
+	--with-gd=shared \
+	--with-gdbm \
 	--with-gmp=shared \
+	--with-hyperwave \
+	%{!?_without_imap:--with-imap=shared --with-imap-ssl} \
+	%{?_with_java:--with-java} \
+	--with-jpeg-dir=shared \
+	%{!?_without_ldap:--with-ldap=shared} \
+	--with-mcrypt=shared \
+	--with-mysql=shared,%{_prefix} \
+	--with-mysql-sock=/var/lib/mysql/mysql.sock \
+	--with-mhash=shared \
 	--with-ming=shared \
-	%{?_with_openssl:--with-openssl} \
-	%{!?_without_odbc:--with-unixODBC=shared} \
+	--with-mm \
+	%{!?_without_openssl:--with-openssl} \
 	%{?_with_oracle:--with-oracle=shared} \
 	%{?_with_oci8:--with-oci8=shared} \
-	--without-db2 \
-	--with-dom=shared \
-    %{?_with_xslt:--enable-xslt=shared} \
-    %{?_with_xslt:--with-xslt-sablot=shared} \
-    %{!?_without_sablot:--with-sablot=/usr/lib} \
-    %{?_with_wddx:--enable-wddx=shared} \
-	--with-pear=%{peardir}
+	--with-pear=%{peardir} \
+	--with-pcre-regex=shared \
+	--with-pdflib=shared \
+	--with-pgsql=shared,%{_prefix} \
+	--with-png-dir=shared \
+	--with-recode=shared \
+	--with-regex=php \
+	%{!?_without_sablot:--with-sablot=/usr/lib} \
+	%{!?_without_snmp:--with-snmp=shared} \
+	--with-t1lib=shared \
+	%{!?_without_odbc:--with-unixODBC=shared} \
+	%{?_with_wddx:--enable-wddx=shared} \
+	--with-zlib=shared \
+	--with-zlib-dir=shared \
+	--with-xml=shared \
+	%{?_with_xslt:--with-xslt-sablot=shared}
 done
 
 # TODO --with-pspell=/usr,shared (pspell missing)
@@ -1126,6 +1119,9 @@ install %{SOURCE1} .
 gzip -9nf CODING_STANDARDS CREDITS \
       EXTENSIONS NEWS TODO* LICENSE Zend/LICENSE \
       Zend/ZEND_CHANGES README.SELF-CONTAINED-EXTENSIONS README.EXT_SKEL
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %post
 %{_sbindir}/apxs -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
@@ -1461,12 +1457,9 @@ fi
 
 %preun libcpdf
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove libcpdf %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove libcpdf %{_sysconfdir}/php.ini
 fi
 %endif
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
@@ -1661,12 +1654,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/ming.so
 
-# --with xslt dose not produce xslt.so (fix me - pascalek)
-#%if %{?_with_xslt:1}%{!?_with_xslt:0}
-#%files xslt
-#%defattr(644,root,root,755)
-#%attr(755,root,root) %{extensionsdir}/xslt.so
-#%endif
+%if %{?_with_xslt:1}%{!?_with_xslt:0}
+%files xslt
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/xslt.so
+%endif
 
 %if %{?_with_wddx:1}%{!?_with_wddx:0}
 %files wddx
