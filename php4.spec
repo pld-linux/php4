@@ -39,7 +39,6 @@ Patch8:		%{name}-mailsecurity2.patch
 Patch9:		%{name}-oracle9.patch
 Patch10:	%{name}-no_%{name}_pcre_in_SAPI_c.patch
 Patch11:	%{name}-libpq_fs_h_path.patch
-
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
