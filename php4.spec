@@ -12,6 +12,7 @@ Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.gz
 Source1:	FAQ.php
 Source2:	php.ini
 Source3:	zend.gif
+Source4:	http://www.php.net/distributions/manual.tar.gz
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -19,6 +20,7 @@ BuildRequires:	zlib-devel
 BuildRequires:	mysql-devel >= 3.22.30-2
 BuildRequires:	kaffe-devel
 BuildRequires:	libxml-devel >= 1.0.0
+BuildRequires:	postgresql-devel
 BuildRequires:	gd-devel
 Requires:	apache(EAPI) >= 1.3.9
 Prereq:		/usr/sbin/apxs
@@ -77,6 +79,21 @@ you should install this package in addition to the main %{name} package.
 
 %description mysql -l pl
 
+%package pgsql
+Summary:	PostgreSQL database module for PHP4
+Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP4
+Group:		Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Requires: 	%{name} = %{version}
+
+%description pgsql
+This is a dynamic shared object (DSO) for Apache that will add PostgreSQL
+database support to PHP4.  If you need back-end support for PostgreSQL,
+you should install this package in addition to the main %{name} package.
+
+%description pgsql -l pl
+
 %package gd
 Summary:	GD extension module for PHP4
 Summary:	Modu³ GD dla PHP4
@@ -124,6 +141,17 @@ XML documents you should install this package in addition to the main
 
 %description xml -l pl
 
+%package doc
+Summary:     Online manual for PHP4
+Summary(pl): Dokumentacja dla PHP4
+Group:       Networking/Daemons
+
+%description doc
+Comprehensive documentation for PHP4, viewable through your web server, too!
+
+%description doc -l pl
+Dokumentacja dla pakietu PHP4.  Mo¿na j± równie¿ ogl±daæ poprzez serwer WWW.
+
 %prep
 %setup -q 
 
@@ -153,8 +181,9 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI"; export CFLAGS
 	--with-filepro \
 	--with-ftp \
 	--with-hyperwave \
-	--with-java
-#	--with-pgsql=shared 
+	--with-java \
+	--with-pgsql=shared,/usr
+
 #	--with-snmp=shared 
 
 make
@@ -163,7 +192,7 @@ make
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_pkglibdir}/php,%{_sysconfdir}/httpd} \
-		$RPM_BUILD_ROOT/home/httpd/html/icons
+		$RPM_BUILD_ROOT/home/httpd/html/{icons,docs,docs/php4-doc}
 
 
 install .libs/*.so	$RPM_BUILD_ROOT%{_pkglibdir}
@@ -171,6 +200,11 @@ install modules/*.so	$RPM_BUILD_ROOT%{_pkglibdir}/php
 
 install %{SOURCE2}		$RPM_BUILD_ROOT%{_sysconfdir}/httpd/php.ini
 install %{SOURCE3} php4.gif	$RPM_BUILD_ROOT/home/httpd/html/icons
+
+cd $RPM_BUILD_ROOT/home/httpd/html/docs/php4-doc
+tar zxf %{SOURCE4}
+ln -s manual.html index.html
+cd -
 
 strip --strip-unneeded	\
 	$RPM_BUILD_ROOT%{_pkglibdir}/*.so \
@@ -209,6 +243,26 @@ fi
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'mysql.so' in /etc/httpd/php.ini" 1>&2
 	perl -pi -e 's|^extension=mysql.so|;extension=mysql.so|g' \
+	%{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+%post pgsql
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "activating module 'pgsql.so' in /etc/httpd/php.ini" 1>&2
+	perl -pi -e 's|^;extension=pgsql.so|extension=pgsql.so|g' \
+	%{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+%postun pgsql
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "deactivating module 'pgsql.so' in /etc/httpd/php.ini" 1>&2
+	perl -pi -e 's|^extension=pgsql.so|;extension=pgsql.so|g' \
 	%{_sysconfdir}/httpd/php.ini
 fi
 if [ -f /var/lock/subsys/httpd ]; then
@@ -296,6 +350,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/mysql.so
 
+%files pgsql
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_pkglibdir}/php/pgsql.so
+
 %files gd
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/gd.so
@@ -307,3 +365,6 @@ rm -rf $RPM_BUILD_ROOT
 %files java
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/libphp_java.so
+
+%files doc
+/home/httpd/html/docs/php4-doc
