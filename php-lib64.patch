@@ -471,3 +471,14 @@ diff -urN php-5.0.0.org/scripts/Makefile.frag php-5.0.0/scripts/Makefile.frag
  
  BUILD_FILES = \
  	scripts/phpize.m4 \
+--- php-5.0.2/php.ini.orig	2004-10-25 11:51:41.000000000 +0200
++++ php-5.0.2/php.ini	2004-10-25 11:56:54.000000000 +0200
+@@ -514,7 +514,7 @@
+ user_dir =
+ 
+ ; Directory in which the loadable extensions (modules) reside.
+-extension_dir = "/usr/lib/php"
++extension_dir = "/usr/lib64/php"
+ 
+ ; Whether or not to enable the dl() function.  The dl() function does NOT work
+ ; properly in multithreaded servers, such as IIS or Zeus, and is automatically
