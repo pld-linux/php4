@@ -8,6 +8,7 @@
 
 # Conditional build:
 # _with_oracle	- with oracle support
+# _with_interbase - with interbase support
 # _with_oci8	- with oci8 support
 # _with_java	- with Java support
 # _with_libcpdf	- with libcpdf support
@@ -26,7 +27,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.1.2
-Release:	4
+Release:	5
 Epoch:		1
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -262,6 +263,24 @@ package.
 
 %description oracle -l pl
 Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 7.
+
+%package interbase
+Summary:	Interbase database module for PHP
+Summary(pl):	Modu³ bazy danych Interbase dla PHP
+Group:		Libraries
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
+Autoreq:	false
+
+%description interbase
+This is a dynamic shared object (DSO) for Apache that will add InterBase
+database support to PHP. If you need back-end support for InterBase.
+you should install this package in addition to the main %{name}
+package.
+
+%description interbase -l pl
+Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych InterBase.
+
 
 %package gd
 Summary:	GD extension module for PHP
@@ -911,6 +930,7 @@ for i in cgi apxs ; do
 	%{!?_without_mm:--with-mm} \
 	%{!?_without_openssl:--with-openssl} \
 	%{?_with_oracle:--with-oracle=shared} \
+	%{?_with_interbase:--with-interbase=shared} \
 	%{?_with_oci8:--with-oci8=shared} \
 	--with-pear=%{peardir} \
 	--with-pcre-regex=shared \
@@ -1171,6 +1191,16 @@ if [ "$1" = "0" ]; then
 fi
 %endif
 
+%if %{?_with_interbase:1}%{!?_with_interbase:0}
+%post interbase
+%{_sbindir}/php-module-install install interbase %{_sysconfdir}/php.ini
+
+%preun interbase
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove interbase %{_sysconfdir}/php.ini
+fi
+%endif
+
 %post pcre
 %{_sbindir}/php-module-install install pcre %{_sysconfdir}/php.ini
 
@@ -1405,6 +1435,12 @@ fi
 %files oracle
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/oracle.so
+%endif
+
+%if %{?_with_interbase:1}%{!?_with_interbase:0}
+%files interbase
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/interbase.so
 %endif
 
 %if %{?_with_oci8:1}%{!?_with_oci8:0}
