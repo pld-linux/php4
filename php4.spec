@@ -1440,9 +1440,17 @@ Obsoletes:	%{name}-pear-additional_classes
 %description pear
 PEAR - PHP Extension and Application Repository.
 
+Please note that this package provides only basic directory structure.
+If you want to use base PEAR classes (PEAR.php, PEAR/*.php), please
+install php-pear-PEAR package.
+
 %description pear -l pl
 PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
 Repozytorium Aplikacji.
+
+Pamiêtaj, ¿e ten pakiet dostarcza tylko podstawowej strukturê katalogów.
+Je¶li chcesz u¿yæ podstawowych klas PEAR (PEAR.php PEAR/*.php),
+zainstaluj pakiet php-pear-PEAR.
 
 %prep
 %setup -q -n %{name}-%{version}%{_rc}
