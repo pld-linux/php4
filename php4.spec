@@ -113,7 +113,8 @@ BuildRequires:	pspell-devel
 BuildRequires:	t1lib-devel
 %{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.3}
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
-#BuildRequires:	xmlrpc-epi-devel # co¶ zrobiæ ¿eby u¿ywa³ dzielonej biblioteki???
+# co¶ zrobiæ ¿eby u¿ywa³ dzielonej biblioteki???
+BuildRequires:	xmlrpc-epi-devel
 BuildRequires:	yaz-devel
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
