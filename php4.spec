@@ -471,7 +471,7 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 	--with-gettext=shared \
 	--with-ldap \
 	--with-mysql=shared \
-	--with-mysql-sock=/var/state/mysql/mysql.sock \
+	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-gd=shared \
 	--with-dbase=shared \
 	--with-filepro=shared \
