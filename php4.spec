@@ -2168,7 +2168,6 @@ fi
 %attr(644,root,root) %{php_pear_dir}/HTML/Processor.php
 %attr(644,root,root) %{php_pear_dir}/HTML/Select.php
 %attr(644,root,root) %{php_pear_dir}/HTTP/Compress.php
-%attr(644,root,root) %{php_pear_dir}/Net/SMTP.php
 %attr(644,root,root) %{php_pear_dir}/Schedule/At.php
 
 %files pear-devel
