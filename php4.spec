@@ -47,6 +47,7 @@ BuildRequires:	libltdl-devel
 BuildRequires:	libpng >= 1.0.8
 BuildRequires:	libtiff-devel
 BuildRequires:	mm-devel >= 1.1.3
+BuildRequires:	mysql-devel >= 3.23.32
 %{!?bcond_off_ldap:BuildRequires: openldap-devel >= 2.0}
 BuildRequires:	pam-devel
 BuildRequires:	pdflib-devel >= 3.0
@@ -647,7 +648,7 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 	--with-regex=system \
 	--with-gettext=shared \
 	%{!?bcond_off_ldap:--with-ldap=shared} \
-	--with-mysql=shared \
+	--with-mysql=shared,/usr \
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-gd=shared \
 	 --enable-gd-imgstrttf \
