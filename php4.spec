@@ -62,8 +62,8 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.9
-Release:	0.2
-Epoch:		0
+Release:	0.3
+#Epoch:		0
 Group:		Libraries
 License:	PHP
 Source0:	http://downloads.php.net/ilia/php-%{version}.tar.bz2
@@ -108,6 +108,7 @@ Patch29:	%{name}-mssql-fix.patch
 Patch30:	%{name}-lib64.patch
 Patch31:	%{name}-mnogosearch-fix.patch
 Patch32:	%{name}-stupidapache_version.patch 
+Patch33:	%{name}-gd_imagerotate_enable.patch
 #Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1528,6 +1529,7 @@ cp php.ini-dist php.ini
 %endif
 %patch31 -p1
 %patch32
+%patch33 -p1
 
 # new apr
 sed -i -e 's#apr-config#apr-1-config#g' sapi/apache*/*.m4
