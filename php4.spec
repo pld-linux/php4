@@ -7,7 +7,7 @@ Release:	2
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-License: 	The PHP license (see "LICENSE" file included in distribution)
+License:	The PHP license (see "LICENSE" file included in distribution)
 Source0:	http://www.php.net/version4/downloads/%{name}-%{version}.tar.gz
 Source1:	FAQ.php
 Source2:	php.ini
@@ -31,7 +31,7 @@ BuildRequires:	gd-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	imap-devel >= 4.7b-1
 # I think jdk is better for java
-# BuildRequires: jdk
+# BuildRequires:	jdk
 BuildRequires:	kaffe-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
@@ -54,40 +54,42 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_pkglibdir	%{_libdir}/apache
 
 %description
-PHP is an HTML-embedded scripting language.  PHP attempts to make it easy
-for developers to write dynamically generated web pages.  PHP also offers
-built-in database integration for several commercial and non-commercial
-database management systems, so writing a database-enabled web page with
-PHP is fairly simple.  The most common use of PHP coding is probably as a
-replacement for CGI scripts.  The mod_php module enables the Apache web
-server to understand and process the embedded PHP language in web pages.
-This package contains PHP version %{version}.  If you use applications which
-specifically rely on PHP/FI (PHP v2 and earlier), you should instead install
-the PHP/FI module contained in the phpfi package.  If you're just starting
-with PHP, you should install this package.  You'll also need to install
-the Apache web server.
+PHP is an HTML-embedded scripting language. PHP attempts to make it
+easy for developers to write dynamically generated web pages. PHP also
+offers built-in database integration for several commercial and
+non-commercial database management systems, so writing a
+database-enabled web page with PHP is fairly simple. The most common
+use of PHP coding is probably as a replacement for CGI scripts. The
+mod_php module enables the Apache web server to understand and process
+the embedded PHP language in web pages. This package contains PHP
+version %{version}. If you use applications which specifically rely on
+PHP/FI (PHP v2 and earlier), you should instead install the PHP/FI
+module contained in the phpfi package. If you're just starting with
+PHP, you should install this package. You'll also need to install the
+Apache web server.
 
 %description -l fr
-PHP est un langage de script embarque dans le HTM. PHP essaye de rendre
-simple aux developpeurs d'ecrire des pages web generees dynamiquement.
-PHP incorpore egalement une integration avec plusieurs systemes de gestion
-de bases de donnees commerciaux et non-connerciaux, qui rent facile
-la creation de pages web liees avec des bases de donnees. L'utilisation la
-plus commune de PHP est probablement en remplacement de scripts CGI. Le
-module mod_php permet au serveur web apache de comprendre et de traiter le
-langage PHP integre dans des pages web.
-Ce package contient PHP version %{version}. Si vous utilisez des
-applications qui utilisent specifiquement PHP/FI, vous devrez installer le
-module PHP/FI inclus dans le package mod_php. Si vous debutez avec PHP, vous
-devriez installer ce package. Vous aurez egalement besoin d'installer le
+PHP est un langage de script embarque dans le HTM. PHP essaye de
+rendre simple aux developpeurs d'ecrire des pages web generees
+dynamiquement. PHP incorpore egalement une integration avec plusieurs
+systemes de gestion de bases de donnees commerciaux et
+non-connerciaux, qui rent facile la creation de pages web liees avec
+des bases de donnees. L'utilisation la plus commune de PHP est
+probablement en remplacement de scripts CGI. Le module mod_php permet
+au serveur web apache de comprendre et de traiter le langage PHP
+integre dans des pages web. Ce package contient PHP version
+%{version}. Si vous utilisez des applications qui utilisent
+specifiquement PHP/FI, vous devrez installer le module PHP/FI inclus
+dans le package mod_php. Si vous debutez avec PHP, vous devriez
+installer ce package. Vous aurez egalement besoin d'installer le
 serveur web Apache.
 
 %description -l pl
-PHP jest jêzykiem skryptowym, którego polecenia umieszcza siê w plikach
-HTML. Pakiet ten zawiera modu³ przeznaczony dla serwera HTTP (jak np.
-Apache), który interpretuje te polecenia.  Umo¿liwia to tworzenie
-dynamicznie stron WWW. Spora czê¶æ sk³adni PHP zapo¿yczona zosta³a
-z jêzyków: C, Java i Perl.
+PHP jest jêzykiem skryptowym, którego polecenia umieszcza siê w
+plikach HTML. Pakiet ten zawiera modu³ przeznaczony dla serwera HTTP
+(jak np. Apache), który interpretuje te polecenia. Umo¿liwia to
+tworzenie dynamicznie stron WWW. Spora czê¶æ sk³adni PHP zapo¿yczona
+zosta³a z jêzyków: C, Java i Perl.
 
 %package mysql
 Summary:	MySQL database module for PHP4
@@ -95,12 +97,12 @@ Summary(pl):	Modu³ bazy danych MySQL dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description mysql
 This is a dynamic shared object (DSO) for Apache that will add MySQL
-database support to PHP4.  If you need back-end support for MySQL,
-you should install this package in addition to the main %{name} package.
+database support to PHP4. If you need back-end support for MySQL, you
+should install this package in addition to the main %{name} package.
 
 %description mysql -l pl
 Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych MySQL.
@@ -112,12 +114,13 @@ Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description pgsql
-This is a dynamic shared object (DSO) for Apache that will add PostgreSQL
-database support to PHP4.  If you need back-end support for PostgreSQL,
-you should install this package in addition to the main %{name} package.
+This is a dynamic shared object (DSO) for Apache that will add
+PostgreSQL database support to PHP4. If you need back-end support for
+PostgreSQL, you should install this package in addition to the main
+%{name} package.
 
 %description pgsql -l pl
 Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych PostgreSQL.
@@ -128,12 +131,13 @@ Summary:	Modu³ GD dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description gd
 This is a dynamic shared object (DSO) for Apache that will add GD
-support to PHP4. You should install this package in addition to the main
-%{name} package if you want to create and manipulate images with PHP.
+support to PHP4. You should install this package in addition to the
+main %{name} package if you want to create and manipulate images with
+PHP.
 
 %description gd -l pl
 
@@ -143,7 +147,7 @@ Summary(pl):	Modu³ Javy dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description java
 This is a dynamic shared object (DSO) for Apache that will add JAVA
@@ -158,14 +162,14 @@ Summary(pl):	Modu³ XML dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description xml
 This is a dynamic shared object (DSO) for Apache that will add XML
 support to PHP4. This extension lets you create XML parsers and then
-define handlers for different XML events. If you want to be able to parse
-XML documents you should install this package in addition to the main 
-%{name} package.
+define handlers for different XML events. If you want to be able to
+parse XML documents you should install this package in addition to the
+main %{name} package.
 
 #%description xml -l pl
 
@@ -175,11 +179,11 @@ Summary(pl):	Modu³ DBA dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description dba
-This is a dynamic shared object (DSO) for Apache that will add flat-file databases (DBA)
-support to PHP4. 
+This is a dynamic shared object (DSO) for Apache that will add
+flat-file databases (DBA) support to PHP4.
 
 #%description dba -l pl
 
@@ -189,11 +193,11 @@ Summary(pl):	Modu³ funkcji kalendarza dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description calendar
-This is a dynamic shared object (DSO) for Apache that will add calendar
-support to PHP4. 
+This is a dynamic shared object (DSO) for Apache that will add
+calendar support to PHP4.
 
 #%description calendar -l pl
 
@@ -203,11 +207,11 @@ Summary(pl):	Modu³ DBase dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description dbase
 This is a dynamic shared object (DSO) for Apache that will add DBase
-support to PHP4. 
+support to PHP4.
 
 #%description dbase -l pl
 
@@ -217,11 +221,11 @@ Summary(pl):	Modu³ FilePro dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description filepro
 This is a dynamic shared object (DSO) for Apache that will add FilePro
-support to PHP4. 
+support to PHP4.
 
 #%description filepro -l pl
 
@@ -231,11 +235,11 @@ Summary(pl):	Modu³ POSIX dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description posix
-This is a dynamic shared object (DSO) for Apache that will add POSIX functions
-support to PHP4. 
+This is a dynamic shared object (DSO) for Apache that will add POSIX
+functions support to PHP4.
 
 #%description posix -l pl
 
@@ -245,11 +249,11 @@ Summary(pl):	Modu³ PCRE dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description pcre
-This is a dynamic shared object (DSO) for Apache that will add Perl Compatible Regular Expression
-support to PHP4. 
+This is a dynamic shared object (DSO) for Apache that will add Perl
+Compatible Regular Expression support to PHP4.
 
 #%description pcre -l pl
 
@@ -259,11 +263,11 @@ Summary(pl):	Modu³ SysV sem dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description sysvsem
-This is a dynamic shared object (DSO) for Apache that will add SysV semafores
-support to PHP4. 
+This is a dynamic shared object (DSO) for Apache that will add SysV
+semafores support to PHP4.
 
 #%description sysvsem -l pl
 
@@ -273,11 +277,11 @@ Summary(pl):	Modu³ SysV shm dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description sysvshm
-This is a dynamic shared object (DSO) for Apache that will add SysV Shared Memory
-support to PHP4. 
+This is a dynamic shared object (DSO) for Apache that will add SysV
+Shared Memory support to PHP4.
 
 #%description sysvshm -l pl
 
@@ -287,11 +291,11 @@ Summary(pl):	Modu³ NIS (yp) dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description yp
-This is a dynamic shared object (DSO) for Apache that will add NIS (Yellow Pages)
-support to PHP4. 
+This is a dynamic shared object (DSO) for Apache that will add NIS
+(Yellow Pages) support to PHP4.
 
 #%description yp -l pl
 
@@ -301,11 +305,11 @@ Summary(pl):	Modu³ bcmath dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description bcmath
-This is a dynamic shared object (DSO) for Apache that will add bc style precision math functions
-support to PHP4. 
+This is a dynamic shared object (DSO) for Apache that will add bc
+style precision math functions support to PHP4.
 
 #%description bcmath -l pl
 
@@ -315,11 +319,11 @@ Summary(pl):	Modu³ FTP dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description ftp
 This is a dynamic shared object (DSO) for Apache that will add FTP
-support to PHP4. 
+support to PHP4.
 
 #%description ftp -l pl
 
@@ -329,26 +333,29 @@ Summary(pl):	Modu³ zlib dla PHP4
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires: 	%{name} = %{version}
+Requires:	%{name} = %{version}
 
 %description zlib
-This is a dynamic shared object (DSO) for Apache that will add commpresion (zlib)
-support to PHP4. 
+This is a dynamic shared object (DSO) for Apache that will add
+commpresion (zlib) support to PHP4.
 
 #%description zlib -l pl
 
 
 
 %package doc
-Summary:     Online manual for PHP4
-Summary(pl): Dokumentacja dla PHP4
-Group:       Networking/Daemons
+Summary:	Online manual for PHP4
+Summary(pl):	Dokumentacja dla PHP4
+Group:		Networking/Daemons
 
 %description doc
-Comprehensive documentation for PHP4, viewable through your web server, too!
+Comprehensive documentation for PHP4, viewable through your web
+server, too!
 
 %description doc -l pl
-Dokumentacja dla pakietu PHP4.  Mo¿na j± równie¿ ogl±daæ poprzez serwer WWW.
+Dokumentacja dla pakietu PHP4. Mo¿na j± równie¿ ogl±daæ poprzez serwer
+WWW.
+
 %prep
 %setup  -q -a 5
 %patch0 -p1
@@ -359,10 +366,10 @@ Dokumentacja dla pakietu PHP4.  Mo¿na j± równie¿ ogl±daæ poprzez serwer WWW.
 
 %build
 LDFLAGS="-s"; export LDFLAGS
-CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
+CFLAGS="$RPM_OPT_FLAGS -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
 ./buildconf
 %configure \
-	--with-apxs=/usr/sbin/apxs \
+	--with-apxs=%{_sbindir}/apxs \
 	--with-config-file-path=%{_sysconfdir}/httpd \
 	--with-exec-dir=%{_bindir} \
 	--disable-debug \
@@ -413,7 +420,7 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 #	--with-snmp=shared \
 #	--with-openssl \
 
-#Syntax error on line 228 of /etc/httpd/httpd.conf: Cannot load /usr/lib/apache/libphp4.so into server: /usr/lib/apache/libphp4.so: undefined symbol: phpi_get_le_gd
+#Syntax error on line 228 of %{_sysconfdir}/httpd/httpd.conf: Cannot load %{_libdir}/apache/libphp4.so into server: %{_libdir}/apache/libphp4.so: undefined symbol: phpi_get_le_gd
 # Solution: make pdf and cpdf shared
 #	--with-gd=shared \
 
@@ -424,7 +431,7 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 
 # To old/new libmcrypt ?
 #	--with-mcrypt=shared \
-#	--with-dom=/usr/X11R6 \
+# --with-dom=%{_prefix}/X11R6 \
 
 make
 
@@ -903,4 +910,5 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_pkglibdir}/php/libphp_java.so
 
 %files doc
+%defattr(644,root,root,755)
 /home/httpd/html/docs/php4-doc
