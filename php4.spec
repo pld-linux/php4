@@ -46,7 +46,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.2.3
-Release:	2
+Release:	3
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -535,7 +535,7 @@ ModuЁ PHP dodaj╠cy obsЁugЙ protokoЁu FTP.
 Summary:	GD extension module for PHP
 Summary:	ModuЁ GD dla PHP
 Group:		Libraries
-Requires:	gd(gif)
+%{!?_without_gif:Requires:	gd(gif)}
 PreReq:		%{name}-common = %{version}
 %{!?_without_gif:Provides:	%{name}-gd(gif) = %{epoch}:%{version}}
 
