@@ -25,6 +25,7 @@
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
+Summary(pt_BR):	A linguagem de script PHP
 Name:		php
 Version:	4.1.2
 Release:	5
@@ -89,7 +90,7 @@ BuildRequires:	pdflib-devel >= 4.0.0
 BuildRequires:	perl
 BuildRequires:	pkgconfig
 BuildRequires:	postgresql-devel
-BuildRequires:  postgresql-backend-devel >= 7.2
+BuildRequires:	postgresql-backend-devel >= 7.2
 %{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	t1lib-devel
 %{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.3}
@@ -153,6 +154,17 @@ dans le package mod_php. Si vous debutez avec PHP, vous devriez
 installer ce package. Vous aurez egalement besoin d'installer le
 serveur web Apache.
 
+%description -l pt_BR
+PHP: Preprocessador de Hipertexto versão 4 é uma linguagem script
+embutida em HTML. Muito de sua sintaxe é emprestada de C, Java e Perl,
+com algumas características únicas, específicas ao PHP. O objetivo da
+linguagem é permitir que desenvolvedores web escrevam páginas
+dinamicamente geradas de forma rápida.
+
+Com módulos adicionais ela suporta comunicação direta com bancos de
+dados postgresql, mysql, msql, arquivos DBF e tem interface para a
+biblioteca gráfica gd.
+
 %description -l pl
 PHP jest jêzykiem skryptowym, którego polecenia umieszcza siê w
 plikach HTML. Pakiet ten zawiera modu³ przeznaczony dla serwera HTTP
@@ -186,6 +198,7 @@ Wspólne pliki dla modu³u apacha i programu CGI.
 %package mysql
 Summary:	MySQL database module for PHP
 Summary(pl):	Modu³ bazy danych MySQL dla PHP
+Summary(pt_BR):	Um módulo para aplicações PHP que usam bancos de dados MySQL
 Group:		Libraries
 Requires(post):	%{name}-common = %{version}
 Requires(preun):	%{name}-common = %{version}
@@ -197,6 +210,9 @@ should install this package in addition to the main %{name} package.
 
 %description mysql -l pl
 Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych MySQL.
+
+%description mysql -l pt_BR
+Um módulo para aplicações PHP que usam bancos de dados MySQL.
 
 %package pdf
 Summary:	libPDF module for PHP
@@ -217,6 +233,7 @@ pdflib.
 %package pgsql
 Summary:	PostgreSQL database module for PHP
 Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP
+Summary(pt_BR):	Um módulo para aplicações PHP que usam bancos de dados postgresql
 Group:		Libraries
 Requires(post):	%{name}-common = %{version}
 Requires(preun):	%{name}-common = %{version}
@@ -229,6 +246,9 @@ PostgreSQL, you should install this package in addition to the main
 
 %description pgsql -l pl
 Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych PostgreSQL.
+
+%description pgsql -l pt_BR
+Um módulo para aplicações PHP que usam bancos de dados postgresql.
 
 %package oci8
 Summary:	Oracle 8 database module for PHP
@@ -273,14 +293,13 @@ Requires(preun):	%{name}-common = %{version}
 Autoreq:	false
 
 %description interbase
-This is a dynamic shared object (DSO) for Apache that will add InterBase
-database support to PHP. If you need back-end support for InterBase.
-you should install this package in addition to the main %{name}
-package.
+This is a dynamic shared object (DSO) for Apache that will add
+InterBase database support to PHP. If you need back-end support for
+InterBase. you should install this package in addition to the main
+%{name} package.
 
 %description interbase -l pl
 Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych InterBase.
-
 
 %package gd
 Summary:	GD extension module for PHP
@@ -351,6 +370,7 @@ wsparcie dla baz danych DBA.
 %package odbc
 Summary:	ODBC extension module for PHP
 Summary(pl):	Modu³ ODBC dla PHP
+Summary(pt_BR):	Um módulo para aplicações PHP que usam bases de dados ODBC
 Group:		Libraries
 Requires(post):	%{name}-common = %{version}
 Requires(preun):	%{name}-common = %{version}
@@ -361,6 +381,9 @@ support to PHP.
 
 %description odbc -l pl
 Modu³ PHP ze wsparciem dla ODBC.
+
+%description odbc -l pt_BR
+Um módulo para aplicações PHP que usam ODBC.
 
 %package calendar
 Summary:	Calendar extension module for PHP
@@ -610,6 +633,7 @@ Modu³ PHP dodaj±cy obs³ugê SNMP.
 %package imap
 Summary:	IMAP extension module for PHP
 Summary(pl):	Modu³ IMAP dla PHP
+Summary(pt_BR):	Um módulo para aplicações PHP que usam IMAP
 Group:		Libraries
 Requires(post):	%{name}-common = %{version}
 Requires(preun):	%{name}-common = %{version}
@@ -621,9 +645,13 @@ support to PHP.
 %description imap -l pl
 Modu³ PHP dodaj±cy obs³ugê skrzynek IMAP.
 
+%description imap -l pt_BR
+Um módulo para aplicações PHP que usam IMAP.
+
 %package ldap
 Summary:	LDAP extension module for PHP
 Summary(pl):	Modu³ LDAP dla PHP
+Summary(pt_BR):	Um módulo para aplicações PHP que usam LDAP
 Group:		Libraries
 Requires(post):	%{name}-common = %{version}
 Requires(preun):	%{name}-common = %{version}
@@ -634,6 +662,9 @@ support to PHP.
 
 %description ldap -l pl
 Modu³ PHP dodaj±cy obs³ugê LDAP.
+
+%description ldap -l pt_BR
+Um módulo para aplicações PHP que usam LDAP.
 
 %package sockets
 Summary:	sockets extension module for PHP
@@ -680,6 +711,7 @@ Modu³ PHP udostêpniaj±cy funkcje mieszaj±ce z biblioteki mhash.
 %package doc
 Summary:	Online manual for PHP
 Summary(pl):	Dokumentacja dla PHP
+Summary(pt_BR):	Manual da linguagem PHP, em formato HTML
 Group:		Networking/Daemons
 Obsoletes:	php-manual
 
@@ -690,6 +722,9 @@ too!
 %description doc -l pl
 Dokumentacja dla pakietu PHP. Mo¿na j± równie¿ ogl±daæ poprzez serwer
 WWW.
+
+%description doc -l pt_BR
+Manual da linguagem PHP, em formato HTML.
 
 %package pear
 Summary:	PEAR - PHP Extension and Application Repository
@@ -719,6 +754,7 @@ Modu³ DOM XML.
 %package devel
 Summary:	Files for PHP modules development
 Summary(pl):	Pliki do kompilacji modu³ów PHP
+Summary(pt_BR):	Arquivos de desenvolvimento para PHP
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{version}
 
@@ -727,6 +763,10 @@ Files for PHP modules development.
 
 %description devel -l pl
 Pliki potrzebne do kompilacji modu³ów PHP.
+
+%description devel -l pt_BR
+Este pacote contém arquivos usados no desenvolvimento de programas ou
+módulos PHP.
 
 %package curl
 Summary:	curl extension module for PHP
@@ -833,8 +873,8 @@ Requires(post):	%{name}-common = %{version}
 Requires(preun):	%{name}-common = %{version}
 
 %description shmop
-This is a dynamic shared object (DSO) for Apache that will add
-Shared Memory Operations support to PHP.
+This is a dynamic shared object (DSO) for Apache that will add Shared
+Memory Operations support to PHP.
 
 %description shmop -l pl
 Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej.
@@ -871,11 +911,11 @@ for i in cgi apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
 	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=%{_prefix}` \
-%if %{_apache2}	
+%if %{_apache2}
 	`[ $i = apxs ] && echo --with-apxs2=%{_sbindir}/apxs` \
 %else
 	`[ $i = apxs ] && echo --with-apxs=%{_sbindir}/apxs` \
-%endif	
+%endif
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
