@@ -1,5 +1,5 @@
-#
-%define	_apache2	%(rpm -q apache-devel | grep -Eq '\-2\.[0-9]+\.' 2> /dev/null ; echo $?)
+
+%define	_apache2	%(rpm -q apache-devel 2> /dev/null | grep -Eq '\\-2\\.[0-9]+\\.' && echo 1 || echo 0)
 
 %if %{_apache2}
 %define _without_recode 1
@@ -25,7 +25,7 @@ Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
-Version:	4.2.0RC2
+Version:	4.2.0RC3
 Release:	1
 Epoch:		1
 Group:		Libraries
@@ -37,21 +37,18 @@ Source3:	zend.gif
 Source4:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
 Source5:	%{name}-module-install
 Source6:	%{name}-xml_fix
+Source7:	%{name}-mod_php.conf
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-mysql-socket.patch
 Patch3:		%{name}-mail.patch
 Patch4:		%{name}-link-libs.patch
-Patch5:		%{name}-am_ac_lt.patch
-Patch6:		%{name}-fastcgi.patch
-Patch7:		%{name}-ac250.patch
-Patch8:		%{name}-mailsecurity2.patch
-Patch9:		%{name}-oracle9.patch
-Patch10:	%{name}-no_%{name}_pcre_in_SAPI_c.patch
-Patch11:	%{name}-libpq_fs_h_path.patch
+Patch5:		%{name}-fastcgi.patch
+Patch6:		%{name}-no_%{name}_pcre_in_SAPI_c.patch
+Patch7:		%{name}-libpq_fs_h_path.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
-BuildRequires:	apache(EAPI)-devel
+BuildRequires:	apache-devel
 BuildRequires:	autoconf >= 1.4
 BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
@@ -103,7 +100,7 @@ BuildRequires:	zlib-devel >= 1.0.9
 %{?_with_xslt:BuildRequires:	w3c-libwww-devel}
 # apache 1.3 vs apache 2.0
 %if %{_apache2}
-PreReq:		apache(EAPI) >= 2.0.35
+PreReq:		apache >= 2.0.35
 %else
 PreReq:		apache(EAPI) < 2.0.0
 PreReq:		apache(EAPI) >= 1.3.9
@@ -819,7 +816,7 @@ Shared Memory Operations support to PHP.
 Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%(echo %{version} | sed -e "s#\.#_#g")
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -828,16 +825,12 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
 
 %build
-CFLAGS="%{rpmcflags} -I%{_prefix}/X11R6/include"; export CFLAGS
+CFLAGS="%{rpmcflags} -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf
 libtoolize --copy --force
@@ -848,7 +841,11 @@ for i in cgi apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
 	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=%{_prefix}` \
-	`[ $i = apxs ] && echo --with-apxs%{?_apache2:2}=%{_sbindir}/apxs` \
+%if %{_apache2}	
+	`[ $i = apxs ] && echo --with-apxs2=%{_sbindir}/apxs` \
+%else
+	`[ $i = apxs ] && echo --with-apxs=%{_sbindir}/apxs` \
+%endif	
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
@@ -893,7 +890,7 @@ for i in cgi apxs ; do
 	--with-hyperwave \
 	%{!?_without_imap:--with-imap=shared --with-imap-ssl} \
 	%{?_with_java:--with-java} \
-	--with-jpeg-dir=shared \
+	--with-jpeg-dir=%{_includedir} \
 	%{!?_without_ldap:--with-ldap=shared} \
 	--with-mcrypt=shared \
 	--with-mysql=shared,%{_prefix} \
@@ -908,7 +905,7 @@ for i in cgi apxs ; do
 	--with-pcre-regex=shared \
 	--with-pdflib=shared \
 	--with-pgsql=shared,%{_prefix} \
-	--with-png-dir=shared \
+	--with-png-dir=%{_includedir} \
 	%{!?_without_recode:--with-recode=shared} \
 	--with-regex=php \
 	%{!?_without_sablot:--with-sablot=/usr/lib} \
@@ -918,7 +915,7 @@ for i in cgi apxs ; do
 	%{?_with_wddx:--enable-wddx=shared} \
 	--with-zlib=shared \
 	--with-zlib-dir=shared \
-	--with-xml=shared \
+	--without-xmlrpc \
 	%{?_with_xslt:--with-xslt-sablot=shared}
 done
 
@@ -944,7 +941,8 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} \
 		$RPM_BUILD_ROOT/home/httpd/icons \
 		$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
-		$RPM_BUILD_ROOT/var/run/php
+		$RPM_BUILD_ROOT/var/run/php \
+		$RPM_BUILD_ROOT/etc/httpd/httpd.conf
 
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
@@ -957,9 +955,9 @@ install .libs/php $RPM_BUILD_ROOT%{_bindir}/php
 #install modules/*.so	$RPM_BUILD_ROOT%{_pkglibdir}/php
 
 install %{SOURCE2}		$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
-install %{SOURCE3} php4.gif	$RPM_BUILD_ROOT/home/httpd/icons
+install %{SOURCE3} php.gif	$RPM_BUILD_ROOT/home/httpd/icons
 install %{SOURCE5} $RPM_BUILD_ROOT/%{_sbindir}
-
+install %{SOURCE7} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
 
 install %{SOURCE1} .
 gzip -9nf CODING_STANDARDS CREDITS \
@@ -970,19 +968,23 @@ gzip -9nf CODING_STANDARDS CREDITS \
 rm -rf $RPM_BUILD_ROOT
 
 %post
-%{_sbindir}/apxs -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
+%if ! %{_apache2}
 perl -pi -e 's|^#AddType application/x-httpd-php \.php|AddType application/x-httpd-php .php|' \
 	/etc/httpd/httpd.conf
+%{_sbindir}/apxs -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
+%endif
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
 %preun
 if [ "$1" = "0" ]; then
+%if ! %{_apache2}
 	%{_sbindir}/apxs -e -A -n php4 %{_pkglibdir}/libphp4.so 1>&2
 	perl -pi -e \
 		's|^AddType application/x-httpd-php \.php|#AddType application/x-httpd-php .php|' \
 		/etc/httpd/httpd.conf
+%endif
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
@@ -1343,6 +1345,9 @@ fi
 
 %files
 %defattr(644,root,root,755)
+%if %{_apache2}
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php.conf
+%endif
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
 
 %files cgi
@@ -1387,7 +1392,7 @@ fi
 
 %files pdf
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/libpdf_php.so
+%attr(755,root,root) %{extensionsdir}/pdf.so
 
 %files pgsql
 %defattr(644,root,root,755)
