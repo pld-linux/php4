@@ -1,5 +1,6 @@
---- php-4.3.3RC3/ext/sybase/config.m4.orig	2002-03-12 17:36:10.000000000 +0100
-+++ php-4.3.3RC3/ext/sybase/config.m4	2003-08-16 16:11:52.854216712 +0200
+diff -ur php-5.0.2.orig/ext/sybase/config.m4 php-5.0.2/ext/sybase/config.m4
+--- php-5.0.2.orig/ext/sybase/config.m4	2004-11-16 23:02:23.000000000 +0100
++++ php-5.0.2/ext/sybase/config.m4	2004-11-16 23:01:42.000000000 +0100
 @@ -18,6 +18,7 @@
    PHP_ADD_INCLUDE($SYBASE_INCDIR)
    PHP_ADD_LIBRARY_WITH_PATH(sybdb, $SYBASE_LIBDIR, SYBASE_SHARED_LIBADD)
@@ -8,3 +9,21 @@
    AC_CHECK_LIB(dnet_stub, dnet_addr,
       [ PHP_ADD_LIBRARY_WITH_PATH(dnet_stub,,SYBASE_SHARED_LIBADD)
          AC_DEFINE(HAVE_LIBDNET_STUB,1,[ ])
+diff -ur php-5.0.2.orig/ext/sybase/php_sybase_db.c php-5.0.2/ext/sybase/php_sybase_db.c
+--- php-5.0.2.orig/ext/sybase/php_sybase_db.c	2004-07-10 09:46:08.000000000 +0200
++++ php-5.0.2/ext/sybase/php_sybase_db.c	2004-11-16 23:04:25.000000000 +0100
+@@ -1108,9 +1108,11 @@
+ {
+ 	php_sybase_fetch_hash(INTERNAL_FUNCTION_PARAM_PASSTHRU);
+ 	if (Z_TYPE_P(return_value)==IS_ARRAY) {
+-		Z_TYPE_P(return_value)=IS_OBJECT;
+-		Z_OBJPROP_P(return_value) = Z_ARRVAL_P(return_value);
+-		Z_OBJCE_P(return_value) = ZEND_STANDARD_CLASS_DEF_PTR;
++		object_and_properties_init(
++		    return_value, 
++		    ZEND_STANDARD_CLASS_DEF_PTR, 
++		    Z_ARRVAL_P(return_value)
++		    );
+ 	}
+ }
+ /* }}} */
