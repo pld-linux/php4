@@ -1,0 +1,11 @@
+--- php-4.3.1/ext/standard/mail.c~	Mon Feb 24 10:53:36 2003
++++ php-4.3.1/ext/standard/mail.c	Mon Feb 24 10:58:35 2003
+@@ -201,7 +201,7 @@
+ 			return 0;
+ 		}
+ #endif
+-		TSRMLS_FETCH();
++		{TSRMLS_FETCH();}
+ 		
+ 		if ((to != NULL) && (strlen(to)!=0)) { 
+ 			fprintf(sendmail, "To: %s\n", to);

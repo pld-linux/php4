@@ -1,0 +1,21 @@
+--- php-4.3.3RC3/ext/qtdom/config.m4~	2002-11-18 06:06:37.000000000 +0100
++++ php-4.3.3RC3/ext/qtdom/config.m4	2003-08-17 11:40:07.000000000 +0200
+@@ -11,6 +11,9 @@
+       if test -f $QTDIR/include/qdom.h; then
+         QTDOM_LIBDIR=$QTDIR/lib
+         QTDOM_INCDIR=$QTDIR/include
++      elif test -f /usr/include/qt/qdom.h; then
++        QTDOM_LIBDIR=/usr/lib
++        QTDOM_INCDIR=/usr/include/qt
+       elif test -f /usr/lib/qt2/include/qdom.h; then
+         QTDOM_LIBDIR=/usr/lib
+         QTDOM_INCDIR=/usr/lib/qt2/include
+@@ -28,7 +31,7 @@
+     AC_MSG_ERROR([qdom.h not found.])
+   fi
+ 
+-  PHP_ADD_LIBRARY_WITH_PATH(qt, $QTDOM_LIBDIR, QTDOM_SHARED_LIBADD)
++  PHP_ADD_LIBRARY_WITH_PATH(qt-mt, $QTDOM_LIBDIR, QTDOM_SHARED_LIBADD)
+   PHP_ADD_INCLUDE($QTDOM_INCDIR)
+   PHP_NEW_EXTENSION(qtdom, qtdom.c qtdom_qt.cpp, $ext_shared)
+   PHP_SUBST(QTDOM_SHARED_LIBADD)

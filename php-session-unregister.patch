@@ -1,0 +1,69 @@
+--- php-4.3.0/ext/session/php_session.h.orig	Thu Oct  3 08:45:15 2002
++++ php-4.3.0/ext/session/php_session.h	Tue Jan  7 12:45:39 2003
+@@ -181,6 +181,7 @@
+ int php_get_session_var(char *name, size_t namelen, zval ***state_var TSRMLS_DC);
+ 
+ PHPAPI int php_session_register_module(ps_module *);
++PHPAPI int php_session_unregister_module(const char *name);
+ 
+ PHPAPI int php_session_register_serializer(const char *name,
+ 	        int (*encode)(PS_SERIALIZER_ENCODE_ARGS),
+--- php-4.3.0/ext/session/session.c.orig	Thu Dec  5 21:42:05 2002
++++ php-4.3.0/ext/session/session.c	Tue Jan  7 12:45:38 2003
+@@ -208,12 +208,33 @@
+ 			ps_modules[i] = ptr;
+ 			ret = 0;
+ 			break;
+-		}	
++		} else if((ps_modules[i]->s_name != NULL) && (ptr->s_name != NULL) && 
++				!strcasecmp(ps_modules[i]->s_name, ptr->s_name)) {
++			/* avoid double registration */
++			ret = 0;
++			break;
++		}
+ 	}
+ 	
+ 	return ret;
+ }
+ 
++PHPAPI int php_session_unregister_module(const char *name)
++{
++	int ret = -1;
++	int i;
++
++	for (i = 0; i < MAX_MODULES; i++) {
++		if (ps_modules[i] && ps_modules[i]->s_name && !strcasecmp(ps_modules[i]->s_name, name)) {
++			ps_modules[i] = 0;
++			ret = 0;
++			break;
++		}
++	}
++
++	return ret;
++}
++
+ PHP_MINIT_FUNCTION(session);
+ PHP_RINIT_FUNCTION(session);
+ PHP_MSHUTDOWN_FUNCTION(session);
+--- php-4.3.0/ext/session/mod_mm.c.orig	Thu Dec  5 21:42:05 2002
++++ php-4.3.0/ext/session/mod_mm.c	Tue Jan  7 12:46:21 2003
+@@ -291,6 +291,7 @@
+ 
+ PHP_MSHUTDOWN_FUNCTION(ps_mm)
+ {
++	php_session_unregister_module("mm");
+ 	if (ps_mm_instance) {
+ 		ps_mm_destroy(ps_mm_instance);
+ 		return SUCCESS;
+--- php-4.3.0/ext/msession/msession.c.orig	Thu Aug 22 15:29:50 2002
++++ php-4.3.0/ext/msession/msession.c	Tue Jan  7 12:46:50 2003
+@@ -188,6 +188,9 @@
+ 
+ PHP_MSHUTDOWN_FUNCTION(msession)
+ {
++#ifdef HAVE_PHP_SESSION
++	php_session_unregister_module("msession");
++#endif
+ 	return SUCCESS;
+ }
+ 
