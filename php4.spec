@@ -1,7 +1,6 @@
 #
 # TODO:
-# - odbc.so isn't linked with -lodbc* (shared odbc is broken in config.m4)
-# - BUILD!!! (shared patch, libphp_common, SAPIs)
+# - BUILD!!! (more voodoo for multiple SAPIs; fix for new libtool)
 # - fastcgi option in cgi SAPI?
 # - add cli SAPI?
 # - check/update "experimental" in descriptions
@@ -86,6 +85,7 @@ Patch7:		%{name}-wddx-fix.patch
 Patch8:		%{name}-cpdf-fix.patch
 #Patch9:		%{name}-session-fix-shared.patch
 Patch10:	%{name}-hyperwave-fix.patch
+Patch11:	%{name}-odbc-fix.patch
 #Patch11:	%{name}-openssl-for-ext-only.patch
 Patch12:	%{name}-java-fix.patch
 Patch13:	%{name}-mcal-shared-lib.patch
@@ -1324,7 +1324,7 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 
 %prep
 %setup -q
-#%patch0 -p1	-- needs update!
+%patch0 -p1
 %patch1 -p1
 #%patch2 -p1	-- obsolete
 %patch2 -p1
@@ -1336,6 +1336,7 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 %patch8 -p1
 #%patch9 -p1	-- obsolete
 %patch10 -p1
+%patch11 -p1
 #%patch11 -p1	-- obsolete (openssl used also in common part)
 #%patch12 -p1	-- needs update? to check
 %patch13 -p1
@@ -1364,12 +1365,14 @@ EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 %{__libtoolize}
 %{__aclocal}
 autoconf
-#for i in cgi fastcgi apxs ; do
+#for i in cgi cli fastcgi apxs ; do
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
 for i in cgi apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
-	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=/usr` \
+	`[ $i != cli ] && echo --disable-cli` \
+	`[ $i = cli ] && echo --disable-cgi` \
+	`[ $i = fastcgi ] && --enable-fastcgi --with-fastcgi=/usr` \
 %if %{_apache2}
 	`[ $i = apxs ] && echo --with-apxs2=%{apxs}` \
 %else
@@ -1380,7 +1383,6 @@ for i in cgi apxs ; do
 	--%{!?debug:dis}%{?debug:en}able-debug \
 	--enable-bcmath=shared \
 	--enable-calendar=shared \
-	--disable-cli \
 	--enable-ctype=shared \
 	--enable-dba=shared \
 	--enable-dbx=shared \
@@ -1465,6 +1467,8 @@ for i in cgi apxs ; do
 	--with-zip=shared \
 	--with-zlib=shared \
 	--with-zlib-dir=shared,/usr
+
+cp -f Makefile Makefile.$i
 done
 
 #	--with-sablot-js=shared,no
@@ -1477,15 +1481,19 @@ done
 #	--with-qtdom=shared
 
 %{__make}
-%{__make} CFLAGS="%{rpmcflags} -DDISCARD_PATH=1" -C sapi/cgi
+
+cp -f Makefile.cgi Makefile
+#%{__make} CFLAGS="%{rpmcflags} -DDISCARD_PATH=1" -C sapi/cgi
+%{__make} sapi/cgi/php
+cp -f Makefile.apxs Makefile
 
 # Kill -rpath from php binary and libphp4.so
-perl -pi -e 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-perl -pi -e 's|^runpath_var=.*|runpath_var=|g' libtool
-%{__make} CFLAGS="%{rpmcflags} -DDISCARD_PATH=1" php
+#perl -pi -e 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+#perl -pi -e 's|^runpath_var=.*|runpath_var=|g' libtool
+#%{__make} CFLAGS="%{rpmcflags} -DDISCARD_PATH=1" php
 
-perl -pi -e 's|^hardcode_into_libs=.*|hardcode_into_libs=no|g' libtool
-rm libphp4.la ; %{__make} libphp4.la
+#perl -pi -e 's|^hardcode_into_libs=.*|hardcode_into_libs=no|g' libtool
+#rm libphp4.la ; %{__make} libphp4.la
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -1501,7 +1509,8 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 
 %{?_with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{_libdir}}
 
-install .libs/php $RPM_BUILD_ROOT%{_bindir}/php
+#install .libs/php $RPM_BUILD_ROOT%{_bindir}/php
+install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 install %{SOURCE6} %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}
@@ -1513,7 +1522,7 @@ install %{SOURCE1} .
 
 mv -f Zend/LICENSE{,.Zend}
 
-mkdir $RPM_BUILD_ROOT%{php_pear_dir}/{Auth,Science,HTML/Template}
+install -d $RPM_BUILD_ROOT%{php_pear_dir}/{Auth,Science,HTML/Template}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
