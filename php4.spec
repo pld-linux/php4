@@ -61,13 +61,13 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
-Version:	4.3.9
-Release:	6
+Version:	4.3.10
+Release:	1
 Epoch:		0
 Group:		Libraries
 License:	PHP
-Source0:	http://downloads.php.net/ilia/php-%{version}.tar.bz2
-# Source0-md5:	b799bbb330da60324d972641baab693c
+Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
+# Source0-md5:	7e56824dae9679c59a8234eb848aa542
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source3:	%{name}-module-install
@@ -105,11 +105,10 @@ Patch25:	%{name}-no_pear_install.patch
 Patch26:	%{name}-zlib.patch
 Patch27:	%{name}-db-shared.patch
 Patch28:	%{name}-sybase-fix.patch
-Patch29:	%{name}-mssql-fix.patch
-Patch30:	%{name}-lib64.patch
-Patch31:	%{name}-mnogosearch-fix.patch
-Patch32:	%{name}-stupidapache_version.patch 
-Patch33:	%{name}-gd_imagerotate_enable.patch
+Patch29:	%{name}-lib64.patch
+Patch30:	%{name}-mnogosearch-fix.patch
+Patch31:	%{name}-stupidapache_version.patch 
+Patch32:	%{name}-gd_imagerotate_enable.patch
 #Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1602,15 +1601,14 @@ cp php.ini-dist php.ini
 %patch26 -p1
 %patch27 -p1
 %patch28 -p1
-%patch29 -p1
 %ifarch amd64
+%patch29 -p1
+%endif
 %patch30 -p1
-%endif
-%patch31 -p1
 %if %{_apache2}
-%patch32
+%patch31
 %endif
-%patch33 -p1
+%patch32 -p1
 
 # new apr
 sed -i -e 's#apr-config#apr-1-config#g' sapi/apache*/*.m4
