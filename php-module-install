@@ -8,9 +8,9 @@ INIFILE=""
 
 install ()
 {
-if [ -f ${INIFILE} ]; then
+if [ -f ${INIFILE} ] && ! grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" ${INIFILE} ; then
 	echo "activating module '${MODNAME}.so' in ${INIFILE}" 1>&2
-	perl -pi -e "s|^;extension=${MODNAME}.so|extension=${MODNAME}.so|g" ${INIFILE}
+	echo "extension=${MODNAME}.so" >> ${INIFILE}
 fi
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
@@ -19,9 +19,16 @@ fi
 
 deinstall()
 {
-if [ -f ${INIFILE} ]; then
+if [ -f ${INIFILE} ] && grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" ${INIFILE} ; then
+	TMPFILE=`mktemp -q /tmp/$0.XXXXXX`
+	if [ $? -ne 0 ]; then
+		echo "$0: Can't create temp file, exiting..."
+		exit 1
+	fi
 	echo "deactivating module '${MODNAME}.so' in ${INIFILE}" 1>&2
-	perl -pi -e "s|^extension=${MODNAME}.so|;extension=${MODNAME}.so|g" $INIFILE
+	grep -v "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" > ${TMPFILE} < ${INIFILE}
+	mv ${TMPFILE} ${INIFILE}
+				
 fi
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
@@ -44,7 +51,7 @@ if [ "$#" = 3 ]; then
 		install
 	else
 		if [ "$1" = "remove" ]; then
-			remove
+			deinstall
 		else
 			usage
 		fi
