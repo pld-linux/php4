@@ -1,32 +1,34 @@
 #
+%define	_apache2	%(rpm -q apache-devel | grep -Eq '\-2\.[0-9]+\.' 2> /dev/null ; echo $?)
+
+%if %{_apache2}
+%define _without_recode 1
+%define _without_mm 1
+%endif
+
 # Conditional build:
-# _with_oracle  - with oracle support 
-# _with_oci8    - with oci8 support
-# _with_java    - with Java support
-# _with_libcpdf - with libcpdf support
-# _with_openssl - with OpenSSL support
-# _with_wddx    - with WDDX support
-# _with_xslt    - with XSLT support
-# _without_imap   - without IMAP support
-# _without_ldap   - without LDAP support
-# _without_odbc   - without ODBC support
-# _without_snmp   - without SNMP support
+# _with_oracle	- with oracle support
+# _with_oci8	- with oci8 support
+# _with_java	- with Java support
+# _with_libcpdf	- with libcpdf support
+# _with_openssl	- with OpenSSL support
+# _with_wddx	- with WDDX support
+# _with_xslt	- with XSLT support
+# _without_imap	- without IMAP support
+# _without_ldap	- without LDAP support
+# _without_odbc	- without ODBC support
+# _without_snmp	- without SNMP support
 # _without_sablot - without sablot support
+# _without_recode - without recode support
+# _without_mm   - without mm support
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	JÍzyk skryptowy PHP -- uøywany wraz z serwerem Apache
 Name:		php
-Version:	4.1.1
+Version:	4.2.0RC2
 Release:	1
 Epoch:		1
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
 License:	The PHP license (see "LICENSE" file included in distribution)
 Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.gz
 Source1:	FAQ.%{name}
@@ -34,19 +36,19 @@ Source2:	%{name}.ini
 Source3:	zend.gif
 Source4:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
 Source5:	%{name}-module-install
+Source6:	%{name}-xml_fix
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-mysql-socket.patch
 Patch3:		%{name}-mail.patch
 Patch4:		%{name}-link-libs.patch
-Patch5:		%{name}-session-path.patch
-Patch6:		%{name}-am_ac_lt.patch
-Patch7:		%{name}-fastcgi.patch
-Patch8:		%{name}-ac250.patch
-Patch9:		%{name}-mailsecurity2.patch
-Patch10:	%{name}-oracle9.patch
-Patch11:	%{name}-%{version}-no_php_pcre_in_SAPI_c.patch
-
+Patch5:		%{name}-am_ac_lt.patch
+Patch6:		%{name}-fastcgi.patch
+Patch7:		%{name}-ac250.patch
+Patch8:		%{name}-mailsecurity2.patch
+Patch9:		%{name}-oracle9.patch
+Patch10:	%{name}-no_%{name}_pcre_in_SAPI_c.patch
+Patch11:	%{name}-libpq_fs_h_path.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -55,8 +57,9 @@ BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
 BuildRequires:	bzip2-devel
 BuildRequires:	curl-devel
-BuildRequires:  cyrus-sasl-devel
+BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel >= 3.1.17
+BuildRequires:	expat-devel
 BuildRequires:	flex
 BuildRequires:	gmp-devel
 BuildRequires:	freetype-devel >= 2.0
@@ -75,7 +78,7 @@ BuildRequires:	libtool >= 1.4
 BuildRequires:	libxml2-devel >= 2.2.7
 BuildRequires:	mhash-devel
 BuildRequires:	ming-devel >= 0.1.0
-BuildRequires:	mm-devel >= 1.1.3
+%{!?_without_mm:BuildRequires:	mm-devel >= 1.1.3}
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
 BuildRequires:	pam-devel
@@ -83,7 +86,8 @@ BuildRequires:	pdflib-devel >= 4.0.0
 BuildRequires:	perl
 BuildRequires:	pkgconfig
 BuildRequires:	postgresql-devel
-BuildRequires:	recode-devel >= 3.5d-3
+BuildRequires:  postgresql-backend-devel >= 7.2
+%{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	t1lib-devel
 %{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.3}
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
@@ -97,15 +101,22 @@ BuildRequires:	zlib-devel >= 1.0.9
 %{?_with_xslt:BuildRequires:	sablotron-devel}
 %{?_with_xslt:BuildRequires:	expat-devel}
 %{?_with_xslt:BuildRequires:	w3c-libwww-devel}
-Prereq:		apache(EAPI) >= 1.3.9
-Prereq:		perl
-Prereq:		%{_sbindir}/apxs
+# apache 1.3 vs apache 2.0
+%if %{_apache2}
+PreReq:		apache(EAPI) >= 2.0.35
+%else
+PreReq:		apache(EAPI) < 2.0.0
+PreReq:		apache(EAPI) >= 1.3.9
+%endif
+PreReq:		perl
+PreReq:		%{_sbindir}/apxs
 PreReq:		%{name}-common = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	phpfi
+Obsoletes:	apache-mod_php
 
 %define		_sysconfdir	/etc/php
-%define 	extensionsdir %{_libdir}/php
+%define		extensionsdir	%{_libdir}/php
 %define		peardir		%{_datadir}/pear
 
 %description
@@ -150,13 +161,6 @@ zosta≥a z jÍzykÛw: C, Java i Perl.
 Summary:	PHP as CGI program
 Summary(pl):	PHP jako program CGI
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
 PreReq:		%{name}-common = %{version}
 
 %description cgi
@@ -169,13 +173,6 @@ PHP jako program CGI.
 Summary:	Common files nneded by both apache module and CGI
 Summary(pl):	WspÛlne pliki dla modu≥u apacha i programu CGI
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
 
 %description common
 Common files needed by both apache module and CGI.
@@ -187,14 +184,8 @@ WspÛlne pliki dla modu≥u apacha i programu CGI.
 Summary:	MySQL database module for PHP
 Summary(pl):	Modu≥ bazy danych MySQL dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description mysql
 This is a dynamic shared object (DSO) for Apache that will add MySQL
@@ -208,14 +199,8 @@ Modu≥ PHP umoøliwiaj±cy dostÍp do bazy danych MySQL.
 Summary:	libPDF module for PHP
 Summary(pl):	Modu≥ do tworzenia plikÛw PDF dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 PreReq:		pdflib
 
 %description pdf
@@ -230,14 +215,8 @@ pdflib.
 Summary:	PostgreSQL database module for PHP
 Summary(pl):	Modu≥ bazy danych PostgreSQL dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description pgsql
 This is a dynamic shared object (DSO) for Apache that will add
@@ -252,14 +231,8 @@ Modu≥ PHP umoøliwiaj±cy dostÍp do bazy danych PostgreSQL.
 Summary:	Oracle 8 database module for PHP
 Summary(pl):	Modu≥ bazy danych Oracle 8 dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 Autoreq:	false
 
 %description oci8
@@ -275,14 +248,8 @@ Modu≥ PHP umoøliwiaj±cy dostÍp do bazy danych Oracle 8.
 Summary:	Oracle 7 database module for PHP
 Summary(pl):	Modu≥ bazy danych Oracle 7 dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 Autoreq:	false
 
 %description oracle
@@ -298,14 +265,8 @@ Modu≥ PHP umoøliwiaj±cy dostÍp do bazy danych Oracle 7.
 Summary:	GD extension module for PHP
 Summary:	Modu≥ GD dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description gd
 This is a dynamic shared object (DSO) for Apache that will add GD
@@ -321,14 +282,8 @@ obrazkÛw z poziomu PHP.
 Summary:	Java extension module for PHP
 Summary(pl):	Modu≥ Javy dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description java
 This is a dynamic shared object (DSO) for Apache that will add JAVA
@@ -343,14 +298,8 @@ obiektÛw Javy z poziomu PHP.
 Summary:	XML extension module for PHP
 Summary(pl):	Modu≥ XML dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description xml
 This is a dynamic shared object (DSO) for Apache that will add XML
@@ -367,33 +316,23 @@ zwi±zanych z tymi plikami.
 Summary:	DBA extension module for PHP
 Summary(pl):	Modu≥ DBA dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description dba
 This is a dynamic shared object (DSO) for Apache that will add
 flat-file databases (DBA) support to PHP.
 
-#%description dba -l pl
+%description dba -l pl
+Dynamiczny obiekt wspÛ≥dzielony (DSO) dla Apache'a, dodaj±cy do PHP
+wsparcie dla baz danych DBA.
 
 %package odbc
 Summary:	ODBC extension module for PHP
 Summary(pl):	Modu≥ ODBC dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description odbc
 This is a dynamic shared object (DSO) for Apache that will add ODBC
@@ -406,33 +345,23 @@ Modu≥ PHP ze wsparciem dla ODBC.
 Summary:	Calendar extension module for PHP
 Summary(pl):	Modu≥ funkcji kalendarza dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description calendar
 This is a dynamic shared object (DSO) for Apache that will add
 calendar support to PHP.
 
-#%description calendar -l pl
+%description calendar -l pl
+Dynamiczny obiekt wspÛ≥dzielony (DSO) dla Apache'a, dodaj±cy do PHP
+wsparcie dla kalendarza.
 
 %package dbase
 Summary:	DBase extension module for PHP
 Summary(pl):	Modu≥ DBase dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description dbase
 This is a dynamic shared object (DSO) for Apache that will add DBase
@@ -445,33 +374,23 @@ Modu≥ PHP ze wsparciem dla DBase.
 Summary:	FilePro extension module for PHP
 Summary(pl):	Modu≥ FilePro dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description filepro
 This is a dynamic shared object (DSO) for Apache that will add FilePro
 support to PHP.
 
-#%description filepro -l pl
+%description filepro -l pl
+Dynamiczny obiekt wspÛ≥dzielony (DSO) dla Apache'a, dodaj±cy do PHP
+wsparcie dla FilePro.
 
 %package posix
 Summary:	POSIX extension module for PHP
 Summary(pl):	Modu≥ POSIX dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description posix
 This is a dynamic shared object (DSO) for Apache that will add POSIX
@@ -479,18 +398,13 @@ functions support to PHP.
 
 %description posix -l pl
 Modu≥ PHP umoøliwiaj±cy korzystanie z funkcji POSIX.
+
 %package pcre
 Summary:	PCRE extension module for PHP
 Summary(pl):	Modu≥ PCRE dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description pcre
 This is a dynamic shared object (DSO) for Apache that will add Perl
@@ -504,14 +418,8 @@ Modu≥ PHP umoøliwiaj±cy korzystanie z perlowych wyraøeÒ regularnych
 Summary:	SysV sem extension module for PHP
 Summary(pl):	Modu≥ SysV sem dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description sysvsem
 This is a dynamic shared object (DSO) for Apache that will add SysV
@@ -524,14 +432,8 @@ Modu≥ PHP umoøliwiaj±cy korzystanie z semaforÛw SysV.
 Summary:	SysV shm extension module for PHP
 Summary(pl):	Modu≥ SysV shm dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description sysvshm
 This is a dynamic shared object (DSO) for Apache that will add SysV
@@ -544,33 +446,23 @@ Modu≥ PHP umoøliwiaj±cy korzystanie z pamiÍci dzielonej SysV.
 Summary:	NIS (yp) extension module for PHP
 Summary(pl):	Modu≥ NIS (yp) dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description yp
 This is a dynamic shared object (DSO) for Apache that will add NIS
 (Yellow Pages) support to PHP.
 
-#%description yp -l pl
+%description yp -l pl
+Dynamiczny obiekt wspÛ≥dzielony (DSO) dla Apache'a, dodaj±cy do PHP
+wsparcie dla NIS (Yellow Pages).
 
 %package bcmath
 Summary:	bcmath extension module for PHP
 Summary(pl):	Modu≥ bcmath dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description bcmath
 This is a dynamic shared object (DSO) for Apache that will add bc
@@ -584,14 +476,8 @@ matematycznych takich jak w programie bc.
 Summary:	FTP extension module for PHP
 Summary(pl):	Modu≥ FTP dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description ftp
 This is a dynamic shared object (DSO) for Apache that will add FTP
@@ -604,14 +490,8 @@ Modu≥ PHP dodaj±cy obs≥ugÍ protoko≥u FTP.
 Summary:	Zlib extension module for PHP
 Summary(pl):	Modu≥ zlib dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description zlib
 This is a dynamic shared object (DSO) for Apache that will add
@@ -620,18 +500,26 @@ compression (zlib) support to PHP.
 %description zlib -l pl
 Modu≥ PHP umoøliwiaj±cy uøywanie kompresji (poprzez bibliotekÍ zlib).
 
+%package bzip2
+Summary:	Bzip2 extension module for PHP
+Summary(pl):	Modu≥ bzip2 dla PHP
+Group:		Libraries
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
+
+%description bzip2
+This is a dynamic shared object (DSO) for Apache that will add
+compression (bzip2) support to PHP.
+
+%description bzip2 -l pl
+Modu≥ PHP umoøliwiaj±cy uøywanie kompresji (poprzez bibliotekÍ bzip2).
+
 %package exif
 Summary:	exif extension module for PHP
 Summary(pl):	Modu≥ exif dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description exif
 This is a dynamic shared object (DSO) for Apache that will add exif
@@ -644,14 +532,8 @@ Modu≥ PHP dodaj±cy obs≥ugÍ plikÛw EXIF.
 Summary:	recode extension module for PHP
 Summary(pl):	Modu≥ recode dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 Requires:	recode >= 3.5d-3
 
 %description recode
@@ -666,14 +548,8 @@ bibliotekÍ recode).
 Summary:	session extension module for PHP
 Summary(pl):	Modu≥ session dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description session
 This is a dynamic shared object (DSO) for Apache that will add session
@@ -686,14 +562,8 @@ Modu≥ PHP dodaj±cy obs≥ugÍ sesji.
 Summary:	gettext extension module for PHP
 Summary(pl):	Modu≥ gettext dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description gettext
 This is a dynamic shared object (DSO) for Apache that will add gettext
@@ -706,14 +576,8 @@ Modu≥ PHP dodaj±cy obs≥ugÍ lokalizacji przez gettext.
 Summary:	SNMP extension module for PHP
 Summary(pl):	Modu≥ SNMP dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description snmp
 This is a dynamic shared object (DSO) for Apache that will add SNMP
@@ -726,14 +590,8 @@ Modu≥ PHP dodaj±cy obs≥ugÍ SNMP.
 Summary:	IMAP extension module for PHP
 Summary(pl):	Modu≥ IMAP dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description imap
 This is a dynamic shared object (DSO) for Apache that will add IMAP
@@ -746,14 +604,8 @@ Modu≥ PHP dodaj±cy obs≥ugÍ skrzynek IMAP.
 Summary:	LDAP extension module for PHP
 Summary(pl):	Modu≥ LDAP dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description ldap
 This is a dynamic shared object (DSO) for Apache that will add LDAP
@@ -766,14 +618,8 @@ Modu≥ PHP dodaj±cy obs≥ugÍ LDAP.
 Summary:	sockets extension module for PHP
 Summary(pl):	Modu≥ socket dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description sockets
 This is a dynamic shared object (DSO) for Apache that will add sockets
@@ -786,14 +632,8 @@ Modu≥ PHP dodaj±cy obs≥ugÍ gniazdek.
 Summary:	mcrypt extension module for PHP
 Summary(pl):	Modu≥ mcrypt dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description mcrypt
 This is a dynamic shared object (DSO) for Apache that will add mcrypt
@@ -806,14 +646,8 @@ Modu≥ PHP dodaj±cy moøliwo∂Ê szyfrowania poprzez bibliotekÍ mcrypt.
 Summary:	mhash extension module for PHP
 Summary(pl):	Modu≥ mhash dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description mhash
 This is a dynamic shared object (DSO) for Apache that will add mhash
@@ -826,8 +660,6 @@ Modu≥ PHP udostÍpniaj±cy funkcje mieszaj±ce z biblioteki mhash.
 Summary:	Online manual for PHP
 Summary(pl):	Dokumentacja dla PHP
 Group:		Networking/Daemons
-Group(de):	Netzwerkwesen/Server
-Group(pl):	Sieciowe/Serwery
 Obsoletes:	php-manual
 
 %description doc
@@ -842,8 +674,8 @@ WWW.
 Summary:	PEAR - PHP Extension and Application Repository
 Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
 Group:		Development/Languages/PHP
-Group(de):	Entwicklung/Sprachen/PHP
-Group(pl):	Programowanie/JÍzyki/PHP
+Requires:	%{name}-cgi = %{version}
+Requires:	%{name}-xml = %{version}
 
 %description pear
 PEAR - PHP Extension and Application Repository.
@@ -856,8 +688,6 @@ Repozytorium Aplikacji.
 Summary:	DOM XML module
 Summary(pl):	Modu≥ DOM XML
 Group:		Development/Languages/PHP
-Group(de):	Entwicklung/Sprachen/PHP
-Group(pl):	Programowanie/JÍzyki/PHP
 
 %description domxml
 DOM XML module.
@@ -869,8 +699,6 @@ Modu≥ DOM XML.
 Summary:	Files for PHP modules development
 Summary(pl):	Pliki do kompilacji modu≥Ûw PHP
 Group:		Development/Languages/PHP
-Group(de):	Entwicklung/Sprachen/PHP
-Group(pl):	Programowanie/JÍzyki/PHP
 Requires:	%{name}-common = %{version}
 
 %description devel
@@ -883,14 +711,6 @@ Pliki potrzebne do kompilacji modu≥Ûw PHP.
 Summary:	curl extension module for PHP
 Summary(pl):	Modu≥ curl dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
 
 %description curl
 This is a dynamic shared object (DSO) for Apache that will add curl
@@ -903,14 +723,8 @@ Modu≥ PHP umoøliwiaj±cy korzystanie z biblioteki curl.
 Summary:	xslt extension module for PHP
 Summary(pl):	Modu≥ xslt dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description xslt
 This is a dynamic shared object (DSO) for Apache that will add xslt
@@ -923,14 +737,8 @@ Modu≥ PHP umoøliwiaj±cy korzystanie z technologii xslt.
 Summary:	wddx extension module for PHP
 Summary(pl):	Modu≥ wddx dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description wddx
 This is a dynamic shared object (DSO) for Apache that will add wddx
@@ -943,14 +751,8 @@ Modu≥ PHP umoøliwiaj±cy korzystanie z wddx.
 Summary:	ming extension module for PHP
 Summary(pl):	Modu≥ ming dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description ming
 This is a dynamic shared object (DSO) for Apache that will add ming
@@ -964,14 +766,8 @@ ming.
 Summary:	cpdf extension module for PHP
 Summary(pl):	Modu≥ cpdf dla PHP
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	‚…¬Ã…œ‘≈À…
-Group(uk):	‚¶¬Ã¶œ‘≈À…
-PreReq:		%{name}-common = %{version}
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
 
 %description libcpdf
 This is a dynamic shared object (DSO) for Apache that will add libcpdf
@@ -980,8 +776,50 @@ support to PHP.
 %description libcpdf -l pl
 Modu≥ PHP dodaj±cy obs≥ugÍ libcpdf.
 
+%package iconv
+Summary:	iconv extension module for PHP
+Summary(pl):	Modu≥ iconv dla PHP
+Group:		Libraries
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
+
+%description iconv
+This is a dynamic shared object (DSO) for Apache that will add iconv
+support to PHP.
+
+%description iconv -l pl
+Modu≥ PHP dodaj±cy obs≥ugÍ iconv.
+
+%package gmp
+Summary:	gmp extension module for PHP
+Summary(pl):	Modu≥ gmp dla PHP
+Group:		Libraries
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
+
+%description gmp
+This is a dynamic shared object (DSO) for Apache that will add
+arbitrary length number support with GNU MP library to PHP.
+
+%description gmp -l pl
+Modu≥ PHP umorzliwiaj±cy korzystanie z biblioteki gmp.
+
+%package shmop
+Summary:	Shared Memory Operations extension module for PHP
+Summary(pl):	Modu≥ shmop dla PHP
+Group:		Libraries
+Requires(post):	%{name}-common = %{version}
+Requires(preun):	%{name}-common = %{version}
+
+%description shmop
+This is a dynamic shared object (DSO) for Apache that will add
+Shared Memory Operations support to PHP.
+
+%description shmop -l pl
+Modu≥ PHP umoøliwiaj±cy korzystanie z pamiÍci dzielonej.
+
 %prep
-%setup  -q
+%setup -q
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -994,11 +832,12 @@ Modu≥ PHP dodaj±cy obs≥ugÍ libcpdf.
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
+
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
 
 %build
-CFLAGS="%{rpmcflags} -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
+CFLAGS="%{rpmcflags} -I%{_prefix}/X11R6/include"; export CFLAGS
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf
 libtoolize --copy --force
@@ -1009,7 +848,7 @@ for i in cgi apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
 	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=%{_prefix}` \
-	`[ $i = apxs ] && echo --with-apxs=%{_sbindir}/apxs` \
+	`[ $i = apxs ] && echo --with-apxs%{?_apache2:2}=%{_sbindir}/apxs` \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
@@ -1033,6 +872,7 @@ for i in cgi apxs ; do
 	--enable-yp=shared \
 	--enable-ucd-snmp-hack \
 	--enable-xml=shared \
+	--with-expat-dir=/usr \
 	%{?_with_xslt:--enable-xslt=shared} \
 	--with-bz2=shared \
 	%{?_with_libcpdf:--with-cpdflib=shared} \
@@ -1041,7 +881,9 @@ for i in cgi apxs ; do
 	--without-db2 \
 	--with-db3 \
 	--with-dbase=shared \
+	--with-iconv=shared \
 	--with-dom=shared \
+	--with-dom-xslt=shared \
 	--with-filepro=shared \
 	--with-freetype-dir=shared \
 	--with-gettext=shared \
@@ -1058,7 +900,7 @@ for i in cgi apxs ; do
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-mhash=shared \
 	--with-ming=shared \
-	--with-mm \
+	%{!?_without_mm:--with-mm} \
 	%{!?_without_openssl:--with-openssl} \
 	%{?_with_oracle:--with-oracle=shared} \
 	%{?_with_oci8:--with-oci8=shared} \
@@ -1067,7 +909,7 @@ for i in cgi apxs ; do
 	--with-pdflib=shared \
 	--with-pgsql=shared,%{_prefix} \
 	--with-png-dir=shared \
-	--with-recode=shared \
+	%{!?_without_recode:--with-recode=shared} \
 	--with-regex=php \
 	%{!?_without_sablot:--with-sablot=/usr/lib} \
 	%{!?_without_snmp:--with-snmp=shared} \
@@ -1082,6 +924,9 @@ done
 
 # TODO --with-pspell=/usr,shared (pspell missing)
 #	--with-qtdom=shared
+
+rm -f ext/xml/libs.mk
+install %{SOURCE6} ext/xml/libs.mk
 
 %{__make}
 %{__make} CFLAGS="%{rpmcflags} -DDISCARD_PATH=1" -C sapi/cgi
@@ -1098,7 +943,8 @@ rm libphp4.la ; %{__make} libphp4.la
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} \
 		$RPM_BUILD_ROOT/home/httpd/icons \
-		$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}}
+		$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
+		$RPM_BUILD_ROOT/var/run/php
 
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
@@ -1117,8 +963,8 @@ install %{SOURCE5} $RPM_BUILD_ROOT/%{_sbindir}
 
 install %{SOURCE1} .
 gzip -9nf CODING_STANDARDS CREDITS \
-      EXTENSIONS NEWS TODO* LICENSE Zend/LICENSE \
-      Zend/ZEND_CHANGES README.SELF-CONTAINED-EXTENSIONS README.EXT_SKEL
+	EXTENSIONS NEWS TODO* LICENSE Zend/LICENSE \
+	Zend/ZEND_CHANGES README.SELF-CONTAINED-EXTENSIONS README.EXT_SKEL
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -1150,7 +996,7 @@ fi
 
 %preun bcmath
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove bcmath %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove bcmath %{_sysconfdir}/php.ini
 fi
 
 %post calendar
@@ -1158,7 +1004,7 @@ fi
 
 %preun calendar
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove calendar %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove calendar %{_sysconfdir}/php.ini
 fi
 
 %post dba
@@ -1166,7 +1012,7 @@ fi
 
 %preun dba
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove dba %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove dba %{_sysconfdir}/php.ini
 fi
 
 %post dbase
@@ -1174,7 +1020,7 @@ fi
 
 %preun dbase
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove dbase %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove dbase %{_sysconfdir}/php.ini
 fi
 
 %post exif
@@ -1182,7 +1028,7 @@ fi
 
 %preun exif
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove exif %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove exif %{_sysconfdir}/php.ini
 fi
 
 %post filepro
@@ -1190,7 +1036,7 @@ fi
 
 %preun filepro
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove filepro %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove filepro %{_sysconfdir}/php.ini
 fi
 
 %post ftp
@@ -1198,7 +1044,7 @@ fi
 
 %preun ftp
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove ftp %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove ftp %{_sysconfdir}/php.ini
 fi
 
 %post gd
@@ -1206,7 +1052,7 @@ fi
 
 %preun gd
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove gd %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove gd %{_sysconfdir}/php.ini
 fi
 
 %post gettext
@@ -1214,7 +1060,7 @@ fi
 
 %preun gettext
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove gettext %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove gettext %{_sysconfdir}/php.ini
 fi
 
 %if %{?_without_imap:0}%{!?_without_imap:1}
@@ -1223,7 +1069,7 @@ fi
 
 %preun imap
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove imap %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove imap %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1233,7 +1079,7 @@ fi
 
 %preun java
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove libphp_java %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove libphp_java %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1243,7 +1089,7 @@ fi
 
 %preun ldap
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove ldap %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove ldap %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1252,7 +1098,7 @@ fi
 
 %preun mcrypt
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove mcrypt %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove mcrypt %{_sysconfdir}/php.ini
 fi
 
 %post mhash
@@ -1260,7 +1106,7 @@ fi
 
 %preun mhash
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove mhash %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove mhash %{_sysconfdir}/php.ini
 fi
 
 %post mysql
@@ -1268,7 +1114,7 @@ fi
 
 %preun mysql
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove mysql %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove mysql %{_sysconfdir}/php.ini
 fi
 
 %post pdf
@@ -1276,7 +1122,7 @@ fi
 
 %preun pdf
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove libpdf_php %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove libpdf_php %{_sysconfdir}/php.ini
 fi
 
 %preun domxml
@@ -1293,7 +1139,7 @@ fi
 
 %preun oci8
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove oci8 %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove oci8 %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1303,7 +1149,7 @@ fi
 
 %preun odbc
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove odbc %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove odbc %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1313,7 +1159,7 @@ fi
 
 %preun oracle
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove oracle %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove oracle %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1322,7 +1168,7 @@ fi
 
 %preun pcre
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove pcre %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove pcre %{_sysconfdir}/php.ini
 fi
 
 %post pgsql
@@ -1330,7 +1176,7 @@ fi
 
 %preun pgsql
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove pgsql %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove pgsql %{_sysconfdir}/php.ini
 fi
 
 %post posix
@@ -1338,23 +1184,25 @@ fi
 
 %preun posix
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove posix %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove posix %{_sysconfdir}/php.ini
 fi
 
+%if %{?_without_recode:0}%{!?_without_recode:1}
 %post recode
 %{_sbindir}/php-module-install install recode %{_sysconfdir}/php.ini
 
 %preun recode
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove recode %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove recode %{_sysconfdir}/php.ini
 fi
+%endif
 
 %post session
 %{_sbindir}/php-module-install install session %{_sysconfdir}/php.ini
 
 %preun session
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove session %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove session %{_sysconfdir}/php.ini
 fi
 
 %if %{?_without_snmp:0}%{!?_without_snmp:1}
@@ -1363,7 +1211,7 @@ fi
 
 %preun snmp
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove snmp %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove snmp %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1372,7 +1220,7 @@ fi
 
 %preun sockets
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove sockets %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove sockets %{_sysconfdir}/php.ini
 fi
 
 %post sysvsem
@@ -1380,7 +1228,7 @@ fi
 
 %preun sysvsem
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove sysvsem %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove sysvsem %{_sysconfdir}/php.ini
 fi
 
 %post sysvshm
@@ -1388,7 +1236,7 @@ fi
 
 %preun sysvshm
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove sysvshm %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove sysvshm %{_sysconfdir}/php.ini
 fi
 
 %post xml
@@ -1396,7 +1244,7 @@ fi
 
 %preun xml
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove xml %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove xml %{_sysconfdir}/php.ini
 fi
 
 %post yp
@@ -1404,7 +1252,7 @@ fi
 
 %preun yp
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove yp %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove yp %{_sysconfdir}/php.ini
 fi
 
 %post zlib
@@ -1412,7 +1260,15 @@ fi
 
 %preun zlib
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove zlib %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove zlib %{_sysconfdir}/php.ini
+fi
+
+%post bzip2
+%{_sbindir}/php-module-install install bz2 %{_sysconfdir}/php.ini
+
+%preun bzip2
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove bz2 %{_sysconfdir}/php.ini
 fi
 
 %post curl
@@ -1420,7 +1276,7 @@ fi
 
 %preun curl
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove curl %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove curl %{_sysconfdir}/php.ini
 fi
 
 %post ming
@@ -1428,7 +1284,7 @@ fi
 
 %preun ming
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove ming %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove ming %{_sysconfdir}/php.ini
 fi
 
 %if %{?_with_xslt:1}%{!?_with_xslt:0}
@@ -1437,7 +1293,7 @@ fi
 
 %preun xslt
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove xslt %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove xslt %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1447,7 +1303,7 @@ fi
 
 %preun wddx
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove wddx %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove wddx %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1461,6 +1317,30 @@ if [ "$1" = "0" ]; then
 fi
 %endif
 
+%post iconv
+%{_sbindir}/php-module-install install iconv %{_sysconfdir}/php.ini
+
+%preun iconv
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove iconv %{_sysconfdir}/php.ini
+fi
+
+%post gmp
+%{_sbindir}/php-module-install install gmp %{_sysconfdir}/php.ini
+
+%preun gmp
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove gmp %{_sysconfdir}/php.ini
+fi
+
+%post shmop
+%{_sbindir}/php-module-install install shmop %{_sysconfdir}/php.ini
+
+%preun shmop
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove shmop %{_sysconfdir}/php.ini
+fi
+
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
@@ -1472,18 +1352,16 @@ fi
 %files common
 %defattr(644,root,root,755)
 %doc {CODING_STANDARDS,CREDITS,Zend/ZEND_CHANGES}.gz
-%doc {LICENSE,Zend/LICENSE,EXTENSIONS,NEWS,TODO*}.gz  
+%doc {LICENSE,Zend/LICENSE,EXTENSIONS,NEWS,TODO*}.gz
 %doc {README.EXT_SKEL,README.SELF-CONTAINED-EXTENSIONS}.gz
 
 %dir %{_sysconfdir}
 %attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
+%attr(730,root,http) %dir %verify(not group mode) /var/run/php
 
 /home/httpd/icons/*
-
 %attr(755,root,root) %{_sbindir}/*
-
 %attr(755,root,root) %{_libdir}/libphp_common*.so.*.*.*
-
 %dir %{extensionsdir}
 
 %files devel
@@ -1531,10 +1409,9 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/gd.so
 
-# To check
-#%files xml
-#%defattr(644,root,root,755)
-#%attr(755,root,root) %{extensionsdir}/xml.so
+%files xml
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/xml.so
 
 %files dba
 %defattr(644,root,root,755)
@@ -1584,13 +1461,19 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/zlib.so
 
+%files bzip2
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/bz2.so
+
 %files exif
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/exif.so
 
+%if %{?_without_recode:0}%{!?_without_recode:1}
 %files recode
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/recode.so
+%endif
 
 #%files session
 #%defattr(644,root,root,755)
@@ -1621,7 +1504,7 @@ fi
 %if %{?_without_ldap:0}%{!?_without_ldap:1}
 %files ldap
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/ldap.*
+%attr(755,root,root) %{extensionsdir}/ldap.so
 %endif
 
 %files sockets
@@ -1671,3 +1554,15 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/cpdf.so
 %endif
+
+%files iconv
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/iconv.so
+
+%files gmp
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/gmp.so
+
+%files shmop
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/shmop.so
