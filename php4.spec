@@ -91,7 +91,7 @@ BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 #BuildRequires:	fastcgi-devkit
 %if %(expr %{?_with_openssl:1}%{!?_with_openssl:0} + %{!?_without_ldap:1}%{?_without_ldap:0})
-BuildRequires:	openssl-devel >= 0.9.6a
+%{!?_without_openssl:BuildRequires:	openssl-devel >= 0.9.6a}
 %endif
 %{?_with_xslt:BuildRequires:	sablotron-devel}
 %{?_with_xslt:BuildRequires:	expat-devel}
@@ -992,75 +992,75 @@ libtoolize --copy --force
 for i in cgi apxs ; do
 ./configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
-`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=%{_prefix}` \
+	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=%{_prefix}` \
 	`[ $i = apxs ] && echo --with-apxs=%{_sbindir}/apxs` \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
-	--disable-debug \
-	--enable-magic-quotes \
-	--enable-shared \
-	--enable-track-vars \
-	--enable-safe-mode \
-	--enable-trans-sid \
-	--enable-sysvsem=shared \
-	--enable-sysvshm=shared \
-	--enable-shmop=shared \
-	--enable-session \
-	--enable-exif=shared \
-	--with-regex=php \
-	--with-gettext=shared \
-	%{!?_without_ldap:--with-ldap=shared} \
---with-mysql=shared,%{_prefix} \
-	--with-mysql-sock=/var/lib/mysql/mysql.sock \
-	--with-gd=shared \
-	--with-jpeg-dir=shared \
-	--with-zlib-dir=shared \
-	--with-png-dir=shared \
-	--enable-gd-native-ttf \
-	--with-freetype-dir=shared \
-	--with-t1lib=shared \
-	--with-dbase=shared \
-	--with-filepro=shared \
-	--enable-ftp=shared \
-	--with-hyperwave \
-	--with-pdflib=shared \
-	--with-cpdflib=shared \
-	%{?_with_java:--with-java} \
---with-pgsql=shared,%{_prefix} \
-	%{!?_without_imap:--with-imap=shared --with-imap-ssl} \
+	--%{!?debug:dis}%{?debug:en}able-debug \
 	--enable-bcmath=shared \
 	--enable-calendar=shared \
-	--with-mm \
-	--with-pcre-regex=shared \
-	--enable-posix=shared \
-	--with-recode=shared \
-	--enable-ucd-snmp-hack \
 	--enable-dba=shared \
-	%{!?_without_snmp:--with-snmp=shared} \
-	--with-gdbm \
-	--with-db3 \
-	--enable-yp=shared \
-	--with-xml=shared \
-	--enable-xml=shared \
-	--with-zlib=shared \
-	--with-mcrypt=shared \
+	--enable-exif=shared \
+	--enable-ftp=shared \
+	--enable-gd-native-ttf \
+	--enable-magic-quotes \
+	--enable-posix=shared \
+	--enable-session \
+	--enable-shared \
+	--enable-shmop=shared \
+	--enable-sysvsem=shared \
+	--enable-sysvshm=shared \
+	--enable-track-vars \
+	--enable-trans-sid \
+	--enable-safe-mode \
 	--enable-sockets=shared \
+	--enable-yp=shared \
+	--enable-ucd-snmp-hack \
+	--enable-xml=shared \
+	%{?_with_xslt:--enable-xslt=shared} \
 	--with-bz2=shared \
+	--with-cpdflib=shared \
 	--with-ctype=shared \
-	--with-mhash=shared \
 	--with-curl=shared \
+	--without-db2 \
+	--with-db3 \
+	--with-dbase=shared \
+	--with-dom=shared \
+	--with-filepro=shared \
+	--with-freetype-dir=shared \
+	--with-gettext=shared \
+	--with-gd=shared \
+	--with-gdbm \
 	--with-gmp=shared \
+	--with-hyperwave \
+	%{!?_without_imap:--with-imap=shared --with-imap-ssl} \
+	%{?_with_java:--with-java} \
+	--with-jpeg-dir=shared \
+	%{!?_without_ldap:--with-ldap=shared} \
+	--with-mcrypt=shared \
+	--with-mysql=shared,%{_prefix} \
+	--with-mysql-sock=/var/lib/mysql/mysql.sock \
+	--with-mhash=shared \
 	--with-ming=shared \
-	%{?_with_openssl:--with-openssl} \
-	%{!?_without_odbc:--with-unixODBC=shared} \
+	--with-mm \
+	%{!?_without_openssl:--with-openssl} \
 	%{?_with_oracle:--with-oracle=shared} \
 	%{?_with_oci8:--with-oci8=shared} \
-	--without-db2 \
-	--with-dom=shared \
-    %{?_with_xslt:--enable-xslt=shared} \
-    %{?_with_xslt:--with-xslt-sablot=shared} \
-    %{?_with_wddx:--enable-wddx=shared} \
-	--with-pear=%{peardir}
+	--with-pear=%{peardir} \
+	--with-pcre-regex=shared \
+	--with-pdflib=shared \
+	--with-pgsql=shared,%{_prefix} \
+	--with-png-dir=shared \
+	--with-recode=shared \
+	--with-regex=php \
+	%{!?_without_snmp:--with-snmp=shared} \
+	--with-t1lib=shared \
+	%{!?_without_odbc:--with-unixODBC=shared} \
+	%{?_with_wddx:--enable-wddx=shared} \
+	--with-zlib=shared \
+	--with-zlib-dir=shared \
+	--with-xml=shared \
+	%{?_with_xslt:--with-xslt-sablot=shared}
 done
 
 # TODO --with-pspell=/usr,shared (pspell missing)
