@@ -76,7 +76,7 @@ BuildRequires:	mysql-devel >= 3.23.32
 %{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
 BuildRequires:	pam-devel
 BuildRequires:	pdflib-devel >= 4.0.0
-BuildRequires:	libxml-devel >= 2.2.7
+BuildRequires:	libxml2-devel >= 2.2.7
 BuildRequires:	postgresql-devel
 BuildRequires:	recode-devel >= 3.5d-3
 BuildRequires:	t1lib-devel
