@@ -47,9 +47,11 @@
 %undefine	with_recode
 %undefine	with_mm
 %endif
-# x86-only libs
-%ifnarch %{ix86}
+%ifnarch %{ix86} sparc sparcv9 ppc
 %undefine	with_interbase
+%endif
+# x86-only lib
+%ifnarch %{ix86}
 %undefine	with_msession
 %endif
 %include	/usr/lib/rpm/macros.php
