@@ -61,7 +61,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.3.5
-%define	_pre	RC2
+%define	_pre	RC3
 %define	_version	4.3.5%{_pre}
 Release:	0.%{_pre}
 Epoch:		3
@@ -69,7 +69,7 @@ Group:		Libraries
 License:	PHP
 #Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
 Source0:	http://downloads.php.net/ilia/%{name}-%{_version}.tar.bz2
-# Source0-md5:	c99bebbb655c8239510da68cb3975cd1
+# Source0-md5:	efa1b74ed9c34f4801ce576f73bbd29c
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -1698,6 +1698,7 @@ ln -sf php.cgi $RPM_BUILD_ROOT%{_bindir}/php
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 install %{SOURCE6} %{SOURCE7} %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}
+install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi-fcgi.ini
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{httpdir}/icons
 install %{SOURCE4} $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE5} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
@@ -2344,6 +2345,7 @@ fi
 %files fcgi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/php.fcgi
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cgi-fcgi.ini
 
 %files cgi
 %defattr(644,root,root,755)
