@@ -25,12 +25,12 @@ Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
-Version:	4.2.0RC4
+Version:	4.2.0
 Release:	1
-Epoch:		1
+Epoch:		2
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
-Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.gz
+Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
 Source1:	FAQ.%{name}
 Source2:	%{name}.ini
 Source3:	zend.gif
@@ -71,7 +71,7 @@ BuildRequires:	libltdl-devel >= 1.4
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	libpng >= 1.0.8
 BuildRequires:	libtiff-devel
-BuildRequires:	libtool >= 1.4
+BuildRequires:	libtool >= 1.4.2-9
 BuildRequires:	libxml2-devel >= 2.2.7
 BuildRequires:	mhash-devel
 BuildRequires:	ming-devel >= 0.1.0
