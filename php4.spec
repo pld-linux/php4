@@ -15,8 +15,8 @@ Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	JÍzyk skryptowy PHP -- uøywany wraz z serwerem Apache
 Name:		php
-Version:	4.1.0
-Release:	1
+Version:	4.0.6
+Release:	13
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -27,27 +27,27 @@ Group(pt_BR):	Bibliotecas
 Group(ru):	‚…¬Ã…œ‘≈À…
 Group(uk):	‚¶¬Ã¶œ‘≈À…
 License:	The PHP license (see "LICENSE" file included in distribution)
-Source0:	http://download.php.net/distributions/%{name}-%{version}.tar.gz
+Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.gz
 Source1:	FAQ.php
 Source2:	%{name}.ini
 Source3:	zend.gif
 Source4:	http://www.php.net/distributions/manual/php_manual_en.tar.bz2
 Source5:	php-module-install
-#Patch0:		%{name}-imap.patch
-#Patch1:		%{name}-mysql-socket.patch
+Patch0:		%{name}-imap.patch
+Patch1:		%{name}-mysql-socket.patch
 Patch2:		%{name}-mail.patch
-#Patch3:		%{name}-link-libs.patch
+Patch3:		%{name}-link-libs.patch
 Patch4:		%{name}-session-path.patch
 Patch5:		%{name}-am_ac_lt.patch
 Patch6:		%{name}-fastcgi.patch
 Patch7:		%{name}-shared.patch
-#Patch8:		%{name}-ac250.patch
-#Patch9:		%{name}-pearinstall.patch
+Patch8:		%{name}-ac250.patch
+Patch9:		%{name}-pearinstall.patch
 Patch10:	%{name}-pldlogo.patch
-#Patch11:	%{name}-libxml2.patch
-#Patch12:	%{name}-mailsecurity2.patch
-#Patch13:	%{name}-ZVAL.patch
-#Patch14:	%{name}-oracle9.patch
+Patch11:	%{name}-libxml2.patch
+Patch12:	%{name}-mailsecurity2.patch
+Patch13:	%{name}-ZVAL.patch
+Patch14:	%{name}-oracle9.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -962,21 +962,21 @@ ming.
 
 %prep
 %setup  -q
-#%patch0 -p1
-#%patch1 -p1
+%patch0 -p1
+%patch1 -p1
 %patch2 -p1
-#%patch3 -p1
+%patch3 -p1
 %patch4 -p1 
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-#%patch8 -p1
-#%patch9 -p1
+%patch8 -p1
+%patch9 -p1
 %patch10 -p1
-#%patch11 -p1
-#%patch12 -p1
-#%patch13 -p1
-#%patch14 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
