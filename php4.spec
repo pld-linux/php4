@@ -14,7 +14,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.5
-Release:	0.2
+Release:	0.3
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -36,6 +36,8 @@ Patch6:		%{name}-DESTDIR.patch
 Patch7:		%{name}-gd-shared.patch
 Patch8:		%{name}-session-path.patch
 Patch9:		%{name}-libtool_version_check_fix.patch
+Patch10:	%{name}-pdflib.patch
+Patch11:	%{name}-am_ac_lt.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -59,7 +61,7 @@ BuildRequires:	mm-devel >= 1.1.3
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?bcond_off_ldap:BuildRequires: openldap-devel >= 2.0}
 BuildRequires:	pam-devel
-BuildRequires:	pdflib-devel >= 3.03-3
+BuildRequires:	pdflib-devel >= 4.0.0
 #BuildRequires:	libxml-devel >= 2.0.0
 BuildRequires:	postgresql-devel
 BuildRequires:	recode-devel >= 3.5d-3
@@ -73,11 +75,11 @@ BuildRequires:	bzip2-devel
 BuildRequires:	gmp-devel
 BuildRequires:	curl-devel
 %if %(expr %{?bcond_on_openssl:1}%{!?bcond_on_openssl:0} + %{!?bcond_off_ldap:1}%{?bcond_off_ldap:0})
-BuildRequires:	openssl-devel >= 0.9.6
+BuildRequires:	openssl-devel >= 0.9.6a
 %endif
 Requires:	apache(EAPI) >= 1.3.9
 Prereq:		perl
-Prereq:		/usr/sbin/apxs
+Prereq:		%{_sbindir}/apxs
 PreReq:		%{name}-common = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	phpfi
@@ -715,11 +717,15 @@ Pliki potrzebne do kompilacji modu³ów PHP.
 %patch7 -p1
 %patch8 -p1 
 %patch9 -p1
+%patch10 -p1
+%patch11 -p1
 
 %build
-libtoolize --copy --force
 CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
 ./buildconf
+libtoolize --copy --force
+aclocal
+autoconf
 %configure \
 	--enable-discard-path \
 	--with-config-file-path=%{_sysconfdir} \
@@ -735,11 +741,11 @@ CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
 	--enable-shmop=shared \
 	--enable-session \
 	--enable-exif=shared \
-	--with-regex=system \
+	--with-regex=php \
 	--with-gettext=shared \
 	%{!?bcond_off_ldap:--with-ldap=shared} \
-	--with-mysql=shared,/usr \
-	--with-mysql-sock=/var/lib/mysql/mysql.sock \
+	--with-mysql=shared,%{_prefix} \
+	--with-mysql-sock=%{_var}/lib/mysql/mysql.sock \
 	--with-gd=shared \
 	--enable-gd-imgstrttf \
 	--with-dbase=shared \
@@ -749,7 +755,7 @@ CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
 	--with-pdflib=shared \
 	--with-cpdflib=shared \
 	%{?bcond_on_java:--with-java} \
-	--with-pgsql=shared,/usr \
+	--with-pgsql=shared,%{_prefix} \
 	%{!?bcond_off_imap:--with-imap=shared} \
 	--enable-bcmath=shared \
 	--enable-calendar=shared \
@@ -790,8 +796,10 @@ mv php php.cgi
 %{__make} clean
 
 ./buildconf
+aclocal
+autoconf
 %configure \
-	--with-apxs=/usr/sbin/apxs \
+	--with-apxs=%{_sbindir}/apxs \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--disable-debug \
@@ -887,7 +895,7 @@ gzip -9nf CODING_STANDARDS CREDITS FUNCTION_LIST.txt \
       Zend/ZEND_CHANGES README.SELF-CONTAINED-EXTENSIONS README.EXT_SKEL
 
 %post
-/usr/sbin/apxs -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
+%{_sbindir}/apxs -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
 perl -pi -e 's|^#AddType application/x-httpd-php \.php|AddType application/x-httpd-php .php|' \
 	/etc/httpd/httpd.conf
 if [ -f /var/lock/subsys/httpd ]; then
@@ -896,7 +904,7 @@ fi
 
 %preun
 if [ "$1" = "0" ]; then
-	/usr/sbin/apxs -e -A -n php4 %{_pkglibdir}/libphp4.so 1>&2
+	%{_sbindir}/apxs -e -A -n php4 %{_pkglibdir}/libphp4.so 1>&2
 	perl -pi -e \
 		's|^AddType application/x-httpd-php \.php|#AddType application/x-httpd-php .php|' \
 		/etc/httpd/httpd.conf
