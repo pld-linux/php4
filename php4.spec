@@ -15,7 +15,7 @@ Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	JÍzyk skryptowy PHP -- uøywany wraz z serwerem Apache
 Name:		php
-Version:	4.1.0
+Version:	4.1.1
 Release:	1
 Epoch:		1
 Group:		Libraries
@@ -27,7 +27,7 @@ Group(pt_BR):	Bibliotecas
 Group(ru):	‚…¬Ã…œ‘≈À…
 Group(uk):	‚¶¬Ã¶œ‘≈À…
 License:	The PHP license (see "LICENSE" file included in distribution)
-Source0:	http://download.php.net/distributions/%{name}-%{version}.tar.gz
+Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.gz
 Source1:	FAQ.%{name}
 Source2:	%{name}.ini
 Source3:	zend.gif
