@@ -14,7 +14,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.4pl1
-Release:	7
+Release:	8
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -79,6 +79,7 @@ BuildRequires:	openssl-devel >= 0.9.6
 Requires:	apache(EAPI) >= 1.3.9
 Prereq:		perl
 Prereq:		/usr/sbin/apxs
+PreReq:		%{name}-common = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/php
@@ -123,6 +124,37 @@ plikach HTML. Pakiet ten zawiera modu³ przeznaczony dla serwera HTTP
 tworzenie dynamicznie stron WWW. Spora czê¶æ sk³adni PHP zapo¿yczona
 zosta³a z jêzyków: C, Java i Perl.
 
+%package cgi
+Summary:	PHP as CGI program
+Summary(pl):	PHP jako program CGI
+Group:		Libraries
+Group(de):	Libraries
+Group(es):	Bibliotecas
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+PreReq:		%{name}-common = %{version}
+
+%description cgi
+PHP as CGI program
+
+%description cgi -l pl
+PHP jako program CGI
+
+%package common
+Summary:	Common files nneded by both apache module and CGI
+Summary(pl):	Wspólne pliki dla modu³u apacha i programu CGI
+Group:		Libraries
+Group(de):	Libraries
+Group(es):	Bibliotecas
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+
+%description common
+Common files nneded by both apache module and CGI
+
+%description common -l pl
+Wspólne pliki dla modu³u apacha i programu CGI
+
 %package mysql
 Summary:	MySQL database module for PHP
 Summary(pl):	Modu³ bazy danych MySQL dla PHP
@@ -131,7 +163,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description mysql
 This is a dynamic shared object (DSO) for Apache that will add MySQL
@@ -149,7 +181,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description pgsql
 This is a dynamic shared object (DSO) for Apache that will add
@@ -168,7 +200,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 Autoreq:	false
 
 %description oci8
@@ -188,7 +220,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 Autoreq:	false
 
 %description oracle
@@ -208,7 +240,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description gd
 This is a dynamic shared object (DSO) for Apache that will add GD
@@ -228,7 +260,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description java
 This is a dynamic shared object (DSO) for Apache that will add JAVA
@@ -247,7 +279,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description xml
 This is a dynamic shared object (DSO) for Apache that will add XML
@@ -268,7 +300,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description dba
 This is a dynamic shared object (DSO) for Apache that will add
@@ -284,7 +316,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description odbc
 This is a dynamic shared object (DSO) for Apache that will add ODBC
@@ -301,7 +333,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description calendar
 This is a dynamic shared object (DSO) for Apache that will add
@@ -317,7 +349,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description dbase
 This is a dynamic shared object (DSO) for Apache that will add DBase
@@ -334,7 +366,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description filepro
 This is a dynamic shared object (DSO) for Apache that will add FilePro
@@ -350,7 +382,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description posix
 This is a dynamic shared object (DSO) for Apache that will add POSIX
@@ -367,7 +399,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description pcre
 This is a dynamic shared object (DSO) for Apache that will add Perl
@@ -385,7 +417,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description sysvsem
 This is a dynamic shared object (DSO) for Apache that will add SysV
@@ -402,7 +434,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description sysvshm
 This is a dynamic shared object (DSO) for Apache that will add SysV
@@ -419,7 +451,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description yp
 This is a dynamic shared object (DSO) for Apache that will add NIS
@@ -435,7 +467,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description bcmath
 This is a dynamic shared object (DSO) for Apache that will add bc
@@ -453,7 +485,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description ftp
 This is a dynamic shared object (DSO) for Apache that will add FTP
@@ -469,7 +501,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description zlib
 This is a dynamic shared object (DSO) for Apache that will add
@@ -486,7 +518,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description exif
 This is a dynamic shared object (DSO) for Apache that will add exif
@@ -502,7 +534,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description recode
 This is a dynamic shared object (DSO) for Apache that will add recode
@@ -518,7 +550,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description session
 This is a dynamic shared object (DSO) for Apache that will add session
@@ -534,7 +566,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description gettext
 This is a dynamic shared object (DSO) for Apache that will add gettext
@@ -550,7 +582,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description snmp
 This is a dynamic shared object (DSO) for Apache that will add snmp
@@ -566,7 +598,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description imap
 This is a dynamic shared object (DSO) for Apache that will add imap
@@ -582,7 +614,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description ldap
 This is a dynamic shared object (DSO) for Apache that will add LDAP
@@ -598,7 +630,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description sockets
 This is a dynamic shared object (DSO) for Apache that will add sockets
@@ -614,7 +646,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description mcrypt
 This is a dynamic shared object (DSO) for Apache that will add mcrypt
@@ -630,7 +662,7 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-PreReq:		%{name} = %{version}
+PreReq:		%{name}-common = %{version}
 
 %description mhash
 This is a dynamic shared object (DSO) for Apache that will add mhash
@@ -664,7 +696,7 @@ PEAR.
 Summary:	Files for PHP modules development
 Summary(pl):	Pliki do kompilacji modu³ów PHP
 Group:		Development/Languages/PHP
-Requires:	%{name} = %{version}
+Requires:	%{name}-common = %{version}
 
 %description devel
 Files for PHP modules development.
@@ -689,8 +721,79 @@ Pliki potrzebne do kompilacji modu³ów PHP.
 CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 ./buildconf
 %configure \
+	--enable-force-cgi-redirect \
+	--enable-discard-path \
+	--with-config-file-path=%{_sysconfdir} \
+	--with-exec-dir=%{_bindir} \
+	--disable-debug \
+	--enable-magic-quotes \
+	--enable-shared \
+	--enable-track-vars \
+	--enable-safe-mode \
+	--enable-trans-sid \
+	--enable-sysvsem=shared \
+	--enable-sysvshm=shared \
+	--enable-shmop=shared \
+	--enable-session \
+	--enable-exif=shared \
+	--with-regex=system \
+	--with-gettext=shared \
+	%{!?bcond_off_ldap:--with-ldap=shared} \
+	--with-mysql=shared,/usr \
+	--with-mysql-sock=/var/lib/mysql/mysql.sock \
+	--with-gd=shared \
+	--enable-gd-imgstrttf \
+	--with-dbase=shared \
+	--with-filepro=shared \
+	--enable-ftp=shared \
+	--with-hyperwave \
+	--with-pdflib=shared \
+	--with-cpdflib=shared \
+	%{?bcond_on_java:--with-java} \
+	--with-pgsql=shared,/usr \
+	%{!?bcond_off_imap:--with-imap=shared} \
+	--enable-bcmath=shared \
+	--enable-calendar=shared \
+	--with-mm \
+	--with-pcre-regex=shared \
+	--enable-posix=shared \
+	--with-ttf \
+	--with-t1lib \
+	--with-recode=shared \
+	--enable-ucd-snmp-hack \
+	--enable-dba=shared \
+	%{!?bcond_off_snmp:--with-snmp=shared} \
+	--with-gdbm \
+	--with-db3 \
+	--enable-yp=shared \
+	--with-xml=shared \
+	--enable-xml=shared \
+	--with-zlib=shared \
+	--with-mcrypt=shared \
+	--enable-sockets=shared \
+	--with-bz2=shared \
+	--with-ctype=shared \
+	--with-mhash=shared \
+	--with-curl=shared \
+	--with-gmp=shared \
+	%{?bcond_on_openssl:--with-openssl} \
+	%{!?bcond_off_odbc:--with-unixODBC=shared} \
+	%{?bcond_on_oracle:--with-oracle=shared} \
+	%{?bcond_on_oci8:--with-oci8=shared} \
+	--without-db2 
+
+# TODO --with-pspell=/usr,shared (pspell missing)
+
+# --with-dom need libxml >= 2.2.7 \
+
+%{__make}
+mv php php.cgi
+%{__make} clean
+
+./buildconf
+%configure \
 	--with-apxs=/usr/sbin/apxs \
-	--with-config-file-path=%{_sysconfdir}/apache \
+	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--disable-debug \
 	--enable-magic-quotes \
@@ -759,14 +862,19 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} \
 		$RPM_BUILD_ROOT/home/httpd/html/{icons,docs,docs/php4-doc} \
-		$RPM_BUILD_ROOT/%{_sbindir}
+		$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}}
 
-%{__make} install DESTDIR=$RPM_BUILD_ROOT INSTALL_IT="install .libs/*.so $RPM_BUILD_ROOT%{_libdir}/apache/"
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT \
+	INSTALL_IT="install .libs/*.so $RPM_BUILD_ROOT%{_libdir}/apache/"
+
+install php.cgi $RPM_BUILD_ROOT%{_bindir}/php
+
 #exit 1
 #install .libs/*.so	$RPM_BUILD_ROOT%{_pkglibdir}
 #install modules/*.so	$RPM_BUILD_ROOT%{_pkglibdir}/php
 
-install %{SOURCE2}		$RPM_BUILD_ROOT%{_sysconfdir}/apache/php.ini
+install %{SOURCE2}		$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 install %{SOURCE3} php4.gif	$RPM_BUILD_ROOT/home/httpd/html/icons
 install %{SOURCE5} $RPM_BUILD_ROOT/%{_sbindir}
 
@@ -798,257 +906,257 @@ if [ "$1" = "0" ]; then
 fi
 
 %post bcmath
-%{_sbindir}/php-module-install install bcmath %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install bcmath %{_sysconfdir}/php.ini
 
 %preun bcmath
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove bcmath %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove bcmath %{_sysconfdir}/php.ini
 fi
 
 %post calendar
-%{_sbindir}/php-module-install install calendar %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install calendar %{_sysconfdir}/php.ini
 
 %preun calendar
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove calendar %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove calendar %{_sysconfdir}/php.ini
 fi
 
 %post dba
-%{_sbindir}/php-module-install install dba %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install dba %{_sysconfdir}/php.ini
 
 %preun dba
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove dba %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove dba %{_sysconfdir}/php.ini
 fi
 
 %post dbase
-%{_sbindir}/php-module-install install dbase %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install dbase %{_sysconfdir}/php.ini
 
 %preun dbase
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove dbase %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove dbase %{_sysconfdir}/php.ini
 fi
 
 %post exif
-%{_sbindir}/php-module-install install exif %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install exif %{_sysconfdir}/php.ini
 
 %preun exif
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove exif %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove exif %{_sysconfdir}/php.ini
 fi
 
 %post filepro
-%{_sbindir}/php-module-install install filepro %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install filepro %{_sysconfdir}/php.ini
 
 %preun filepro
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove filepro %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove filepro %{_sysconfdir}/php.ini
 fi
 
 %post ftp
-%{_sbindir}/php-module-install install ftp %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install ftp %{_sysconfdir}/php.ini
 
 %preun ftp
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove ftp %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove ftp %{_sysconfdir}/php.ini
 fi
 
 %post gd
-%{_sbindir}/php-module-install install gd %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install gd %{_sysconfdir}/php.ini
 
 %preun gd
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove gd %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove gd %{_sysconfdir}/php.ini
 fi
 
 %post gettext
-%{_sbindir}/php-module-install install gettext %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install gettext %{_sysconfdir}/php.ini
 
 %preun gettext
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove gettext %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove gettext %{_sysconfdir}/php.ini
 fi
 
 %if %{?bcond_off_imap:0}%{!?bcond_off_imap:1}
 %post imap
-%{_sbindir}/php-module-install install imap %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install imap %{_sysconfdir}/php.ini
 
 %preun imap
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove imap %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove imap %{_sysconfdir}/php.ini
 fi
 %endif
 
 %if %{?bond_on_java:1}%{!?bond_on_java:0}
 %post java
-%{_sbindir}/php-module-install install libphp_java %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install libphp_java %{_sysconfdir}/php.ini
 
 %preun java
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove libphp_java %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove libphp_java %{_sysconfdir}/php.ini
 fi
 %endif
 
 %if %{?bcond_off_ldap:0}%{!?bcond_off_ldap:1}
 %post ldap
-%{_sbindir}/php-module-install install ldap %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install ldap %{_sysconfdir}/php.ini
 
 %preun ldap
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove ldap %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove ldap %{_sysconfdir}/php.ini
 fi
 %endif
 
 %post mcrypt
-%{_sbindir}/php-module-install install mcrypt %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install mcrypt %{_sysconfdir}/php.ini
 
 %preun mcrypt
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove mcrypt %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove mcrypt %{_sysconfdir}/php.ini
 fi
 
 %post mhash
-%{_sbindir}/php-module-install install mhash %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install mhash %{_sysconfdir}/php.ini
 
 %preun mhash
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove mhash %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove mhash %{_sysconfdir}/php.ini
 fi
 
 %post mysql
-%{_sbindir}/php-module-install install mysql %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install mysql %{_sysconfdir}/php.ini
 
 %preun mysql
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove mysql %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove mysql %{_sysconfdir}/php.ini
 fi
 
 %if %{?bcond_on_oci8:1}%{!?bcond_on_oci8:0}
 %post oci8
-%{_sbindir}/php-module-install install oci8 %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install oci8 %{_sysconfdir}/php.ini
 
 %preun oci8
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove oci8 %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove oci8 %{_sysconfdir}/php.ini
 fi
 %endif
 
 %if %{?bcond_off_odbc:0}%{!?bcond_off_odbc:1}
 %post odbc
-%{_sbindir}/php-module-install install odbc %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install odbc %{_sysconfdir}/php.ini
 
 %preun odbc
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove odbc %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove odbc %{_sysconfdir}/php.ini
 fi
 %endif
 
 %if %{?bcond_on_oracle:1}%{!?bcond_on_oracle:0}
 %post oracle
-%{_sbindir}/php-module-install install oracle %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install oracle %{_sysconfdir}/php.ini
 
 %preun oracle
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove oracle %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove oracle %{_sysconfdir}/php.ini
 fi
 %endif
 
 %post pcre
-%{_sbindir}/php-module-install install pcre %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install pcre %{_sysconfdir}/php.ini
 
 %preun pcre
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove pcre %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove pcre %{_sysconfdir}/php.ini
 fi
 
 %post pgsql
-%{_sbindir}/php-module-install install pgsql %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install pgsql %{_sysconfdir}/php.ini
 
 %preun pgsql
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove pgsql %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove pgsql %{_sysconfdir}/php.ini
 fi
 
 %post posix
-%{_sbindir}/php-module-install install posix %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install posix %{_sysconfdir}/php.ini
 
 %preun posix
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove posix %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove posix %{_sysconfdir}/php.ini
 fi
 
 %post recode
-%{_sbindir}/php-module-install install recode %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install recode %{_sysconfdir}/php.ini
 
 %preun recode
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove recode %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove recode %{_sysconfdir}/php.ini
 fi
 
 %post session
-%{_sbindir}/php-module-install install session %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install session %{_sysconfdir}/php.ini
 
 %preun session
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove session %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove session %{_sysconfdir}/php.ini
 fi
 
 %if %{?bcond_off_snmp:0}%{!?bcond_off_snmp:1}
 %post snmp
-%{_sbindir}/php-module-install install snmp %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install snmp %{_sysconfdir}/php.ini
 
 %preun snmp
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove snmp %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove snmp %{_sysconfdir}/php.ini
 fi
 %endif
 
 %post sockets
-%{_sbindir}/php-module-install install sockets %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install sockets %{_sysconfdir}/php.ini
 
 %preun sockets
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove sockets %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove sockets %{_sysconfdir}/php.ini
 fi
 
 %post sysvsem
-%{_sbindir}/php-module-install install sysvsem %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install sysvsem %{_sysconfdir}/php.ini
 
 %preun sysvsem
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove sysvsem %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove sysvsem %{_sysconfdir}/php.ini
 fi
 
 %post sysvshm
-%{_sbindir}/php-module-install install sysvshm %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install sysvshm %{_sysconfdir}/php.ini
 
 %preun sysvshm
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove sysvshm %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove sysvshm %{_sysconfdir}/php.ini
 fi
 
 %post xml
-%{_sbindir}/php-module-install install xml %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install xml %{_sysconfdir}/php.ini
 
 %preun xml
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove xml %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove xml %{_sysconfdir}/php.ini
 fi
 
 %post yp
-%{_sbindir}/php-module-install install yp %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install yp %{_sysconfdir}/php.ini
 
 %preun yp
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove yp %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove yp %{_sysconfdir}/php.ini
 fi
 
 %post zlib
-%{_sbindir}/php-module-install install zlib %{_sysconfdir}/apache/php.ini
+%{_sbindir}/php-module-install install zlib %{_sysconfdir}/php.ini
 
 %preun zlib
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove zlib %{_sysconfdir}/apache/php.ini
+        %{_sbindir}/php-module-install remove zlib %{_sysconfdir}/php.ini
 fi
 
 %clean
@@ -1056,15 +1164,22 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/apache/libphp4.so
+
+%files cgi
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/php
+
+%files common
+%defattr(644,root,root,755)
 %doc {CODING_STANDARDS,CREDITS,FUNCTION_LIST.txt,Zend/ZEND_CHANGES}.gz
 %doc {LICENSE,Zend/LICENSE,EXTENSIONS,NEWS,TODO*}.gz  
 %doc {README.EXT_SKEL,README.SELF-CONTAINED-EXTENSIONS}.gz
 
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/apache/*
+%attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
 
 /home/httpd/html/icons/*
 
-%attr(755,root,root) %{_libdir}/apache/libphp4.so
 %attr(755,root,root) %{_sbindir}/*
 
 %dir %{_libdir}/php
