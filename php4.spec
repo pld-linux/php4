@@ -110,6 +110,7 @@ Patch27:	%{name}-zlib.patch
 Patch28:	%{name}-db-shared.patch
 Patch29:	%{name}-sybase-fix.patch
 Patch30:	%{name}-mssql-fix.patch
+Patch31:	%{name}-phpize_fixes.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1506,6 +1507,7 @@ cp php.ini-dist php.ini
 %patch28 -p1
 %patch29 -p1
 %patch30 -p1
+%patch31 -p0
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
