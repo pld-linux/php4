@@ -17,7 +17,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.1.2
-Release:	0.1
+Release:	0.9
 Epoch:		1
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -32,18 +32,14 @@ Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-mysql-socket.patch
 Patch3:		%{name}-mail.patch
 Patch4:		%{name}-link-libs.patch
-#Patch5:		%{name}-session-path.patch
-Patch6:		%{name}-am_ac_lt.patch
-Patch7:		%{name}-fastcgi.patch
-Patch8:		%{name}-ac250.patch
-Patch9:		%{name}-mailsecurity2.patch
-Patch10:	%{name}-oracle9.patch
-Patch11:	%{name}-no_%{name}_pcre_in_SAPI_c.patch
-Patch12:	%{name}-libpq_fs_h_path.patch
-# Some new patches from bugs.php.net (adasi)
-#Patch101:	%{name}-register_shutdown_function.patch
-#Patch102:	%{name}-domxml_node.patch
-#Patch103:	%{name}-image_c.patch
+Patch5:		%{name}-am_ac_lt.patch
+Patch6:		%{name}-fastcgi.patch
+Patch7:		%{name}-ac250.patch
+Patch8:		%{name}-mailsecurity2.patch
+Patch9:		%{name}-oracle9.patch
+Patch10:	%{name}-no_%{name}_pcre_in_SAPI_c.patch
+Patch11:	%{name}-libpq_fs_h_path.patch
+
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -721,17 +717,13 @@ Modu³ PHP dodaj±cy obs³ugê libcpdf.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-#%patch5 -p1	obsolete
+%patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
-%patch12 -p1
-#%patch101 -p1
-#%patch102 -p1
-#%patch103 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
