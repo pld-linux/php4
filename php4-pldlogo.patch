@@ -1,7 +1,7 @@
-diff -urN php-4.2.0.org/ext/standard/info.c php-4.2.0/ext/standard/info.c
---- php-4.2.0.org/ext/standard/info.c	Tue Apr 23 10:30:02 2002
-+++ php-4.2.0/ext/standard/info.c	Tue Apr 23 10:30:39 2002
-@@ -231,7 +231,20 @@
+diff -urN php-4.2.1RC2.org/ext/standard/info.c php-4.2.1RC2/ext/standard/info.c
+--- php-4.2.1RC2.org/ext/standard/info.c	Sat May 11 20:49:24 2002
++++ php-4.2.1RC2/ext/standard/info.c	Sat May 11 20:49:40 2002
+@@ -229,7 +229,20 @@
  		php_printf("This program makes use of the Zend Scripting Language Engine:<br />");
  		php_html_puts(zend_version, strlen(zend_version) TSRMLS_CC);
  		php_info_print_box_end();
@@ -23,10 +23,10 @@ diff -urN php-4.2.0.org/ext/standard/info.c php-4.2.0/ext/standard/info.c
  	}
  
  	if ((flag & PHP_INFO_CREDITS) && expose_php) {	
-diff -urN php-4.2.0.org/ext/standard/info.c.orig php-4.2.0/ext/standard/info.c.orig
---- php-4.2.0.org/ext/standard/info.c.orig	Thu Jan  1 01:00:00 1970
-+++ php-4.2.0/ext/standard/info.c.orig	Mon Apr 22 19:57:45 2002
-@@ -0,0 +1,596 @@
+diff -urN php-4.2.1RC2.org/ext/standard/info.c.orig php-4.2.1RC2/ext/standard/info.c.orig
+--- php-4.2.1RC2.org/ext/standard/info.c.orig	Thu Jan  1 01:00:00 1970
++++ php-4.2.1RC2/ext/standard/info.c.orig	Thu Mar 14 19:39:37 2002
+@@ -0,0 +1,594 @@
 +/* 
 +   +----------------------------------------------------------------------+
 +   | PHP Version 4                                                        |
@@ -204,9 +204,7 @@ diff -urN php-4.2.0.org/ext/standard/info.c.orig php-4.2.0/ext/standard/info.c.o
 +			}
 +			if ((ta->tm_mon==3) && (ta->tm_mday==1)) {
 +				PUTS("?="PHP_EGG_LOGO_GUID"\" border=0 align=\"right\" alt=\"Thies!\"></a>");
-+			} else if ((ta->tm_mon==11) && (ta->tm_mday==25)) {
-+				PUTS("?="PHP_XMAS_LOGO_GUID"\" border=0 align=\"right\" alt=\"Happy X-mas!\"></a>");
-+			} else { 
++			} else {
 +				PUTS("?="PHP_LOGO_GUID"\" border=0 align=\"right\" alt=\"PHP Logo\"></a>");
 +			}
 +		}
@@ -623,21 +621,21 @@ diff -urN php-4.2.0.org/ext/standard/info.c.orig php-4.2.0/ext/standard/info.c.o
 + * vim600: sw=4 ts=4 fdm=marker
 + * vim<600: sw=4 ts=4
 + */
-diff -urN php-4.2.0.org/ext/standard/info.h php-4.2.0/ext/standard/info.h
---- php-4.2.0.org/ext/standard/info.h	Tue Apr 23 10:30:02 2002
-+++ php-4.2.0/ext/standard/info.h	Tue Apr 23 10:30:39 2002
-@@ -55,6 +55,7 @@
- #define PHP_XMAS_LOGO_GUID	"P0DB0CE02AD-4462-618A-7A0A-212E4522E052"
+diff -urN php-4.2.1RC2.org/ext/standard/info.h php-4.2.1RC2/ext/standard/info.h
+--- php-4.2.1RC2.org/ext/standard/info.h	Sat May 11 20:49:24 2002
++++ php-4.2.1RC2/ext/standard/info.h	Sat May 11 20:49:40 2002
+@@ -54,6 +54,7 @@
+ #define PHP_EGG_LOGO_GUID	"PHPE9568F36-D428-11d2-A769-00AA001ACF42"
  #define ZEND_LOGO_GUID		"PHPE9568F35-D428-11d2-A769-00AA001ACF42"
  #define PHP_CREDITS_GUID  "PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000"
 +#define PLD_LOGO_GUID	"PHPE9568F40-D428-11d2-A769-00AA001ACF42"
  
  PHP_FUNCTION(phpversion);
  PHP_FUNCTION(phpinfo);
-diff -urN php-4.2.0.org/ext/standard/info.h.orig php-4.2.0/ext/standard/info.h.orig
---- php-4.2.0.org/ext/standard/info.h.orig	Thu Jan  1 01:00:00 1970
-+++ php-4.2.0/ext/standard/info.h.orig	Mon Apr 22 19:55:19 2002
-@@ -0,0 +1,81 @@
+diff -urN php-4.2.1RC2.org/ext/standard/info.h.orig php-4.2.1RC2/ext/standard/info.h.orig
+--- php-4.2.1RC2.org/ext/standard/info.h.orig	Thu Jan  1 01:00:00 1970
++++ php-4.2.1RC2/ext/standard/info.h.orig	Thu Feb 28 09:26:46 2002
+@@ -0,0 +1,80 @@
 +/* 
 +   +----------------------------------------------------------------------+
 +   | PHP Version 4                                                        |
@@ -692,7 +690,6 @@ diff -urN php-4.2.0.org/ext/standard/info.h.orig php-4.2.0/ext/standard/info.h.o
 +
 +#define PHP_LOGO_GUID		  "PHPE9568F34-D428-11d2-A769-00AA001ACF42"
 +#define PHP_EGG_LOGO_GUID	"PHPE9568F36-D428-11d2-A769-00AA001ACF42"
-+#define PHP_XMAS_LOGO_GUID	"P0DB0CE02AD-4462-618A-7A0A-212E4522E052"
 +#define ZEND_LOGO_GUID		"PHPE9568F35-D428-11d2-A769-00AA001ACF42"
 +#define PHP_CREDITS_GUID  "PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000"
 +
@@ -719,14 +716,13 @@ diff -urN php-4.2.0.org/ext/standard/info.h.orig php-4.2.0/ext/standard/info.h.o
 +void register_phpinfo_constants(INIT_FUNC_ARGS);
 +
 +#endif /* INFO_H */
-diff -urN php-4.2.0.org/main/logos.h php-4.2.0/main/logos.h
---- php-4.2.0.org/main/logos.h	Tue Apr 23 10:30:03 2002
-+++ php-4.2.0/main/logos.h	Tue Apr 23 10:34:00 2002
-@@ -1787,3 +1787,128 @@
- 	 89, 100,  96,  89, 121,  80,  82, 226, 
- 	176,  14, 206,  72, 158, 249,  61, 238, 
- 	248,  14, 139,   1,   1,   0,  59 };
-+
+diff -urN php-4.2.1RC2.org/main/logos.h php-4.2.1RC2/main/logos.h
+--- php-4.2.1RC2.org/main/logos.h	Sat May 11 20:49:24 2002
++++ php-4.2.1RC2/main/logos.h	Sat May 11 20:50:32 2002
+@@ -1057,3 +1057,127 @@
+ 	  4,   0,  59,   0  };
+ 
+ 
 +unsigned char pld_logo[] = {
 + 	137,  80,  78,  71,  13,  10,  26,  10,   0,   0,
 + 	  0,  13,  73,  72,  68,  82,   0,   0,   0,  80,
@@ -851,14 +847,14 @@ diff -urN php-4.2.0.org/main/logos.h php-4.2.0/main/logos.h
 + 	  0,   0, 218,  35,  72, 230, 144,   1,  81,  42,
 + 	  0,   0,   0,   0,  73,  69,  78,  68, 174,  66,
 + 	 96, 130 };
-diff -urN php-4.2.0.org/main/php_logos.c php-4.2.0/main/php_logos.c
---- php-4.2.0.org/main/php_logos.c	Tue Apr 23 10:30:03 2002
-+++ php-4.2.0/main/php_logos.c	Tue Apr 23 10:35:22 2002
-@@ -57,6 +57,7 @@
- 	php_register_info_logo(PHP_EGG_LOGO_GUID , "image/gif", php_egg_logo , sizeof(php_egg_logo));
- 	php_register_info_logo(PHP_XMAS_LOGO_GUID, "image/gif", php_xmas_logo, sizeof(php_xmas_logo));
- 	php_register_info_logo(ZEND_LOGO_GUID    , "image/gif", zend_logo    , sizeof(zend_logo));
-+	php_register_info_logo(PLD_LOGO_GUID     , "image/png", pld_logo     , sizeof(pld_logo));
+diff -urN php-4.2.1RC2.org/main/php_logos.c php-4.2.1RC2/main/php_logos.c
+--- php-4.2.1RC2.org/main/php_logos.c	Sat May 11 20:49:24 2002
++++ php-4.2.1RC2/main/php_logos.c	Sat May 11 20:51:05 2002
+@@ -56,6 +56,7 @@
+ 	php_register_info_logo(PHP_LOGO_GUID    , "image/gif", php_logo    , sizeof(php_logo));
+ 	php_register_info_logo(PHP_EGG_LOGO_GUID, "image/gif", php_egg_logo, sizeof(php_egg_logo));
+ 	php_register_info_logo(ZEND_LOGO_GUID   , "image/gif", zend_logo   , sizeof(zend_logo));
++	php_register_info_logo(PLD_LOGO_GUID    , "image/png", pld_logo    , sizeof(pld_logo));
  
  	return SUCCESS;
  }
