@@ -69,28 +69,28 @@ Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
-Patch2:		%{name}-mysql-socket.patch
+#Patch2:		%{name}-mysql-socket.patch
 Patch3:		%{name}-mail.patch
-Patch4:		%{name}-link-libs.patch
-Patch5:		%{name}-fastcgi.patch
+#Patch4:		%{name}-link-libs.patch
+#Patch5:		%{name}-fastcgi.patch
 Patch6:		%{name}-libpq_fs_h_path.patch
 Patch7:		%{name}-wddx-fix.patch
 Patch8:		%{name}-cpdf-fix.patch
-Patch9:		%{name}-session-fix-shared.patch
+#Patch9:		%{name}-session-fix-shared.patch
 Patch10:	%{name}-hyperwave-fix.patch
-Patch11:	%{name}-openssl-for-ext-only.patch
+#Patch11:	%{name}-openssl-for-ext-only.patch
 Patch12:	%{name}-java-fix.patch
 Patch13:	%{name}-mcal-shared-lib.patch
 Patch14:	%{name}-msession-shared-lib.patch
 Patch15:	%{name}-build_modules.patch
-Patch16:	%{name}-sapi-ini-file.patch
-Patch17:	%{name}-%{name}_iconv_string_declaration.patch
-Patch18:	%{name}-pear-cosmetic.patch
-Patch19:	%{name}-mnogosearch.patch
+#Patch16:	%{name}-sapi-ini-file.patch
+#Patch17:	%{name}-%{name}_iconv_string_declaration.patch
+#Patch18:	%{name}-pear-cosmetic.patch
+#Patch19:	%{name}-mnogosearch.patch
 Patch20:	%{name}-ini.patch
 Patch21:	%{name}-acam.patch
 Patch22:	%{name}-xmlrpc-fix.patch
-Patch23:	%{name}-iconv-bug18039.patch
+#Patch23:	%{name}-iconv-bug18039.patch
 Patch24:	%{name}-db4.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
@@ -151,7 +151,7 @@ BuildRequires:	t1lib-devel
 %{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.6}
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
 %{!?_without_xmlrpc:BuildRequires:	xmlrpc-epi-devel}
-BuildRequires:	yaz-devel
+BuildRequires:	yaz-devel >= 1.9
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	zziplib-devel
@@ -1315,33 +1315,33 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 
 %prep
 %setup -q
-%patch0 -p1
+#%patch0 -p1	-- needs update!
 %patch1 -p1
-%patch2 -p1
+#%patch2 -p1	-- obsolete
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
+#%patch4 -p1	-- seems obsolete
+#%patch5 -p1	-- obsolete (fastcgi SAPI removed)
 %patch6 -p1
-%patch7 -p1
+#%patch7 -p1	-- partially obsolete, the rest to check (too many changes)
 %patch8 -p1
-%patch9 -p1
+#%patch9 -p1	-- obsolete
 %patch10 -p1
-%patch11 -p1
-%patch12 -p1
+#%patch11 -p1	-- obsolete (openssl used also in common part)
+#%patch12 -p1	-- needs update? to check
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
-%patch16 -p1
-%patch17 -p1
-%patch18 -p1
-%patch19 -p1
+#%patch16 -p1	-- uhm... php allows _separate_ (not included) php-${SAPI}.ini files now
+#%patch17 -p1	-- obsolete
+#%patch18 -p1	-- obsolete? - no such file
+#%patch19 -p1	-- obsolete
 cp php.ini-dist php.ini
 %patch20 -p1
 # for ac2.53b/am1.6b - AC_LANG_CXX has AM_CONDITIONAL, so cannot be invoked
 # conditionally...
 %patch21 -p1
 %patch22 -p1
-%patch23 -p1
+#%patch23 -p1	-- obsolete
 %patch24 -p1
 
 install -d manual
@@ -1443,7 +1443,7 @@ for i in cgi apxs ; do
 	%{!?_without_pspell:--with-pspell=shared} \
 	%{!?_without_recode:--with-recode=shared} \
 	--with-regex=php \
-	--with-sablot-js=shared,no \
+	--without-sablot-js \
 	%{!?_without_snmp:--with-snmp=shared} \
 	%{!?_without_sybase_ct:--with-sybase-ct=shared,/usr} \
 	--with-t1lib=shared \
@@ -1454,8 +1454,10 @@ for i in cgi apxs ; do
 	--with-yaz=shared \
 	--with-zip=shared \
 	--with-zlib=shared \
-	--with-zlib-dir=shared
+	--with-zlib-dir=shared,/usr
 done
+
+#	--with-sablot-js=shared,no
 
 # for now session_mm doesn't work with shared session module...
 # --enable-session=shared
