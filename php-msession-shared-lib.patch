@@ -1,5 +1,5 @@
---- php-4.3.0/ext/msession/config.m4.orig	Thu Jan  2 20:40:11 2003
-+++ php-4.3.0/ext/msession/config.m4	Thu Jan  2 20:42:17 2003
+--- php-5.0.3/ext/msession/config.m4.orig	2003-02-12 19:34:20.000000000 +0100
++++ php-5.0.3/ext/msession/config.m4	2004-12-26 16:35:35.520883760 +0100
 @@ -6,12 +6,12 @@
  [  --with-msession[=DIR]   Include msession support])
   
@@ -15,7 +15,7 @@
  				PHOENIX_DIR=$i
  				AC_MSG_RESULT(found in $i)
  			fi
-@@ -25,9 +25,9 @@
+@@ -25,12 +25,12 @@
  
  
    	AC_DEFINE(HAVE_MSESSION, 1, [ ])
@@ -25,5 +25,9 @@
 -	PHP_SUBST(PHOENIX_LIB)
 +	PHP_SUBST(MSESSION_SHARED_LIBADD)
  
+   	PHP_REQUIRE_CXX
    	PHP_NEW_EXTENSION(msession, msession.c, $ext_shared)
+-  	PHP_ADD_LIBRARY(stdc++)
++  	PHP_ADD_LIBRARY(stdc++,,MSESSION_SHARED_LIBADD)
  fi
+ 
