@@ -3,7 +3,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache.
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache.
 Name:		php
 Version:	4.0.1pl2
-Release: 2
+Release:	2
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
@@ -351,8 +351,8 @@ Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
 
 %description exif
-This is a dynamic shared object (DSO) for Apache that will add
-exif support to PHP4.
+This is a dynamic shared object (DSO) for Apache that will add exif
+support to PHP4.
 
 #%description exif -l pl
 
@@ -365,23 +365,23 @@ Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
 
 %description recode
-This is a dynamic shared object (DSO) for Apache that will add
-recode support to PHP4.
+This is a dynamic shared object (DSO) for Apache that will add recode
+support to PHP4.
 
 #%description recode -l pl
 
-#%package session
-#Summary:	sessionextension module for PHP4
-#Summary(pl):	Modu³ session dla PHP4
-#Group:		Libraries
-#Group(fr):	Librairies
-#Group(pl):	Biblioteki
-#Requires:	%{name} = %{version}
-#
-#%description session
-#This is a dynamic shared object (DSO) for Apache that will add
-#session support to PHP4.
-#
+%package session
+Summary:	sessionextension module for PHP4
+Summary(pl):	Modu³ session dla PHP4
+Group:		Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Requires:	%{name} = %{version}
+
+%description session
+This is a dynamic shared object (DSO) for Apache that will add
+session support to PHP4.
+
 #%description session -l pl
 
 %package gettext
@@ -393,8 +393,8 @@ Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
 
 %description gettext
-This is a dynamic shared object (DSO) for Apache that will add
-gettext support to PHP4.
+This is a dynamic shared object (DSO) for Apache that will add gettext
+support to PHP4.
 
 #%description gettext -l pl
 
@@ -408,8 +408,8 @@ Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
 
 %description snmp
-This is a dynamic shared object (DSO) for Apache that will add
-snmp support to PHP4.
+This is a dynamic shared object (DSO) for Apache that will add snmp
+support to PHP4.
 
 #%description snmp -l pl
 
@@ -422,8 +422,8 @@ Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
 
 %description imap
-This is a dynamic shared object (DSO) for Apache that will add
-imap support to PHP4.
+This is a dynamic shared object (DSO) for Apache that will add imap
+support to PHP4.
 
 #%description imap -l pl
 
