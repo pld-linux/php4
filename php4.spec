@@ -15,6 +15,7 @@ Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
 BuildRequires:	zlib-devel
+BuildRequires:	mysql-devel
 BuildRoot:	/tmp/%{name}-%{version}-root
 
 %description
@@ -49,17 +50,19 @@ PHP jest jêzykiem skryptowym
 	--enable-magic-quotes \
 	--enable-track-vars \
 	--without-gd \
+	--with-mysql \
 	--enable-shared 
 make
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d 	$RPM_BUILD_ROOT{%{_libdir}/apache,%{_sysconfdir}/httpd,/home/httpd/html/icons/}
+install -d $RPM_BUILD_ROOT{%{_libdir}/apache,%{_sysconfdir}/httpd} \
+		$RPM_BUILD_ROOT/home/httpd/html/icons
 
-install 	.libs/*.so		$RPM_BUILD_ROOT%{_libdir}/apache
-install 	%{SOURCE2}		$RPM_BUILD_ROOT%{_sysconfdir}/httpd/php.ini
-install %{SOURCE3} $RPM_BUILD_ROOT/home/httpd/html/icons/
+install .libs/*.so	$RPM_BUILD_ROOT%{_libdir}/apache
+install %{SOURCE2}	$RPM_BUILD_ROOT%{_sysconfdir}/httpd/php.ini
+install %{SOURCE3} 	$RPM_BUILD_ROOT/home/httpd/html/icons
 
 strip --strip-unneeded	$RPM_BUILD_ROOT%{_libdir}/apache/*.so
 
@@ -68,7 +71,6 @@ gzip -9nf CODING_STANDARDS CREDITS FAQ*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-
 
 %files
 %defattr(644,root,root,755)
