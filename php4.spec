@@ -16,7 +16,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	JÍzyk skryptowy PHP -- uøywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.6
-Release:	12
+Release:	13
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -51,12 +51,14 @@ Patch14:	%{name}-oracle9.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
-BuildRequires:	zip
+BuildRequires:	autoconf >= 1.4
+BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
-BuildRequires:	flex
-BuildRequires:	perl
-BuildRequires:	pkgconfig
+BuildRequires:	bzip2-devel
+BuildRequires:	curl-devel
 BuildRequires:	db3-devel >= 3.1.17
+BuildRequires:	flex
+BuildRequires:	gmp-devel
 BuildRequires:	freetype-devel >= 2.0
 BuildRequires:	gd-devel >= 2.0.1
 BuildRequires:	gdbm-devel
@@ -66,28 +68,27 @@ BuildRequires:	gdbm-devel
 %{?_with_java:BuildRequires:	kaffe-devel}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libltdl-devel >= 1.4
+BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	libpng >= 1.0.8
 BuildRequires:	libtiff-devel
 BuildRequires:	libtool >= 1.4
-BuildRequires:	automake >= 1.4d
-BuildRequires:	autoconf >= 1.4
+BuildRequires:	libxml2-devel >= 2.2.7
+BuildRequires:	mhash-devel
+BuildRequires:	ming-devel >= 0.1.0
 BuildRequires:	mm-devel >= 1.1.3
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
 BuildRequires:	pam-devel
 BuildRequires:	pdflib-devel >= 4.0.0
-BuildRequires:	libxml2-devel >= 2.2.7
+BuildRequires:	perl
+BuildRequires:	pkgconfig
 BuildRequires:	postgresql-devel
 BuildRequires:	recode-devel >= 3.5d-3
 BuildRequires:	t1lib-devel
-%{!?_without_odbc:BuildRequires: unixODBC-devel}
-BuildRequires:	zlib-devel >= 1.0.9
 %{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.3}
-BuildRequires:	libmcrypt-devel >= 2.4.4
-BuildRequires:	mhash-devel
-BuildRequires:	bzip2-devel
-BuildRequires:	gmp-devel
-BuildRequires:	curl-devel
+%{!?_without_odbc:BuildRequires: unixODBC-devel}
+BuildRequires:	zip
+BuildRequires:	zlib-devel >= 1.0.9
 #BuildRequires:	fastcgi-devkit
 %if %(expr %{?_with_openssl:1}%{!?_with_openssl:0} + %{!?_without_ldap:1}%{?_without_ldap:0})
 BuildRequires:	openssl-devel >= 0.9.6a
@@ -596,7 +597,8 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add FTP
 support to PHP.
 
-#%description ftp -l pl
+%description ftp -l pl
+Modu≥ PHP dodaj±cy obs≥ugÍ protoko≥u FTP.
 
 %package zlib
 Summary:	Zlib extension module for PHP
@@ -619,7 +621,7 @@ compression (zlib) support to PHP.
 Modu≥ PHP umoøliwiaj±cy uøywanie kompresji (poprzez bibliotekÍ zlib).
 
 %package exif
-Summary:	exifextension module for PHP
+Summary:	exif extension module for PHP
 Summary(pl):	Modu≥ exif dla PHP
 Group:		Libraries
 Group(de):	Libraries
@@ -635,10 +637,11 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add exif
 support to PHP.
 
-#%description exif -l pl
+%description exif -l pl
+Modu≥ PHP dodaj±cy obs≥ugÍ plikÛw EXIF.
 
 %package recode
-Summary:	recodeextension module for PHP
+Summary:	recode extension module for PHP
 Summary(pl):	Modu≥ recode dla PHP
 Group:		Libraries
 Group(de):	Libraries
@@ -655,10 +658,12 @@ Requires:	recode >= 3.5d-3
 This is a dynamic shared object (DSO) for Apache that will add recode
 support to PHP.
 
-#%description recode -l pl
+%description recode -l pl
+Modu≥ PHP dodaj±cy moøliwo∂Ê konwersji kodowania plikÛw (poprzez
+bibliotekÍ recode).
 
 %package session
-Summary:	sessionextension module for PHP
+Summary:	session extension module for PHP
 Summary(pl):	Modu≥ session dla PHP
 Group:		Libraries
 Group(de):	Libraries
@@ -674,10 +679,11 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add session
 support to PHP.
 
-#%description session -l pl
+%description session -l pl
+Modu≥ PHP dodaj±cy obs≥ugÍ sesji.
 
 %package gettext
-Summary:	gettextextension module for PHP
+Summary:	gettext extension module for PHP
 Summary(pl):	Modu≥ gettext dla PHP
 Group:		Libraries
 Group(de):	Libraries
@@ -693,11 +699,12 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add gettext
 support to PHP.
 
-#%description gettext -l pl
+%description gettext -l pl
+Modu≥ PHP dodaj±cy obs≥ugÍ lokalizacji przez gettext.
 
 %package snmp
-Summary:	snmpextension module for PHP
-Summary(pl):	Modu≥ snmp dla PHP
+Summary:	SNMP extension module for PHP
+Summary(pl):	Modu≥ SNMP dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(es):	Bibliotecas
@@ -709,14 +716,15 @@ Group(uk):	‚¶¬Ã¶œ‘≈À…
 PreReq:		%{name}-common = %{version}
 
 %description snmp
-This is a dynamic shared object (DSO) for Apache that will add snmp
+This is a dynamic shared object (DSO) for Apache that will add SNMP
 support to PHP.
 
-#%description snmp -l pl
+%description snmp -l pl
+Modu≥ PHP dodaj±cy obs≥ugÍ SNMP.
 
 %package imap
-Summary:	imapextension module for PHP
-Summary(pl):	Modu≥ imap dla PHP
+Summary:	IMAP extension module for PHP
+Summary(pl):	Modu≥ IMAP dla PHP
 Group:		Libraries
 Group(de):	Libraries
 Group(es):	Bibliotecas
@@ -728,10 +736,11 @@ Group(uk):	‚¶¬Ã¶œ‘≈À…
 PreReq:		%{name}-common = %{version}
 
 %description imap
-This is a dynamic shared object (DSO) for Apache that will add imap
+This is a dynamic shared object (DSO) for Apache that will add IMAP
 support to PHP.
 
-#%description imap -l pl
+%description imap -l pl
+Modu≥ PHP dodaj±cy obs≥ugÍ skrzynek IMAP.
 
 %package ldap
 Summary:	LDAP extension module for PHP
@@ -750,7 +759,8 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add LDAP
 support to PHP.
 
-#%description ldap -l pl
+%description ldap -l pl
+Modu≥ PHP dodaj±cy obs≥ugÍ LDAP.
 
 %package sockets
 Summary:	sockets extension module for PHP
@@ -769,7 +779,8 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add sockets
 support to PHP.
 
-#%description sockets -l pl
+%description sockets -l pl
+Modu≥ PHP dodaj±cy obs≥ugÍ gniazdek.
 
 %package mcrypt
 Summary:	mcrypt extension module for PHP
@@ -788,7 +799,8 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add mcrypt
 support to PHP.
 
-#%description mcrypt -l pl
+%description mcrypt -l pl
+Modu≥ PHP dodaj±cy moøliwo∂Ê szyfrowania poprzez bibliotekÍ mcrypt.
 
 %package mhash
 Summary:	mhash extension module for PHP
@@ -807,7 +819,8 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add mhash
 support to PHP.
 
-#%description mhash -l pl
+%description mhash -l pl
+Modu≥ PHP udostÍpniaj±cy funkcje mieszaj±ce z biblioteki mhash.
 
 %package doc
 Summary:	Online manual for PHP
@@ -926,6 +939,27 @@ support to PHP.
 %description wddx -l pl
 Modu≥ PHP umoøliwiaj±cy korzystanie z wddx.
 
+%package ming
+Summary:	ming extension module for PHP
+Summary(pl):	Modu≥ ming dla PHP
+Group:		Libraries
+Group(de):	Libraries
+Group(es):	Bibliotecas
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	‚…¬Ã…œ‘≈À…
+Group(uk):	‚¶¬Ã¶œ‘≈À…
+PreReq:		%{name}-common = %{version}
+
+%description ming
+This is a dynamic shared object (DSO) for Apache that will add ming
+(Flash - .swf files) support to PHP.
+
+%description ming -l pl
+Modu≥ PHP dodaj±cy obs≥ugÍ plikÛw Flash (.swf) poprzez bibliotekÍ
+ming.
+
 %prep
 %setup  -q
 %patch0 -p1
@@ -1016,6 +1050,7 @@ for i in cgi apxs ; do
 	--with-mhash=shared \
 	--with-curl=shared \
 	--with-gmp=shared \
+	--with-ming=shared \
 	%{?_with_openssl:--with-openssl} \
 	%{!?_without_odbc:--with-unixODBC=shared} \
 	%{?_with_oracle:--with-oracle=shared} \
@@ -1576,10 +1611,18 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/curl.so
 
-#%files xslt
-#%defattr(644,root,root,755)
-#%attr(755,root,root) %{extensionsdir}/xslt.so
-#
-#%files wddx
-#%defattr(644,root,root,755)
-#%attr(755,root,root) %{extensionsdir}/wddx.so
+%files ming
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/ming.so
+
+%if %{?_with_xslt:1}%{!?_with_xslt:0}
+%files xslt
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/xslt.so
+%endif
+
+%if %{?_with_wddx:1}%{!?_with_wddx:0}
+%files wddx
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/wddx.so
+%endif
