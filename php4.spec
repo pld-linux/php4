@@ -86,9 +86,9 @@ BuildRequires:	curl-devel
 %if %(expr %{?_with_openssl:1}%{!?_with_openssl:0} + %{!?_without_ldap:1}%{?_without_ldap:0})
 BuildRequires:	openssl-devel >= 0.9.6a
 %endif
-BuildRequires:	sablotron-devel
-BuildRequires:	expat-devel
-BuildRequires:	w3c-libwww-devel
+{?_with_xslt:BuildRequires:	sablotron-devel}
+{?_with_xslt:BuildRequires:	expat-devel}
+{?_with_xslt:BuildRequires:	w3c-libwww-devel}
 Prereq:		apache(EAPI) >= 1.3.9
 Prereq:		perl
 Prereq:		%{_sbindir}/apxs
@@ -883,7 +883,7 @@ for i in cgi apxs ; do
 	--with-dom=shared \
     %{?_with_xslt:--enable-xslt=shared} \
     %{?_with_xslt:--with-xslt-sablot=shared} \
-    %{?_with_xslt:--enable-wddx=shared} \
+    %{?_with_wddx:--enable-wddx=shared} \
 	--with-pear=%{peardir}
 done
 
