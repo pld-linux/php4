@@ -17,7 +17,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.1.2
-Release:	1
+Release:	2
 Epoch:		1
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -612,6 +612,7 @@ WWW.
 Summary:	PEAR - PHP Extension and Application Repository
 Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
 Group:		Development/Languages/PHP
+Requires:	%{name}-cgi = %{version}
 
 %description pear
 PEAR - PHP Extension and Application Repository.
