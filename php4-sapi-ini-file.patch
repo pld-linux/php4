@@ -1,61 +1,39 @@
---- php-4.2.1/main/php_ini.c.orig	Tue Mar  5 01:21:28 2002
-+++ php-4.2.1/main/php_ini.c	Wed Jun 12 18:10:30 2002
-@@ -204,6 +204,8 @@
- 	char *env_location, *php_ini_search_path;
- 	int safe_mode_state;
- 	char *open_basedir;
-+	char *sapi_ini_filename;
-+	char *sapi_ini_opened_path;
- 	int free_ini_search_path=0;
- 	zend_file_handle fh;
- 	TSRMLS_FETCH();
-@@ -264,15 +266,10 @@
- 	PG(open_basedir) = NULL;
- 	
- 	fh.handle.fp = php_fopen_with_path("php.ini", "r", php_ini_search_path, &php_ini_opened_path TSRMLS_CC);
--	if (free_ini_search_path) {
--		efree(php_ini_search_path);
--	}
- 	PG(safe_mode) = safe_mode_state;
- 	PG(open_basedir) = open_basedir;
- 
--	if (!fh.handle.fp) {
--		return SUCCESS;  /* having no configuration file is ok */
--	}
-+  if (fh.handle.fp) {
- 	fh.type = ZEND_HANDLE_FP;
- 	fh.filename = php_ini_opened_path;
- 
-@@ -288,7 +285,31 @@
- 		efree(php_ini_opened_path);
- 		php_ini_opened_path = zend_strndup(Z_STRVAL(tmp), Z_STRLEN(tmp));
+--- php-4.3.0/main/php_ini.c.orig	Tue Nov 12 21:56:47 2002
++++ php-4.3.0/main/php_ini.c	Sat Jan  4 12:22:39 2003
+@@ -351,6 +351,22 @@
+ 				}
+ 			}
+ 		}
++		/* Search (global) php.ini file in search path */
++		if (!fh.handle.fp) {
++			fh.handle.fp = php_fopen_with_path("php.ini", "r", php_ini_search_path, &php_ini_opened_path TSRMLS_CC);
++			if (fh.handle.fp) {
++				fh.filename = php_ini_opened_path;
++			}
++			PG(safe_mode) = safe_mode_state;
++			PG(open_basedir) = open_basedir;
++			fh.type = ZEND_HANDLE_FP;
++			zend_parse_ini_file(&fh, 1, php_config_ini_parser_cb, &extension_lists);
++			safe_mode_state = PG(safe_mode);
++			open_basedir = PG(open_basedir);
++			PG(safe_mode) = 0;
++			PG(open_basedir) = NULL;
++			fh.handle.fp = NULL;
++		}
+ 		/* Search php-%sapi-module-name%.ini file in search path */
+ 		if (!fh.handle.fp) {
+ 			const char *fmt = "php-%s.ini";
+@@ -361,13 +377,6 @@
+ 			if (fh.handle.fp) {
+ 				fh.filename = php_ini_opened_path;
+ 			}
+-		}
+-		/* Search php.ini file in search path */
+-		if (!fh.handle.fp) {
+-			fh.handle.fp = php_fopen_with_path("php.ini", "r", php_ini_search_path, &php_ini_opened_path TSRMLS_CC);
+-			if (fh.handle.fp) {
+-				fh.filename = php_ini_opened_path;
+-			}
+ 		}
  	}
--	
-+  }
-+
-+    sapi_ini_filename = do_alloca(7+1+strlen(sapi_module.name)+1);
-+	if(sapi_ini_filename == NULL) {
-+		if (free_ini_search_path)
-+			efree(php_ini_search_path);
-+		return SUCCESS;
-+	}
-+	sprintf(sapi_ini_filename,"php-%s.ini",sapi_module.name);
-+	fh.handle.fp = php_fopen_with_path(sapi_ini_filename, "r", php_ini_search_path, &sapi_ini_opened_path TSRMLS_CC);
-+	if (free_ini_search_path) {
-+		efree(php_ini_search_path);
-+	}
-+	if (!fh.handle.fp) {
-+		return SUCCESS;  /* having no configuration file is ok */
-+	}
-+	fh.type = ZEND_HANDLE_FP;
-+	fh.filename = sapi_ini_opened_path;
-+
-+	zend_parse_ini_file(&fh, 1, php_config_ini_parser_cb, &extension_lists);
-+
-+	if (sapi_ini_opened_path)
-+		efree(sapi_ini_opened_path);
-+	free_alloca(sapi_ini_filename);
-+
- 	return SUCCESS;
- }
- /* }}} */
+ 	if (free_ini_search_path) {

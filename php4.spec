@@ -1,13 +1,15 @@
 #
 # TODO:
 # - msession module causes SEGV during phpinfo()
+#   (only in Ra?  doesn't happen in my environment)
 # - pear - isn't built now, what is still needed???
 # - fastcgi option in cgi SAPI?
 # - add cli SAPI?
 #   maybe /usr/bin/php.{cli,cgi,fcgi}, but which one should be /usr/bin/php?
-# - what about .ini files?
-#   We used (by patch) included php-${SAPI}.ini files beside global php.ini,
-#   now php can use php-${SAPI}.ini files, but in place of php.ini...
+# - add notes about different behaviour (global file + included SAPI files)
+#   to php*.ini
+# - look at security notes in php.ini-recommended (ugh), update ini patch;
+#   set java.{class,library}.path appropriately
 # - check/update "experimental" in descriptions
 #
 # Automatic pear requirements finding:
@@ -92,11 +94,11 @@ Patch8:		%{name}-cpdf-fix.patch
 Patch10:	%{name}-hyperwave-fix.patch
 Patch11:	%{name}-odbc-fix.patch
 #Patch11:	%{name}-openssl-for-ext-only.patch
-Patch12:	%{name}-java-fix.patch
+Patch12:	%{name}-java-norpath.patch
 Patch13:	%{name}-mcal-shared-lib.patch
 Patch14:	%{name}-msession-shared-lib.patch
 Patch15:	%{name}-build_modules.patch
-#Patch16:	%{name}-sapi-ini-file.patch
+Patch16:	%{name}-sapi-ini-file.patch
 Patch17:	%{name}-dl-zlib.patch
 Patch18:	%{name}-dl-pcre.patch
 #Patch17:	%{name}-%{name}_iconv_string_declaration.patch
@@ -698,9 +700,17 @@ This is a dynamic shared object (DSO) for Apache that will add JAVA
 support to PHP. This extension provides a simple and effective means
 for creating and invoking methods on Java objects from PHP.
 
+Note: it requires setting LD_LIBRARY_PATH to JRE directories
+containing JVM libraries (e.g. libjava.so, libverify.so and libjvm.so
+for Sun's JRE) before starting Apache or PHP interpreter.
+
 %description java -l pl
 Modu³ PHP dodaj±cy wsparcie dla Javy. Umo¿liwia odwo³ywanie siê do
 obiektów Javy z poziomu PHP.
+
+Uwaga: modu³ wymaga ustawienia LD_LIBRARY_PATH na katalogi JRE
+zawieraj±ce biblioteki JVM (np. libjava.so, libverify.so i libjvm.so
+dla JRE Suna) przed uruchomieniem Apache'a lub interpretera PHP.
 
 %package ldap
 Summary:	LDAP extension module for PHP
@@ -1347,11 +1357,11 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 %patch10 -p1
 %patch11 -p1
 #%patch11 -p1	-- obsolete (openssl used also in common part)
-#%patch12 -p1	-- needs update? to check
+%patch12 -p1
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
-#%patch16 -p1	-- uhm... php allows _separate_ (not included) php-${SAPI}.ini files now
+%patch16 -p1
 %patch17 -p1
 %patch18 -p1
 #%patch17 -p1	-- obsolete
@@ -1377,14 +1387,13 @@ EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 %{__libtoolize}
 %{__aclocal}
 autoconf
-#for i in cgi cli fastcgi apxs ; do
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
-for i in cgi apxs ; do
+for i in cgi fcgi cli apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
 	`[ $i != cli ] && echo --disable-cli` \
 	`[ $i = cli ] && echo --disable-cgi` \
-	`[ $i = fastcgi ] && --enable-fastcgi --with-fastcgi=/usr` \
+	`[ $i = fcgi ] && echo --enable-fastcgi --with-fastcgi=/usr` \
 %if %{_apache2}
 	`[ $i = apxs ] && echo --with-apxs2=%{apxs}` \
 %else
@@ -1481,6 +1490,8 @@ for i in cgi apxs ; do
 	--with-zlib-dir=shared,/usr
 
 cp -f Makefile Makefile.$i
+# for testing:
+cp -f main/php_config.h php_config.h.$i
 done
 
 # for now session_mm doesn't work with shared session module...
@@ -1499,6 +1510,7 @@ perl -pi -e "s|^(relink_command=.* -rpath )[^ ]*/libs |\1%{_libdir}/apache |" li
 
 %{__make} sapi/cgi/php -f Makefile.cgi \
 	CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=1"
+%{__make} sapi/cli/php -f Makefile.cli
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -1512,7 +1524,7 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
 	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}"
 
-%{?_with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{_libdir}}
+%{?_with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{extensionsdir}}
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 install %{SOURCE6} %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}
@@ -2069,6 +2081,7 @@ fi
 %attr(755,root,root) %{_bindir}/phpize
 %attr(755,root,root) %{_bindir}/php-config
 %attr(755,root,root) %{_libdir}/libphp_common.so
+%{_libdir}/libphp_common.la
 %{_includedir}/php
 %{_libdir}/php/build
 
@@ -2176,7 +2189,7 @@ fi
 %files java
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/java.so
-%{_libdir}/php_java.jar
+%{extensionsdir}/php_java.jar
 %endif
 
 %if %{?_without_ldap:0}%{!?_without_ldap:1}
