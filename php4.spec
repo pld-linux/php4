@@ -3,14 +3,7 @@
 # - msession module causes SEGV during phpinfo()
 #   (only in Ra?  doesn't happen in my environment)
 # - pear - isn't built now, what is still needed???
-# - fastcgi option in cgi SAPI?
-# - add cli SAPI?
-#   maybe /usr/bin/php.{cli,cgi,fcgi}, but which one should be /usr/bin/php?
-# - add notes about different behaviour (global file + included SAPI files)
-#   to php*.ini
-# - look at security notes in php.ini-recommended (ugh), update ini patch;
-#   set java.{class,library}.path appropriately
-# - check/update "experimental" in descriptions
+# - fastcgi option in cgi SAPI? or separate fcgi SAPI?
 #
 # Automatic pear requirements finding:
 %include	/usr/lib/rpm/macros.php
@@ -80,6 +73,7 @@ Source4:	%{name}-module-install
 Source5:	%{name}-mod_%{name}.conf
 Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
+Source8:	%{name}-cli.ini
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-xml-expat-fix.patch
@@ -262,14 +256,28 @@ PHP4 - ÃÅ ÍÏ×Á ÎÁÐÉÓÁÎÎÑ ÓËÒÉÐÔ¦×, ÝÏ ×ÂÕÄÏ×ÕÀÔØÓÑ × HTML-ËÏÄ. PHP
 %package cgi
 Summary:	PHP as CGI program
 Summary(pl):	PHP jako program CGI
-Group:		Libraries
+Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{version}
+Provides:	php-program = %{version}
 
 %description cgi
 PHP as CGI program.
 
 %description cgi -l pl
 PHP jako program CGI.
+
+%package cli
+Summary:	PHP as CLI interpreter
+Summary(pl):	PHP jako interpreter dzia³aj±cy z linii poleceñ
+Group:		Development/Languages/PHP
+PreReq:		%{name}-common = %{version}
+Provides:	php-program = %{version}
+
+%description cli
+PHP as CLI interpreter.
+
+%description cli -l pl
+PHP jako interpreter dzia³aj±cy z linii poleceñ.
 
 %package common
 Summary:	Common files nneded by both apache module and CGI
@@ -946,8 +954,8 @@ Uwaga: to jest modu³ eksperymentalny.
 Summary:	Process Control extension module for PHP
 Summary(pl):	Modu³ Process Control dla PHP
 Group:		Libraries
-Requires(post,preun):%{name}-cgi = %{version}
-Requires:	%{name}-cgi = %{version}
+Requires(post,preun):%{name}-program = %{version}
+Requires:	%{name}-program = %{version}
 
 %description pcntl
 This is a dynamic shared object (DSO) for Apache that will add process
@@ -1388,7 +1396,7 @@ EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 %{__aclocal}
 autoconf
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
-for i in cgi fcgi cli apxs ; do
+for i in cgi cli apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
 	`[ $i != cli ] && echo --disable-cli` \
@@ -1490,8 +1498,6 @@ for i in cgi fcgi cli apxs ; do
 	--with-zlib-dir=shared,/usr
 
 cp -f Makefile Makefile.$i
-# for testing:
-cp -f main/php_config.h php_config.h.$i
 done
 
 # for now session_mm doesn't work with shared session module...
@@ -1508,9 +1514,18 @@ perl -pi -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
 perl -pi -e "s|^libdir=.*|libdir='%{_libdir}/apache'|" libphp4.la
 perl -pi -e "s|^(relink_command=.* -rpath )[^ ]*/libs |\1%{_libdir}/apache |" libphp4.la
 
+# notes:
+# -DENABLE_CHROOT_FUNC=1 (cgi,fcgi) is used in ext/standard/dir.c (libphp_common)
+# -DPHP_WRITE_STDOUT is used also for cli, but not set by its config.m4
+
 %{__make} sapi/cgi/php -f Makefile.cgi \
-	CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=1"
+	CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=1 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0 -DPHP_WRITE_STDOUT=1"
+
 %{__make} sapi/cli/php -f Makefile.cli
+
+# for fcgi: -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0
+# -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1(die) -DHAVE_SYS_PARAM_H=1
+# -DPHP_FASTCGI=1 -DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -1522,12 +1537,15 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 
 %{__make} install install-build install-programs install-headers \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
-	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}"
+	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi ; \$(LIBTOOL) --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php.cli"
+
+# compatibility (/usr/bin/php used to be CGI SAPI)
+ln -sf php.cgi $RPM_BUILD_ROOT%{_bindir}/php
 
 %{?_with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{extensionsdir}}
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
-install %{SOURCE6} %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}
+install %{SOURCE6} %{SOURCE7} %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{httpdir}/icons
 install %{SOURCE4} $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE5} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
@@ -1871,11 +1889,21 @@ if [ "$1" = "0" ]; then
 fi
 
 %post pcntl
+if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 %{_sbindir}/php-module-install install pcntl %{_sysconfdir}/php-cgi.ini
+fi
+if [ -f %{_sysconfdir}/php-cli.ini ]; then
+%{_sbindir}/php-module-install install pcntl %{_sysconfdir}/php-cli.ini
+fi
 
 %preun pcntl
 if [ "$1" = "0" ]; then
+	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 	%{_sbindir}/php-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
+	fi
+	if [ -f %{_sysconfdir}/php-cli.ini ]; then
+	%{_sbindir}/php-module-install remove pcntl %{_sysconfdir}/php-cli.ini
+	fi
 fi
 
 %post pcre
@@ -2056,8 +2084,14 @@ fi
 
 %files cgi
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/php.cgi
 %attr(755,root,root) %{_bindir}/php
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cgi.ini
+
+%files cli
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/php.cli
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cli.ini
 
 %files common
 %defattr(644,root,root,755)
