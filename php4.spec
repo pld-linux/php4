@@ -1729,7 +1729,8 @@ for i in cli cgi fcgi;
 do
 	mv -f $RPM_BUILD_ROOT%{_bindir}/php{,4}.$i
 done
-mv -f $RPM_BUILD_ROOT%{_bindir}/php{,4}
+ln -sf php4.cgi $RPM_BUILD_ROOT%{_bindir}/php4
+rm -f $RPM_BUILD_ROOT%{_bindir}/php
 mv -f $RPM_BUILD_ROOT%{_mandir}/man1/php{,4}.1
 
 
