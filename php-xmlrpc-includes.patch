@@ -15,7 +15,7 @@
 +      elif test -r $i/include/xmlrpc-epi/xmlrpc.h; then
 +	XMLRPC_DIR=$i
 +	XMLRPC_INC=$i/include/xmlrpc-epi
-+	AC_MSG_RESULT([found in $i, includes in $i/include/xmlrpc-rpi])
++	AC_MSG_RESULT([found in $i, includes in $i/include/xmlrpc-epi])
        fi
      done
    fi
