@@ -1,8 +1,13 @@
 #
 # TODO:
-# - BUILD!!! (more voodoo for multiple SAPIs; fix for new libtool)
+# - msession module causes SEGV during phpinfo()
+# - pear - isn't built now, what is still needed???
 # - fastcgi option in cgi SAPI?
 # - add cli SAPI?
+#   maybe /usr/bin/php.{cli,cgi,fcgi}, but which one should be /usr/bin/php?
+# - what about .ini files?
+#   We used (by patch) included php-${SAPI}.ini files beside global php.ini,
+#   now php can use php-${SAPI}.ini files, but in place of php.ini...
 # - check/update "experimental" in descriptions
 #
 # Automatic pear requirements finding:
@@ -92,12 +97,15 @@ Patch13:	%{name}-mcal-shared-lib.patch
 Patch14:	%{name}-msession-shared-lib.patch
 Patch15:	%{name}-build_modules.patch
 #Patch16:	%{name}-sapi-ini-file.patch
+Patch17:	%{name}-dl-zlib.patch
+Patch18:	%{name}-dl-pcre.patch
 #Patch17:	%{name}-%{name}_iconv_string_declaration.patch
 #Patch18:	%{name}-pear-cosmetic.patch
 #Patch19:	%{name}-mnogosearch.patch
 Patch20:	%{name}-ini.patch
 Patch21:	%{name}-acam.patch
 Patch22:	%{name}-xmlrpc-fix.patch
+Patch23:	%{name}-libtool.patch
 #Patch23:	%{name}-iconv-bug18039.patch
 Patch24:	%{name}-db4.patch
 Icon:		php4.gif
@@ -163,7 +171,7 @@ BuildRequires:	yaz-devel >= 1.9
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	zziplib-devel
-#BuildRequires:	fastcgi-devkit
+#BuildRequires:	fcgi-devel
 # apache 1.3 vs apache 2.0
 %if %{_apache2}
 PreReq:		apache >= 2.0.40
@@ -181,6 +189,7 @@ Obsoletes:	apache-mod_php
 
 %define		_sysconfdir	/etc/php
 %define		extensionsdir	%{_libdir}/php
+%define		httpdir		/home/services/httpd
 
 %description
 PHP is an HTML-embedded scripting language. PHP attempts to make it
@@ -1343,6 +1352,8 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 %patch14 -p1
 %patch15 -p1
 #%patch16 -p1	-- uhm... php allows _separate_ (not included) php-${SAPI}.ini files now
+%patch17 -p1
+%patch18 -p1
 #%patch17 -p1	-- obsolete
 #%patch18 -p1	-- obsolete? - no such file
 #%patch19 -p1	-- obsolete
@@ -1352,6 +1363,7 @@ cp php.ini-dist php.ini
 # conditionally...
 %patch21 -p1
 %patch22 -p1
+%patch23 -p1
 #%patch23 -p1	-- obsolete
 %patch24 -p1
 
@@ -1471,8 +1483,6 @@ for i in cgi apxs ; do
 cp -f Makefile Makefile.$i
 done
 
-#	--with-sablot-js=shared,no
-
 # for now session_mm doesn't work with shared session module...
 # --enable-session=shared
 # %{?_without_mm:--with-mm=shared,no}%{!?_without_mm:--with-mm=shared}
@@ -1482,39 +1492,31 @@ done
 
 %{__make}
 
-cp -f Makefile.cgi Makefile
-#%{__make} CFLAGS="%{rpmcflags} -DDISCARD_PATH=1" -C sapi/cgi
-%{__make} sapi/cgi/php
-cp -f Makefile.apxs Makefile
+# fix install paths, avoid evil rpaths
+perl -pi -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
+perl -pi -e "s|^libdir=.*|libdir='%{_libdir}/apache'|" libphp4.la
+perl -pi -e "s|^(relink_command=.* -rpath )[^ ]*/libs |\1%{_libdir}/apache |" libphp4.la
 
-# Kill -rpath from php binary and libphp4.so
-#perl -pi -e 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-#perl -pi -e 's|^runpath_var=.*|runpath_var=|g' libtool
-#%{__make} CFLAGS="%{rpmcflags} -DDISCARD_PATH=1" php
-
-#perl -pi -e 's|^hardcode_into_libs=.*|hardcode_into_libs=no|g' libtool
-#rm libphp4.la ; %{__make} libphp4.la
+%{__make} sapi/cgi/php -f Makefile.cgi \
+	CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=1"
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} \
-	$RPM_BUILD_ROOT/home/services/httpd/icons \
+	$RPM_BUILD_ROOT%{httpdir}/icons \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/run/php \
 	$RPM_BUILD_ROOT/etc/httpd/httpd.conf
 
-%{__make} install \
+%{__make} install install-build install-programs install-headers \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
-	INSTALL_IT="install libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache/ ; install libs/libphp_common*.so.*.*.* $RPM_BUILD_ROOT%{_libdir}"
+	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}"
 
 %{?_with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{_libdir}}
 
-#install .libs/php $RPM_BUILD_ROOT%{_bindir}/php
-install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php
-
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 install %{SOURCE6} %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}
-install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/httpd/icons
+install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{httpdir}/icons
 install %{SOURCE4} $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE5} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
 
@@ -2056,18 +2058,19 @@ fi
 %attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
 %attr(730,root,http) %dir %verify(not group mode) /var/run/php
 
-/home/services/httpd/icons/*
+%{httpdir}/icons/*
 %attr(755,root,root) %{_sbindir}/*
-%attr(755,root,root) %{_libdir}/libphp_common*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libphp_common-*.so
 %dir %{extensionsdir}
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/php
-%{_libdir}/php/build
 %attr(755,root,root) %{_bindir}/phpextdist
 %attr(755,root,root) %{_bindir}/phpize
 %attr(755,root,root) %{_bindir}/php-config
+%attr(755,root,root) %{_libdir}/libphp_common.so
+%{_includedir}/php
+%{_libdir}/php/build
 
 %files doc
 %defattr(644,root,root,755)
@@ -2363,6 +2366,8 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/zlib.so
 
+# not built yet
+%if 0
 %files pear
 %defattr(644,root,root,755)
 %dir %{php_pear_dir}
@@ -2402,3 +2407,4 @@ fi
 #%attr(755,root,root) %{_bindir}/pear
 %attr(755,root,root) %{_bindir}/pearize
 %attr(755,root,root) %{_bindir}/phptar
+%endif
