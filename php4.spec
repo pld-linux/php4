@@ -74,13 +74,15 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
-Version:	4.3.10
-Release:	6.1%{?with_hardened:hardened}
+Version:	4.3.11
+%define		_suf	RC2
+Release:	0.%{_suf}.1%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
-Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
-# Source0-md5:	7e56824dae9679c59a8234eb848aa542
+#Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
+Source0:	http://downloads.php.net/ilia/php-%{version}%{_suf}.tar.bz2
+# Source0-md5:	87873fc4dd7a85a0bf669693f9a66108
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source3:	%{name}-module-install
@@ -89,7 +91,7 @@ Source5:	%{name}-cgi-fcgi.ini
 Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Source8:	%{name}-cli.ini
-Source9:	http://www.hardened-php.net/hardened-php-%{version}-0.2.5.patch.gz
+#Source9:	http://www.hardened-php.net/hardened-php-%{version}-0.2.5.patch.gz
 # Source9-md5:	4330fa3d2addf6e8f9920d54eeda1b78
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
@@ -1568,7 +1570,7 @@ compression support to PHP.
 ModuЁ PHP umo©liwiaj╠cy u©ywanie kompresji zlib.
 
 %prep
-%setup -q -n php-%{version}
+%setup -q -n php-%{version}%{_suf}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
