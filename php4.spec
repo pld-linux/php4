@@ -1813,11 +1813,6 @@ fi
 %defattr(644,root,root,755)
 %doc manual/*
 
-%files pear
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/pear
-%{peardir}
-
 %files bcmath
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/bcmath.so
@@ -1995,6 +1990,11 @@ fi
 %files pcre
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pcre.so
+
+%files pear
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/pear
+%{peardir}
 
 %files pdf
 %defattr(644,root,root,755)
