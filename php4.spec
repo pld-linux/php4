@@ -38,7 +38,7 @@ Source5:	php-module-install
 Patch2:		%{name}-mail.patch
 #Patch3:		%{name}-link-libs.patch
 Patch4:		%{name}-session-path.patch
-Patch5:		%{name}-am_ac_lt.patch
+#Patch5:		%{name}-am_ac_lt.patch
 Patch6:		%{name}-fastcgi.patch
 Patch7:		%{name}-shared.patch
 #Patch8:		%{name}-ac250.patch
@@ -967,7 +967,7 @@ ming.
 %patch2 -p1
 #%patch3 -p1
 %patch4 -p1 
-%patch5 -p1
+#%patch5 -p1
 %patch6 -p1
 %patch7 -p1
 #%patch8 -p1
@@ -984,13 +984,13 @@ bzip2 -dc %{SOURCE4} | tar -xf - -C manual
 %build
 CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
-./buildconf
+#./buildconf
 libtoolize --copy --force
-aclocal
-autoconf
+#aclocal
+#autoconf
 #for i in cgi fastcgi apxs ; do
 for i in cgi apxs ; do
-%configure \
+./configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
 	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=/usr` \
 	`[ $i = apxs ] && echo --with-apxs=%{_sbindir}/apxs` \
