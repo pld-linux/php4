@@ -1,4 +1,7 @@
 #
+# TODO:
+# - make additional headers added by mail patch configurable
+#
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
 %bcond_with	fdf		# with FDF (PDF forms) module		(BR: proprietary lib)
