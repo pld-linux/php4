@@ -715,7 +715,7 @@ Pliki potrzebne do kompilacji modu³ów PHP.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch5 -p1
+#%patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1 
@@ -731,7 +731,8 @@ CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
 libtoolize --copy --force
 aclocal
 autoconf
-for i in cgi fastcgi apxs ; do
+#for i in cgi fastcgi apxs ; do
+for i in cgi apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
 	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=/usr` \
