@@ -3,7 +3,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache.
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache.
 Name:		php
 Version:	4.0RC1
-Release:	1
+Release:	2
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
@@ -13,6 +13,7 @@ Source1:	FAQ.php
 Source2:	php.ini
 Source3:	zend.gif
 Source4:	http://www.php.net/distributions/manual.tar.gz
+Patch0:		php-mysqlsock.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -163,6 +164,7 @@ Comprehensive documentation for PHP4, viewable through your web server, too!
 Dokumentacja dla pakietu PHP4.  Mo¿na j± równie¿ ogl±daæ poprzez serwer WWW.
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 LDFLAGS=""; export LDFLAGS
