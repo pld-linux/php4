@@ -1786,7 +1786,7 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 	INSTALL_CLI="\$(LIBTOOL) --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php.cli"
 
 # compatibility (/usr/bin/php used to be CGI SAPI)
-ln -sf php.cgi $RPM_BUILD_ROOT%{_bindir}/php
+ln -sf php.cli $RPM_BUILD_ROOT%{_bindir}/php
 
 %{?with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{extensionsdir}}
 
@@ -1815,7 +1815,7 @@ for i in cli cgi fcgi;
 do
 	mv -f $RPM_BUILD_ROOT%{_bindir}/php{,4}.$i
 done
-ln -sf php4.cgi $RPM_BUILD_ROOT%{_bindir}/php4
+ln -sf php4.cli $RPM_BUILD_ROOT%{_bindir}/php4
 rm -f $RPM_BUILD_ROOT%{_bindir}/php
 mv -f $RPM_BUILD_ROOT%{_mandir}/man1/php{,4}.1
 
@@ -2453,12 +2453,12 @@ fi
 %files cgi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/php4.cgi
-%attr(755,root,root) %{_bindir}/php4
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cgi.ini
 
 %files cli
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/php4.cli
+%attr(755,root,root) %{_bindir}/php4
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cli.ini
 %{_mandir}/man1/php4.1*
 
