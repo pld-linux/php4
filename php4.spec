@@ -62,13 +62,11 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.9
-%define	_rc	%{nil}
-# Release:	0.%{_rc}.1
-Release:	0.1
+Release:	0.2
 Epoch:		0
 Group:		Libraries
 License:	PHP
-Source0:	http://downloads.php.net/ilia/php-%{version}%{_rc}.tar.bz2
+Source0:	http://downloads.php.net/ilia/php-%{version}.tar.bz2
 # Source0-md5:	b799bbb330da60324d972641baab693c
 Source1:	FAQ.%{name}
 Source2:	zend.gif
@@ -184,7 +182,8 @@ BuildRequires:	zziplib-devel
 BuildRequires:	fcgi-devel
 # apache 1.3 vs apache 2.0
 %if %{_apache2}
-BuildRequires:	apr-devel >= 1:0.9.4-1
+BuildRequires:	apr-devel >= 1:1.0.0
+BuildRequires:	apr-util-devel >= 1:1.0.0
 PreReq:		apache >= 2.0.40
 Requires:	apache(modules-api) = %{apache_modules_api}
 %else
@@ -1488,7 +1487,7 @@ PEAR/*.php), dostarczanych z PHP, zainstaluj odpowiednie pakiety
 php-pear-* (php-pear-PEAR, php-pear-Archive_Tar, itp).
 
 %prep
-%setup -q -n php-%{version}%{_rc}
+%setup -q -n php-%{version}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -1528,8 +1527,11 @@ cp php.ini-dist php.ini
 %endif
 %patch31 -p1
 
+# new apr
+sed -i -e 's#apr-config#apr-1-config#g' sapi/apache*/*.m4
+
 %build
-CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
+CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include `%{_bindir}/apr-1-config --cppflags --includes` `%{_bindir}/apu-1-config --includes`"
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf --force
 %{__libtoolize}
