@@ -20,7 +20,7 @@ fi
 deinstall()
 {
 if [ -f ${INIFILE} ] && grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" ${INIFILE} ; then
-	TMPFILE=`mktemp -q /tmp/$0.XXXXXX`
+	TMPFILE=`mktemp -q /tmp/php-module-install.XXXXXX`
 	if [ $? -ne 0 ]; then
 		echo "$0: Can't create temp file, exiting..."
 		exit 1
