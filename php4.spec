@@ -916,7 +916,8 @@ for i in cgi apxs ; do
 	--with-zlib=shared \
 	--with-zlib-dir=shared \
 	--without-xmlrpc \
-	%{?_with_xslt:--with-xslt-sablot=shared}
+	%{?_with_xslt:--with-xslt-sablot=shared} \
+	--disable-cli
 done
 
 # TODO --with-pspell=/usr,shared (pspell missing)
