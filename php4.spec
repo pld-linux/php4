@@ -73,6 +73,7 @@ Patch17:	%{name}-build_modules.patch
 Patch18:	%{name}-sapi-ini-file.patch
 Patch19:	%{name}-apache2_broken_macro.patch
 Patch20:	%{name}-php_iconv_string_declaration.patch
+Patch21:	%{name}-pear-cosmetic.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -1251,6 +1252,7 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
 %patch18 -p1
 %patch19 -p1
 %patch20 -p1
+%patch21 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
