@@ -116,9 +116,7 @@ Patch21:	%{name}-sybase-fix.patch
 Patch22:	%{name}-mssql-fix.patch
 Patch23:	%{name}-mnogosearch-fix.patch
 Patch24:	%{name}-nohttpd.patch
-%ifarch amd64
 Patch25:	%{name}-lib64.patch
-%endif
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1451,7 +1449,9 @@ cp php.ini-dist php.ini
 %patch22 -p1
 %patch23 -p1
 %patch24 -p1
+%ifarch amd64
 %patch25 -p1
+%endif
 
 # conflict seems to be resolved by recode patches
 rm -f ext/recode/config9.m4
