@@ -1,6 +1,11 @@
 #
-%define	_apache2	%(rpm -q apache-devel | grep -q '\-2\.' 2> /dev/null ; echo $?)
-#
+%define	_apache2	%(rpm -q apache-devel | grep -Eq '\-2\.[0-9]+\.' 2> /dev/null ; echo $?)
+
+%if %{_apache2}
+%define _without_recode 1
+%define _without_mm 1
+%endif
+
 # Conditional build:
 # _with_oracle	- with oracle support
 # _with_oci8	- with oci8 support
@@ -14,6 +19,8 @@
 # _without_odbc	- without ODBC support
 # _without_snmp	- without SNMP support
 # _without_sablot - without sablot support
+# _without_recode - without recode support
+# _without_mm   - without mm support
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
@@ -71,7 +78,7 @@ BuildRequires:	libtool >= 1.4
 BuildRequires:	libxml2-devel >= 2.2.7
 BuildRequires:	mhash-devel
 BuildRequires:	ming-devel >= 0.1.0
-BuildRequires:	mm-devel >= 1.1.3
+%{!?_without_mm:BuildRequires:	mm-devel >= 1.1.3}
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
 BuildRequires:	pam-devel
@@ -80,7 +87,7 @@ BuildRequires:	perl
 BuildRequires:	pkgconfig
 BuildRequires:	postgresql-devel
 BuildRequires:  postgresql-backend-devel >= 7.2
-BuildRequires:	recode-devel >= 3.5d-3
+%{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	t1lib-devel
 %{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.3}
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
@@ -893,7 +900,7 @@ for i in cgi apxs ; do
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-mhash=shared \
 	--with-ming=shared \
-	--with-mm \
+	%{!?_without_mm:--with-mm} \
 	%{!?_without_openssl:--with-openssl} \
 	%{?_with_oracle:--with-oracle=shared} \
 	%{?_with_oci8:--with-oci8=shared} \
@@ -902,7 +909,7 @@ for i in cgi apxs ; do
 	--with-pdflib=shared \
 	--with-pgsql=shared,%{_prefix} \
 	--with-png-dir=shared \
-	--with-recode=shared \
+	%{!?_without_recode:--with-recode=shared} \
 	--with-regex=php \
 	%{!?_without_sablot:--with-sablot=/usr/lib} \
 	%{!?_without_snmp:--with-snmp=shared} \
@@ -1180,6 +1187,7 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove posix %{_sysconfdir}/php.ini
 fi
 
+%if %{?_without_recode:0}%{!?_without_recode:1}
 %post recode
 %{_sbindir}/php-module-install install recode %{_sysconfdir}/php.ini
 
@@ -1187,6 +1195,7 @@ fi
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove recode %{_sysconfdir}/php.ini
 fi
+%endif
 
 %post session
 %{_sbindir}/php-module-install install session %{_sysconfdir}/php.ini
@@ -1460,9 +1469,11 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/exif.so
 
+%if %{?_without_recode:0}%{!?_without_recode:1}
 %files recode
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/recode.so
+%endif
 
 #%files session
 #%defattr(644,root,root,755)
