@@ -129,6 +129,7 @@ BuildRequires:	cyrus-sasl-devel
 BuildRequires:	expat-devel
 %endif
 %{?with_fdf:BuildRequires:	fdftk-devel}
+BuildRequires:	file >= 4.00
 BuildRequires:	flex
 %if %{with mssql} || %{with sybase}
 BuildRequires:	freetds-devel
