@@ -147,7 +147,7 @@ fi
 
 %post mysql
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'mysql.so' in /etc/httpd/php.ini" >&2
+	echo "activating module 'mysql.so' in /etc/httpd/php.ini" 1>&2
 	sed -e 's|^;extension=mysql.so|extension=mysql.so|g' \
 	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
 	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
@@ -158,7 +158,7 @@ fi
 
 %postun mysql
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "deactivating module 'mysql.so' in /etc/httpd/php.ini" >&2
+	echo "deactivating module 'mysql.so' in /etc/httpd/php.ini" 1>&2
 	sed -e 's|^extension=mysql.so|;extension=mysql.so|g' \
 	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
 	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
@@ -169,7 +169,7 @@ fi
 
 %post gd
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'gd.so' in /etc/httpd/php.ini" >&2
+	echo "activating module 'gd.so' in /etc/httpd/php.ini" 1>&2
 	sed -e 's|^;extension=gd.so|extension=gd.so|g' \
 	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
 	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
@@ -180,7 +180,7 @@ fi
 
 %postun gd
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "deactivating module 'gd.so' in /etc/httpd/php.ini" >&2
+	echo "deactivating module 'gd.so' in /etc/httpd/php.ini" 1>&2
 	sed -e 's|^extension=gd.so|;extension=gd.so|g' \
 	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
 	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
