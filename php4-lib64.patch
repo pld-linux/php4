@@ -459,3 +459,15 @@ diff -urN php-5.0.0.org/ext/xmlrpc/config.m4 php-5.0.0/ext/xmlrpc/config.m4
 +  PHP_ADD_LIBRARY_WITH_PATH(xmlrpc, $XMLRPC_DIR/lib64, XMLRPC_SHARED_LIBADD)
  fi
  
+diff -urN php-5.0.0.org/scripts/Makefile.frag php-5.0.0/scripts/Makefile.frag
+--- php-5.0.0.org/scripts/Makefile.frag	2004-08-04 15:01:43.632554016 +0200
++++ php-5.0.0/scripts/Makefile.frag	2004-08-04 15:37:06.942761800 +0200
+@@ -4,7 +4,7 @@
+ #
+ 
+ phpincludedir = $(includedir)/php
+-phpbuilddir = $(prefix)/lib/php/build
++phpbuilddir = $(libdir)/php/build
+ 
+ BUILD_FILES = \
+ 	scripts/phpize.m4 \
