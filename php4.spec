@@ -3,6 +3,7 @@
 # _with_oracle  - with oracle support 
 # _with_oci8    - with oci8 support
 # _with_java    - with Java support
+# _with_libcpdf - with libcpdf support
 # _with_openssl - with OpenSSL support
 # _with_wddx    - with WDDX support
 # _with_xslt    - with XSLT support
@@ -10,6 +11,7 @@
 # _without_ldap   - without LDAP support
 # _without_odbc   - without ODBC support
 # _without_snmp   - without SNMP support
+# _without_sablot - without sablot support
 # _with_pcre	- with pcre support
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
@@ -81,6 +83,7 @@ BuildRequires:	zlib-devel >= 1.0.9
 %if %(expr %{?_with_openssl:1}%{!?_with_openssl:0} + %{!?_without_ldap:1}%{?_without_ldap:0})
 %{!?_without_openssl:BuildRequires:	openssl-devel >= 0.9.6a}
 %endif
+%{?_with_libcpdf:BuildRequires:	libcpdf-devel >= 2.00}
 %{?_with_xslt:BuildRequires:	sablotron-devel}
 %{?_with_xslt:BuildRequires:	expat-devel}
 %{?_with_xslt:BuildRequires:	w3c-libwww-devel}
@@ -948,6 +951,26 @@ This is a dynamic shared object (DSO) for Apache that will add ming
 Modu³ PHP dodaj±cy obs³ugê plików Flash (.swf) poprzez bibliotekê
 ming.
 
+%package libcpdf
+Summary:	cpdf extension module for PHP
+Summary(pl):	Modu³ cpdf dla PHP
+Group:		Libraries
+Group(de):	Libraries
+Group(es):	Bibliotecas
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	âÉÂÌÉÏÔÅËÉ
+Group(uk):	â¦ÂÌ¦ÏÔÅËÉ
+PreReq:		%{name}-common = %{version}
+
+%description libcpdf
+This is a dynamic shared object (DSO) for Apache that will add libcpdf
+support to PHP.
+
+%description libcpdf -l pl
+Modu³ PHP dodaj±cy obs³ugê libcpdf.
+
 %prep
 %setup  -q
 %patch0 -p1
@@ -994,7 +1017,7 @@ for i in cgi apxs ; do
 	--enable-xml=shared \
 	%{?_with_xslt:--enable-xslt=shared} \
 	--with-bz2=shared \
-	--with-cpdflib=shared \
+	%{?_with_libcpdf:--with-cpdflib=shared} \
 	--with-ctype=shared \
 	--with-curl=shared \
 	--without-db2 \
@@ -1028,6 +1051,7 @@ for i in cgi apxs ; do
 	--with-png-dir=shared \
 	--with-recode=shared \
 	--with-regex=php \
+	%{!?_without_sablot:--with-sablot=/usr/lib} \
 	%{!?_without_snmp:--with-snmp=shared} \
 	--with-t1lib=shared \
 	%{!?_without_odbc:--with-unixODBC=shared} \
@@ -1077,6 +1101,9 @@ install %{SOURCE1} .
 gzip -9nf CODING_STANDARDS CREDITS \
       EXTENSIONS NEWS TODO* LICENSE Zend/LICENSE \
       Zend/ZEND_CHANGES README.SELF-CONTAINED-EXTENSIONS README.EXT_SKEL
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %post
 %{_sbindir}/apxs -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
@@ -1182,7 +1209,7 @@ if [ "$1" = "0" ]; then
 fi
 %endif
 
-%if %{?bond_on_java:1}%{!?bond_on_java:0}
+%if %{?_with_java:1}%{!?_with_java:0}
 %post java
 %{_sbindir}/php-module-install install libphp_java %{_sysconfdir}/php.ini
 
@@ -1271,6 +1298,7 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove oracle %{_sysconfdir}/php.ini
 fi
 %endif
+
 %if %{?_with_pcre:1}%{!?_with_pcre:0}
 %post pcre
 %{_sbindir}/php-module-install install pcre %{_sysconfdir}/php.ini
@@ -1281,6 +1309,7 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove pcre %{_sysconfdir}/php.ini
 fi
 %endif
+
 %post pgsql
 %{_sbindir}/php-module-install install pgsql %{_sysconfdir}/php.ini
 
@@ -1379,24 +1408,43 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove curl %{_sysconfdir}/php.ini
 fi
 
-#%post xslt
-#%{_sbindir}/php-module-install install xslt %{_sysconfdir}/php.ini
-#
-#%preun xslt
-#if [ "$1" = "0" ]; then
-#        %{_sbindir}/php-module-install remove xslt %{_sysconfdir}/php.ini
-#fi
-#
-#%post wddx
-#%{_sbindir}/php-module-install install wddx %{_sysconfdir}/php.ini
-#
-#%preun wddx
-#if [ "$1" = "0" ]; then
-#        %{_sbindir}/php-module-install remove wddx %{_sysconfdir}/php.ini
-#fi
+%post ming
+%{_sbindir}/php-module-install install ming %{_sysconfdir}/php.ini
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+%preun ming
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove ming %{_sysconfdir}/php.ini
+fi
+
+%if %{?_with_xslt:1}%{!?_with_xslt:0}
+%post xslt
+%{_sbindir}/php-module-install install xslt %{_sysconfdir}/php.ini
+
+%preun xslt
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove xslt %{_sysconfdir}/php.ini
+fi
+%endif
+
+%if %{?_with_wddx:1}%{!?_with_wddx:0}
+%post wddx
+%{_sbindir}/php-module-install install wddx %{_sysconfdir}/php.ini
+
+%preun wddx
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove wddx %{_sysconfdir}/php.ini
+fi
+%endif
+
+%if %{?_with_libcpdf:1}%{!?_with_libcpdf:0}
+%post libcpdf
+%{_sbindir}/php-module-install install libcpdf %{_sysconfdir}/php.ini
+
+%preun libcpdf
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove libcpdf %{_sysconfdir}/php.ini
+fi
+%endif
 
 %files
 %defattr(644,root,root,755)
@@ -1603,4 +1651,10 @@ rm -rf $RPM_BUILD_ROOT
 %files wddx
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/wddx.so
+%endif
+
+%if %{?_with_libcpdf:1}%{!?_with_libcpdf:0}
+%files libcpdf
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/cpdf.so
 %endif
