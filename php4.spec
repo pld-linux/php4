@@ -1691,7 +1691,6 @@ done
 #	--with-qtdom=shared
 
 %{__make}
-%{__make} CFLAGS="%{rpmcflags} -DDISCARD_PATH=1" -C sapi/cgi
 
 # fix install paths, avoid evil rpaths
 %{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
