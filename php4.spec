@@ -1,6 +1,5 @@
 #
 # TODO:
-# - fastcgi option in cgi SAPI? or separate fcgi SAPI?
 # - make sure that session-unregister patch is no longer needed
 #   (any crash reports related to session modules?)
 # - think of including support for:
