@@ -14,13 +14,13 @@ Source2:	php.ini
 Source3:	zend.gif
 Icon:		php4.gif
 URL:		http://www.php.net/
-BuildRequires:	apache-devel
+BuildRequires:	apache(EAPI)-devel
 BuildRequires:	zlib-devel
 BuildRequires:	mysql-devel >= 3.22.30-2
 BuildRequires:	kaffe-devel
 BuildRequires:	libxml-devel >= 1.0.0
 BuildRequires:	gd-devel
-Requires:	apache >= 1.3.9
+Requires:	apache(EAPI) >= 1.3.9
 Prereq:		/usr/sbin/apxs
 BuildRoot:	/tmp/%{name}-%{version}-root
 
@@ -129,6 +129,7 @@ XML documents you should install this package in addition to the main
 
 %build
 LDFLAGS=""; export LDFLAGS
+CFLAGS="$RPM_OPT_FLAGS -DEAPI"; export CFLAGS
 ./buildconf
 %configure \
 	--with-apxs=%{_sbindir}/apxs \
