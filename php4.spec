@@ -37,7 +37,7 @@ Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Summary(pt_BR):	A linguagem de script PHP
 Name:		php
 Version:	4.2.1
-Release:	5.9
+Release:	6
 Epoch:		3
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
