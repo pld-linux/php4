@@ -63,14 +63,15 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
-Version:	4.3.3
-Release:	1.1
+Version:	4.3.4
+%define		_rc	RC1
+Release:	0.%{_rc}
 Epoch:		3
 Group:		Libraries
 License:	PHP
-Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
-# Source0-md5:	1171d96104e2ff2cff9e19789a4a1536
-#Source0:	http://downloads.php.net/ilia/%{name}-%{version}%{_rc}.tar.bz2
+#Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
+Source0:	http://downloads.php.net/ilia/%{name}-%{version}%{_rc}.tar.bz2
+# Source0-md5:	f7ff7bf763f917b9f955e19caf77c1f1
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -112,6 +113,7 @@ Icon:		php4.gif
 URL:		http://www.php.net/
 %{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird-devel}}
 BuildRequires:	apache-devel
+BuildRequires:	apr-devel
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
@@ -1442,7 +1444,7 @@ PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
 Repozytorium Aplikacji.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}%{_rc}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
