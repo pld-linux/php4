@@ -2111,7 +2111,7 @@ fi
 %attr(755,root,root) %{extensionsdir}/odbc.so
 %endif
 
-%if %{?_without_openssl:0}%{!?_without_odbc:1}
+%if %{?_without_openssl:0}%{!?_without_openssl:1}
 %files openssl
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/openssl.so
