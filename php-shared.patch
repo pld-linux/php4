@@ -1,7 +1,7 @@
 diff -urN php-4_2_0RC3.org/Makefile.in php-4_2_0RC3/Makefile.in
 --- php-4_2_0RC3.org/Makefile.in	Sat Apr 13 01:18:28 2002
-+++ php-4_2_0RC3/Makefile.in	Sat Apr 13 01:26:49 2002
-@@ -2,40 +2,68 @@
++++ php-4_2_0RC3/Makefile.in	Sat Apr 13 01:56:27 2002
+@@ -2,40 +2,67 @@
  ZEND_DIR = $(srcdir)/Zend
  SUBDIRS = Zend main ext sapi $(TSRM_DIR) $(REGEX_DIR) $(CLI_DIR) . $(PEAR_DIR)
  
@@ -76,8 +76,7 @@ diff -urN php-4_2_0RC3.org/Makefile.in php-4_2_0RC3/Makefile.in
 +	-@if test ! -r $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME); then \
 +		for i in 0.0.0 0.0 0; do \
 +			if test -r $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME).$$i; then \
-+				$(LN_S) $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME).$$i $(phptempdir)/libphp_
-+common.$(SHLIB_SUFFIX_NAME); \
++				$(LN_S) $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME).$$i $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME); \
  				$(LN_S) $(phptempdir)/libphp4.$(SHLIB_SUFFIX_NAME).$$i $(phptempdir)/libphp4.$(SHLIB_SUFFIX_NAME); \
  				break; \
  			fi; \
