@@ -12,17 +12,17 @@ diff -Nur php-4.2.0.orig/ext/cpdf/Makefile.in php-4.2.0/ext/cpdf/Makefile.in
 diff -Nur php-4.2.0.orig/ext/cpdf/config.m4 php-4.2.0/ext/cpdf/config.m4
 --- php-4.2.0.orig/ext/cpdf/config.m4	Fri Nov 30 19:59:27 2001
 +++ php-4.2.0/ext/cpdf/config.m4	Wed May  1 19:15:34 2002
-@@ -1,70 +1,101 @@
+@@ -1,70 +1,100 @@
  dnl $Id$
  
- AC_MSG_CHECKING(for cpdflib support)
+-AC_MSG_CHECKING(for cpdflib support)
 -AC_ARG_WITH(cpdflib,
 -[  --with-cpdflib[=DIR]    Include cpdflib support (requires cpdflib >= 2).],
 -[
 -  case $withval in
 -    no)
 -      AC_MSG_RESULT(no) ;;
-+PHP_ARG_WITH(cpdflib,
++PHP_ARG_WITH(cpdflib, for cpdflib support,
 +[  --with-cpdflib[=DIR]    Include cpdflib support (requires cpdflib >= 2).])
 +
 +if test "$PHP_CPDFLIB" != "no"; then

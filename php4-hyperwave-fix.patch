@@ -1,0 +1,22 @@
+diff -Nur php-4.2.0/ext/hyperwave.orig/Makefile.in php-4.2.0/ext/hyperwave/Makefile.in
+--- php-4.2.0/ext/hyperwave.orig/Makefile.in	Tue May  2 00:38:28 2000
++++ php-4.2.0/ext/hyperwave/Makefile.in	Wed May  1 22:50:03 2002
+@@ -1,5 +1,6 @@
+ 
+ LTLIBRARY_NAME    = libhyperwave.la
+ LTLIBRARY_SOURCES = hw.c hg_comm.c
++LTLIBRARY_SHARED_NAME = hyperwave.la
+ 
+ include $(top_srcdir)/build/dynlib.mk
+diff -Nur php-4.2.0/ext/hyperwave.orig/config.m4 php-4.2.0/ext/hyperwave/config.m4
+--- php-4.2.0/ext/hyperwave.orig/config.m4	Fri Nov 30 19:59:37 2001
++++ php-4.2.0/ext/hyperwave/config.m4	Wed May  1 22:50:44 2002
+@@ -9,7 +9,7 @@
+   if test "$withval" != "no"; then
+     AC_DEFINE(HYPERWAVE,1,[ ])
+     AC_MSG_RESULT(yes)
+-    PHP_EXTENSION(hyperwave)
++    PHP_EXTENSION(hyperwave, $ext_shared)
+   else
+     AC_DEFINE(HYPERWAVE,0,[ ])
+     AC_MSG_RESULT(no)
