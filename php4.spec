@@ -123,7 +123,7 @@ URL:		http://www.php.net/
 %if %{_apache2}
 BuildRequires:	apache-devel
 %else
-BuildRequires:  apache1-devel
+BuildRequires:	apache1-devel
 %endif
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
 BuildRequires:	autoconf >= 2.53
