@@ -3,7 +3,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache.
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache.
 Name:		php
 Version:	4.0.1pl2
-Release:	1
+Release: 2
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
@@ -34,7 +34,7 @@ BuildRequires:	imap-devel >= 4.7b-1
 # BuildRequires:	jdk
 BuildRequires:	kaffe-devel
 BuildRequires:	libjpeg-devel
-BuildRequires:	libpng-devel
+BuildRequires:	libpng >= 1.0.8
 BuildRequires:	libtiff-devel
 BuildRequires:	mm-devel
 BuildRequires:	openldap-devel
