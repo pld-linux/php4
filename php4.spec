@@ -1,16 +1,16 @@
 #
 # Conditional build:
-# _with_oracle  - with oracle support 
-# _with_oci8    - with oci8 support
-# _with_java    - with Java support
-# _with_libcpdf - with libcpdf support
-# _with_openssl - with OpenSSL support
-# _with_wddx    - with WDDX support
-# _with_xslt    - with XSLT support
-# _without_imap   - without IMAP support
-# _without_ldap   - without LDAP support
-# _without_odbc   - without ODBC support
-# _without_snmp   - without SNMP support
+# _with_oracle	- with oracle support
+# _with_oci8	- with oci8 support
+# _with_java	- with Java support
+# _with_libcpdf	- with libcpdf support
+# _with_openssl	- with OpenSSL support
+# _with_wddx	- with WDDX support
+# _with_xslt	- with XSLT support
+# _without_imap	- without IMAP support
+# _without_ldap	- without LDAP support
+# _without_odbc	- without ODBC support
+# _without_snmp	- without SNMP support
 # _without_sablot - without sablot support
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
@@ -109,9 +109,9 @@ BuildRequires:	zlib-devel >= 1.0.9
 %{?_with_xslt:BuildRequires:	sablotron-devel}
 %{?_with_xslt:BuildRequires:	expat-devel}
 %{?_with_xslt:BuildRequires:	w3c-libwww-devel}
-Prereq:		apache(EAPI) >= 1.3.9
-Prereq:		perl
-Prereq:		%{_sbindir}/apxs
+PreReq:		apache(EAPI) >= 1.3.9
+PreReq:		perl
+PreReq:		%{_sbindir}/apxs
 PreReq:		%{name}-common = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	phpfi
@@ -492,7 +492,9 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add
 flat-file databases (DBA) support to PHP.
 
-#%description dba -l pl
+%description dba -l pl
+Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy
+do PHP wsparcie dla baz danych DBA.
 
 %package odbc
 Summary:	ODBC extension module for PHP
@@ -549,7 +551,9 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add
 calendar support to PHP.
 
-#%description calendar -l pl
+%description calendar -l pl
+Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy
+do PHP wsparcie dla kalendarza.
 
 %package dbase
 Summary:	DBase extension module for PHP
@@ -606,7 +610,9 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add FilePro
 support to PHP.
 
-#%description filepro -l pl
+%description filepro -l pl
+Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy
+do PHP wsparcie dla FilePro.
 
 %package posix
 Summary:	POSIX extension module for PHP
@@ -636,6 +642,7 @@ functions support to PHP.
 
 %description posix -l pl
 Modu³ PHP umo¿liwiaj±cy korzystanie z funkcji POSIX.
+
 %package pcre
 Summary:	PCRE extension module for PHP
 Summary(pl):	Modu³ PCRE dla PHP
@@ -750,7 +757,9 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add NIS
 (Yellow Pages) support to PHP.
 
-#%description yp -l pl
+%description yp -l pl
+Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy
+do PHP wsparcie dla NIS (Yellow Pages).
 
 %package bcmath
 Summary:	bcmath extension module for PHP
@@ -1387,7 +1396,7 @@ support to PHP.
 Modu³ PHP dodaj±cy obs³ugê libcpdf.
 
 %prep
-%setup  -q
+%setup -q
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -1527,8 +1536,8 @@ install %{SOURCE5} $RPM_BUILD_ROOT/%{_sbindir}
 
 install %{SOURCE1} .
 gzip -9nf CODING_STANDARDS CREDITS \
-      EXTENSIONS NEWS TODO* LICENSE Zend/LICENSE \
-      Zend/ZEND_CHANGES README.SELF-CONTAINED-EXTENSIONS README.EXT_SKEL
+	EXTENSIONS NEWS TODO* LICENSE Zend/LICENSE \
+	Zend/ZEND_CHANGES README.SELF-CONTAINED-EXTENSIONS README.EXT_SKEL
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -1560,7 +1569,7 @@ fi
 
 %preun bcmath
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove bcmath %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove bcmath %{_sysconfdir}/php.ini
 fi
 
 %post calendar
@@ -1568,7 +1577,7 @@ fi
 
 %preun calendar
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove calendar %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove calendar %{_sysconfdir}/php.ini
 fi
 
 %post dba
@@ -1576,7 +1585,7 @@ fi
 
 %preun dba
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove dba %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove dba %{_sysconfdir}/php.ini
 fi
 
 %post dbase
@@ -1584,7 +1593,7 @@ fi
 
 %preun dbase
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove dbase %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove dbase %{_sysconfdir}/php.ini
 fi
 
 %post exif
@@ -1592,7 +1601,7 @@ fi
 
 %preun exif
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove exif %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove exif %{_sysconfdir}/php.ini
 fi
 
 %post filepro
@@ -1600,7 +1609,7 @@ fi
 
 %preun filepro
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove filepro %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove filepro %{_sysconfdir}/php.ini
 fi
 
 %post ftp
@@ -1608,7 +1617,7 @@ fi
 
 %preun ftp
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove ftp %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove ftp %{_sysconfdir}/php.ini
 fi
 
 %post gd
@@ -1616,7 +1625,7 @@ fi
 
 %preun gd
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove gd %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove gd %{_sysconfdir}/php.ini
 fi
 
 %post gettext
@@ -1624,7 +1633,7 @@ fi
 
 %preun gettext
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove gettext %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove gettext %{_sysconfdir}/php.ini
 fi
 
 %if %{?_without_imap:0}%{!?_without_imap:1}
@@ -1633,7 +1642,7 @@ fi
 
 %preun imap
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove imap %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove imap %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1643,7 +1652,7 @@ fi
 
 %preun java
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove libphp_java %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove libphp_java %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1653,7 +1662,7 @@ fi
 
 %preun ldap
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove ldap %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove ldap %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1662,7 +1671,7 @@ fi
 
 %preun mcrypt
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove mcrypt %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove mcrypt %{_sysconfdir}/php.ini
 fi
 
 %post mhash
@@ -1670,7 +1679,7 @@ fi
 
 %preun mhash
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove mhash %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove mhash %{_sysconfdir}/php.ini
 fi
 
 %post mysql
@@ -1678,7 +1687,7 @@ fi
 
 %preun mysql
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove mysql %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove mysql %{_sysconfdir}/php.ini
 fi
 
 %post pdf
@@ -1686,7 +1695,7 @@ fi
 
 %preun pdf
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove libpdf_php %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove libpdf_php %{_sysconfdir}/php.ini
 fi
 
 %preun domxml
@@ -1703,7 +1712,7 @@ fi
 
 %preun oci8
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove oci8 %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove oci8 %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1713,7 +1722,7 @@ fi
 
 %preun odbc
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove odbc %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove odbc %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1723,7 +1732,7 @@ fi
 
 %preun oracle
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove oracle %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove oracle %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1732,7 +1741,7 @@ fi
 
 %preun pcre
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove pcre %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove pcre %{_sysconfdir}/php.ini
 fi
 
 %post pgsql
@@ -1740,7 +1749,7 @@ fi
 
 %preun pgsql
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove pgsql %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove pgsql %{_sysconfdir}/php.ini
 fi
 
 %post posix
@@ -1748,7 +1757,7 @@ fi
 
 %preun posix
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove posix %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove posix %{_sysconfdir}/php.ini
 fi
 
 %post recode
@@ -1756,7 +1765,7 @@ fi
 
 %preun recode
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove recode %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove recode %{_sysconfdir}/php.ini
 fi
 
 %post session
@@ -1764,7 +1773,7 @@ fi
 
 %preun session
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove session %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove session %{_sysconfdir}/php.ini
 fi
 
 %if %{?_without_snmp:0}%{!?_without_snmp:1}
@@ -1773,7 +1782,7 @@ fi
 
 %preun snmp
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove snmp %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove snmp %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1782,7 +1791,7 @@ fi
 
 %preun sockets
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove sockets %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove sockets %{_sysconfdir}/php.ini
 fi
 
 %post sysvsem
@@ -1790,7 +1799,7 @@ fi
 
 %preun sysvsem
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove sysvsem %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove sysvsem %{_sysconfdir}/php.ini
 fi
 
 %post sysvshm
@@ -1798,7 +1807,7 @@ fi
 
 %preun sysvshm
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove sysvshm %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove sysvshm %{_sysconfdir}/php.ini
 fi
 
 %post xml
@@ -1806,7 +1815,7 @@ fi
 
 %preun xml
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove xml %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove xml %{_sysconfdir}/php.ini
 fi
 
 %post yp
@@ -1814,7 +1823,7 @@ fi
 
 %preun yp
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove yp %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove yp %{_sysconfdir}/php.ini
 fi
 
 %post zlib
@@ -1822,7 +1831,7 @@ fi
 
 %preun zlib
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove zlib %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove zlib %{_sysconfdir}/php.ini
 fi
 
 %post curl
@@ -1830,7 +1839,7 @@ fi
 
 %preun curl
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove curl %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove curl %{_sysconfdir}/php.ini
 fi
 
 %post ming
@@ -1838,7 +1847,7 @@ fi
 
 %preun ming
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove ming %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove ming %{_sysconfdir}/php.ini
 fi
 
 %if %{?_with_xslt:1}%{!?_with_xslt:0}
@@ -1847,7 +1856,7 @@ fi
 
 %preun xslt
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove xslt %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove xslt %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1857,7 +1866,7 @@ fi
 
 %preun wddx
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove wddx %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove wddx %{_sysconfdir}/php.ini
 fi
 %endif
 
@@ -1882,7 +1891,7 @@ fi
 %files common
 %defattr(644,root,root,755)
 %doc {CODING_STANDARDS,CREDITS,Zend/ZEND_CHANGES}.gz
-%doc {LICENSE,Zend/LICENSE,EXTENSIONS,NEWS,TODO*}.gz  
+%doc {LICENSE,Zend/LICENSE,EXTENSIONS,NEWS,TODO*}.gz
 %doc {README.EXT_SKEL,README.SELF-CONTAINED-EXTENSIONS}.gz
 
 %dir %{_sysconfdir}
