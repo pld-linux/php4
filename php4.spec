@@ -14,7 +14,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.5
-Release:	0.4
+Release:	0.5
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -31,15 +31,15 @@ Source5:	php-module-install
 Patch0:		%{name}-imap.patch
 Patch1:		%{name}-mysql-socket.patch
 Patch2:		%{name}-mail.patch
-Patch5:		%{name}-no_libnsl.patch
-Patch6:		%{name}-DESTDIR.patch
-Patch7:		%{name}-gd-shared.patch
-Patch8:		%{name}-session-path.patch
-Patch9:		%{name}-libtool_version_check_fix.patch
-Patch10:	%{name}-pdflib.patch
-Patch11:	%{name}-am_ac_lt.patch
-Patch12:	%{name}-fastcgi.patch
-Patch13:	%{name}-shared.patch
+Patch3:		%{name}-link-libs.patch
+Patch4:		%{name}-DESTDIR.patch
+Patch5:		%{name}-gd-shared.patch
+Patch6:		%{name}-session-path.patch
+Patch7:		%{name}-libtool_version_check_fix.patch
+Patch8:		%{name}-pdflib.patch
+Patch9:		%{name}-am_ac_lt.patch
+Patch10:	%{name}-fastcgi.patch
+Patch11:	%{name}-shared.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -715,15 +715,15 @@ Pliki potrzebne do kompilacji modu³ów PHP.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-#%patch5 -p1
-%patch6 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1 
 %patch7 -p1
-%patch8 -p1 
+%patch8 -p1
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
-%patch12 -p1
-%patch13 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
