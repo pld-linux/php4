@@ -1,6 +1,6 @@
 diff -burN php-5.0.0b3/php.ini-dist php-5.0.0b3-php.ini/php.ini-dist
 --- php-5.0.0b3/php.ini-dist	2003-12-18 03:06:00.000000000 +0100
-+++ php-5.0.0b3-php.ini/php.ini-dist	2003-12-27 00:29:41.000000000 +0100
++++ php-5.0.0b3-php.ini/php.ini	2003-12-27 00:29:41.000000000 +0100
 @@ -3,13 +3,18 @@
  ;;;;;;;;;;;
  ; WARNING ;
