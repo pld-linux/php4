@@ -49,6 +49,7 @@ BuildRequires:	bzip2-devel
 BuildRequires:	curl-devel
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel >= 3.1.17
+BuildRequires:	expat-devel
 BuildRequires:	flex
 BuildRequires:	gmp-devel
 BuildRequires:	freetype-devel >= 2.0
@@ -626,6 +627,7 @@ Summary:	PEAR - PHP Extension and Application Repository
 Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
 Group:		Development/Languages/PHP
 Requires:	%{name}-cgi = %{version}
+Requires:	%{name}-xml = %{version}
 
 %description pear
 PEAR - PHP Extension and Application Repository.
@@ -816,6 +818,7 @@ for i in cgi apxs ; do
 	--enable-yp=shared \
 	--enable-ucd-snmp-hack \
 	--enable-xml=shared \
+	--with-expat-dir=/usr \
 	%{?_with_xslt:--enable-xslt=shared} \
 	--with-bz2=shared \
 	%{?_with_libcpdf:--with-cpdflib=shared} \
