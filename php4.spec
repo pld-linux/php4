@@ -1,7 +1,5 @@
 #
 # TODO:
-# - msession module causes SEGV during phpinfo()
-#   (only in Ra?  doesn't happen in my environment)
 # - pear - isn't built now, what is still needed???
 # - fastcgi option in cgi SAPI? or separate fcgi SAPI?
 #
@@ -95,6 +93,7 @@ Patch15:	%{name}-build_modules.patch
 Patch16:	%{name}-sapi-ini-file.patch
 Patch17:	%{name}-dl-zlib.patch
 Patch18:	%{name}-dl-pcre.patch
+Patch19:	%{name}-session-unregister.patch
 #Patch17:	%{name}-%{name}_iconv_string_declaration.patch
 #Patch18:	%{name}-pear-cosmetic.patch
 #Patch19:	%{name}-mnogosearch.patch
@@ -1372,6 +1371,7 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 %patch16 -p1
 %patch17 -p1
 %patch18 -p1
+%patch19 -p1
 #%patch17 -p1	-- obsolete
 #%patch18 -p1	-- obsolete? - no such file
 #%patch19 -p1	-- obsolete
