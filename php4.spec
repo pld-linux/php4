@@ -1425,7 +1425,7 @@ rm -rf $RPM_BUILD_ROOT
 %if ! %{_apache2}
 perl -pi -e 's|^#AddType application/x-httpd-php \.php|AddType application/x-httpd-php .php|' \
 	/etc/httpd/httpd.conf
-%{_sbindir}/apxs -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
+%{apxs} -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
 %endif
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
@@ -1441,7 +1441,7 @@ fi
 %else
 %preun
 if [ "$1" = "0" ]; then
-	%{_sbindir}/apxs -e -A -n php4 %{_pkglibdir}/libphp4.so 1>&2
+	%{apxs} -e -A -n php4 %{_pkglibdir}/libphp4.so 1>&2
 	perl -pi -e \
 		's|^AddType application/x-httpd-php \.php|#AddType application/x-httpd-php .php|' \
 		/etc/httpd/httpd.conf
