@@ -1227,6 +1227,7 @@ fi
 %preun domxml
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove domxml %{_sysconfdir}/php.ini
+fi
 
 %post domxml
 %{_sbindir}/php-module-install install domxml %{_sysconfdir}/php.ini
