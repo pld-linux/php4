@@ -17,6 +17,8 @@ URL:		http://www.php.net/
 BuildRequires:	apache-devel
 BuildRequires:	zlib-devel
 BuildRequires:	mysql-devel >= 3.22.30-2
+BuildRequires:	kaffe-devel
+BuildRequires:	libxml-devel >= 1.0.0
 BuildRequires:	gd-devel
 Requires:	apache >= 1.3.9
 Prereq:		/usr/sbin/apxs
@@ -87,6 +89,28 @@ support to PHP4.
 
 %description gd -l pl
 
+%package java
+Summary:	Java extension module for PHP4
+Summary(pl):	Modu³ Javy dla PHP4
+Group:		Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Requires: 	%{name} = %{version}
+
+%description java
+%description java -l pl
+
+%package xml
+Summary:	XML extension module for PHP4
+Summary(pl):	Modu³ XML dla PHP4
+Group:		Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Requires: 	%{name} = %{version}
+
+%description xml
+%description xml -l pl
+
 %prep
 %setup -q 
 
@@ -96,17 +120,29 @@ LDFLAGS=""; export LDFLAGS
 %configure \
 	--with-apxs=%{_sbindir}/apxs \
 	--with-config-file-path=%{_sysconfdir}/httpd \
-	--enable-safe-mode \
 	--with-exec-dir=%{_bindir} \
 	--disable-debug \
-	--with-zlib \
 	--enable-magic-quotes \
+	--enable-shared \
 	--enable-track-vars \
-	--with-gd=shared \
+	--enable-safe-mode \
+	--enable-trans-sid \
+	--enable-sysvsem \
+	--enable-sysvshm \
+	--enable-xml=shared \
+	--with-zlib \
 	--with-regex=system \
 	--with-gettext \
 	--with-mysql=shared \
-	--enable-shared 
+	--with-gd=shared \
+	--with-dbase \
+	--with-filepro \
+	--with-ftp \
+	--with-hyperwave \
+	--with-java
+#	--with-pgsql=shared 
+#	--with-snmp=shared 
+
 make
 
 
@@ -189,6 +225,49 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
+%post xml
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "activating module 'xml.so' in /etc/httpd/php.ini" 1>&2
+	sed -e 's|^;extension=xml.so|extension=xml.so|g' \
+	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
+	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+%postun xml
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "deactivating module 'xml.so' in /etc/httpd/php.ini" 1>&2
+	sed -e 's|^extension=xml.so|;extension=xml.so|g' \
+	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
+	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+%post java
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "activating module 'libphp_java.so' in /etc/httpd/php.ini" 1>&2
+	sed -e 's|^;extension=libphp_java.so|extension=libphp_java.so|g' \
+	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
+	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+%postun java
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "deactivating module 'libphp_java.so' in /etc/httpd/php.ini" 1>&2
+	sed -e 's|^extension=libphp_java.so|;extension=libphp_java.so|g' \
+	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
+	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -214,3 +293,11 @@ rm -rf $RPM_BUILD_ROOT
 %files gd
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/gd.so
+
+%files xml
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_pkglibdir}/php/xml.so
+
+%files java
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_pkglibdir}/php/libphp_java.so
