@@ -1,4 +1,12 @@
 #
+# TODO:
+# - cannot find libexpat for XML module,
+#   with --with-expat-dir=/usr finds, but xmlrpc is built as static
+# - libphp4.so is linked with -lnsl
+# - msession.so isn't linked with -lphoenix
+# - odbc.so isn't linked with -lodbc*
+# - wddx.so isn't linked with anything except libc
+#
 # Automatic pear requirements finding:
 %include	/usr/lib/rpm/macros.php
 
