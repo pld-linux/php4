@@ -76,6 +76,7 @@ Patch20:	%{name}-php_iconv_string_declaration.patch
 Patch21:	%{name}-pear-cosmetic.patch
 Patch22:	%{name}-mnogosearch.patch
 Patch23:	%{name}-ini.patch
+Patch24:	%{name}-acam.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -1257,6 +1258,9 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 %patch22 -p1
 cp php.ini-dist php.ini
 %patch23 -p1
+# for ac2.53b/am1.6b - AC_LANG_CXX has AM_CONDITIONAL, so cannot be invoked
+# conditionally...
+%patch24 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE3} | tar -xf - -C manual
