@@ -1,7 +1,23 @@
-diff -urN php-4.0.5.org/configure.in php-4.0.5/configure.in
---- php-4.0.5.org/configure.in	Thu May 10 23:24:29 2001
-+++ php-4.0.5/configure.in	Fri May 11 00:03:54 2001
-@@ -113,11 +113,11 @@
+diff -urN php-4.1.2.org/TSRM/threads.m4 php-4.1.2/TSRM/threads.m4
+--- php-4.1.2.org/TSRM/threads.m4	Mon Apr  8 01:42:39 2002
++++ php-4.1.2/TSRM/threads.m4	Mon Apr  8 01:43:36 2002
+@@ -32,7 +32,11 @@
+ dnl
+ AC_DEFUN(PTHREADS_FLAGS,[
+   if test -z "$host_alias"; then
+-    AC_MSG_ERROR(host_alias is not set. Make sure to run config.guess)
++    if test -z "$build_alias"; then
++      AC_MSG_ERROR(host_alias is not set. Make sure to run config.guess)
++    else
++      host_alias=$build_alias
++    fi
+   fi
+   case "$host_alias" in
+   *solaris*)
+diff -urN php-4.1.2.org/configure.in php-4.1.2/configure.in
+--- php-4.1.2.org/configure.in	Mon Apr  8 01:42:39 2002
++++ php-4.1.2/configure.in	Mon Apr  8 01:42:57 2002
+@@ -115,11 +115,11 @@
  
  AM_PROG_CC_STDC
  
