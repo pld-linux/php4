@@ -38,6 +38,9 @@
 # _without_xml		- without XML extension module
 # _without_xmlrpc	- without XML-RPC extension module
 # _without_xslt		- without XSLT extension module
+#
+# _without_curl		- wihtout CURL support 
+# _without_psql		- without PostgreSQL support
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
@@ -89,7 +92,7 @@ BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
 BuildRequires:	bzip2-devel
 BuildRequires:	cracklib-devel >= 2.7-15
-BuildRequires:	curl-devel
+%{!?_without_curl:BuildRequires:	curl-devel}
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel >= 3.1.17
 %if %(expr %{?_without_xml:0}%{!?_without_xml:1} + %{?_without_xmlrpc:0}%{!?_without_xmlrpc:1})
@@ -127,8 +130,8 @@ BuildRequires:	pam-devel
 %{!?_without_pdf:BuildRequires:	pdflib-devel >= 4.0.0}
 BuildRequires:	perl
 %{!?_without_msession:BuildRequires:	phoenix-devel}
-BuildRequires:	postgresql-devel
-BuildRequires:	postgresql-backend-devel >= 7.2
+%{!?_without_psql:BuildRequires:	postgresql-devel}
+%{!?_without_psql:BuildRequires:	postgresql-backend-devel >= 7.2}
 BuildRequires:	pspell-devel
 %{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-80
@@ -1325,7 +1328,7 @@ for i in cgi apxs ; do
 	--with-bz2=shared \
 	%{!?_without_cpdf:--with-cpdflib=shared} \
 	--with-crack=shared \
-	--with-curl=shared \
+	%{?_without_curl:--without-curl}%{!?_without_curl:--with-curl=shared} \
 	--without-db2 \
 	--with-db3 \
 	--with-dbase=shared \
@@ -1364,7 +1367,7 @@ for i in cgi apxs ; do
 	%{?_without_pcre:--without-pcre-regex}%{!?_without_pcre:--with-pcre-regex=shared} \
 	%{!?_without_pdf:--with-pdflib=shared} \
 	--with-pear=%{php_pear_dir} \
-	--with-pgsql=shared,/usr \
+	%{?_without_psql:--without-pgsql}%{!?_without_psql:--with-pgsql=shared,/usr} \
 	--with-png-dir=shared,/usr \
 	--with-pspell=shared \
 	%{!?_without_recode:--with-recode=shared} \
@@ -2004,9 +2007,11 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/ctype.so
 
+%if %{!?_without_curl:1}%{?_without_curl:0}
 %files curl
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/curl.so
+%endif
 
 %files dba
 %defattr(644,root,root,755)
@@ -2165,9 +2170,11 @@ fi
 %attr(755,root,root) %{extensionsdir}/pdf.so
 %endif
 
+%if %{!?_without_psql:1}%{?_without_psql:0}
 %files pgsql
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pgsql.so
+%endif
 
 %files posix
 %defattr(644,root,root,755)
