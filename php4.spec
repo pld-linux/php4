@@ -2,7 +2,7 @@ Summary:	The PHP HTML-embedded scripting language for use with Apache.
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache.
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache.
 Name:		php
-Version:	4.0.1
+Version:	4.0.1pl2
 Release:	1
 Group:		Libraries
 Group(fr):	Librairies
@@ -412,6 +412,20 @@ This is a dynamic shared object (DSO) for Apache that will add
 snmp support to PHP4.
 
 #%description snmp -l pl
+
+%package imap
+Summary:	imapextension module for PHP4
+Summary(pl):	Modu³ imap dla PHP4
+Group:		Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Requires:	%{name} = %{version}
+
+%description imap
+This is a dynamic shared object (DSO) for Apache that will add
+imap support to PHP4.
+
+#%description imap -l pl
 
 
 %package doc
@@ -994,9 +1008,25 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
+%post imap
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "activating module 'imap.so' in /etc/httpd/php.ini" 1>&2
+	perl -pi -e 's|^;extension=imap.so|extension=imap.so|g' \
+	%{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
 
-
-
+%preun imap
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "deactivating module 'imap.so' in /etc/httpd/php.ini" 1>&2
+	perl -pi -e 's|^extension=imap.so|;extension=imap.so|g' \
+	%{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -1094,6 +1124,10 @@ rm -rf $RPM_BUILD_ROOT
 %files gettext
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/gettext.so
+
+%files imap
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_pkglibdir}/php/imap.so
 
 %files snmp
 %defattr(644,root,root,755)
