@@ -1568,7 +1568,7 @@ for i in fcgi cgi cli apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
 	`[ $i = cli ] && echo --disable-cgi` \
-`[ $i = fcgi ] && echo --enable-fastcgi --with-fastcgi=%{_prefix}` \
+	`[ $i = fcgi ] && echo --enable-fastcgi --with-fastcgi=%{_prefix}` \
 %if %{_apache2}
 	`[ $i = apxs ] && echo --with-apxs2=%{apxs}` \
 	--enable-experimental-zts \
