@@ -41,7 +41,6 @@
 %bcond_without	pspell		# without pspell extension module
 %bcond_without	recode		# without recode extension module
 %bcond_without	snmp		# without SNMP extension module
-%bcond_without	sybase		# without Sybase and Sybase-CT extension modules
 %bcond_without	tidy		# without Tidy extension module
 %bcond_without	wddx		# without WDDX extension module
 %bcond_without	xmlrpc		# without XML-RPC extension module
@@ -54,6 +53,7 @@
 # Breaks build
 %bcond_with	simplexml	# without simplexml extension module
 %bcond_with	sqlite		# without SQLite extension module
+%bcond_with	sybase		# without Sybase and Sybase-CT extension modules
 #
 %define	_apache2	%(rpm -q apache-devel 2> /dev/null | grep -Eq '\\-2\\.[0-9]+\\.' && echo 1 || echo 0)
 %define	apxs		/usr/sbin/apxs
