@@ -1563,7 +1563,7 @@ EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
-PROG_SENDMAIL="%{_prefix}/lib/sendmail"; export PROG_SENDMAIL
+PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
 for i in fcgi cgi cli apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
