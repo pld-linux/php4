@@ -74,7 +74,7 @@ License:	PHP
 # See this dumb scheme? It makes rpm think Source0 filename is mirror. Gosh.
 #Source0:	http://www.php.net/get/%{name}-%{version}%{_pre}.tar.bz2/from/this/mirror
 Source0:	http://mamut.pld-linux.org/~adamg/%{name}-%{version}%{_pre}.tar.bz2
-# Source0-md5:	91957dae6b1a1dbdb386a92a3227d5d6
+# Source0-md5:	bc9dfe2083564a749b88dd7ce7ed1a59
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
