@@ -35,6 +35,8 @@ Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	JЙzyk skryptowy PHP -- u©ywany wraz z serwerem Apache
 Summary(pt_BR):	A linguagem de script PHP
+Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на сервере
+Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.2.1
 Release:	6
@@ -56,7 +58,7 @@ Patch2:		%{name}-mysql-socket.patch
 Patch3:		%{name}-mail.patch
 Patch4:		%{name}-link-libs.patch
 Patch5:		%{name}-fastcgi.patch
-Patch6:		%{name}-no_%{name}_pcre_in_SAPI_c.patch
+Patch6:		%{name}-no_php_pcre_in_SAPI_c.patch
 Patch7:		%{name}-libpq_fs_h_path.patch
 Patch8:		%{name}-wddx-fix.patch
 Patch9:		%{name}-cpdf-fix.patch
@@ -117,7 +119,7 @@ BuildRequires:	perl
 %{!?_without_msession:BuildRequires:	phoenix-devel}
 BuildRequires:	pkgconfig
 BuildRequires:	postgresql-devel
-BuildRequires:  postgresql-backend-devel >= 7.2
+BuildRequires:	postgresql-backend-devel >= 7.2
 BuildRequires:	pspell-devel
 %{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	rpm-php-pearprov
@@ -172,11 +174,12 @@ non-connerciaux, qui rent facile la creation de pages web liees avec
 des bases de donnees. L'utilisation la plus commune de PHP est
 probablement en remplacement de scripts CGI. Le module mod_php permet
 au serveur web apache de comprendre et de traiter le langage PHP
-integre dans des pages web. Ce package contient PHP version %{version}.
-Si vous utilisez des applications qui utilisent specifiquement PHP/FI,
-vous devrez installer le module PHP/FI inclus dans le package mod_php.
-Si vous debutez avec PHP, vous devriez installer ce package. Vous
-aurez egalement besoin dinstaller le serveur web Apache.
+integre dans des pages web. Ce package contient PHP version
+%{version}. Si vous utilisez des applications qui utilisent
+specifiquement PHP/FI, vous devrez installer le module PHP/FI inclus
+dans le package mod_php. Si vous debutez avec PHP, vous devriez
+installer ce package. Vous aurez egalement besoin dinstaller le
+serveur web Apache.
 
 %description -l pl
 PHP jest jЙzykiem skryptowym, ktСrego polecenia umieszcza siЙ w
@@ -191,6 +194,27 @@ embutida em HTML. Muito de sua sintaxe И emprestada de C, Java e Perl,
 com algumas caracterМsticas Зnicas, especМficas ao PHP. O objetivo da
 linguagem И permitir que desenvolvedores web escrevam pАginas
 dinamicamente geradas de forma rАpida.
+
+%description -l ru
+PHP4 - это язык написания скриптов, встраиваемых в HTML-код. PHP
+предлагает интерграцию с множеством СУБД, поэтому написание скриптов
+для работы с базами данных относительно просто. Наиболее популярное
+использование PHP - замена для CGI скриптов.
+
+Этот пакет содержит самодостаточную (CGI) версию интерпретатора языка.
+Вы должны также установить пакет %{name}-common. Если вам нужен
+интерпретатор PHP в качестве модуля apache, установите пакет
+apache-php.
+
+%description -l uk
+PHP4 - це мова написання скрипт╕в, що вбудовуються в HTML-код. PHP
+пропону╓ ╕нтеграц╕ю з багатьма СУБД, тому написання скрипт╕в для
+роботи з базами даних ╓ довол╕ простим. Найб╕льш популярне
+використання PHP - зам╕на для CGI скрипт╕в.
+
+Цей пакет м╕стить самодостатню (CGI) верс╕ю ╕нтерпретатора мови. Ви
+ма╓те також встановити пакет %{name}-common. Якщо вам потр╕бен
+╕нтерпретатор PHP в якост╕ модуля apache, встанов╕ть пакет apache-php.
 
 %package cgi
 Summary:	PHP as CGI program
@@ -207,6 +231,8 @@ PHP jako program CGI.
 %package common
 Summary:	Common files nneded by both apache module and CGI
 Summary(pl):	WspСlne pliki dla moduЁu apacha i programu CGI
+Summary(ru):	Разделяемые библиотеки для php
+Summary(uk):	Б╕бл╕отеки сп╕льного використання для php
 Group:		Libraries
 Provides:	%{name}-session = %{version}
 Obsoletes:	%{name}-session <= %{epoch}:%{version}-%{release}
@@ -217,15 +243,30 @@ Common files needed by both apache module and CGI.
 %description common -l pl
 WspСlne pliki dla moduЁu apacha i programu CGI.
 
+%description common -l ru
+Этот пакет содержит общие файлы для разных вариантов реализации PHP
+(самодостаточной и в качестве модуля apache).
+
+%description common -l uk
+Цей пакет м╕стить сп╕льн╕ файли для р╕зних вар╕ант╕в реал╕зац╕╖ PHP
+(самодостатньо╖ та в якост╕ модуля apache).
+
 %package devel
 Summary:	Files for PHP modules development
 Summary(pl):	Pliki do kompilacji moduЁСw PHP
 Summary(pt_BR):	Arquivos de desenvolvimento para PHP
+Summary(ru):	Пакет разработки для построения расширений PHP4
+Summary(uk):	Пакет розробки для побудови розширень PHP4
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{version}
 
 %description devel
-Files for PHP modules development.
+The php-devel package lets you compile dynamic extensions to PHP.
+Included here is the source for the php extensions. Instead of
+recompiling the whole php binary to add support for, say, oracle,
+install this package and use the new self-contained extensions
+support. For more information, read the file
+SELF-CONTAINED-EXTENSIONS.
 
 %description devel -l pl
 Pliki potrzebne do kompilacji moduЁСw PHP.
@@ -233,6 +274,20 @@ Pliki potrzebne do kompilacji moduЁСw PHP.
 %description devel -l pt_BR
 Este pacote contИm arquivos usados no desenvolvimento de programas ou
 mСdulos PHP.
+
+%description devel -l uk
+Пакет php-devel да╓ можлив╕сть комп╕лювати динам╕чн╕ розширення PHP.
+До пакету включено вих╕дний код для розширень. Зам╕сть повторно╖
+комп╕ляц╕╖ б╕нарного файлу php для додання, наприклад, п╕дтримки
+oracle, встанов╕ть цей пакет для комп╕ляц╕╖ окремих розширень.
+Детальн╕ша ╕нформац╕я - в файл╕ SELF-CONTAINED-EXTENSIONS.
+
+%description devel -l ru
+Пакет php-devel дает возможность компилировать динамические расширения
+PHP. Пакет включает исходный код этих расширений. Вместо повторной
+компиляции бинарного файла php для добавления, например, поддержки
+oracle, установите этот пакет для компилирования отдельных расширений.
+Подробности - в файле SELF-CONTAINED-EXTENSIONS.
 
 %package doc
 Summary:	Online manual for PHP
@@ -330,8 +385,8 @@ Group:		Libraries
 PreReq:		%{name}-common = %{version}
 
 %description ctype
-This is a dynamic shared object (DSO) for Apache that will add
-ctype support to PHP.
+This is a dynamic shared object (DSO) for Apache that will add ctype
+support to PHP.
 
 %description crack -l pl
 ModuЁ PHP umo©liwiaj╠cy korzystanie z funkcji ctype.
@@ -383,8 +438,8 @@ Group:		Libraries
 PreReq:		%{name}-common = %{version}
 
 %description dbx
-This is a dynamic shared object (DSO) for Apache that will add
-DB abstraction layer to PHP. DBX supports odbc, mysql, pgsql, mssql,
+This is a dynamic shared object (DSO) for Apache that will add DB
+abstraction layer to PHP. DBX supports odbc, mysql, pgsql, mssql,
 fbsql and more.
 
 %description dbx -l pl
@@ -399,8 +454,8 @@ Group:		Libraries
 PreReq:		%{name}-common = %{version}
 
 %description dio
-This is a dynamic shared object (DSO) for Apache that will add
-direct file I/O support to PHP.
+This is a dynamic shared object (DSO) for Apache that will add direct
+file I/O support to PHP.
 
 Warning: this is an experimental module.
 
@@ -672,8 +727,8 @@ Group:		Libraries
 PreReq:		%{name}-common = %{version}
 
 %description mnogosearch
-This is a dynamic shared object (DSO) for Apache that will allow
-you to access mnoGoSearch free search engine in PHP.
+This is a dynamic shared object (DSO) for Apache that will allow you
+to access mnoGoSearch free search engine in PHP.
 
 %description mnogosearch -l pl
 ModuЁ PHP dodaj╠cy pozwalaj╠cy na dostЙp do wolnodostЙpnego silnika
@@ -686,9 +741,9 @@ Group:		Libraries
 PreReq:		%{name}-common = %{version}
 
 %description msession
-This is a dynamic shared object (DSO) for Apache that will allow
-you to use msession in PHP. msession is a high speed session daemon
-which can run either locally or remotely. It is designed to provide
+This is a dynamic shared object (DSO) for Apache that will allow you
+to use msession in PHP. msession is a high speed session daemon which
+can run either locally or remotely. It is designed to provide
 consistent session management for a PHP web farm.
 
 %description msession -l pl
@@ -870,13 +925,13 @@ Requires:	%{name}-pear
 Requires:	%{name}-xml = %{version}
 
 %description pear-additional_classes
-PEAR - PHP Extension and Application Repository.
-Additional classes which can't be found in pear packages.
+PEAR - PHP Extension and Application Repository. Additional classes
+which can't be found in pear packages.
 
 %description pear-additional_classes -l pl
 PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
-Repozytorium Aplikacji.
-Dodatkowe klasy, ktСrych nie ma w innych pakietach peara.
+Repozytorium Aplikacji. Dodatkowe klasy, ktСrych nie ma w innych
+pakietach peara.
 
 %package pear-devel
 Summary:	PEAR - PHP Extension and Application Repository
@@ -889,13 +944,12 @@ Requires:	%{name}-pear
 Requires:	%{name}-pear-PEAR-Command
 
 %description pear-devel
-PEAR - PHP Extension and Application Repository.
-This package contains aplications needed to use pear from cvs.
+PEAR - PHP Extension and Application Repository. This package contains
+aplications needed to use pear from cvs.
 
 %description pear-devel -l pl
 PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
-Repozytorium Aplikacji.
-Ten pakiet zawiera aplikacje potrzebne do 
+Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 
 %package pgsql
 Summary:	PostgreSQL database module for PHP
@@ -978,8 +1032,8 @@ Group:		Libraries
 PreReq:		%{name}-common = %{version}
 
 %description shmop
-This is a dynamic shared object (DSO) for Apache that will add
-Shared Memory Operations support to PHP.
+This is a dynamic shared object (DSO) for Apache that will add Shared
+Memory Operations support to PHP.
 
 Warning: this is an experimental module.
 
@@ -1025,8 +1079,8 @@ Group:		Libraries
 PreReq:		%{name}-common = %{version}
 
 %description sybase-ct
-This is a dynamic shared object (DSO) for Apache that will add
-Sybase and MS SQL databases support through CT-lib to PHP.
+This is a dynamic shared object (DSO) for Apache that will add Sybase
+and MS SQL databases support through CT-lib to PHP.
 
 %description sybase-ct -l pl
 ModuЁ PHP dodaj╠cy obsЁugЙ baz danych Sybase oraz MS SQL poprzez
@@ -1155,8 +1209,8 @@ Group:		Libraries
 PreReq:		%{name}-common = %{version}
 
 %description zip
-This is a dynamic shared object (DSO) for Apache that will add
-ZZipLib (read-only access to ZIP archives) support to PHP.
+This is a dynamic shared object (DSO) for Apache that will add ZZipLib
+(read-only access to ZIP archives) support to PHP.
 
 %description zip -l pl
 ModuЁ PHP umo©liwiaj╠cy korzystanie z bibliotekli ZZipLib
@@ -1214,11 +1268,11 @@ for i in cgi apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
 	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=%{_prefix}` \
-%if %{_apache2}	
+%if %{_apache2}
 	`[ $i = apxs ] && echo --with-apxs2=%{_sbindir}/apxs` \
 %else
 	`[ $i = apxs ] && echo --with-apxs=%{_sbindir}/apxs` \
-%endif	
+%endif
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
@@ -1563,7 +1617,7 @@ fi
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove interbase %{_sysconfdir}/php.ini
 fi
-	
+
 %post java
 %{_sbindir}/php-module-install install java %{_sysconfdir}/php.ini
 
