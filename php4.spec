@@ -3,15 +3,15 @@
 %include	/usr/lib/rpm/macros.php
 
 %define	_apache2	%(rpm -q apache-devel 2> /dev/null | grep -Eq '\\-2\\.[0-9]+\\.' && echo 1 || echo 0)
-%define		apxs		/usr/sbin/apxs
+%define	apxs		/usr/sbin/apxs
 
 %if %{_apache2}
-%define _without_recode 1
-%define _without_mm 1
+%define	_without_recode		1
+%define	_without_mm		1
 %endif
 
 %ifnarch %{ix86}
-%define _without_msession 1
+%define	_without_msession	1
 %endif
 
 # Conditional build:
@@ -53,14 +53,16 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.2.3
-Release:	7
+Release:	12
 Epoch:		3
 Group:		Libraries
 License:	PHP
-Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
+Source0:	http://static.php.net/www.php.net/distributions/%{name}-%{version}.tar.bz2
+# Source0-md5:	a0c7531f3d53a7736742c780f72a0f41
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source3:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
+# Source3-md5:	d89cb5124f95d2c30fb0d0e2dfe5de4e
 Source4:	%{name}-module-install
 Source5:	%{name}-mod_php.conf
 Source6:	%{name}-cgi.ini
@@ -89,6 +91,8 @@ Patch20:	%{name}-ini.patch
 Patch21:	%{name}-acam.patch
 Patch22:	%{name}-xmlrpc-fix.patch
 Patch23:	%{name}-iconv-bug18039.patch
+Patch24:	%{name}-wrap.patch
+Patch25:	%{name}-sessid.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -1339,6 +1343,8 @@ cp php.ini-dist php.ini
 %patch21 -p1
 %patch22 -p1
 %patch23 -p1
+%patch24 -p1
+%patch25 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE3} | tar -xf - -C manual

@@ -1,0 +1,11 @@
+--- php-4.0.4pl1/ext/session/mod_mm.c.orig	Fri Nov  3 13:00:49 2000
++++ php-4.0.4pl1/ext/session/mod_mm.c	Fri Feb 16 15:25:05 2001
+@@ -30,7 +30,7 @@
+ #include "php_session.h"
+ #include "mod_mm.h"
+ 
+-#define PS_MM_PATH "/tmp/session_mm"
++#define PS_MM_PATH "/var/run/php_session_mm"
+ 
+ /*
+  * this list holds all data associated with one session 

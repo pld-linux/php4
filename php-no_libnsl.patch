@@ -1,0 +1,23 @@
+diff -Naur php-4.0.3RC1/configure.in php-4.0.3RC1-p/configure.in
+--- php-4.0.3RC1/configure.in	Sun Sep 10 11:35:48 2000
++++ php-4.0.3RC1-p/configure.in	Mon Sep 25 16:18:19 2000
+@@ -215,12 +215,14 @@
+ 
+ if test "$php_no_nsl_checks" != "yes"; then
+ 
+-AC_CHECK_LIB(nsl, gethostname, [
+- AC_ADD_LIBRARY(nsl)
+- AC_DEFINE(HAVE_LIBNSL,1,[ ]) ],[
+- AC_CHECK_LIB(nsl, gethostbyaddr, [
++AC_CHECK_FUNC(gethostname, [ ], [
++ AC_CHECK_LIB(nsl, gethostname, [
+   AC_ADD_LIBRARY(nsl)
+-  AC_DEFINE(HAVE_LIBNSL,1,[ ]) ], [])
++  AC_DEFINE(HAVE_LIBNSL,1,[ ]) ],[
++  AC_CHECK_LIB(nsl, gethostbyaddr, [
++   AC_ADD_LIBRARY(nsl)
++   AC_DEFINE(HAVE_LIBNSL,1,[ ]) ], [])
++ ])
+ ])
+ 
+ fi
