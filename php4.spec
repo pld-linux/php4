@@ -39,7 +39,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.2.1
-Release:	9
+Release:	10
 Epoch:		3
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -389,7 +389,7 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add ctype
 support to PHP.
 
-%description crack -l pl
+%description ctype -l pl
 ModuЁ PHP umo©liwiaj╠cy korzystanie z funkcji ctype.
 
 %package curl
