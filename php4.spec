@@ -43,7 +43,6 @@
 %define	apxs		/usr/sbin/apxs
 # some problems with apache 2.x
 %if %{_apache2}
-%undefine	with_recode
 %undefine	with_mm
 %endif
 %ifnarch %{ix86} sparc sparcv9 ppc
