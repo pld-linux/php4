@@ -1,4 +1,6 @@
 #
+%define	_apache2	%(rpm -q apache-devel | grep -q '\-2\.' 2> /dev/null ; echo $?)
+#
 # Conditional build:
 # _with_oracle	- with oracle support
 # _with_oci8	- with oci8 support
@@ -93,8 +95,12 @@ BuildRequires:	zlib-devel >= 1.0.9
 %{?_with_xslt:BuildRequires:	expat-devel}
 %{?_with_xslt:BuildRequires:	w3c-libwww-devel}
 # apache 1.3 vs apache 2.0
-%requires_eq	apache
+%if %{_apache2}
+PreReq:		apache(EAPI) >= 2.0.35
+%else
+PreReq:		apache(EAPI) < 2.0.0
 PreReq:		apache(EAPI) >= 1.3.9
+%endif
 PreReq:		perl
 PreReq:		%{_sbindir}/apxs
 PreReq:		%{name}-common = %{version}
@@ -835,7 +841,7 @@ for i in cgi apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
 	`[ $i = fastcgi ] && echo --enable-discard-path --with-fastcgi=%{_prefix}` \
-	`[ $i = apxs ] && echo --with-apxs=%{_sbindir}/apxs` \
+	`[ $i = apxs ] && echo --with-apxs%{?_apache2:2}=%{_sbindir}/apxs` \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
