@@ -41,6 +41,7 @@ Patch9:		%{name}-am_ac_lt.patch
 Patch10:	%{name}-fastcgi.patch
 Patch11:	%{name}-shared.patch
 Patch12:	%{name}-ac250.patch
+Patch13:	%{name}-pearinstall.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -89,8 +90,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	phpfi
 
 %define		_sysconfdir	/etc/php
-# check ZEND_MODULE_API_NO in  Zend/modules.h
-%define 	extensionsdir %{_libdir}/php/extensions/no-debug-non-zts-20001222
+%define 	extensionsdir %{_libdir}/php
+%define		peardir		%{_datadir}/pear
 
 %description
 PHP is an HTML-embedded scripting language. PHP attempts to make it
@@ -737,10 +738,12 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki curl.
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
-%patch12 -p1 -b .wiget
+%patch12 -p1
+%patch13 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
+EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf
 libtoolize --copy --force
 aclocal
@@ -808,7 +811,8 @@ for i in cgi apxs ; do
 	%{!?_without_odbc:--with-unixODBC=shared} \
 	%{?_with_oracle:--with-oracle=shared} \
 	%{?_with_oci8:--with-oci8=shared} \
-	--without-db2 
+	--without-db2 \
+	--with-pear=%{peardir}
 done
 
 # TODO --with-pspell=/usr,shared (pspell missing)
@@ -1155,7 +1159,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc {CODING_STANDARDS,CREDITS,Zend/ZEND_CHANGES}.gz
 %doc {LICENSE,Zend/LICENSE,EXTENSIONS,NEWS,TODO*}.gz  
 %doc {README.EXT_SKEL,README.SELF-CONTAINED-EXTENSIONS}.gz
-%doc manual
 
 %dir %{_sysconfdir}
 %attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
@@ -1166,14 +1169,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %attr(755,root,root) %{_libdir}/libphp_common*.so.*.*.*
 
-%dir %{_libdir}/php
-%dir %{_libdir}/php/extensions
 %dir %{extensionsdir}
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/php4
-%{_libdir}/php4
+%{_includedir}/php
+%{_libdir}/php/build
 %attr(755,root,root) %{_bindir}/phpextdist
 %attr(755,root,root) %{_bindir}/phpize
 %attr(755,root,root) %{_bindir}/php-config
@@ -1181,19 +1182,7 @@ rm -rf $RPM_BUILD_ROOT
 %files pear
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/pear
-%{_libdir}/php/Benchmark
-%{_libdir}/php/Crypt
-%{_libdir}/php/Date
-%{_libdir}/php/DB
-%{_libdir}/php/File
-%{_libdir}/php/HTML
-%{_libdir}/php/Mail
-%{_libdir}/php/Math
-%{_libdir}/php/Net
-%{_libdir}/php/Payment
-%{_libdir}/php/PEAR
-%{_libdir}/php/XML
-%{_libdir}/php/*.php
+%{peardir}
 
 %files mysql
 %defattr(644,root,root,755)
@@ -1219,9 +1208,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/gd.so
 
-%files xml
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/xml.so
+# To check
+#%files xml
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/xml.so
 
 %files dba
 %defattr(644,root,root,755)
