@@ -1,0 +1,12 @@
+diff -burN php-4.3.10.orig/scripts/Makefile.frag php-4.3.10/scripts/Makefile.frag
+--- php-4.3.10.orig/scripts/Makefile.frag	2003-12-01 17:12:42.000000000 +0100
++++ php-4.3.10/scripts/Makefile.frag	2005-02-10 23:11:49.428479472 +0100
+@@ -26,6 +26,8 @@
+ 	/ \
+ 	Zend \
+ 	TSRM \
++	ext/gd \
++	ext/gd/libgd/ \
+ 	ext/standard \
+ 	ext/session \
+ 	ext/xml \
