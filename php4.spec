@@ -48,7 +48,7 @@
 # _without_sybase_ct	- without Sybase-CT extension module
 # _without_wddx		- without WDDX extension module
 # _without_xmlrpc	- without XML-RPC extension module
-# _without_xml		- without XML extension module
+# _without_xml		- without XML and DOMXML extension modules
 # _without_xslt		- without XSLT extension module
 # _without_yaz		- without YAZ extension module
 
@@ -96,6 +96,7 @@ Patch19:	%{name}-acam.patch
 Patch20:	%{name}-xmlrpc-fix.patch
 Patch21:	%{name}-libtool.patch
 Patch22:	%{name}-db4.patch
+Patch23:	%{name}-threads-acfix.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird-devel}}
@@ -1338,6 +1339,7 @@ cp php.ini-dist php.ini
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
+%patch23 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE3} | tar -xf - -C manual
@@ -1397,7 +1399,7 @@ for i in cgi cli apxs ; do
 	%{?_without_curl:--without-curl}%{!?_without_curl:--with-curl=shared} \
 	%{?_with_db3:--with-db3}%{!?_with_db3:--with-db4} \
 	--with-dbase=shared \
-	--with-dom=shared \
+	%{!?_without_xml:--with-dom=shared} \
 	%{!?_without_domxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
 %if %(expr %{?_without_xml:0}%{!?_without_xml:1} + %{?_without_xmlrpc:0}%{!?_without_xmlrpc:1})
 	--with-expat-dir=shared,/usr \
@@ -2126,9 +2128,11 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/dio.so
 
+%if 0%{!?_without_xml:1}
 %files domxml
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/domxml.so
+%endif
 
 %files exif
 %defattr(644,root,root,755)
