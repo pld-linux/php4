@@ -97,6 +97,7 @@ Patch20:	%{name}-xmlrpc-fix.patch
 Patch21:	%{name}-libtool.patch
 Patch22:	%{name}-db4.patch
 Patch23:	%{name}-threads-acfix.patch
+Patch24:	%{name}-tsrmlsfetchgcc2.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird-devel}}
@@ -1340,6 +1341,7 @@ cp php.ini-dist php.ini
 %patch21 -p1
 %patch22 -p1
 %patch23 -p1
+%patch24 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE3} | tar -xf - -C manual
