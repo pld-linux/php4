@@ -2,13 +2,13 @@ Summary:	The PHP HTML-embedded scripting language for use with Apache.
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache.
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache.
 Name:		php
-Version:	4.0.0
-Release:	2
+Version:	4.0.1
+Release:	1
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 License:	The PHP license (see "LICENSE" file included in distribution)
-Source0:	http://www.php.net/version4/downloads/%{name}-%{version}.tar.gz
+Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.gz
 Source1:	FAQ.php
 Source2:	php.ini
 Source3:	zend.gif
@@ -341,6 +341,76 @@ commpresion (zlib) support to PHP4.
 
 #%description zlib -l pl
 
+%package exif
+Summary:	exifextension module for PHP4
+Summary(pl):	Modu³ exif dla PHP4
+Group:		Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Requires:	%{name} = %{version}
+
+%description exif
+This is a dynamic shared object (DSO) for Apache that will add
+exif support to PHP4.
+
+#%description exif -l pl
+
+%package recode
+Summary:	recodeextension module for PHP4
+Summary(pl):	Modu³ recode dla PHP4
+Group:		Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Requires:	%{name} = %{version}
+
+%description recode
+This is a dynamic shared object (DSO) for Apache that will add
+recode support to PHP4.
+
+#%description recode -l pl
+
+#%package session
+#Summary:	sessionextension module for PHP4
+#Summary(pl):	Modu³ session dla PHP4
+#Group:		Libraries
+#Group(fr):	Librairies
+#Group(pl):	Biblioteki
+#Requires:	%{name} = %{version}
+#
+#%description session
+#This is a dynamic shared object (DSO) for Apache that will add
+#session support to PHP4.
+#
+#%description session -l pl
+
+%package gettext
+Summary:	gettextextension module for PHP4
+Summary(pl):	Modu³ gettext dla PHP4
+Group:		Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Requires:	%{name} = %{version}
+
+%description gettext
+This is a dynamic shared object (DSO) for Apache that will add
+gettext support to PHP4.
+
+#%description gettext -l pl
+
+
+%package snmp
+Summary:	snmpextension module for PHP4
+Summary(pl):	Modu³ snmp dla PHP4
+Group:		Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Requires:	%{name} = %{version}
+
+%description snmp
+This is a dynamic shared object (DSO) for Apache that will add
+snmp support to PHP4.
+
+#%description snmp -l pl
 
 
 %package doc
@@ -366,7 +436,7 @@ WWW.
 
 %build
 LDFLAGS="-s"; export LDFLAGS
-CFLAGS="$RPM_OPT_FLAGS -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
+CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 ./buildconf
 %configure \
 	--with-apxs=%{_sbindir}/apxs \
@@ -380,8 +450,10 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
 	--enable-trans-sid \
 	--enable-sysvsem=shared \
 	--enable-sysvshm=shared \
+	--enable-session \
+	--enable-exif=shared \
 	--with-regex=system \
-	--with-gettext \
+	--with-gettext=shared \
 	--with-ldap \
 	--with-mysql=shared \
 	--with-mysql-sock=/var/state/mysql/mysql.sock \
@@ -394,18 +466,19 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
 	--with-cpdflib=shared \
 	--with-java \
 	--with-pgsql=shared,/usr \
-	--with-imap \
+	--with-imap=shared \
 	--enable-bcmath=shared \
 	--enable-calendar=shared \
 	--with-mm \
 	--with-pcre-regex=shared \
 	--enable-posix=shared \
-	--enable-session \
 	--with-ttf \
 	--with-t1lib \
-	--with-recode \
+	--with-recode=shared \
 	--enable-ucd-snmp-hack \
 	--enable-dba=shared \
+	--with-snmp=shared \
+	--with-openssl \
 	--with-gdbm \
 	--with-ndbm \
 	--enable-yp=shared \
@@ -417,8 +490,6 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
 #	--with-db3 \
 
 # snmp won
-#	--with-snmp=shared \
-#	--with-openssl \
 
 #Syntax error on line 228 of %{_sysconfdir}/httpd/httpd.conf: Cannot load %{_libdir}/apache/libphp4.so into server: %{_libdir}/apache/libphp4.so: undefined symbol: phpi_get_le_gd
 # Solution: make pdf and cpdf shared
@@ -822,6 +893,108 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
+%post exif
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "activating module 'exif.so' in /etc/httpd/php.ini" 1>&2
+	perl -pi -e 's|^;extension=exif.so|extension=exif.so|g' \
+	%{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+%preun exif
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "deactivating module 'exif.so' in /etc/httpd/php.ini" 1>&2
+	perl -pi -e 's|^extension=exif.so|;extension=exif.so|g' \
+	%{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+%post recode
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "activating module 'recode.so' in /etc/httpd/php.ini" 1>&2
+	perl -pi -e 's|^;extension=recode.so|extension=recode.so|g' \
+	%{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+%preun recode
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "deactivating module 'recode.so' in /etc/httpd/php.ini" 1>&2
+	perl -pi -e 's|^extension=recode.so|;extension=recode.so|g' \
+	%{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+#%post session
+#if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+#	echo "activating module 'session.so' in /etc/httpd/php.ini" 1>&2
+#	perl -pi -e 's|^;extension=session.so|extension=session.so|g' \
+#	%{_sysconfdir}/httpd/php.ini
+#fi
+#if [ -f /var/lock/subsys/httpd ]; then
+#	/etc/rc.d/init.d/httpd restart 1>&2
+#fi
+#
+#%preun session
+#if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+#	echo "deactivating module 'session.so' in /etc/httpd/php.ini" 1>&2
+#	perl -pi -e 's|^extension=session.so|;extension=session.so|g' \
+#	%{_sysconfdir}/httpd/php.ini
+#fi
+#if [ -f /var/lock/subsys/httpd ]; then
+#	/etc/rc.d/init.d/httpd restart 1>&2
+#fi
+
+%post gettext
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "activating module 'gettext.so' in /etc/httpd/php.ini" 1>&2
+	perl -pi -e 's|^;extension=gettext.so|extension=gettext.so|g' \
+	%{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+%preun gettext
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "deactivating module 'gettext.so' in /etc/httpd/php.ini" 1>&2
+	perl -pi -e 's|^extension=gettext.so|;extension=gettext.so|g' \
+	%{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+%post snmp
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "activating module 'snmp.so' in /etc/httpd/php.ini" 1>&2
+	perl -pi -e 's|^;extension=snmp.so|extension=snmp.so|g' \
+	%{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+%preun snmp
+if [ -f %{_sysconfdir}/httpd/php.ini ]; then
+	echo "deactivating module 'snmp.so' in /etc/httpd/php.ini" 1>&2
+	perl -pi -e 's|^extension=snmp.so|;extension=snmp.so|g' \
+	%{_sysconfdir}/httpd/php.ini
+fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+
+
 
 
 %clean
@@ -904,6 +1077,26 @@ rm -rf $RPM_BUILD_ROOT
 %files zlib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/zlib.so
+
+%files exif
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_pkglibdir}/php/exif.so
+
+%files recode
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_pkglibdir}/php/recode.so
+
+#%files session
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{_pkglibdir}/php/session.so
+
+%files gettext
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_pkglibdir}/php/gettext.so
+
+%files snmp
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_pkglibdir}/php/snmp.so
 
 %files java
 %defattr(644,root,root,755)
