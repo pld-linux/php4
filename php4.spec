@@ -33,7 +33,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.2.1
-Release:	2.1
+Release:	3
 Epoch:		3
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -65,6 +65,7 @@ Patch15:	%{name}-msession-shared-lib.patch
 Patch16:	%{name}-xmlrpc-includes.patch
 Patch17:	%{name}-build_modules.patch
 Patch18:	%{name}-sapi-ini-file.patch
+Patch19:	%{name}-apache2_broken_macro.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -1119,6 +1120,7 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
 %patch16 -p1
 %patch17 -p1
 %patch18 -p1
+%patch19 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
@@ -2003,6 +2005,8 @@ fi
 %files pear
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/pear
+%attr(755,root,root) %{_bindir}/pearize
+%attr(755,root,root) %{_bindir}/phptar
 %{peardir}
 
 %files pdf
