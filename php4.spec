@@ -50,7 +50,7 @@ BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	db3-devel >= 3.1.17
 BuildRequires:	freetype-devel >= 2.0
-BuildRequires:	gd-devel >= 1.8.3
+BuildRequires:	gd-devel >= 2.0.1
 BuildRequires:	gdbm-devel
 %{!?_without_imap:BuildRequires: imap-devel >= 1:2001-0.BETA.200107022325.2 }
 # I think jdk is better for java
