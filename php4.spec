@@ -977,18 +977,25 @@ if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
-%preun
+%if %{_apache2}
+%postun
 if [ "$1" = "0" ]; then
-%if ! %{_apache2}
-	%{_sbindir}/apxs -e -A -n php4 %{_pkglibdir}/libphp4.so 1>&2
-	perl -pi -e \
-		's|^AddType application/x-httpd-php \.php|#AddType application/x-httpd-php .php|' \
-		/etc/httpd/httpd.conf
-%endif
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
 fi
+%else
+%preun
+if [ "$1" = "0" ]; then
+	%{_sbindir}/apxs -e -A -n php4 %{_pkglibdir}/libphp4.so 1>&2
+	perl -pi -e \
+		's|^AddType application/x-httpd-php \.php|#AddType application/x-httpd-php .php|' \
+		/etc/httpd/httpd.conf
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
+	fi
+fi
+%endif
 
 %post common -p /sbin/ldconfig
 %postun common -p /sbin/ldconfig
