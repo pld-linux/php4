@@ -1,13 +1,13 @@
 #
 # Conditional build:
-# bcond_on_oracle  - with oracle support 
-# bcond_on_oci8    - with oci8 support
-# bcond_on_java    - with Java support
-# bcond_on_openssl - with OpenSSL support
-# bcond_off_imap   - without IMAP support
-# bcond_off_ldap   - without LDAP support
-# bcond_off_odbc   - without ODBC support
-# bcond_off_snmp   - without SNMP support
+# _with_oracle  - with oracle support 
+# _with_oci8    - with oci8 support
+# _with_java    - with Java support
+# _with_openssl - with OpenSSL support
+# _without_imap   - without IMAP support
+# _without_ldap   - without LDAP support
+# _without_odbc   - without ODBC support
+# _without_snmp   - without SNMP support
 #
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
@@ -50,10 +50,10 @@ BuildRequires:	db3-devel >= 3.1.17
 BuildRequires:	freetype1-devel
 BuildRequires:	gd-devel >= 1.8.3
 BuildRequires:	gdbm-devel
-%{!?bcond_off_imap:BuildRequires: imap-devel >= 4.7b-1}
+%{!?_without_imap:BuildRequires: imap-devel >= 4.7b-1}
 # I think jdk is better for java
 # BuildRequires:	jdk
-%{?bcond_on_java:BuildRequires:	kaffe-devel}
+%{?_with_java:BuildRequires:	kaffe-devel}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libltdl-devel >= 1.4
 BuildRequires:	libpng >= 1.0.8
@@ -61,23 +61,23 @@ BuildRequires:	libtiff-devel
 BuildRequires:	libtool
 BuildRequires:	mm-devel >= 1.1.3
 BuildRequires:	mysql-devel >= 3.23.32
-%{!?bcond_off_ldap:BuildRequires: openldap-devel >= 2.0}
+%{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
 BuildRequires:	pam-devel
 BuildRequires:	pdflib-devel >= 4.0.0
 #BuildRequires:	libxml-devel >= 2.0.0
 BuildRequires:	postgresql-devel
 BuildRequires:	recode-devel >= 3.5d-3
 BuildRequires:	t1lib-devel
-%{!?bcond_off_odbc:BuildRequires: unixODBC-devel}
+%{!?_without_odbc:BuildRequires: unixODBC-devel}
 BuildRequires:	zlib-devel >= 1.0.9
-%{!?bcond_off_snmp:BuildRequires: ucd-snmp-devel >= 4.2.1-8}
+%{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.1-8}
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	mhash-devel
 BuildRequires:	bzip2-devel
 BuildRequires:	gmp-devel
 BuildRequires:	curl-devel
 #BuildRequires:	fastcgi-devkit
-%if %(expr %{?bcond_on_openssl:1}%{!?bcond_on_openssl:0} + %{!?bcond_off_ldap:1}%{?bcond_off_ldap:0})
+%if %(expr %{?_with_openssl:1}%{!?_with_openssl:0} + %{!?_without_ldap:1}%{?_without_ldap:0})
 BuildRequires:	openssl-devel >= 0.9.6a
 %endif
 Prereq:		apache(EAPI) >= 1.3.9
@@ -752,7 +752,7 @@ for i in cgi apxs ; do
 	--enable-exif=shared \
 	--with-regex=system \
 	--with-gettext=shared \
-	%{!?bcond_off_ldap:--with-ldap=shared} \
+	%{!?_without_ldap:--with-ldap=shared} \
 	--with-mysql=shared,/usr \
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-gd=shared \
@@ -763,9 +763,9 @@ for i in cgi apxs ; do
 	--with-hyperwave \
 	--with-pdflib=shared \
 	--with-cpdflib=shared \
-	%{?bcond_on_java:--with-java} \
+	%{?_with_java:--with-java} \
 	--with-pgsql=shared,/usr \
-	%{!?bcond_off_imap:--with-imap=shared} \
+	%{!?_without_imap:--with-imap=shared} \
 	--enable-bcmath=shared \
 	--enable-calendar=shared \
 	--with-mm \
@@ -776,7 +776,7 @@ for i in cgi apxs ; do
 	--with-recode=shared \
 	--enable-ucd-snmp-hack \
 	--enable-dba=shared \
-	%{!?bcond_off_snmp:--with-snmp=shared} \
+	%{!?_without_snmp:--with-snmp=shared} \
 	--with-gdbm \
 	--with-db3 \
 	--enable-yp=shared \
@@ -790,10 +790,10 @@ for i in cgi apxs ; do
 	--with-mhash=shared \
 	--with-curl=shared \
 	--with-gmp=shared \
-	%{?bcond_on_openssl:--with-openssl} \
-	%{!?bcond_off_odbc:--with-unixODBC=shared} \
-	%{?bcond_on_oracle:--with-oracle=shared} \
-	%{?bcond_on_oci8:--with-oci8=shared} \
+	%{?_with_openssl:--with-openssl} \
+	%{!?_without_odbc:--with-unixODBC=shared} \
+	%{?_with_oracle:--with-oracle=shared} \
+	%{?_with_oci8:--with-oci8=shared} \
 	--without-db2 
 done
 
@@ -935,7 +935,7 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove gettext %{_sysconfdir}/php.ini
 fi
 
-%if %{?bcond_off_imap:0}%{!?bcond_off_imap:1}
+%if %{?_without_imap:0}%{!?_without_imap:1}
 %post imap
 %{_sbindir}/php-module-install install imap %{_sysconfdir}/php.ini
 
@@ -955,7 +955,7 @@ if [ "$1" = "0" ]; then
 fi
 %endif
 
-%if %{?bcond_off_ldap:0}%{!?bcond_off_ldap:1}
+%if %{?_without_ldap:0}%{!?_without_ldap:1}
 %post ldap
 %{_sbindir}/php-module-install install ldap %{_sysconfdir}/php.ini
 
@@ -989,7 +989,7 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove mysql %{_sysconfdir}/php.ini
 fi
 
-%if %{?bcond_on_oci8:1}%{!?bcond_on_oci8:0}
+%if %{?_with_oci8:1}%{!?_with_oci8:0}
 %post oci8
 %{_sbindir}/php-module-install install oci8 %{_sysconfdir}/php.ini
 
@@ -999,7 +999,7 @@ if [ "$1" = "0" ]; then
 fi
 %endif
 
-%if %{?bcond_off_odbc:0}%{!?bcond_off_odbc:1}
+%if %{?_without_odbc:0}%{!?_without_odbc:1}
 %post odbc
 %{_sbindir}/php-module-install install odbc %{_sysconfdir}/php.ini
 
@@ -1009,7 +1009,7 @@ if [ "$1" = "0" ]; then
 fi
 %endif
 
-%if %{?bcond_on_oracle:1}%{!?bcond_on_oracle:0}
+%if %{?_with_oracle:1}%{!?_with_oracle:0}
 %post oracle
 %{_sbindir}/php-module-install install oracle %{_sysconfdir}/php.ini
 
@@ -1059,7 +1059,7 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove session %{_sysconfdir}/php.ini
 fi
 
-%if %{?bcond_off_snmp:0}%{!?bcond_off_snmp:1}
+%if %{?_without_snmp:0}%{!?_without_snmp:1}
 %post snmp
 %{_sbindir}/php-module-install install snmp %{_sysconfdir}/php.ini
 
@@ -1181,13 +1181,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pgsql.so
 
-%if %{?bcond_on_oracle:1}%{!?bcond_on_oracle:0}
+%if %{?_with_oracle:1}%{!?_with_oracle:0}
 %files oracle
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/oracle.so
 %endif
 
-%if %{?bcond_on_oci8:1}%{!?bcond_on_oci8:0}
+%if %{?_with_oci8:1}%{!?_with_oci8:0}
 %files oci8
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/oci8.so
@@ -1265,25 +1265,25 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/gettext.so
 
-%if %{?bcond_off_imap:0}%{!?bcond_off_imap:1}
+%if %{?_without_imap:0}%{!?_without_imap:1}
 %files imap
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/imap.so
 %endif
 
-%if %{?bcond_off_snmp:0}%{!?bcond_off_snmp:1}
+%if %{?_without_snmp:0}%{!?_without_snmp:1}
 %files snmp
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/snmp.so
 %endif
 
-%if %{?bcond_on_java:1}%{!?bcond_on_java:0}
+%if %{?_with_java:1}%{!?_with_java:0}
 %files java
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/libphp_java.so
 %endif
 
-%if %{?bcond_off_ldap:0}%{!?bcond_off_ldap:1}
+%if %{?_without_ldap:0}%{!?_without_ldap:1}
 %files ldap
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/ldap.*
@@ -1301,7 +1301,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mhash.so
 
-%if %{?bcond_off_odbc:0}%{!?bcond_off_odbc:1}
+%if %{?_without_odbc:0}%{!?_without_odbc:1}
 %files odbc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/odbc.so
