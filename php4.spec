@@ -92,6 +92,7 @@ Patch12:	%{name}-msession-shared-lib.patch
 Patch13:	%{name}-build_modules.patch
 Patch14:	%{name}-sapi-ini-file.patch
 Patch15:	%{name}-dl-zlib.patch
+Patch16:	%{name}-no-metaccld.patch
 #Patch16:	%{name}-dl-pcre.patch	-- obsolete
 Patch17:	%{name}-session-unregister.patch
 Patch18:	%{name}-ini.patch
@@ -1316,6 +1317,7 @@ Repozytorium Aplikacji.
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
+%patch16 -p1
 #%patch17 -p1	-- TODO s/name/s_name/ - if patch still necessary
 cp php.ini-dist php.ini
 %patch18 -p1
