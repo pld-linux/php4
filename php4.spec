@@ -62,13 +62,13 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.9
-%define	_rc	RC1
+%define	_rc	RC2
 Release:	0.%{_rc}
 Epoch:		0
 Group:		Libraries
 License:	PHP
 Source0:	http://downloads.php.net/ilia/php-%{version}%{_rc}.tar.bz2
-# Source0-md5:	b741b28a55ae1b2b12ca53f590ac9f99
+# Source0-md5:	d3c074be9ff17515328b097e7ce04a56
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -108,7 +108,7 @@ Patch28:	%{name}-sybase-fix.patch
 Patch29:	%{name}-mssql-fix.patch
 Patch30:	%{name}-lib64.patch
 Patch31:	%{name}-mnogosearch-fix.patch
-Icon:		php4.gif
+#Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 BuildRequires:	apache-devel
@@ -140,6 +140,7 @@ BuildRequires:	gmp-devel
 %{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2 }
 %{?with_java:BuildRequires:	jdk >= 1.1}
 %{?with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
+BuildRequires:	libgcrypt-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libltdl-devel >= 1.4
 BuildRequires:	libmcal-devel
