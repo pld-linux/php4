@@ -337,6 +337,8 @@ Summary(pt_BR):	Arquivos de desenvolvimento para PHP
 Summary(ru):	Пакет разработки для построения расширений PHP4
 Summary(uk):	Пакет розробки для побудови розширень PHP4
 Group:		Development/Languages/PHP
+Requires:	autoconf
+Requires:	automake
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-pear-devel
 Conflicts:	php-devel
