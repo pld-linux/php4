@@ -1,0 +1,12 @@
+--- php-4.2.0/acinclude.m4.orig	Thu May  2 01:33:20 2002
++++ php-4.2.0/acinclude.m4	Thu May  2 03:16:05 2002
+@@ -1256,8 +1256,8 @@
+   fi
+   
+   if test "$found_iconv" = "yes"; then
++    AC_DEFINE(HAVE_ICONV, 1, [ ])
+     if test -n "$ICONV_DIR"; then
+-      AC_DEFINE(HAVE_ICONV, 1, [ ])
+       PHP_ADD_LIBRARY_WITH_PATH($iconv_lib_name, $ICONV_DIR/lib, $1)
+       PHP_ADD_INCLUDE($ICONV_DIR/include)
+     fi
