@@ -1655,8 +1655,8 @@ done
 
 # fix install paths, avoid evil rpaths
 %{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
-%{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}/apache'|" libphp4.la
-%{__perl} -pi -e 's|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |' libphp4.la
+%{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}/apache'|" libphp5.la
+%{__perl} -pi -e 's|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |' libphp5.la
 
 # notes:
 # -DENABLE_CHROOT_FUNC=1 (cgi,fcgi) is used in ext/standard/dir.c (libphp_common)
@@ -1679,8 +1679,12 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
-	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi" \
+	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp5.la $RPM_BUILD_ROOT%{_libdir}/apache ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi" \
 	INSTALL_CLI="\$(LIBTOOL) --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php.cli"
+
+# ToDo:
+# Why make install doesn't install libphp5.so ?
+install libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/apache
 
 # compatibility (/usr/bin/php used to be CGI SAPI)
 ln -sf php.cgi $RPM_BUILD_ROOT%{_bindir}/php
@@ -1700,7 +1704,7 @@ cp -f Zend/LICENSE{,.Zend}
 # Directories created for pear:
 install -d $RPM_BUILD_ROOT%{php_pear_dir}/{Archive,Console,Crypt,HTML/Template,Image,Net,Science,XML}
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/apache/libphp5.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
