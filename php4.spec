@@ -1111,6 +1111,8 @@ Uwaga: to jest modu³ eksperymentalny.
 Summary:	Process Control extension module for PHP
 Summary(pl):	Modu³ Process Control dla PHP
 Group:		Libraries
+Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
+Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-pcntl = %{epoch}:%{version}-%{release}
 
 %description pcntl
@@ -1228,6 +1230,8 @@ Modu³ PHP dodaj±cy obs³ugê funkcji Qt DOM.
 Summary:	readline extension module for PHP
 Summary(pl):	Modu³ readline dla PHP
 Group:		Libraries
+Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
+Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-readline = %{epoch}:%{version}-%{release}
 
 %description readline
