@@ -45,6 +45,7 @@ Patch11:	%{name}-shared.patch
 Patch12:	%{name}-ac250.patch
 Patch13:	%{name}-pearinstall.patch
 #Patch14:	%{name}-linking.patch
+Patch15:	%{name}-pldlogo.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
