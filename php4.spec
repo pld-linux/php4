@@ -28,7 +28,7 @@ Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Summary(pt_BR):	A linguagem de script PHP
 Name:		php
 Version:	4.1.2
-Release:	7
+Release:	8
 Epoch:		1
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -70,7 +70,7 @@ BuildRequires:	gmp-devel
 BuildRequires:	freetype-devel >= 2.0
 BuildRequires:	gd-devel >= 2.0.1
 BuildRequires:	gdbm-devel
-%{!?_without_imap:BuildRequires: imap-devel >= 1:2001-0.BETA.200107022325.2 }
+%{!?_without_imap:BuildRequires: imap-devel >= 1:2001a }
 # I think jdk is better for java
 # BuildRequires:	jdk
 %{?_with_java:BuildRequires:	kaffe-devel}
