@@ -53,6 +53,9 @@ Patch10:	%{name}-session-fix-shared.patch
 Patch11:	%{name}-hyperwave-fix.patch
 Patch12:	%{name}-openssl-for-ext-only.patch
 Patch13:	%{name}-java-fix.patch
+Patch14:	%{name}-mcal-shared-lib.patch
+Patch15:	%{name}-msession-shared-lib.patch
+Patch16:	%{name}-xmlrpc-includes.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -76,6 +79,7 @@ BuildRequires:	gmp-devel
 %{?_with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libltdl-devel >= 1.4
+BuildRequires:	libmcal-devel
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	libpng >= 1.0.8
 BuildRequires:	libtiff-devel
@@ -85,6 +89,7 @@ BuildRequires:	libxml2-devel >= 2.2.7
 BuildRequires:	mhash-devel
 BuildRequires:	ming-devel >= 0.1.0
 %{!?_without_mm:BuildRequires:	mm-devel >= 1.1.3}
+BuildRequires:	mnogosearch-devel
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
 %if %(expr %{?_without_openssl:0}%{!?_without_openssl:1} + %{?_without_ldap:0}%{!?_without_ldap:1})
@@ -93,16 +98,21 @@ BuildRequires:	openssl-devel >= 0.9.6a
 BuildRequires:	pam-devel
 BuildRequires:	pdflib-devel >= 4.0.0
 BuildRequires:	perl
+BuildRequires:	phoenix-devel
 BuildRequires:	pkgconfig
 BuildRequires:	postgresql-devel
 BuildRequires:  postgresql-backend-devel >= 7.2
+BuildRequires:	pspell-devel
 %{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
 %{!?_without_xslt:BuildRequires:	sablotron-devel}
 BuildRequires:	t1lib-devel
 %{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.3}
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
+#BuildRequires:	xmlrpc-epi-devel # co¶ zrobiæ ¿eby u¿ywa³ dzielonej biblioteki???
+BuildRequires:	yaz-devel
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
+BuildRequires:	zziplib-devel
 #BuildRequires:	fastcgi-devkit
 # apache 1.3 vs apache 2.0
 %if %{_apache2}
@@ -574,6 +584,20 @@ multibyte string support to PHP.
 %description mbstring -l pl
 Modu³ PHP dodaj±cy obs³ugê ci±gów znaków wielobajtowych.
 
+%package mcal
+Summary:	mcal extension module for PHP
+Summary(pl):	Modu³ mcal dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description mcal
+This is a dynamic shared object (DSO) for Apache that will add mcal
+(Modular Calendar Access Library) support to PHP.
+
+%description mcal -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki mcal (daj±cej dostêp
+do kalendarzy).
+
 %package mcrypt
 Summary:	mcrypt extension module for PHP
 Summary(pl):	Modu³ mcrypt dla PHP
@@ -613,6 +637,38 @@ This is a dynamic shared object (DSO) for Apache that will add ming
 %description ming -l pl
 Modu³ PHP dodaj±cy obs³ugê plików Flash (.swf) poprzez bibliotekê
 ming.
+
+%package mnogosearch
+Summary:	mnoGoSearch extension module for PHP
+Summary(pl):	Modu³ mnoGoSearch dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description mnogosearch
+This is a dynamic shared object (DSO) for Apache that will allow
+you to access mnoGoSearch free search engine in PHP.
+
+%description mnogosearch -l pl
+Modu³ PHP dodaj±cy pozwalaj±cy na dostêp do wolnodostêpnego silnika
+wyszukiwarki mnoGoSearch.
+
+%package msession
+Summary:	msession extension module for PHP
+Summary(pl):	Modu³ msession dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description msession
+This is a dynamic shared object (DSO) for Apache that will allow
+you to use msession in PHP. msession is a high speed session daemon
+which can run either locally or remotely. It is designed to provide
+consistent session management for a PHP web farm.
+
+%description msession -l pl
+Modu³ PHP dodaj±cy umo¿liwiaj±cy korzystanie z demona msession. Jest
+to demon szybkiej obs³ugi sesji, który mo¿e dzia³aæ lokalnie lub na
+innej maszynie. S³u¿y do zapewniania spójnej obs³ugi sesji dla farmy
+serwerów.
 
 %package mysql
 Summary:	MySQL database module for PHP
@@ -784,6 +840,21 @@ functions support to PHP.
 %description posix -l pl
 Modu³ PHP umo¿liwiaj±cy korzystanie z funkcji POSIX.
 
+%package pspell
+Summary:	pspell extension module for PHP
+Summary(pl):	Modu³ pspell dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description pspell
+This is a dynamic shared object (DSO) for Apache that will add pspell
+support to PHP. It allows to check the spelling of a word and offer
+suggestions.
+
+%description pspell -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z pspella. Pozwala on na
+sprawdzanie pisowni s³owa i sugerowanie poprawek.
+
 %package recode
 Summary:	recode extension module for PHP
 Summary(pl):	Modu³ recode dla PHP
@@ -930,6 +1001,23 @@ main %{name} package.
 Modu³ PHP umo¿liwiaj±cy parsowanie plików XML i obs³ugê zdarzeñ
 zwi±zanych z tymi plikami.
 
+%package xmlrpc
+Summary:	xmlrpc extension module for PHP
+Summary(pl):	Modu³ xmlrpc dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description xmlrpc
+This is a dynamic shared object (DSO) for Apache that will add XMLRPC
+support to PHP.
+
+Warning: this is an experimental module.
+
+%description xmlrpc -l pl
+Modu³ PHP dodaj±cy obs³ugê XMLRPC.
+
+Uwaga: to jest modu³ eksperymentalny.
+
 %package xslt
 Summary:	xslt extension module for PHP
 Summary(pl):	Modu³ xslt dla PHP
@@ -942,6 +1030,21 @@ support to PHP.
 
 %description xslt -l pl
 Modu³ PHP umo¿liwiaj±cy korzystanie z technologii xslt.
+
+%package yaz
+Summary:	yaz extension module for PHP
+Summary(pl):	Modu³ yaz dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description yaz
+This is a dynamic shared object (DSO) for Apache that will add yaz
+support to PHP. yaz toolkit implements the Z39.50 protocol for
+information retrieval.
+
+%description yaz -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z yaz - implementacji protoko³u
+Z39.50 s³u¿±cego do pozyskiwania informacji.
 
 %package yp
 Summary:	NIS (yp) extension module for PHP
@@ -956,6 +1059,20 @@ This is a dynamic shared object (DSO) for Apache that will add NIS
 %description yp -l pl
 Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy do PHP
 wsparcie dla NIS (Yellow Pages).
+
+%package zip
+Summary:	zip extension module for PHP
+Summary(pl):	Modu³ zip dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description zip
+This is a dynamic shared object (DSO) for Apache that will add
+ZZipLib (read-only access to ZIP archives) support to PHP.
+
+%description zip -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z bibliotekli ZZipLib
+(pozwalaj±cej na odczyt archiwów ZIP).
 
 %package zlib
 Summary:	Zlib extension module for PHP
@@ -986,6 +1103,9 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1 -b .orig
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
@@ -1066,12 +1186,15 @@ for i in cgi apxs ; do
 	%{?_with_java:--with-java} \
 	--with-jpeg-dir=shared,/usr \
 	%{!?_without_ldap:--with-ldap=shared} \
+	--with-mcal=shared,/usr \
 	--with-mcrypt=shared \
-	--with-mysql=shared,/usr \
-	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-mhash=shared \
 	--with-ming=shared \
 	%{?_without_mm:--with-mm=shared,no}%{!?_without_mm:--with-mm=shared} \
+	--with-mnogosearch=shared,/usr \
+	--with-msession=shared \
+	--with-mysql=shared,/usr \
+	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	%{?_with_oci8:--with-oci8=shared} \
 	%{!?_without_openssl:--with-openssl=shared} \
 	%{?_with_oracle:--with-oracle=shared} \
@@ -1080,6 +1203,7 @@ for i in cgi apxs ; do
 	--with-pear=%{peardir} \
 	--with-pgsql=shared,%{_prefix} \
 	--with-png-dir=shared,/usr \
+	--with-pspell=shared \
 	%{!?_without_recode:--with-recode=shared} \
 	--with-regex=php \
 	--with-sablot-js=shared,no \
@@ -1088,8 +1212,10 @@ for i in cgi apxs ; do
 	--with-t1lib=shared \
 	--with-tiff-dir=shared,/usr \
 	%{!?_without_odbc:--with-unixODBC=shared} \
-	--without-xmlrpc \
+	--with-xmlrpc=shared,/usr \
 	%{!?_without_xslt:--with-xslt-sablot=shared} \
+	--with-yaz=shared \
+	--with-zip=shared \
 	--with-zlib=shared \
 	--with-zlib-dir=shared
 done
@@ -1370,6 +1496,14 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove mbstring %{_sysconfdir}/php.ini
 fi
 
+%post mcal
+%{_sbindir}/php-module-install install mcal %{_sysconfdir}/php.ini
+
+%preun mcal
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove mcal %{_sysconfdir}/php.ini
+fi
+
 %post mcrypt
 %{_sbindir}/php-module-install install mcrypt %{_sysconfdir}/php.ini
 
@@ -1392,6 +1526,22 @@ fi
 %preun ming
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove ming %{_sysconfdir}/php.ini
+fi
+
+%post mnogosearch
+%{_sbindir}/php-module-install install mnogosearch %{_sysconfdir}/php.ini
+
+%preun mnogosearch
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove mnogosearch %{_sysconfdir}/php.ini
+fi
+
+%post msession
+%{_sbindir}/php-module-install install msession %{_sysconfdir}/php.ini
+
+%preun msession
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove msession %{_sysconfdir}/php.ini
 fi
 
 %post mysql
@@ -1482,6 +1632,14 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove posix %{_sysconfdir}/php.ini
 fi
 
+%post pspell
+%{_sbindir}/php-module-install install pspell %{_sysconfdir}/php.ini
+
+%preun pspell
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove pspell %{_sysconfdir}/php.ini
+fi
+
 %post recode
 %{_sbindir}/php-module-install install recode %{_sysconfdir}/php.ini
 
@@ -1562,6 +1720,14 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove xml %{_sysconfdir}/php.ini
 fi
 
+%post xmlrpc
+%{_sbindir}/php-module-install install xmlrpc %{_sysconfdir}/php.ini
+
+%preun xmlrpc
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove xmlrpc %{_sysconfdir}/php.ini
+fi
+
 %post xslt
 %{_sbindir}/php-module-install install xslt %{_sysconfdir}/php.ini
 
@@ -1570,12 +1736,28 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove xslt %{_sysconfdir}/php.ini
 fi
 
+%post yaz
+%{_sbindir}/php-module-install install yaz %{_sysconfdir}/php.ini
+
+%preun yaz
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove yaz %{_sysconfdir}/php.ini
+fi
+
 %post yp
 %{_sbindir}/php-module-install install yp %{_sysconfdir}/php.ini
 
 %preun yp
 if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove yp %{_sysconfdir}/php.ini
+fi
+
+%post zip
+%{_sbindir}/php-module-install install zip %{_sysconfdir}/php.ini
+
+%preun zip
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove zip %{_sysconfdir}/php.ini
 fi
 
 %post zlib
@@ -1740,6 +1922,10 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mbstring.so
 
+%files mcal
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/mcal.so
+
 %files mcrypt
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mcrypt.so
@@ -1751,6 +1937,14 @@ fi
 %files ming
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/ming.so
+
+%files mnogosearch
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/mnogosearch.so
+
+%files msession
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/msession.so
 
 %files mysql
 %defattr(644,root,root,755)
@@ -1805,6 +1999,10 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/posix.so
 
+%files pspell
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/pspell.so
+
 %if %{?_without_recode:0}%{!?_without_recode:1}
 %files recode
 %defattr(644,root,root,755)
@@ -1853,15 +2051,27 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/xml.so
 
+%files xmlrpc
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/xmlrpc.so
+
 %if %{?_without_xslt:0}%{!?_without_xslt:1}
 %files xslt
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/xslt.so
 %endif
 
+%files yaz
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/yaz.so
+
 %files yp
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/yp.so
+
+%files zip
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/zip.so
 
 %files zlib
 %defattr(644,root,root,755)
