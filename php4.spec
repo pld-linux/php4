@@ -1546,7 +1546,7 @@ cp php.ini-dist php.ini
 %patch22 -p1
 %patch23 -p1
 %patch24 -p1
-%{!?with_pear:%patch25 -p1}
+%patch25 -p1
 %patch26 -p1
 %patch27 -p1
 %patch28 -p1
@@ -1723,6 +1723,8 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
 	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi ; \$(LIBTOOL) --mode=install install sapi/fcgi/php $RPM_BUILD_ROOT%{_bindir}/php.fcgi" \
 	INSTALL_CLI="\$(LIBTOOL) --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php.cli"
+
+install -d $RPM_BUILD_ROOT%{php_pear_dir}/pear/{Archive,Console,Crypt,Image,Net,Science,XML,HTML/Template}
 
 # compatibility (/usr/bin/php used to be CGI SAPI)
 ln -sf php.cgi $RPM_BUILD_ROOT%{_bindir}/php
@@ -2759,28 +2761,13 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/zlib.so
 
-%if %{with pear}
 %files pear
 %defattr(644,root,root,755)
 %dir %{php_pear_dir}
-%dir %{php_pear_dir}/Archive
-%dir %{php_pear_dir}/Auth
-%dir %{php_pear_dir}/Console
-%dir %{php_pear_dir}/Crypt
-%dir %{php_pear_dir}/Date
-%dir %{php_pear_dir}/DB
-%dir %{php_pear_dir}/File
-%dir %{php_pear_dir}/HTML
-%dir %{php_pear_dir}/HTML/Template
-%dir %{php_pear_dir}/HTTP
-%dir %{php_pear_dir}/Image
-%dir %{php_pear_dir}/Mail
-%dir %{php_pear_dir}/Net
-%dir %{php_pear_dir}/PEAR
-%dir %{php_pear_dir}/Schedule
-%dir %{php_pear_dir}/Science
-%dir %{php_pear_dir}/XML
+%dir %{php_pear_dir}/*
+%dir %{php_pear_dir}/*/*
 
+%if 0
 %files pear-additional_classes
 %defattr(644,root,root,755)
 %attr(644,root,root) %{php_pear_dir}/Crypt/HCEMD5.php
