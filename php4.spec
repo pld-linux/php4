@@ -325,8 +325,10 @@ Summary(uk):	Б╕бл╕отеки сп╕льного використання для php
 Group:		Libraries
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
 Provides:	php-common = %{epoch}:%{version}-%{release}
+Provides:	php-openssl = %{epoch}:%{version}-%{release}
 Provides:	php-session = %{epoch}:%{version}-%{release}
 Obsoletes:	php-session < 3:4.2.1-2
+Obsoletes:	php-openssl < 3:4.3.9-2.2
 
 %description common
 Common files needed by both apache module and CGI.
@@ -2488,10 +2490,11 @@ fi
 %attr(755,root,root) %{_libdir}/libphp_common.so
 %{_libdir}/libphp_common.la
 %{_includedir}/php
-%{_libdir}/php/build
-%ifarch amd64
+# is it the right way [tm] to do this?
+##%{_libdir}/php/build
+##%ifarch amd64
 %{_ulibdir}/php/build
-%endif
+##%endif
 
 %files bcmath
 %defattr(644,root,root,755)
