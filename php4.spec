@@ -61,15 +61,12 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.3.5
-%define	_pre	RC4
-%define	_version	4.3.5%{_pre}
-Release:	0.%{_pre}
+Release:	1
 Epoch:		3
 Group:		Libraries
 License:	PHP
-#Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
-Source0:	http://downloads.php.net/ilia/%{name}-%{_version}.tar.bz2
-# Source0-md5:	677df559363411d0251c009c15d4eada
+Source0:	http://downloads.php.net/ilia/%{name}-%{version}.tar.bz2
+# Source0-md5:	29e61c125ac6278897c6c219f5d100d1
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -314,9 +311,7 @@ Summary(ru):	Разделяемые библиотеки для php
 Summary(uk):	Б╕бл╕отеки сп╕льного використання для php
 Group:		Libraries
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
-Provides:	%{name}-openssl = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-session <= %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-openssl <= %{epoch}:%{version}-%{release}
 
 %description common
 Common files needed by both apache module and CGI.
@@ -1483,7 +1478,7 @@ PEAR/*.php), dostarczanych z PHP, zainstaluj odpowiednie pakiety
 php-pear-* (php-pear-PEAR, php-pear-Archive_Tar, itp).
 
 %prep
-%setup -q -n %{name}-%{_version}
+%setup -q
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -1615,7 +1610,7 @@ for i in fcgi cgi cli apxs ; do
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-ncurses=shared \
 	%{?with_oci8:--with-oci8=shared} \
-	%{?with_openssl:--with-openssl} \
+	%{?with_openssl:--with-openssl=shared,/usr} \
 	%{?with_oracle:--with-oracle=shared} \
 	%{!?with_pcre:--without-pcre-regex}%{?with_pcre:--with-pcre-regex=shared} \
 	%{?with_pdf:--with-pdflib=shared} \
@@ -1639,7 +1634,6 @@ for i in fcgi cgi cli apxs ; do
 	--with-zip=shared \
 	--with-zlib=shared \
 	--with-zlib-dir=shared,/usr
-# --with-openssl=shared not supported in 4.3.2
 
 cp -f Makefile Makefile.$i
 # left for debugging purposes
@@ -2580,12 +2574,11 @@ fi
 %attr(755,root,root) %{extensionsdir}/odbc.so
 %endif
 
-# shared openssl module not supported in 4.3.2
-#%if %{with openssl}
-#%files openssl
-#%defattr(644,root,root,755)
-#%attr(755,root,root) %{extensionsdir}/openssl.so
-#%endif
+%if %{with openssl}
+%files openssl
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/openssl.so
+%endif
 
 %if %{with oracle}
 %files oracle
