@@ -44,7 +44,7 @@
 +			}
 +			if (zend_hash_find(PG(http_globals)[TRACK_VARS_SERVER]->value.ht, "SERVER_NAME", sizeof("SERVER_NAME"), (void **) &server_name)==SUCCESS) {
 +				convert_to_string_ex(server_name);
-+				fprintf(sendmail, "HTTP-Posting-URI: %s\n", Z_STRVAL_PP(server_name));
++				fprintf(sendmail, "HTTP-Posting-URI: %s", Z_STRVAL_PP(server_name));
 +				if (zend_hash_find(PG(http_globals)[TRACK_VARS_SERVER]->value.ht, "SERVER_PORT", sizeof("SERVER_PORT"), (void **) &server_port)==SUCCESS) {
 +					convert_to_string_ex(server_port);
 +					fprintf(sendmail, ":%s", Z_STRVAL_PP(server_port));
