@@ -1,0 +1,262 @@
+--- php-4.0.6/ext/pdf/config.m4.wiget	Thu Jun 14 06:35:44 2001
++++ php-4.0.6/ext/pdf/config.m4	Fri Jul  6 08:37:53 2001
+@@ -18,7 +18,7 @@
+       AC_CHECK_LIB(pdf, PDF_show_boxed, [
+         AC_DEFINE(HAVE_PDFLIB,1,[ ])
+       ],[
+-        AC_MSG_ERROR(pdflib extension requires at least pdflib 3.x. You may also need libtiff and libjpeg. If so, use the options --with-tiff-dir=<DIR> and --with-jpeg-dir=<DIR>)
++        AC_MSG_ERROR([pdflib extension requires at least pdflib 3.x. You may also need libtiff and libjpeg. If so, use the options --with-tiff-dir=<DIR> and --with-jpeg-dir=<DIR>])
+       ],[
+         -ltiff -ljpeg -lpng -lz
+       ])
+@@ -34,7 +34,7 @@
+       if test -n "$PDFLIB_INCLUDE" ; then
+ 
+         if test "$PHP_ZLIB_DIR" = "no"; then
+-          AC_MSG_ERROR(PDF extension requires ZLIB. Use --with-zlib-dir=<DIR>)
++          AC_MSG_ERROR([PDF extension requires ZLIB. Use --with-zlib-dir=<DIR>])
+         fi
+         
+         PHP_ADD_LIBRARY_WITH_PATH(z, $PHP_ZLIB_DIR/lib, PDFLIB_SHARED_LIBADD)
+@@ -47,7 +47,7 @@
+           [
+             PHP_ADD_LIBRARY_WITH_PATH(jpeg, $PHP_JPEG_DIR/lib, PDFLIB_SHARED_LIBADD)
+           ],[
+-            AC_MSG_ERROR(libjpeg not found!)
++            AC_MSG_ERROR([libjpeg not found!])
+           ],[
+             -L$PHP_JPEG_DIR/lib
+           ])
+@@ -56,12 +56,12 @@
+           [ 
+             PHP_ADD_LIBRARY(jpeg,, PDFLIB_SHARED_LIBADD)
+           ],[
+-            AC_MSG_RESULT(no, try --with-jpeg-dir=<DIR>)
++            AC_MSG_RESULT([no, try --with-jpeg-dir=<DIR>])
+           ])
+         fi
+ 
+  
+-        PHP_ARG_WITH(png-dir, for the location of libpng, 
++        PHP_ARG_WITH(png-dir,[ for the location of libpng], 
+         [  --with-png-dir[=DIR]      PDFLIB: define libpng install directory])
+         
+         if test "$PHP_PNG_DIR" != "no"; then
+@@ -69,7 +69,7 @@
+           [
+             PHP_ADD_LIBRARY_WITH_PATH(png, $PHP_PNG_DIR/lib, PDFLIB_SHARED_LIBADD)
+           ],[
+-            AC_MSG_ERROR(libpng not found!)
++            AC_MSG_ERROR([libpng not found!])
+           ],[
+             -L$PHP_PNG_DIR/lib
+           ])
+@@ -78,12 +78,12 @@
+           [ 
+             PHP_ADD_LIBRARY(png,, PDFLIB_SHARED_LIBADD)
+           ],[
+-            AC_MSG_RESULT(no, try --with-png-dir=<DIR>)
++            AC_MSG_RESULT([no, try --with-png-dir=<DIR>])
+           ])
+         fi
+         
+ 
+-        PHP_ARG_WITH(tiff-dir, for the location of libtiff,
++        PHP_ARG_WITH(tiff-dir,[ for the location of libtiff],
+         [  --with-tiff-dir[=DIR]     PDFLIB: define libtiff install directory])
+ 
+         if test "$PHP_TIFF_DIR" != "no"; then
+@@ -91,7 +91,7 @@
+           [
+             PHP_ADD_LIBRARY_WITH_PATH(tiff, $PHP_TIFF_DIR/lib, PDFLIB_SHARED_LIBADD)
+           ],[
+-            AC_MSG_ERROR(libtiff not found!)
++            AC_MSG_ERROR([libtiff not found!])
+           ],[
+             -L$PHP_TIFF_DIR/lib
+           ])
+@@ -100,7 +100,7 @@
+           [
+             PHP_ADD_LIBRARY(tiff,, PDFLIB_SHARED_LIBADD)
+           ],[
+-            AC_MSG_RESULT(no, Try --with-tiff-dir=<DIR>)
++            AC_MSG_RESULT([no, Try --with-tiff-dir=<DIR>])
+           ])
+         fi
+ 
+@@ -111,7 +111,7 @@
+           PHP_ADD_LIBRARY_WITH_PATH(pdf, $PHP_PDFLIB/lib, PDFLIB_SHARED_LIBADD)
+           PHP_ADD_INCLUDE($PDFLIB_INCLUDE)
+         ],[
+-          AC_MSG_ERROR(pdflib extension requires at least pdflib 3.x.)
++          AC_MSG_ERROR([pdflib extension requires at least pdflib 3.x.])
+         ],[
+           -L$PHP_PDFLIB/lib
+         ])
+--- php-4.0.6/ext/yp/config.m4.wiget	Fri Jul  6 08:37:53 2001
++++ php-4.0.6/ext/yp/config.m4	Fri Jul  6 08:37:53 2001
+@@ -2,13 +2,15 @@
+ dnl config.m4 for extension yp
+ dnl don't forget to call PHP_EXTENSION(yp)
+ 
+-PHP_ARG_ENABLE(yp,whether to include YP support,
++PHP_ARG_ENABLE(yp,[whether to include YP support],
+ [  --enable-yp             Include YP support])
+ 
+ if test "$PHP_YP" != "no"; then
+   PHP_SUBST(NSL_SHARED_LIBADD)
+-  AC_ADD_LIBRARY_WITH_PATH(nsl, /usr/lib, NSL_SHARED_LIBADD)
+-  AC_CHECK_LIB(nsl, yp_match, [AC_DEFINE(HAVE_YP,1,[ ])], [AC_MSG_ERROR(YP module requires libnsl)],)
++  AC_CHECK_LIB(nsl, yp_match, [
++  	AC_DEFINE(HAVE_YP,1,[ ])
++  	PHP_ADD_LIBRARY(nsl,, NSL_SHARED_LIBADD)
++	], [AC_MSG_ERROR([YP module requires libnsl])])
+   PHP_EXTENSION(yp, $ext_shared)
+ 
+   case "$host_alias" in
+--- php-4.0.6/acinclude.m4.wiget	Sun Jun 10 21:52:56 2001
++++ php-4.0.6/acinclude.m4	Fri Jul  6 09:26:10 2001
+@@ -351,7 +351,7 @@
+   AC_SUBST($1)
+ ])
+ 
+-AC_DEFUN(PHP_FAST_OUTPUT,[
++AC_DEFUN([PHP_FAST_OUTPUT],[
+   PHP_FAST_OUTPUT_FILES="$PHP_FAST_OUTPUT_FILES $1"
+ ])
+ 
+@@ -377,7 +377,7 @@
+   done
+ ])
+ 
+-AC_DEFUN(PHP_GEN_MAKEFILES,[
++AC_DEFUN([PHP_GEN_MAKEFILES],[
+   $SHELL $srcdir/build/fastgen.sh $srcdir $ac_cv_mkdir_p $BSD_MAKEFILE $1
+ ])
+ 
+@@ -798,12 +798,6 @@
+   PHP_FAST_OUTPUT($ext_builddir/Makefile)
+ ])
+ 
+-PHP_SUBST(EXT_SUBDIRS)
+-PHP_SUBST(EXT_STATIC)
+-PHP_SUBST(EXT_SHARED)
+-PHP_SUBST(EXT_LIBS)
+-PHP_SUBST(EXT_LTLIBS)
+-
+ dnl
+ dnl Solaris requires main code to be position independent in order
+ dnl to let shared objects find symbols.  Weird.  Ugly.
+@@ -914,6 +908,7 @@
+ dnl ## This macro can be used several times.
+ AC_DEFUN(PHP_OUTPUT,[
+   PHP_OUTPUT_FILES="$PHP_OUTPUT_FILES $1"
++  AC_CONFIG_FILES($1)
+ ])
+ 
+ AC_DEFUN(PHP_DECLARED_TIMEZONE,[
+@@ -954,11 +949,6 @@
+   fi
+ ])
+ 
+-AC_DEFUN(AC_ADD_LIBPATH, [indir([PHP_ADD_LIBPATH])])
+-AC_DEFUN(AC_ADD_LIBRARY, [indir([PHP_ADD_LIBRARY])])
+-AC_DEFUN(AC_ADD_LIBRARY_WITH_PATH, [indir([PHP_ADD_LIBRARY_WITH_PATH])])
+-AC_DEFUN(AC_ADD_INCLUDE, [indir([PHP_ADD_INCLUDE])])
+-
+ AC_DEFUN(PHP_FOPENCOOKIE,[
+ 	AC_CHECK_FUNC(fopencookie, [ have_glibc_fopencookie=yes ])
+ 
+--- php-4.0.6/configure.in.wiget	Fri Jul  6 08:37:53 2001
++++ php-4.0.6/configure.in	Fri Jul  6 09:32:15 2001
+@@ -5,7 +5,7 @@
+ 
+ AC_INIT(README.CVS-RULES)
+ 
+-PHP_FAST_OUTPUT(sapi/Makefile ext/Makefile Makefile pear/Makefile main/Makefile)
++PHP_FAST_OUTPUT([sapi/Makefile ext/Makefile Makefile pear/Makefile main/Makefile])
+ 
+ if test "$with_shared_apache" != "no" && test -n "$with_shared_apache" ; then
+   AC_MSG_ERROR(--with-shared-apache is not supported. Please refer to the documentation for using APXS)
+@@ -117,10 +117,7 @@
+ AC_PROG_CC_C_O
+ AC_PROG_LN_S
+ 
+-AM_PROG_LEX
+-if test -n "$LEX"; then
+-  AC_DECL_YYTEXT
+-fi
++AC_PROG_LEX()
+ 
+ dnl ## Make flex scanners use const if they can, even if __STDC__ is not
+ dnl ## true, for compilers like Sun's that only set __STDC__ true in
+@@ -225,12 +222,12 @@
+ 
+ unset ac_cv_func_yp_get_default_domain
+ AC_CHECK_FUNC(yp_get_default_domain,
+- [php_no_nsl_checks=yes],[ ])
++ [php_no_nsl_checks=yes],[true ])
+ unset ac_cv_func_yp_get_default_domain
+ 
+ if test "$php_no_nsl_checks" != "yes"; then
+ 
+-AC_CHECK_FUNC(gethostname, [ ], [
++AC_CHECK_FUNC(gethostname, [true ], [
+ AC_CHECK_LIB(nsl, gethostname, [
+  PHP_ADD_LIBRARY(nsl)
+  AC_DEFINE(HAVE_LIBNSL,1,[ ]) ],[
+@@ -250,8 +247,8 @@
+ 
+ dnl Only include libbind if inet_aton is not found in 
+ dnl libresolv.
+-AC_CHECK_LIB(resolv, inet_aton, [], [
+-  AC_CHECK_LIB(bind, inet_aton, [], [
++AC_CHECK_LIB(resolv, inet_aton, [true], [
++  AC_CHECK_LIB(bind, inet_aton, [true], [
+     AC_CHECK_LIB(bind, __inet_aton)
+   ])
+ ])
+@@ -870,6 +867,12 @@
+ PHP_SUBST(TSRM_LIB)
+ PHP_SUBST(WARNING_LEVEL)
+ PHP_SUBST_OLD(YACC)
++PHP_SUBST(EXT_SUBDIRS)
++PHP_SUBST(EXT_STATIC)
++PHP_SUBST(EXT_SHARED)
++PHP_SUBST(EXT_LIBS)
++PHP_SUBST(EXT_LTLIBS)
++
+ 
+ PHP_CONFIGURE_PART(Configuring libtool)
+ 
+@@ -936,14 +939,17 @@
+ pear/scripts/pear pear/scripts/phpize pear/scripts/php-config \
+ TSRM/Makefile $PHP_OUTPUT_FILES"
+ 
+-AC_OUTPUT($ALL_OUTPUT_FILES, [], [
++AC_CONFIG_FILES([php4.spec Zend/Makefile main/build-defs.h 
++	pear/scripts/pear pear/scripts/phpize pear/scripts/php-config 
++	TSRM/Makefile])
++AC_CONFIG_COMMANDS([default], [true], [
+ 
+-if test "\$CONFIG_FILES" = "$ALL_OUTPUT_FILES"; then
++dnl if test "\$CONFIG_FILES" = "$ALL_OUTPUT_FILES"; then
+   REDO_ALL=yes
+-fi
++dnl fi
+ 
+ if test -n "\$REDO_ALL"; then
+-  PHP_GEN_MAKEFILES($PHP_FAST_OUTPUT_FILES)
++  PHP_GEN_MAKEFILES([$PHP_FAST_OUTPUT_FILES])
+ fi
+ 		   
+ if test ! -f $srcdir/ext/bcmath/number.c; then
+@@ -1057,6 +1063,8 @@
+ fi
+ ])
+ 
++AC_OUTPUT
++
+ dnl ## Local Variables:
+ dnl ## tab-width: 4
+ dnl ## End:
