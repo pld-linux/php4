@@ -45,13 +45,12 @@ Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
 Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
 Source1:	FAQ.%{name}
-Source2:	%{name}.ini
-Source3:	zend.gif
-Source4:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
-Source5:	%{name}-module-install
-Source6:	%{name}-mod_php.conf
-Source7:	%{name}-cgi.ini
-Source8:	%{name}-apache.ini
+Source2:	zend.gif
+Source3:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
+Source4:	%{name}-module-install
+Source5:	%{name}-mod_php.conf
+Source6:	%{name}-cgi.ini
+Source7:	%{name}-apache.ini
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-mysql-socket.patch
@@ -75,6 +74,7 @@ Patch19:	%{name}-apache2_broken_macro.patch
 Patch20:	%{name}-php_iconv_string_declaration.patch
 Patch21:	%{name}-pear-cosmetic.patch
 Patch22:	%{name}-mnogosearch.patch
+Patch23:	%{name}-ini.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -105,7 +105,7 @@ BuildRequires:	libpng >= 1.0.8
 BuildRequires:	libtiff-devel
 BuildRequires:	libtool >= 0:1.4.2-9
 BuildRequires:	libxml2-devel >= 2.2.7
-%{!?_without_domxslt:BuildRequires:	libxslt >= 1.0.3}
+%{!?_without_domxslt:BuildRequires:	libxslt-devel >= 1.0.3}
 BuildRequires:	mhash-devel
 BuildRequires:	ming-devel >= 0.1.0
 %{!?_without_mm:BuildRequires:	mm-devel >= 1.1.3}
@@ -1255,9 +1255,11 @@ Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
+cp php.ini-dist php.ini
+%patch23
 
 install -d manual
-bzip2 -dc %{SOURCE4} | tar -xf - -C manual
+bzip2 -dc %{SOURCE3} | tar -xf - -C manual
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I%{_prefix}/X11R6/include"
@@ -1400,11 +1402,11 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 
 install .libs/php $RPM_BUILD_ROOT%{_bindir}/php
 
-install %{SOURCE2}		$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
-install %{SOURCE7} %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}
-install %{SOURCE3} php.gif $RPM_BUILD_ROOT/home/httpd/icons
-install %{SOURCE5} $RPM_BUILD_ROOT%{_sbindir}
-install %{SOURCE6} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
+install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
+install %{SOURCE6} %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}
+install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/httpd/icons
+install %{SOURCE4} $RPM_BUILD_ROOT%{_sbindir}
+install %{SOURCE5} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
 
 install %{SOURCE1} .
 
@@ -1935,6 +1937,7 @@ fi
 
 %files common
 %defattr(644,root,root,755)
+%doc php.ini-*
 %doc CODING_STANDARDS CREDITS Zend/ZEND_CHANGES
 %doc LICENSE Zend/LICENSE.Zend EXTENSIONS NEWS TODO*
 %doc README.EXT_SKEL README.SELF-CONTAINED-EXTENSIONS
