@@ -961,8 +961,8 @@ Um módulo para aplicações PHP que usam bancos de dados MySQL.
 Summary:	ncurses module for PHP
 Summary(pl):	Modu³ ncurses dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-program = %{epoch}:%{version}-%{release}
-Requires:	%{name}-program = %{epoch}:%{version}-%{release}
+Requires(post,preun):	php-program = %{epoch}:%{version}-%{release}
+Requires:	php-program = %{epoch}:%{version}-%{release}
 
 %description ncurses
 This PHP module adds support for ncurses functions (only for cli and
