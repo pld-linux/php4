@@ -1,13 +1,9 @@
 #
-# TODO:
-# - make sure that session-unregister patch is no longer needed
-#   (any crash reports related to session modules?)
-#
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
 %bcond_with	fdf		# with FDF (PDF forms) module		(BR: proprietary lib)
+%bcond_with	hardened	# build with hardened patch applied (http://www.hardened-php.net/)
 %bcond_with	interbase_inst	# use InterBase install., not Firebird	(BR: proprietary libs)
-%bcond_with	hardened	# build with hardened patch applied (http://www.hardenet.php/)
 %bcond_with	java		# with Java extension module		(BR: jdk)
 %bcond_with	oci8		# with Oracle oci8 extension module	(BR: proprietary libs)
 %bcond_with	oracle		# with oracle extension module		(BR: proprietary libs)
@@ -68,7 +64,7 @@ Summary(ru):	PHP ÷ÅÒÓÉÉ 4 - ÑÚÙË ÐÒÅÐÒÏÃÅÓÓÉÒÏ×ÁÎÉÑ HTML-ÆÁÊÌÏ×, ×ÙÐÏÌÎÑÅÍÙÊ ÎÁ 
 Summary(uk):	PHP ÷ÅÒÓ¦§ 4 - ÍÏ×Á ÐÒÅÐÒÏÃÅÓÕ×ÁÎÎÑ HTML-ÆÁÊÌ¦×, ×ÉËÏÎÕ×ÁÎÁ ÎÁ ÓÅÒ×ÅÒ¦
 Name:		php4
 Version:	4.3.10
-Release:	1%{?with_hardened:hardended}
+Release:	1%{?with_hardened:hardened}
 Epoch:		0
 Group:		Libraries
 License:	PHP
@@ -120,26 +116,22 @@ Patch32:	%{name}-gd_imagerotate_enable.patch
 #Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
-%if %{_apache2}
-BuildRequires:	apache-devel
-%else
-BuildRequires:	apache1-devel
-%endif
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
 BuildRequires:	bzip2-devel
 BuildRequires:	cracklib-devel >= 2.7-15
-%{?with_curl:BuildRequires:	curl-devel >= 7.12.0 }
+%{?with_curl:BuildRequires:	curl-devel >= 7.12.0}
 BuildRequires:	cyrus-sasl-devel
 %{?with_db3:BuildRequires:	db3-devel >= 3.1}
 %{!?with_db3:BuildRequires:	db-devel >= 4.0}
 BuildRequires:	elfutils-devel
-%if %{with xml} || %{with xmlrpc}
+%if %{with wddx} || %{with xml} || %{with xmlrpc}
 BuildRequires:	expat-devel
 %endif
 %{?with_fdf:BuildRequires:	fdftk-devel}
+BuildRequires:	fcgi-devel
 BuildRequires:	flex
 %if %{with mssql} || %{with sybase}
 BuildRequires:	freetds-devel
@@ -150,7 +142,7 @@ BuildRequires:	gd-devel >= 2.0.28-2
 BuildRequires:	gd-devel(gif)
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
-%{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2 }
+%{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2}
 %{?with_java:BuildRequires:	jdk >= 1.1}
 %{?with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
 BuildRequires:	libjpeg-devel
@@ -167,7 +159,7 @@ BuildRequires:	libtool >= 1.4.3
 %{?with_mm:BuildRequires:	mm-devel >= 1.3.0}
 %{?with_mnogosearch:BuildRequires:	mnogosearch-devel >= 3.2.6}
 BuildRequires:	mysql-devel >= 3.23.32
-BuildRequires:	ncurses-devel
+BuildRequires:	ncurses-ext-devel
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.0}
 %if %{with openssl} || %{with ldap}
 BuildRequires:	openssl-devel >= 0.9.7d
@@ -192,14 +184,15 @@ BuildRequires:	t1lib-devel
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	zziplib-devel
-BuildRequires:	fcgi-devel
 # apache 1.3 vs apache 2.0
 %if %{_apache2}
+BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.0.0
-PreReq:		apache >= 2.0.40
+PreReq:		apache >= 2.0.52-2
 Requires:	apache(modules-api) = %{apache_modules_api}
 %else
+BuildRequires:	apache1-devel
 PreReq:		apache1(EAPI) >= 1.3.9
 Requires(post,preun):	%{apxs}
 Requires(post,preun):	%{__perl}
@@ -1351,16 +1344,18 @@ Summary(pl):	Modu³ Sybase DB dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-sybase-ct
 Provides:	php-sybase = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-sybase-ct
 
 %description sybase
 This is a dynamic shared object (DSO) for PHP that will add Sybase and
-MS SQL databases support through SYBDB library.
+MS SQL databases support through SYBDB library. Currently Sybase module
+is not maintained. Using Sybase-CT module is recommended instead.
 
 %description sybase -l pl
 Modu³ PHP dodaj±cy obs³ugê baz danych Sybase oraz MS SQL poprzez
-bibliotekê SYBDB.
+bibliotekê SYBDB. W chwili obecnej modu³ Sybase nie jest wspierany.
+Zaleca siê u¿ywanie modu³u Sybase-CT.
 
 %package sybase-ct
 Summary:	Sybase-CT extension module for PHP
@@ -1368,8 +1363,8 @@ Summary(pl):	Modu³ Sybase-CT dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-sybase
 Provides:	php-sybase-ct = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-sybase
 
 %description sybase-ct
 This is a dynamic shared object (DSO) for PHP that will add Sybase and
@@ -1578,7 +1573,7 @@ repozytorium aplikacji.
 
 Nale¿y pamiêtaæ, ¿e ten pakiet dostarcza tylko podstawow± strukturê
 katalogów. Aby u¿yæ podstawowych klas PEAR (PEAR.php PEAR/*.php),
-dostarczanych z PHP, nale¿y zainstaliwaæ odpowiednie pakiety
+dostarczanych z PHP, nale¿y zainstalowaæ odpowiednie pakiety
 php-pear-* (php-pear-PEAR, php-pear-Archive_Tar, itp).
 
 %prep
@@ -1669,7 +1664,8 @@ for i in fcgi cgi cli apxs ; do
 	--enable-filepro=shared \
 	--enable-gd-native-ttf \
 	--enable-magic-quotes \
-	--enable-mbstring=shared,all --enable-mbregex \
+	--enable-mbstring=shared,all \
+	--enable-mbregex \
 	--enable-overload=shared \
 	--enable-pcntl=shared \
 	--enable-posix=shared \
@@ -1764,9 +1760,6 @@ done
 # --enable-session=shared
 # %{!?with_mm:--with-mm=shared,no}%{?with_mm:--with-mm=shared}
 
-# TODO:
-#	--with-qtdom=shared
-
 %{__make}
 
 # fix install paths, avoid evil rpaths
@@ -1811,7 +1804,6 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache1},%{_sysconfdir}/{apache,cgi}}
 	$RPM_BUILD_ROOT/etc/apache/apache.conf
 %endif
 
-
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
 	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache%{?with_apache1:1} ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi ; \$(LIBTOOL) --mode=install install sapi/fcgi/php $RPM_BUILD_ROOT%{_bindir}/php.fcgi" \
@@ -1830,7 +1822,6 @@ install %{SOURCE3} $RPM_BUILD_ROOT%{_sbindir}
 %if %{_apache2}
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php4.conf
 %endif
-
 
 install %{SOURCE1} .
 
