@@ -65,6 +65,7 @@ Name:		php4
 Version:	4.3.8
 %define	_rc	%{nil}
 Release:	2
+Epoch:		0
 Group:		Libraries
 License:	PHP
 Source0:	http://downloads.php.net/ilia/php-%{version}%{_rc}.tar.bz2
@@ -198,8 +199,8 @@ Obsoletes:	phpfi
 Obsoletes:	apache-mod_php
 Provides:	php = %{epoch}:%{version}-%{release}
 
-%define		_sysconfdir	/etc/php
-%define		extensionsdir	%{_libdir}/php
+%define		_sysconfdir	/etc/php4
+%define		extensionsdir	%{_libdir}/php4
 %define		httpdir		/home/services/httpd
 %define		_ulibdir	%{_prefix}/lib
 
@@ -340,6 +341,7 @@ Summary(uk):	Пакет розробки для побудови розширень PHP4
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}
 Obsoletes:	%{name}-pear-devel
+Conflicts:	php-devel
 
 %description devel
 The php-devel package lets you compile dynamic extensions to PHP.
@@ -1703,7 +1705,7 @@ done
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi-fcgi.ini
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{httpdir}/icons
 install %{SOURCE4} $RPM_BUILD_ROOT%{_sbindir}
-install %{SOURCE5} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
+install %{SOURCE5} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php4.conf
 
 install %{SOURCE1} .
 
@@ -2339,7 +2341,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %if %{_apache2}
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php.conf
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php4.conf
 %endif
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
