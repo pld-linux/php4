@@ -95,7 +95,7 @@ LDFLAGS=""; export LDFLAGS
 	--with-config-file-path=%{_sysconfdir}/httpd \
 	--enable-safe-mode \
 	--with-exec-dir=%{_bindir} \
-	--enable-debug \
+	--disable-debug \
 	--with-zlib \
 	--enable-magic-quotes \
 	--enable-track-vars \
