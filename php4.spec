@@ -462,6 +462,19 @@ compression (zlib) support to PHP.
 %description zlib -l pl
 Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
 
+%package bzip2
+Summary:	Bzip2 extension module for PHP
+Summary(pl):	Modu³ bzip2 dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description bzip2
+This is a dynamic shared object (DSO) for Apache that will add
+compression (bzip2) support to PHP.
+
+%description bzip2 -l pl
+Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê bzip2).
+
 %package exif
 Summary:	exif extension module for PHP
 Summary(pl):	Modu³ exif dla PHP
@@ -710,6 +723,45 @@ support to PHP.
 %description libcpdf -l pl
 Modu³ PHP dodaj±cy obs³ugê libcpdf.
 
+%package iconv
+Summary:	iconv extension module for PHP
+Summary(pl):	Modu³ iconv dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description iconv
+This is a dynamic shared object (DSO) for Apache that will add iconv
+support to PHP.
+
+%description iconv -l pl
+Modu³ PHP dodaj±cy obs³ugê iconv.
+
+%package gmp
+Summary:	gmp extension module for PHP
+Summary(pl):	Modu³ gmp dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description gmp
+This is a dynamic shared object (DSO) for Apache that will add
+arbitrary length number support with GNU MP library to PHP.
+
+%description gmp -l pl
+Modu³ PHP umorzliwiaj±cy korzystanie z biblioteki gmp.
+
+%package shmop
+Summary:	Shared Memory Operations extension module for PHP
+Summary(pl):	Modu³ shmop dla PHP
+Group:		Libraries
+PreReq:		%{name}-common = %{version}
+
+%description shmop
+This is a dynamic shared object (DSO) for Apache that will add
+Shared Memory Operations support to PHP.
+
+%description shmop -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -772,7 +824,9 @@ for i in cgi apxs ; do
 	--without-db2 \
 	--with-db3 \
 	--with-dbase=shared \
+	--with-iconv=shared \
 	--with-dom=shared \
+	--with-dom-xslt=shared \
 	--with-filepro=shared \
 	--with-freetype-dir=shared \
 	--with-gettext=shared \
@@ -1147,6 +1201,14 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove zlib %{_sysconfdir}/php.ini
 fi
 
+%post bzip2
+%{_sbindir}/php-module-install install bz2 %{_sysconfdir}/php.ini
+
+%preun bzip2
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove bz2 %{_sysconfdir}/php.ini
+fi
+
 %post curl
 %{_sbindir}/php-module-install install curl %{_sysconfdir}/php.ini
 
@@ -1192,6 +1254,30 @@ if [ "$1" = "0" ]; then
 	%{_sbindir}/php-module-install remove libcpdf %{_sysconfdir}/php.ini
 fi
 %endif
+
+%post iconv
+%{_sbindir}/php-module-install install iconv %{_sysconfdir}/php.ini
+
+%preun iconv
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove iconv %{_sysconfdir}/php.ini
+fi
+
+%post gmp
+%{_sbindir}/php-module-install install gmp %{_sysconfdir}/php.ini
+
+%preun gmp
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove gmp %{_sysconfdir}/php.ini
+fi
+
+%post shmop
+%{_sbindir}/php-module-install install shmop %{_sysconfdir}/php.ini
+
+%preun shmop
+if [ "$1" = "0" ]; then
+	%{_sbindir}/php-module-install remove shmop %{_sysconfdir}/php.ini
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -1314,6 +1400,10 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/zlib.so
 
+%files bzip2
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/bz2.so
+
 %files exif
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/exif.so
@@ -1351,7 +1441,7 @@ fi
 %if %{?_without_ldap:0}%{!?_without_ldap:1}
 %files ldap
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/ldap.*
+%attr(755,root,root) %{extensionsdir}/ldap.so
 %endif
 
 %files sockets
@@ -1401,3 +1491,15 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/cpdf.so
 %endif
+
+%files iconv
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/iconv.so
+
+%files gmp
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/gmp.so
+
+%files shmop
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/shmop.so
