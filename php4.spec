@@ -137,7 +137,7 @@ BuildRequires:	libtool >= 0:1.4.2-9
 %{!?_without_domxslt:BuildRequires:	libxslt-devel >= 1.0.3}
 %{!?_without_mhash:BuildRequires:	mhash-devel}
 %{!?_without_ming:BuildRequires:	ming-devel >= 0.1.0}
-%{!?_without_mm:BuildRequires:	mm-devel >= 1.3.0}
+%{!?_without_mm:BuildRequires:	mm-devel >= 1.1.0}
 %{!?_without_mnogosearch:BuildRequires:	mnogosearch-devel >= 3.2.6}
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
@@ -155,7 +155,7 @@ BuildRequires:	perl
 BuildRequires:	rpm-php-pearprov >= 4.0.2-100
 %{!?_without_xslt:BuildRequires:	sablotron-devel >= 0.96}
 BuildRequires:	t1lib-devel
-%{!?_without_snmp:BuildRequires: net-snmp-devel >= 5.0.7}
+%{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.6}
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
 %{!?_without_xmlrpc:BuildRequires:	xmlrpc-epi-devel}
 %{!?_without_yaz:BuildRequires:	yaz-devel >= 1.9}
