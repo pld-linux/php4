@@ -1,5 +1,6 @@
---- php-4.3.0/ext/java/config.m4.orig	Sat Jan  4 10:51:49 2003
-+++ php-4.3.0/ext/java/config.m4	Sat Jan  4 10:54:48 2003
+diff -burN php-4.3.2/ext/java/config.m4 php-4.3.2-java-norpath/ext/java/config.m4
+--- php-4.3.2/ext/java/config.m4	Fri Apr  4 19:43:13 2003
++++ php-4.3.2-java-norpath/ext/java/config.m4	Wed Jun 11 09:38:23 2003
 @@ -58,7 +58,6 @@
  AC_DEFUN(JAVA_CHECK_LIB, [
   AC_MSG_CHECKING([Checking for libjava])
@@ -36,6 +37,6 @@
 -      fi
 -    fi
 -
-     INSTALL_IT="$INSTALL_IT; \$(srcdir)/build/shtool mkdir -p -f -m 0755 \$(INSTALL_ROOT)\$(libdir)"
-     INSTALL_IT="$INSTALL_IT; \$(INSTALL) -m 0755 \$(srcdir)/ext/java/php_java.jar \$(INSTALL_ROOT)\$(libdir)"
-   fi
+     if test -n "$INSTALL_IT"; then
+       INSTALL_IT="$INSTALL_IT ;"
+     fi
