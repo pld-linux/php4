@@ -62,7 +62,7 @@ Summary(ru):	PHP ÷ÅÒÓÉÉ 4 -- ÑÚÙË ÐÒÅÐÒÏÃÅÓÓÉÒÏ×ÁÎÉÑ HTML-ÆÁÊÌÏ×, ×ÙÐÏÌÎÑÅÍÙÊ ÎÁ
 Summary(uk):	PHP ÷ÅÒÓ¦§ 4 -- ÍÏ×Á ÐÒÅÐÒÏÃÅÓÕ×ÁÎÎÑ HTML-ÆÁÊÌ¦×, ×ÉËÏÎÕ×ÁÎÁ ÎÁ ÓÅÒ×ÅÒ¦
 Name:		php4
 Version:	4.3.9
-Release:	0.3
+Release:	0.4
 Epoch:		0
 Group:		Libraries
 License:	PHP
@@ -276,6 +276,7 @@ Summary:	PHP as FastCGI program
 Summary(pl):	PHP jako program FastCGI
 Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-fcgi = %{epoch}:%{version}-%{release}
 Provides:	php-program = %{epoch}:%{version}-%{release}
 
 %description fcgi
@@ -289,6 +290,7 @@ Summary:	PHP as CGI program
 Summary(pl):	PHP jako program CGI
 Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-cgi = %{epoch}:%{version}-%{release}
 Provides:	php-program = %{epoch}:%{version}-%{release}
 
 %description cgi
@@ -302,6 +304,7 @@ Summary:	PHP as CLI interpreter
 Summary(pl):	PHP jako interpreter dzia³aj±cy z linii poleceñ
 Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-cli = %{epoch}:%{version}-%{release}
 Provides:	php-program = %{epoch}:%{version}-%{release}
 
 %description cli
@@ -317,6 +320,7 @@ Summary(ru):	òÁÚÄÅÌÑÅÍÙÅ ÂÉÂÌÉÏÔÅËÉ ÄÌÑ php
 Summary(uk):	â¦ÂÌ¦ÏÔÅËÉ ÓÐ¦ÌØÎÏÇÏ ×ÉËÏÒÉÓÔÁÎÎÑ ÄÌÑ php
 Group:		Libraries
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
+Provides:	php-common = %{epoch}:%{version}-%{release}
 
 %description common
 Common files needed by both apache module and CGI.
@@ -342,7 +346,8 @@ Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	autoconf
 Requires:	automake
-Conflicts:	php-devel
+Conflicts:	php-devel >= 3:5.0.0
+Provides:	php-devel = %{epoch}:%{version}-%{release}
 
 %description devel
 The php-devel package lets you compile dynamic extensions to PHP.
@@ -379,6 +384,7 @@ Summary(pl):	Modu³ bcmath dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-bcmath = %{epoch}:%{version}-%{release}
 
 %description bcmath
 This is a dynamic shared object (DSO) for PHP that will add bc style
@@ -394,6 +400,7 @@ Summary(pl):	Modu³ bzip2 dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-bzip2 = %{epoch}:%{version}-%{release}
 
 %description bzip2
 This is a dynamic shared object (DSO) for PHP that will add bzip2
@@ -408,6 +415,7 @@ Summary(pl):	Modu³ funkcji kalendarza dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-calendar = %{epoch}:%{version}-%{release}
 
 %description calendar
 This is a dynamic shared object (DSO) for PHP that will add calendar
@@ -422,6 +430,7 @@ Summary(pl):	Modu³ cpdf dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-cpdf = %{epoch}:%{version}-%{release}
 
 %description cpdf
 This is a dynamic shared object (DSO) for PHP that will add PDF
@@ -436,6 +445,7 @@ Summary(pl):	Modu³ crack dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-crack = %{epoch}:%{version}-%{release}
 
 %description crack
 This is a dynamic shared object (DSO) for PHP that will add cracklib
@@ -454,6 +464,7 @@ Summary(pl):	Modu³ ctype dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-ctype = %{epoch}:%{version}-%{release}
 
 %description ctype
 This is a dynamic shared object (DSO) for PHP that will add ctype
@@ -468,6 +479,7 @@ Summary(pl):	Modu³ curl dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-curl = %{epoch}:%{version}-%{release}
 
 %description curl
 This is a dynamic shared object (DSO) for PHP that will add curl
@@ -482,6 +494,7 @@ Summary(pl):	Modu³ xDBM dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-db = %{epoch}:%{version}-%{release}
 
 %description db
 This is an old dynamic shared object (DSO) for PHP that will add DBM
@@ -504,6 +517,7 @@ Summary(pl):	Modu³ DBA dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-dba = %{epoch}:%{version}-%{release}
 
 %description dba
 This is a dynamic shared object (DSO) for PHP that will add flat-file
@@ -519,6 +533,7 @@ Summary(pl):	Modu³ DBase dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-dbase = %{epoch}:%{version}-%{release}
 
 %description dbase
 This is a dynamic shared object (DSO) for PHP that will add DBase
@@ -533,6 +548,7 @@ Summary(pl):	Modu³ DBX dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-dbx = %{epoch}:%{version}-%{release}
 
 %description dbx
 This is a dynamic shared object (DSO) for PHP that will add DB
@@ -549,6 +565,7 @@ Summary(pl):	Modu³ Direct I/O dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-dio = %{epoch}:%{version}-%{release}
 
 %description dio
 This is a dynamic shared object (DSO) for PHP that will add direct
@@ -563,6 +580,7 @@ Summary(pl):	Modu³ DOM XML dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-domxml = %{epoch}:%{version}-%{release}
 
 %description domxml
 This is a dynamic shared object (DSO) for PHP that will add DOM XML
@@ -581,6 +599,7 @@ Summary(pl):	Modu³ exif dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-exif = %{epoch}:%{version}-%{release}
 
 %description exif
 This is a dynamic shared object (DSO) for PHP that will add EXIF tags
@@ -595,6 +614,7 @@ Summary(pl):	Modu³ FDF dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-fdf = %{epoch}:%{version}-%{release}
 
 %description fdf
 This PHP module adds support for PDF Forms through Adobe FDFTK
@@ -610,6 +630,7 @@ Summary(pl):	Modu³ filePro dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-filepro = %{epoch}:%{version}-%{release}
 
 %description filepro
 This is a dynamic shared object (DSO) for PHP that will add support
@@ -625,6 +646,7 @@ Summary(pl):	Modu³e FriBiDi dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-fribidi = %{epoch}:%{version}-%{release}
 
 %description fribidi
 This extension is basically a wrapper for the FriBidi implementation
@@ -644,6 +666,7 @@ Summary(pl):	Modu³ FTP dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-ftp = %{epoch}:%{version}-%{release}
 
 %description ftp
 This is a dynamic shared object (DSO) for PHP that will add FTP
@@ -661,6 +684,7 @@ Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	gd >= 2.0.28-2
 Requires:	gd(gif)
 Provides:	%{name}-gd(gif) = %{epoch}:%{version}-%{release}
+Provides:	php-gd = %{epoch}:%{version}-%{release}
 
 %description gd
 This is a dynamic shared object (DSO) for PHP that will add GD
@@ -676,6 +700,7 @@ Summary(pl):	Modu³ gettext dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-gettext = %{epoch}:%{version}-%{release}
 
 %description gettext
 This is a dynamic shared object (DSO) for PHP that will add gettext
@@ -690,6 +715,7 @@ Summary(pl):	Modu³ gmp dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-gmp = %{epoch}:%{version}-%{release}
 
 %description gmp
 This is a dynamic shared object (DSO) for PHP that will add arbitrary
@@ -705,6 +731,7 @@ Summary(pl):	Modu³ Hyperwave dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-hyperwave = %{epoch}:%{version}-%{release}
 
 %description hyperwave
 This is a dynamic shared object (DSO) for PHP that will add Hyperwave
@@ -719,6 +746,7 @@ Summary(pl):	Modu³ iconv dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-iconv = %{epoch}:%{version}-%{release}
 
 %description iconv
 This is a dynamic shared object (DSO) for PHP that will add iconv
@@ -734,6 +762,7 @@ Summary(pt_BR):	Um módulo para aplicações PHP que usam IMAP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-imap = %{epoch}:%{version}-%{release}
 
 %description imap
 This is a dynamic shared object (DSO) for PHP that will add IMAP
@@ -751,6 +780,7 @@ Summary(pl):	Modu³ bazy danych InterBase/Firebird dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-interbase = %{epoch}:%{version}-%{release}
 %{?with_interbase_inst:Autoreq:	false}
 
 %description interbase
@@ -766,6 +796,7 @@ Summary(pl):	Modu³ Javy dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-java = %{epoch}:%{version}-%{release}
 
 %description java
 This is a dynamic shared object (DSO) for PHP that will add Java
@@ -791,6 +822,7 @@ Summary(pt_BR):	Um módulo para aplicações PHP que usam LDAP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-ldap = %{epoch}:%{version}-%{release}
 
 %description ldap
 This is a dynamic shared object (DSO) for PHP that will add LDAP
@@ -808,6 +840,7 @@ Summary(pl):	Modu³ mbstring dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-mbstring = %{epoch}:%{version}-%{release}
 
 %description mbstring
 This is a dynamic shared object (DSO) for PHP that will add multibyte
@@ -822,6 +855,7 @@ Summary(pl):	Modu³ mcal dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-mcal = %{epoch}:%{version}-%{release}
 
 %description mcal
 This is a dynamic shared object (DSO) for PHP that will add mcal
@@ -837,6 +871,7 @@ Summary(pl):	Modu³ mcrypt dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-mcrypt = %{epoch}:%{version}-%{release}
 
 %description mcrypt
 This is a dynamic shared object (DSO) for PHP that will add mcrypt
@@ -851,6 +886,7 @@ Summary(pl):	Modu³ mhash dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-mhash = %{epoch}:%{version}-%{release}
 
 %description mhash
 This is a dynamic shared object (DSO) for PHP that will add mhash
@@ -866,6 +902,7 @@ Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	/usr/share/file/magic.mime
+Provides:	php-mime_magic = %{epoch}:%{version}-%{release}
 
 %description mime_magic
 This PHP module adds support for MIME type lookup via file magic
@@ -881,6 +918,7 @@ Summary(pl):	Modu³ ming dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-ming = %{epoch}:%{version}-%{release}
 
 %description ming
 This is a dynamic shared object (DSO) for PHP that will add ming
@@ -896,6 +934,7 @@ Summary(pl):	Modu³ mnoGoSearch dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-mnogosearch = %{epoch}:%{version}-%{release}
 
 %description mnogosearch
 This is a dynamic shared object (DSO) for PHP that will allow you to
@@ -911,6 +950,7 @@ Summary(pl):	Modu³ msession dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-msession = %{epoch}:%{version}-%{release}
 
 %description msession
 This is a dynamic shared object (DSO) for PHP that will allow you to
@@ -930,6 +970,7 @@ Summary(pl):	Modu³ MS SQL dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-mssql = %{epoch}:%{version}-%{release}
 
 %description mssql
 This is a dynamic shared object (DSO) for PHP that will add MS SQL
@@ -946,6 +987,7 @@ Summary(pt_BR):	Um módulo para aplicações PHP que usam bancos de dados MySQL
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-mysql = %{epoch}:%{version}-%{release}
 
 %description mysql
 This is a dynamic shared object (DSO) for PHP that will add MySQL
@@ -963,6 +1005,7 @@ Summary(pl):	Modu³ ncurses dla PHP
 Group:		Libraries
 Requires(post,preun):	php-program = %{epoch}:%{version}-%{release}
 Requires:	php-program = %{epoch}:%{version}-%{release}
+Provides:	php-ncurses = %{epoch}:%{version}-%{release}
 
 %description ncurses
 This PHP module adds support for ncurses functions (only for cli and
@@ -977,6 +1020,7 @@ Summary(pl):	Modu³ bazy danych Oracle 8 dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-oci8 = %{epoch}:%{version}-%{release}
 Autoreq:	false
 
 %description oci8
@@ -995,6 +1039,7 @@ Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	unixODBC >= 2.1.1-3
+Provides:	php-odbc = %{epoch}:%{version}-%{release}
 
 %description odbc
 This is a dynamic shared object (DSO) for PHP that will add ODBC
@@ -1012,6 +1057,7 @@ Summary(pl):	Modu³ OpenSSL dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-openssl = %{epoch}:%{version}-%{release}
 
 %description openssl
 This is a dynamic shared object (DSO) for PHP that will add OpenSSL
@@ -1030,6 +1076,7 @@ Summary(pl):	Modu³ bazy danych Oracle 7 dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-oracle = %{epoch}:%{version}-%{release}
 Autoreq:	false
 
 %description oracle
@@ -1045,6 +1092,7 @@ Summary(pl):	Modu³ Overload dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-overload = %{epoch}:%{version}-%{release}
 
 %description overload
 This is a dynamic shared object (DSO) for PHP that will add user-space
@@ -1063,6 +1111,7 @@ Summary(pl):	Modu³ Process Control dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-program = %{epoch}:%{version}-%{release}
 Requires:	%{name}-program = %{epoch}:%{version}-%{release}
+Provides:	php-pcntl = %{epoch}:%{version}-%{release}
 
 %description pcntl
 This is a dynamic shared object (DSO) for PHP that will add process
@@ -1085,6 +1134,7 @@ Summary(pl):	Modu³ PCRE dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-pcre = %{epoch}:%{version}-%{release}
 
 %description pcre
 This is a dynamic shared object (DSO) for PHP that will add Perl
@@ -1100,6 +1150,7 @@ Summary(pl):	Modu³ do tworzenia plików PDF dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-pdf = %{epoch}:%{version}-%{release}
 
 %description pdf
 This is a dynamic shared object (DSO) for PHP that will add PDF
@@ -1115,6 +1166,7 @@ Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-pgsql = %{epoch}:%{version}-%{release}
 
 %description pgsql
 This is a dynamic shared object (DSO) for PHP that will add PostgreSQL
@@ -1132,6 +1184,7 @@ Summary(pl):	Modu³ POSIX dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-posix = %{epoch}:%{version}-%{release}
 
 %description posix
 This is a dynamic shared object (DSO) for PHP that will add POSIX
@@ -1146,6 +1199,7 @@ Summary(pl):	Modu³ pspell dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-pspell = %{epoch}:%{version}-%{release}
 
 %description pspell
 This is a dynamic shared object (DSO) for PHP that will add pspell
@@ -1162,6 +1216,7 @@ Summary(pl):	Modu³ QT DOM dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-qtdom = %{epoch}:%{version}-%{release}
 
 %description qtdom
 This PHP module adds QT DOM functions support.
@@ -1175,6 +1230,7 @@ Summary(pl):	Modu³ readline dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-program = %{epoch}:%{version}-%{release}
 Requires:	%{name}-program = %{epoch}:%{version}-%{release}
+Provides:	php-readline = %{epoch}:%{version}-%{release}
 
 %description readline
 This PHP module adds support for readline functions (only for cli and
@@ -1190,6 +1246,7 @@ Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	recode >= 3.5d-3
+Provides:	php-recode = %{epoch}:%{version}-%{release}
 
 %description recode
 This is a dynamic shared object (DSO) for PHP that will add recode
@@ -1205,6 +1262,7 @@ Summary(pl):	Modu³ session dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-session = %{epoch}:%{version}-%{release}
 
 %description session
 This is a dynamic shared object (DSO) for PHP that will add session
@@ -1219,6 +1277,7 @@ Summary(pl):	Modu³ shmop dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-shmop = %{epoch}:%{version}-%{release}
 
 %description shmop
 This is a dynamic shared object (DSO) for PHP that will add Shared
@@ -1237,6 +1296,7 @@ Summary(pl):	Modu³ SNMP dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-snmp = %{epoch}:%{version}-%{release}
 
 %description snmp
 This is a dynamic shared object (DSO) for PHP that will add SNMP
@@ -1251,6 +1311,7 @@ Summary(pl):	Modu³ socket dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-sockets = %{epoch}:%{version}-%{release}
 
 %description sockets
 This is a dynamic shared object (DSO) for PHP that will add sockets
@@ -1270,6 +1331,7 @@ Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-sybase-ct
+Provides:	php-sybase = %{epoch}:%{version}-%{release}
 
 %description sybase
 This is a dynamic shared object (DSO) for PHP that will add Sybase and
@@ -1286,6 +1348,7 @@ Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-sybase
+Provides:	php-sybase-ct = %{epoch}:%{version}-%{release}
 
 %description sybase-ct
 This is a dynamic shared object (DSO) for PHP that will add Sybase and
@@ -1301,6 +1364,7 @@ Summary(pl):	Modu³ SysV msg dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-sysvmsg = %{epoch}:%{version}-%{release}
 
 %description sysvmsg
 This is a dynamic shared object (DSO) for PHP that will add SysV
@@ -1315,6 +1379,7 @@ Summary(pl):	Modu³ SysV sem dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-sysvsem = %{epoch}:%{version}-%{release}
 
 %description sysvsem
 This is a dynamic shared object (DSO) for PHP that will add SysV
@@ -1329,6 +1394,7 @@ Summary(pl):	Modu³ SysV shm dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-sysvshm = %{epoch}:%{version}-%{release}
 
 %description sysvshm
 This is a dynamic shared object (DSO) for PHP that will add SysV
@@ -1344,6 +1410,7 @@ Group:		Libraries
 PreReq:		%{name}-session = %{epoch}:%{version}-%{release}
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-wddx = %{epoch}:%{version}-%{release}
 
 %description wddx
 This is a dynamic shared object (DSO) for PHP that will add wddx
@@ -1358,6 +1425,7 @@ Summary(pl):	Modu³ XML dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-xml = %{epoch}:%{version}-%{release}
 
 %description xml
 This is a dynamic shared object (DSO) for PHP that will add XML
@@ -1375,6 +1443,7 @@ Summary(pl):	Modu³ xmlrpc dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-xmlrpc = %{epoch}:%{version}-%{release}
 
 %description xmlrpc
 This is a dynamic shared object (DSO) for PHP that will add XMLRPC
@@ -1393,6 +1462,7 @@ Summary(pl):	Modu³ xslt dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-xslt = %{epoch}:%{version}-%{release}
 
 %description xslt
 This is a dynamic shared object (DSO) for PHP that will add xslt
@@ -1408,6 +1478,7 @@ Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	yaz >= 1.9
+Provides:	php-yaz = %{epoch}:%{version}-%{release}
 
 %description yaz
 This is a dynamic shared object (DSO) for PHP that will add yaz
@@ -1424,6 +1495,7 @@ Summary(pl):	Modu³ NIS (yp) dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-yp = %{epoch}:%{version}-%{release}
 
 %description yp
 This is a dynamic shared object (DSO) for PHP that will add NIS
@@ -1438,6 +1510,7 @@ Summary(pl):	Modu³ zip dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-zip = %{epoch}:%{version}-%{release}
 
 %description zip
 This is a dynamic shared object (DSO) for PHP that will add ZZipLib
@@ -1453,6 +1526,7 @@ Summary(pl):	Modu³ zlib dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-zlib = %{epoch}:%{version}-%{release}
 
 %description zlib
 This is a dynamic shared object (DSO) for PHP that will add zlib
