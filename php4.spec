@@ -351,8 +351,8 @@ Provides:	php-devel = %{epoch}:%{version}-%{release}
 
 %description devel
 The php-devel package lets you compile dynamic extensions to PHP.
-Included here is the source for the php extensions. Instead of
-recompiling the whole php binary to add support for, say, oracle,
+Included here is the source for the PHP extensions. Instead of
+recompiling the whole PHP binary to add support for, say, oracle,
 install this package and use the new self-contained extensions
 support. For more information, read the file
 SELF-CONTAINED-EXTENSIONS.
@@ -367,14 +367,14 @@ mСdulos PHP.
 %description devel -l uk
 Пакет php-devel да╓ можлив╕сть комп╕лювати динам╕чн╕ розширення PHP.
 До пакету включено вих╕дний код для розширень. Зам╕сть повторно╖
-комп╕ляц╕╖ б╕нарного файлу php для додання, наприклад, п╕дтримки
+комп╕ляц╕╖ б╕нарного файлу PHP для додання, наприклад, п╕дтримки
 oracle, встанов╕ть цей пакет для комп╕ляц╕╖ окремих розширень.
 Детальн╕ша ╕нформац╕я - в файл╕ SELF-CONTAINED-EXTENSIONS.
 
 %description devel -l ru
 Пакет php-devel дает возможность компилировать динамические расширения
 PHP. Пакет включает исходный код этих расширений. Вместо повторной
-компиляции бинарного файла php для добавления, например, поддержки
+компиляции бинарного файла PHP для добавления, например, поддержки
 oracle, установите этот пакет для компилирования отдельных расширений.
 Подробности - в файле SELF-CONTAINED-EXTENSIONS.
 
