@@ -39,7 +39,7 @@ Summary(ru):	PHP ˜≈“”…… 4 -- —⁄ŸÀ –“≈–“œ√≈””…“œ◊¡Œ…— HTML-∆¡ Ãœ◊, ◊Ÿ–œÃŒ—≈ÕŸ  Œ¡
 Summary(uk):	PHP ˜≈“”¶ß 4 -- Õœ◊¡ –“≈–“œ√≈”’◊¡ŒŒ— HTML-∆¡ Ã¶◊, ◊…ÀœŒ’◊¡Œ¡ Œ¡ ”≈“◊≈“¶
 Name:		php
 Version:	4.2.2
-Release:	0.1
+Release:	0.9
 Epoch:		3
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -903,54 +903,6 @@ support to PHP.
 Modu≥ PHP umoøliwiaj±cy tworzenie plikÛw PDF. Wykorzystuje bibliotekÍ
 pdflib.
 
-%package pear
-Summary:	PEAR - PHP Extension and Application Repository
-Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
-Group:		Development/Languages/PHP
-Requires:	%{name}-pcre = %{version}
-Requires:	%{name}-xml = %{version}
-
-%description pear
-PEAR - PHP Extension and Application Repository.
-
-%description pear -l pl
-PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
-Repozytorium Aplikacji.
-
-%package pear-additional_classes
-Summary:	PEAR - PHP Extension and Application Repository
-Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
-Group:		Development/Languages/PHP
-Requires:	%{name}-pcre = %{version}
-Requires:	%{name}-pear
-
-%description pear-additional_classes
-PEAR - PHP Extension and Application Repository. Additional classes
-which can't be found in pear packages.
-
-%description pear-additional_classes -l pl
-PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
-Repozytorium Aplikacji. Dodatkowe klasy, ktÛrych nie ma w innych
-pakietach peara.
-
-%package pear-devel
-Summary:	PEAR - PHP Extension and Application Repository
-Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
-Group:		Development/Languages/PHP
-Requires:	%{name}-cgi = %{version}
-Requires:	%{name}-pcre = %{version}
-Requires:	%{name}-xml = %{version}
-Requires:	%{name}-pear
-Requires:	%{name}-pear-PEAR-Command
-
-%description pear-devel
-PEAR - PHP Extension and Application Repository. This package contains
-aplications needed to use pear from cvs.
-
-%description pear-devel -l pl
-PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
-Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
-
 %package pgsql
 Summary:	PostgreSQL database module for PHP
 Summary(pl):	Modu≥ bazy danych PostgreSQL dla PHP
@@ -1229,6 +1181,54 @@ compression (zlib) support to PHP.
 %description zlib -l pl
 Modu≥ PHP umoøliwiaj±cy uøywanie kompresji (poprzez bibliotekÍ zlib).
 
+%package pear
+Summary:	PEAR - PHP Extension and Application Repository
+Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
+Group:		Development/Languages/PHP
+Requires:	%{name}-pcre = %{version}
+Requires:	%{name}-xml = %{version}
+
+%description pear
+PEAR - PHP Extension and Application Repository.
+
+%description pear -l pl
+PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
+Repozytorium Aplikacji.
+
+%package pear-additional_classes
+Summary:	PEAR - PHP Extension and Application Repository
+Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
+Group:		Development/Languages/PHP
+Requires:	%{name}-pcre = %{version}
+Requires:	%{name}-pear
+
+%description pear-additional_classes
+PEAR - PHP Extension and Application Repository. Additional classes
+which can't be found in pear packages.
+
+%description pear-additional_classes -l pl
+PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
+Repozytorium Aplikacji. Dodatkowe klasy, ktÛrych nie ma w innych
+pakietach peara.
+
+%package pear-devel
+Summary:	PEAR - PHP Extension and Application Repository
+Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
+Group:		Development/Languages/PHP
+Requires:	%{name}-cgi = %{version}
+Requires:	%{name}-pcre = %{version}
+Requires:	%{name}-xml = %{version}
+Requires:	%{name}-pear
+Requires:	%{name}-pear-PEAR-Command
+
+%description pear-devel
+PEAR - PHP Extension and Application Repository. This package contains
+aplications needed to use pear from cvs.
+
+%description pear-devel -l pl
+PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
+Repozytorium Aplikacji. Ten pakiet zawiera aplikacje potrzebne do
+
 %prep
 %setup -q
 %patch0 -p1
@@ -1408,7 +1408,7 @@ install %{SOURCE1} .
 
 mv -f Zend/LICENSE{,.Zend}
 
-mkdir $RPM_BUILD_ROOT%{php_pear_dir}/{Auth,Auth_HTTP}
+mkdir $RPM_BUILD_ROOT%{php_pear_dir}/{Auth,Auth_HTTP,Science}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -2136,46 +2136,6 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pcre.so
 
-%files pear
-%defattr(644,root,root,755)
-%dir %{php_pear_dir}
-%dir %{php_pear_dir}/Archive
-%dir %{php_pear_dir}/Auth
-%dir %{php_pear_dir}/Auth_HTTP
-%dir %{php_pear_dir}/Console
-%dir %{php_pear_dir}/Crypt
-%dir %{php_pear_dir}/Date
-%dir %{php_pear_dir}/DB
-%dir %{php_pear_dir}/File
-%dir %{php_pear_dir}/HTML
-%dir %{php_pear_dir}/HTTP
-%dir %{php_pear_dir}/Image
-%dir %{php_pear_dir}/Mail
-%dir %{php_pear_dir}/Net
-%dir %{php_pear_dir}/PEAR
-%dir %{php_pear_dir}/Schedule
-%dir %{php_pear_dir}/XML
-
-%files pear-additional_classes
-%defattr(644,root,root,755)
-%attr(644,root,root) %{php_pear_dir}/Crypt/HCEMD5.php
-%attr(644,root,root) %{php_pear_dir}/Date/Calc.php
-%attr(644,root,root) %{php_pear_dir}/Date/Human.php
-%attr(644,root,root) %{php_pear_dir}/File/Passwd.php
-%attr(644,root,root) %{php_pear_dir}/HTML/Form.php
-%attr(644,root,root) %{php_pear_dir}/HTML/IT*.php
-%attr(644,root,root) %{php_pear_dir}/HTML/Page.php
-%attr(644,root,root) %{php_pear_dir}/HTML/Processor.php
-%attr(644,root,root) %{php_pear_dir}/HTML/Select.php
-%attr(644,root,root) %{php_pear_dir}/HTTP/Compress.php
-%attr(644,root,root) %{php_pear_dir}/Schedule/At.php
-
-%files pear-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/pear
-%attr(755,root,root) %{_bindir}/pearize
-%attr(755,root,root) %{_bindir}/phptar
-
 %files pdf
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pdf.so
@@ -2266,3 +2226,44 @@ fi
 %files zlib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/zlib.so
+
+%files pear
+%defattr(644,root,root,755)
+%dir %{php_pear_dir}
+%dir %{php_pear_dir}/Archive
+%dir %{php_pear_dir}/Auth
+%dir %{php_pear_dir}/Auth_HTTP
+%dir %{php_pear_dir}/Console
+%dir %{php_pear_dir}/Crypt
+%dir %{php_pear_dir}/Date
+%dir %{php_pear_dir}/DB
+%dir %{php_pear_dir}/File
+%dir %{php_pear_dir}/HTML
+%dir %{php_pear_dir}/HTTP
+%dir %{php_pear_dir}/Image
+%dir %{php_pear_dir}/Mail
+%dir %{php_pear_dir}/Net
+%dir %{php_pear_dir}/PEAR
+%dir %{php_pear_dir}/Schedule
+%dir %{php_pear_dir}/Science
+%dir %{php_pear_dir}/XML
+
+%files pear-additional_classes
+%defattr(644,root,root,755)
+%attr(644,root,root) %{php_pear_dir}/Crypt/HCEMD5.php
+%attr(644,root,root) %{php_pear_dir}/Date/Calc.php
+%attr(644,root,root) %{php_pear_dir}/Date/Human.php
+%attr(644,root,root) %{php_pear_dir}/File/Passwd.php
+%attr(644,root,root) %{php_pear_dir}/HTML/Form.php
+%attr(644,root,root) %{php_pear_dir}/HTML/IT*.php
+%attr(644,root,root) %{php_pear_dir}/HTML/Page.php
+%attr(644,root,root) %{php_pear_dir}/HTML/Processor.php
+%attr(644,root,root) %{php_pear_dir}/HTML/Select.php
+%attr(644,root,root) %{php_pear_dir}/HTTP/Compress.php
+%attr(644,root,root) %{php_pear_dir}/Schedule/At.php
+
+%files pear-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/pear
+%attr(755,root,root) %{_bindir}/pearize
+%attr(755,root,root) %{_bindir}/phptar
