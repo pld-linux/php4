@@ -149,7 +149,7 @@ BuildRequires:	perl
 %{!?_without_pspell:BuildRequires:	pspell-devel}
 %{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-100
-%{!?_without_xslt:BuildRequires:	sablotron-devel}
+%{!?_without_xslt:BuildRequires:	sablotron-devel >= 0.96}
 BuildRequires:	t1lib-devel
 %{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.6}
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
