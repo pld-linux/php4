@@ -433,7 +433,7 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
 #	--with-mcrypt=shared \
 # --with-dom=%{_prefix}/X11R6 \
 
-make
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
