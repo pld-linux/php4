@@ -11,7 +11,8 @@
 %bcond_with	java		# with Java extension module		(BR: jdk)
 %bcond_with	oci8		# with Oracle oci8 extension module	(BR: proprietary libs)
 %bcond_with	oracle		# with oracle extension module		(BR: proprietary libs)
-%bcond_with	apache1		# build with apache1
+%bcond_without	apache1		# don't build apache1 module
+%bcond_without	apache2		# don't build apache2 module
 %bcond_without	cpdf		# without cpdf extension module
 %bcond_without	curl		# without CURL extension module
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
@@ -40,19 +41,18 @@
 %bcond_without	xml		# without XML and DOMXML extension modules
 %bcond_without	xslt		# without XSLT extension module
 %bcond_without	yaz		# without YAZ extension module
-#
-%define	_apache2	%{?with_apache1:0}%{?!with_apache1:1}
 
-%if %{_apache2}
-%define	apxs		/usr/sbin/apxs
-%define	_apache_confdir /etc/httpd/httpd.conf
-%else
-%define apxs		/usr/sbin/apxs1
-%define	_apache_confdir /etc/apache/conf.d
+%if %{with apache1}
+%define apxs1		/usr/sbin/apxs1
+%define	_apache1_confdir /etc/apache/conf.d
+%endif
+%if %{with apache2}
+%define	apxs2		/usr/sbin/apxs2
+%define	_apache2_confdir /etc/httpd/httpd.conf
 %endif
 
 # some problems with apache 2.x
-%if %{_apache2}
+%if %{with apache2}
 %undefine	with_recode
 %undefine	with_mm
 %endif
@@ -75,7 +75,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.10
-Release:	6.1%{?with_hardened:hardened}
+Release:	6.3%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -198,17 +198,18 @@ BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	zziplib-devel
 # apache 1.3 vs apache 2.0
-%if %{_apache2}
+%if %{with apache2}
 BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.0.0
 Requires:		apache >= 2.0.52-2
 Requires:	apache(modules-api) = %{apache_modules_api}
-%else
+%endif
+%if %{with apache1}
 BuildRequires:	apache1-devel >= 1.3.33-2
 Requires:		apache1(EAPI) >= 1.3.33-2
 Requires:		apache(mod_mime)
-Requires(post,preun):	%{apxs}
+#Requires(post,preun):	%{apxs1}
 Requires(post,preun):	%{__perl}
 %endif
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
@@ -219,7 +220,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/php4
 %define		extensionsdir	%{_libdir}/php4
-%if %{_apache2}
+%if %{with apache2}
 %define		httpdir		/home/services/httpd
 %define		apachelib	%{_libdir}/apache
 %else
@@ -293,6 +294,26 @@ PHP4 - це мова написання скрипт╕в, що вбудовуються в HTML-код. PHP
 Цей пакет м╕стить самодостатню (CGI) верс╕ю ╕нтерпретатора мови. Ви
 ма╓те також встановити пакет %{name}-common. Якщо вам потр╕бен
 ╕нтерпретатор PHP в якост╕ модуля apache, встанов╕ть пакет apache-php.
+
+%if %{with apache1}
+%package apache1
+Summary:	apache1 module
+Group:		Development/Languages/PHP
+Provides:	%{name} = %{epoch}:%{version}-%{release}
+
+%description apache1
+apache1 module
+%endif
+
+%if %{with apache2}
+%package apache
+Summary:	apache module
+Group:		Development/Languages/PHP
+Provides:	%{name} = %{epoch}:%{version}-%{release}
+
+%description apache
+apache 2.x module
+%endif
 
 %package fcgi
 Summary:	php4 as FastCGI program
@@ -1606,7 +1627,7 @@ cp php.ini-dist php.ini
 %patch29 -p1
 %endif
 %patch30 -p1
-%if %{_apache2}
+%if %{with apache2}
 %patch31
 %endif
 %patch32 -p1
@@ -1620,28 +1641,16 @@ sed -i -e 's#apr-config#apr-1-config#g' sapi/apache*/*.m4
 sed -i -e 's#apu-config#apu-1-config#g' sapi/apache*/*.m4
 
 %build
-%if %{_apache2}
-CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include `%{_bindir}/apr-1-config --cppflags --includes` `%{_bindir}/apu-1-config --includes`"
-%else
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
-%endif
+
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
-./buildconf --force
-%{__libtoolize}
-%{__aclocal}
-%{__autoconf}
+#./buildconf --force
+#%{__libtoolize}
+#%{__aclocal}
+#%{__autoconf}
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
-for i in fcgi cgi cli apxs ; do
-%configure \
-	`[ $i = cgi ] && echo --enable-discard-path` \
-	`[ $i = cli ] && echo --disable-cgi` \
-	`[ $i = fcgi ] && echo --enable-fastcgi --with-fastcgi=/usr` \
-%if %{_apache2}
-	`[ $i = apxs ] && echo --with-apxs2=%{apxs}` \
-	--enable-experimental-zts \
-%else
-	`[ $i = apxs ] && echo --with-apxs=%{apxs}` \
-%endif
+
+COMMON_CONFIG="
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
@@ -1743,17 +1752,49 @@ for i in fcgi cgi cli apxs ; do
 	--with-zip=shared \
 	--with-zlib=shared \
 	--with-zlib-dir=shared,/usr
-
-cp -f Makefile Makefile.$i
-# left for debugging purposes
-cp -f main/php_config.h php_config.h.$i
-done
+"
 
 # for now session_mm doesn't work with shared session module...
 # --enable-session=shared
 # %{!?with_mm:--with-mm=shared,no}%{?with_mm:--with-mm=shared}
 
-%{__make}
+sapis="fcgi cgi cli
+%if %{with apache1}
+	apxs1
+%endif
+%if %{with apache2}
+	apxs2
+%endif
+"
+
+sapis="cgi cli fcgi"
+# leave apxs2 last, as we change CFLAGS (TODO: fix this)
+for sapi in $sapis; do
+	rm -rf build-$sapi
+	mkdir -p build-$sapi
+	cd build-$sapi
+
+	[ $sapi = apxs2 ] && CFLAGS="$CFLAGS `%{_bindir}/apr-1-config --cppflags --includes` `%{_bindir}/apu-1-config --includes`"
+	../%configure \
+		$COMMON_CONFIG \
+		$([ $sapi = cgi ] && echo --enable-discard-path) \
+		$([ $sapi = cli ] && echo --disable-cgi) \
+		$([ $sapi = fcgi ] && echo --enable-fastcgi --with-fastcgi=/usr) \
+		$([ $sapi = apxs2 ] && echo --with-apxs2=%{apxs2} --enable-experimental-zts) \
+		$([ $sapi = apxs1 ] && echo --with-apxs=%{apxs1}) \
+
+	# copied from debian/rules
+	cp ../Zend/zend_ini_scanner.c ../Zend/zend_language_scanner.c \
+	../Zend/zend_ini_parser.h ../Zend/zend_language_parser.h \
+	../Zend/zend_ini_parser.c ../Zend/zend_language_parser.c \
+	Zend/
+
+	%{__make}
+
+	cp -f Makefile Makefile.$sapi
+	# left for debugging purposes
+	cp -f main/php_config.h php_config.h.$sapi
+done
 
 # fix install paths, avoid evil rpaths
 %{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
@@ -1827,27 +1868,27 @@ mv -f $RPM_BUILD_ROOT%{_mandir}/man1/php{,4}.1
 rm -rf $RPM_BUILD_ROOT
 
 %post
-%if %{_apache2}
+#%if %{_apache2}
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
-%else
+#%else
 if [ -f /var/lock/subsys/apache ]; then
 	/etc/rc.d/init.d/apache restart 1>&2
 fi
-%endif
+#%endif
 
 %postun
 if [ "$1" = "0" ]; then
-%if %{_apache2}
+#%if %{_apache2}
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
-%else
+#%else
 	if [ -f /var/lock/subsys/apache ]; then
 		/etc/rc.d/init.d/apache restart 1>&2
 	fi
-%endif
+#%endif
 fi
 
 %post	common -p /sbin/ldconfig
@@ -2436,10 +2477,26 @@ if [ "$1" = "0" ]; then
 fi
 
 %files
-%defattr(644,root,root,755)
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_apache_confdir}/*_mod_php4.conf
-%attr(755,root,root) %{apachelib}/libphp4.so
+#%defattr(644,root,root,755)
+#%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_apache_confdir}/*_mod_php4.conf
+#%attr(755,root,root) %{apachelib}/libphp4.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
+
+%if %{with apache1}
+%files apache1
+%defattr(644,root,root,755)
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_apache1_confdir}/*_mod_php4.conf
+%attr(755,root,root) %{apache1lib}/libphp4.so
+#%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
+%endif
+
+%if %{with apache2}
+%files apache
+%defattr(644,root,root,755)
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_apache2_confdir}/*_mod_php4.conf
+%attr(755,root,root) %{apache2lib}/libphp4.so
+#%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
+%endif
 
 %files fcgi
 %defattr(644,root,root,755)
