@@ -315,7 +315,7 @@ Summary(ru):	Разделяемые библиотеки для php
 Summary(uk):	Б╕бл╕отеки сп╕льного використання для php
 Group:		Libraries
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-session <= %{epoch}:%{version}-%{release}
+Obsoletes:	php-session <= %{epoch}:%{version}-%{release}
 
 %description common
 Common files needed by both apache module and CGI.
@@ -339,7 +339,7 @@ Summary(ru):	Пакет разработки для построения расширений PHP4
 Summary(uk):	Пакет розробки для побудови розширень PHP4
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}
-Obsoletes:	%{name}-pear-devel
+Obsoletes:	php-pear-devel
 
 %description devel
 The php-devel package lets you compile dynamic extensions to PHP.
@@ -393,8 +393,8 @@ Requires(post,preun):	%{name}-common = %{epoch}:%{version}
 Requires:	%{name}-common = %{epoch}:%{version}
 
 %description bzip2
-This is a dynamic shared object (DSO) for PHP that will add
-bzip2 compression support to PHP.
+This is a dynamic shared object (DSO) for PHP that will add bzip2
+compression support to PHP.
 
 %description bzip2 -l pl
 ModuЁ PHP umo©liwiaj╠cy u©ywanie kompresji bzip2.
@@ -580,8 +580,8 @@ Requires(post,preun):	%{name}-common = %{epoch}:%{version}
 Requires:	%{name}-common = %{epoch}:%{version}
 
 %description exif
-This is a dynamic shared object (DSO) for PHP that will add EXIF
-tags support in image files.
+This is a dynamic shared object (DSO) for PHP that will add EXIF tags
+support in image files.
 
 %description exif -l pl
 ModuЁ PHP dodaj╠cy obsЁugЙ znacznikСw EXIF w plikach obrazkСw.
@@ -807,8 +807,8 @@ Requires(post,preun):	%{name}-common = %{epoch}:%{version}
 Requires:	%{name}-common = %{epoch}:%{version}
 
 %description mbstring
-This is a dynamic shared object (DSO) for PHP that will add
-multibyte string support.
+This is a dynamic shared object (DSO) for PHP that will add multibyte
+string support.
 
 %description mbstring -l pl
 ModuЁ PHP dodaj╠cy obsЁugЙ ci╠gСw znakСw wielobajtowych.
@@ -933,7 +933,8 @@ This is a dynamic shared object (DSO) for PHP that will add MS SQL
 databases support through FreeTDS library.
 
 %description mssql -l pl
-ModuЁ PHP dodaj╠cy obsЁugЙ baz danych MS SQL poprzez bibliotekЙ FreeTDS.
+ModuЁ PHP dodaj╠cy obsЁugЙ baz danych MS SQL poprzez bibliotekЙ
+FreeTDS.
 
 %package mysql
 Summary:	MySQL database module for PHP
@@ -1463,7 +1464,7 @@ Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
 Group:		Development/Languages/PHP
 Requires:	%{name}-pcre = %{epoch}:%{version}
 Requires:	%{name}-xml = %{epoch}:%{version}
-Obsoletes:	%{name}-pear-additional_classes
+Obsoletes:	php-pear-additional_classes
 
 %description pear
 PEAR - PHP Extension and Application Repository.
