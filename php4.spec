@@ -1111,17 +1111,13 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
-%patch16 -p1 -b .orig
+%patch16 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I%{_prefix}/X11R6/include"
-if [ -f %{_pkgconfigdir}/libpng12.pc ] ; then
-	CFLAGS="`pkg-config libpng12 --cflags` $CFLAGS"
-fi
-export CFLAGS
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf
 libtoolize --copy --force
