@@ -36,7 +36,7 @@
 +
 +		if (PG(http_globals)[TRACK_VARS_SERVER]) {
 +			zval **remote_addr, **server_name, **server_port,
-+				**request_uri, **http_user_agent;
++				**script_name, **http_user_agent;
 +			
 +			if (zend_hash_find(PG(http_globals)[TRACK_VARS_SERVER]->value.ht, "REMOTE_ADDR", sizeof("REMOTE_ADDR"), (void **) &remote_addr)==SUCCESS) {
 +				convert_to_string_ex(remote_addr);
@@ -49,9 +49,9 @@
 +					convert_to_string_ex(server_port);
 +					fprintf(sendmail, ":%s", Z_STRVAL_PP(server_port));
 +				}	
-+				if (zend_hash_find(PG(http_globals)[TRACK_VARS_SERVER]->value.ht, "REQUEST_URI", sizeof("REQUEST_URI"), (void **) &request_uri)==SUCCESS) {
-+					convert_to_string_ex(request_uri);
-+					fprintf(sendmail, "%s", Z_STRVAL_PP(request_uri));
++				if (zend_hash_find(PG(http_globals)[TRACK_VARS_SERVER]->value.ht, "SCRIPT_NAME", sizeof("SCRIPT_NAME"), (void **) &script_name)==SUCCESS) {
++					convert_to_string_ex(script_name);
++					fprintf(sendmail, "%s", Z_STRVAL_PP(script_name));
 +				}
 +				fprintf(sendmail, "\n");
 +			}
