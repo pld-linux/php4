@@ -7,7 +7,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.4pl1
-Release:	0.2
+Release:	0.4
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -24,6 +24,10 @@ Patch0:		%{name}-imap.patch
 Patch1:		%{name}-mysql-socket.patch
 Patch2:		%{name}-mail.patch
 Patch5:		%{name}-no_libnsl.patch
+Patch6:		%{name}-DESTDIR.patch
+Patch7:		%{name}-gd-shared.patch
+Patch8:		%{name}-apache-fixes.patch
+#Patch9:		%{name}-system-expat.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -55,7 +59,6 @@ BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	ucd-snmp-devel >= 4.1
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	mhash-devel
-BuildRequires:	libltdl-devel
 BuildRequires:	bzip2-devel
 BuildRequires:	gmp-devel
 BuildRequires:	curl-devel
@@ -67,7 +70,8 @@ Prereq:		perl
 Prereq:		/usr/sbin/apxs
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_pkglibdir	%{_libdir}/apache
+%define		_sysconfdir	/etc/php
+%define 	extensionsdir 	%{_libdir}/php/extensions/no-debug-non-zts-%(egrep '#define ZEND_MODULE_API_NO ' %{_builddir}/%{buildsubdir}/Zend/modules.h|sed 's/#define ZEND_MODULE_API_NO //')
 
 %description
 PHP is an HTML-embedded scripting language. PHP attempts to make it
@@ -596,19 +600,38 @@ server, too!
 Dokumentacja dla pakietu PHP. Mo¿na j± równie¿ ogl±daæ poprzez serwer
 WWW.
 
+%package pear
+Summary:	PEAR
+Group:		Development/Languages/PHP
+
+%description pear
+PEAR.
+
+%package devel
+Summary:	Files for PHP modules development
+Group:		Development/Languages/PHP
+
+%description devel
+Files for PHP modules development.
+
 %prep
 %setup  -q
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+#%patch9 -p1
+
 
 %build
 CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 ./buildconf
 %configure \
 	--with-apxs=/usr/sbin/apxs \
-	--with-config-file-path=%{_sysconfdir}/httpd \
+	--with-config-file-path=%{_sysconfdir}/apache \
 	--with-exec-dir=%{_bindir} \
 	--disable-debug \
 	--enable-magic-quotes \
@@ -671,37 +694,24 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 
 
 # TODO --with-pspell=/usr,shared (pspell missing)
-#	--with-unixODBC=shared (nie jest shared)
 
-#	--with-db3 \
 
-# snmp won
-
-#Syntax error on line 228 of %{_sysconfdir}/httpd/httpd.conf: Cannot load %{_libdir}/apache/libphp4.so into server: %{_libdir}/apache/libphp4.so: undefined symbol: phpi_get_le_gd
-# Solution: make pdf and cpdf shared
-#	--with-gd=shared \
-
-#	--with-unixODBC \
-
-# This option get trouble with imap
-#	--enable-versioning \
-
-# To old/new libmcrypt ?
-#	--with-mcrypt=shared \
-# --with-dom=%{_prefix}/X11R6 \
+# --with-dom need libxml >= 2.2.7 \
 
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_pkglibdir}/php,%{_sysconfdir}/httpd} \
+install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} \
 		$RPM_BUILD_ROOT/home/httpd/html/{icons,docs,docs/php4-doc} \
 		$RPM_BUILD_ROOT/%{_sbindir}
 
-install .libs/*.so	$RPM_BUILD_ROOT%{_pkglibdir}
-install modules/*.so	$RPM_BUILD_ROOT%{_pkglibdir}/php
+%{__make} install DESTDIR=$RPM_BUILD_ROOT INSTALL_IT="install .libs/*.so $RPM_BUILD_ROOT%{_libdir}/apache/"
+#exit 1
+#install .libs/*.so	$RPM_BUILD_ROOT%{_pkglibdir}
+#install modules/*.so	$RPM_BUILD_ROOT%{_pkglibdir}/php
 
-install %{SOURCE2}		$RPM_BUILD_ROOT%{_sysconfdir}/httpd/php.ini
+install %{SOURCE2}		$RPM_BUILD_ROOT%{_sysconfdir}/apache/php.ini
 install %{SOURCE3} php4.gif	$RPM_BUILD_ROOT/home/httpd/html/icons
 install %{SOURCE5} $RPM_BUILD_ROOT/%{_sbindir}
 
@@ -736,251 +746,251 @@ fi
 
 
 %post bcmath
-%{_sbindir}/php-module-install install bcmath /etc/httpd/php.ini
+%{_sbindir}/php-module-install install bcmath %{_sysconfdir}/apache/php.ini
 
 %preun bcmath
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove bcmath /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove bcmath %{_sysconfdir}/apache/php.ini
 fi
 
 %post calendar
-%{_sbindir}/php-module-install install calendar /etc/httpd/php.ini
+%{_sbindir}/php-module-install install calendar %{_sysconfdir}/apache/php.ini
 
 %preun calendar
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove calendar /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove calendar %{_sysconfdir}/apache/php.ini
 fi
 
 %post dba
-%{_sbindir}/php-module-install install dba /etc/httpd/php.ini
+%{_sbindir}/php-module-install install dba %{_sysconfdir}/apache/php.ini
 
 %preun dba
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove dba /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove dba %{_sysconfdir}/apache/php.ini
 fi
 
 %post dbase
-%{_sbindir}/php-module-install install dbase /etc/httpd/php.ini
+%{_sbindir}/php-module-install install dbase %{_sysconfdir}/apache/php.ini
 
 %preun dbase
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove dbase /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove dbase %{_sysconfdir}/apache/php.ini
 fi
 
 %post exif
-%{_sbindir}/php-module-install install exif /etc/httpd/php.ini
+%{_sbindir}/php-module-install install exif %{_sysconfdir}/apache/php.ini
 
 %preun exif
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove exif /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove exif %{_sysconfdir}/apache/php.ini
 fi
 
 %post filepro
-%{_sbindir}/php-module-install install filepro /etc/httpd/php.ini
+%{_sbindir}/php-module-install install filepro %{_sysconfdir}/apache/php.ini
 
 %preun filepro
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove filepro /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove filepro %{_sysconfdir}/apache/php.ini
 fi
 
 %post ftp
-%{_sbindir}/php-module-install install ftp /etc/httpd/php.ini
+%{_sbindir}/php-module-install install ftp %{_sysconfdir}/apache/php.ini
 
 %preun ftp
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove ftp /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove ftp %{_sysconfdir}/apache/php.ini
 fi
 
 %post gd
-%{_sbindir}/php-module-install install gd /etc/httpd/php.ini
+%{_sbindir}/php-module-install install gd %{_sysconfdir}/apache/php.ini
 
 %preun gd
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove gd /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove gd %{_sysconfdir}/apache/php.ini
 fi
 
 %post gettext
-%{_sbindir}/php-module-install install gettext /etc/httpd/php.ini
+%{_sbindir}/php-module-install install gettext %{_sysconfdir}/apache/php.ini
 
 %preun gettext
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove gettext /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove gettext %{_sysconfdir}/apache/php.ini
 fi
 
 %post imap
-%{_sbindir}/php-module-install install imap /etc/httpd/php.ini
+%{_sbindir}/php-module-install install imap %{_sysconfdir}/apache/php.ini
 
 %preun imap
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove imap /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove imap %{_sysconfdir}/apache/php.ini
 fi
 
 %if %{?bond_on_java:1}%{!?bond_on_java:0}
 %post java
-%{_sbindir}/php-module-install install libphp_java /etc/httpd/php.ini
+%{_sbindir}/php-module-install install libphp_java %{_sysconfdir}/apache/php.ini
 
 %preun java
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove libphp_java /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove libphp_java %{_sysconfdir}/apache/php.ini
 fi
 %endif
 
 %if %{?bcond_off_ldap:0}%{!?bcond_off_ldap:1}
 %post ldap
-%{_sbindir}/php-module-install install ldap /etc/httpd/php.ini
+%{_sbindir}/php-module-install install ldap %{_sysconfdir}/apache/php.ini
 
 %preun ldap
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove ldap /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove ldap %{_sysconfdir}/apache/php.ini
 fi
 %endif
 
 %post mcrypt
-%{_sbindir}/php-module-install install mcrypt /etc/httpd/php.ini
+%{_sbindir}/php-module-install install mcrypt %{_sysconfdir}/apache/php.ini
 
 %preun mcrypt
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove mcrypt /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove mcrypt %{_sysconfdir}/apache/php.ini
 fi
 
 %post mhash
-%{_sbindir}/php-module-install install mhash /etc/httpd/php.ini
+%{_sbindir}/php-module-install install mhash %{_sysconfdir}/apache/php.ini
 
 %preun mhash
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove mhash /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove mhash %{_sysconfdir}/apache/php.ini
 fi
 
 %post mysql
-%{_sbindir}/php-module-install install mysql /etc/httpd/php.ini
+%{_sbindir}/php-module-install install mysql %{_sysconfdir}/apache/php.ini
 
 %preun mysql
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove mysql /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove mysql %{_sysconfdir}/apache/php.ini
 fi
 
 %if %{?bcond_on_oci8:1}%{!?bcond_on_oci8:0}
 %post oci8
-%{_sbindir}/php-module-install install oci8 /etc/httpd/php.ini
+%{_sbindir}/php-module-install install oci8 %{_sysconfdir}/apache/php.ini
 
 %preun oci8
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove oci8 /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove oci8 %{_sysconfdir}/apache/php.ini
 fi
 %endif
 
 %post odbc
-%{_sbindir}/php-module-install install odbc /etc/httpd/php.ini
+%{_sbindir}/php-module-install install odbc %{_sysconfdir}/apache/php.ini
 
 %preun odbc
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove odbc /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove odbc %{_sysconfdir}/apache/php.ini
 fi
 
 %if %{?bcond_on_oracle:1}%{!?bcond_on_oracle:0}
 %post oracle
-%{_sbindir}/php-module-install install oracle /etc/httpd/php.ini
+%{_sbindir}/php-module-install install oracle %{_sysconfdir}/apache/php.ini
 
 %preun oracle
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove oracle /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove oracle %{_sysconfdir}/apache/php.ini
 fi
 %endif
 
 %post pcre
-%{_sbindir}/php-module-install install pcre /etc/httpd/php.ini
+%{_sbindir}/php-module-install install pcre %{_sysconfdir}/apache/php.ini
 
 %preun pcre
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove pcre /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove pcre %{_sysconfdir}/apache/php.ini
 fi
 
 %post pgsql
-%{_sbindir}/php-module-install install pgsql /etc/httpd/php.ini
+%{_sbindir}/php-module-install install pgsql %{_sysconfdir}/apache/php.ini
 
 %preun pgsql
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove pgsql /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove pgsql %{_sysconfdir}/apache/php.ini
 fi
 
 %post posix
-%{_sbindir}/php-module-install install posix /etc/httpd/php.ini
+%{_sbindir}/php-module-install install posix %{_sysconfdir}/apache/php.ini
 
 %preun posix
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove posix /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove posix %{_sysconfdir}/apache/php.ini
 fi
 
 %post recode
-%{_sbindir}/php-module-install install recode /etc/httpd/php.ini
+%{_sbindir}/php-module-install install recode %{_sysconfdir}/apache/php.ini
 
 %preun recode
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove recode /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove recode %{_sysconfdir}/apache/php.ini
 fi
 
 %post session
-%{_sbindir}/php-module-install install session /etc/httpd/php.ini
+%{_sbindir}/php-module-install install session %{_sysconfdir}/apache/php.ini
 
 %preun session
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove session /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove session %{_sysconfdir}/apache/php.ini
 fi
 
 %post snmp
-%{_sbindir}/php-module-install install snmp /etc/httpd/php.ini
+%{_sbindir}/php-module-install install snmp %{_sysconfdir}/apache/php.ini
 
 %preun snmp
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove snmp /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove snmp %{_sysconfdir}/apache/php.ini
 fi
 
 %post sockets
-%{_sbindir}/php-module-install install sockets /etc/httpd/php.ini
+%{_sbindir}/php-module-install install sockets %{_sysconfdir}/apache/php.ini
 
 %preun sockets
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove sockets /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove sockets %{_sysconfdir}/apache/php.ini
 fi
 
 %post sysvsem
-%{_sbindir}/php-module-install install sysvsem /etc/httpd/php.ini
+%{_sbindir}/php-module-install install sysvsem %{_sysconfdir}/apache/php.ini
 
 %preun sysvsem
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove sysvsem /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove sysvsem %{_sysconfdir}/apache/php.ini
 fi
 
 %post sysvshm
-%{_sbindir}/php-module-install install sysvshm /etc/httpd/php.ini
+%{_sbindir}/php-module-install install sysvshm %{_sysconfdir}/apache/php.ini
 
 %preun sysvshm
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove sysvshm /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove sysvshm %{_sysconfdir}/apache/php.ini
 fi
 
 %post xml
-%{_sbindir}/php-module-install install xml /etc/httpd/php.ini
+%{_sbindir}/php-module-install install xml %{_sysconfdir}/apache/php.ini
 
 %preun xml
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove xml /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove xml %{_sysconfdir}/apache/php.ini
 fi
 
 %post yp
-%{_sbindir}/php-module-install install yp /etc/httpd/php.ini
+%{_sbindir}/php-module-install install yp %{_sysconfdir}/apache/php.ini
 
 %preun yp
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove yp /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove yp %{_sysconfdir}/apache/php.ini
 fi
 
 %post zlib
-%{_sbindir}/php-module-install install zlib /etc/httpd/php.ini
+%{_sbindir}/php-module-install install zlib %{_sysconfdir}/apache/php.ini
 
 %preun zlib
 if [ "$1" = "0" ]; then
-        %{_sbindir}/php-module-install remove zlib /etc/httpd/php.ini
+        %{_sbindir}/php-module-install remove zlib %{_sysconfdir}/apache/php.ini
 fi
 
 %clean
@@ -992,143 +1002,171 @@ rm -rf $RPM_BUILD_ROOT
 %doc {LICENSE,Zend/LICENSE,EXTENSIONS,NEWS,TODO*}.gz  
 %doc {README.EXT_SKEL,README.SELF-CONTAINED-EXTENSIONS}.gz
 
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/*
-%dir %{_pkglibdir}/php
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/apache/*
 
-#%attr(755,root,root) %{_libdir}/apache/php/*.so
 
 /home/httpd/html/icons/*
 
-%attr(755,root,root) %{_pkglibdir}/libphp4.so
+%attr(755,root,root) %{_libdir}/apache/libphp4.so
 %attr(755,root,root) %{_sbindir}/*
+
+%dir %{_libdir}/php
+%dir %{_libdir}/php/extensions
+%dir %{extensionsdir}
+
+%files devel
+%defattr(644,root,root,755)
+%{_includedir}/php4
+%{_libdir}/php4/build
+%attr(755,root,root) %{_bindir}/phpextdist
+%attr(755,root,root) %{_bindir}/phpize
+%attr(755,root,root) %{_bindir}/php-config
+
+%files pear
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/pear
+%{_libdir}/php/Benchmark
+%{_libdir}/php/Crypt
+%{_libdir}/php/Date
+%{_libdir}/php/DB
+%{_libdir}/php/File
+%{_libdir}/php/HTML
+%{_libdir}/php/Mail
+%{_libdir}/php/Math
+%{_libdir}/php/Net
+%{_libdir}/php/Payment
+%{_libdir}/php/PEAR
+%{_libdir}/php/XML
+%{_libdir}/php/*.php
+
 
 %files mysql
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/mysql.so
+%attr(755,root,root) %{extensionsdir}/mysql.*
 
 %files pgsql
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/pgsql.so
+%attr(755,root,root) %{extensionsdir}/pgsql.so
 
 %if %{?bcond_on_oracle:1}%{!?bcond_on_oracle:0}
 %files oracle
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/oracle.so
+%attr(755,root,root) %{extensionsdir}/oracle.so
 %endif
 
 %if  %{?bcond_on_oci8:1}%{!?bcond_on_oci8:0}
 %files oci8
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/oci8.so
+%attr(755,root,root) %{extensionsdir}/oci8.so
 %endif
 
 %files gd
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/gd.so
+%attr(755,root,root) %{extensionsdir}/gd.so
 
 %files xml
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/xml.so
+%attr(755,root,root) %{extensionsdir}/xml.so
 
 %files dba
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/dba.so
+%attr(755,root,root) %{extensionsdir}/dba.so
 
 %files dbase
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/dbase.so
+%attr(755,root,root) %{extensionsdir}/dbase.so
 
 %files filepro
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/filepro.so
+%attr(755,root,root) %{extensionsdir}/filepro.so
 
 %files pcre
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/pcre.so
+%attr(755,root,root) %{extensionsdir}/pcre.so
 
 %files posix
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/posix.so
+%attr(755,root,root) %{extensionsdir}/posix.so
 
 %files sysvsem
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/sysvsem.so
+%attr(755,root,root) %{extensionsdir}/sysvsem.so
 
 %files sysvshm
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/sysvshm.so
+%attr(755,root,root) %{extensionsdir}/sysvshm.so
 
 %files yp
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/yp.so
+%attr(755,root,root) %{extensionsdir}/yp.so
 
 %files calendar
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/calendar.so
+%attr(755,root,root) %{extensionsdir}/calendar.so
 
 %files bcmath
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/bcmath.so
+%attr(755,root,root) %{extensionsdir}/bcmath.so
 
 %files ftp
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/ftp.so
+%attr(755,root,root) %{extensionsdir}/ftp.so
 
 %files zlib
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/zlib.so
+%attr(755,root,root) %{extensionsdir}/zlib.so
 
 %files exif
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/exif.so
+%attr(755,root,root) %{extensionsdir}/exif.so
 
 %files recode
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/recode.so
+%attr(755,root,root) %{extensionsdir}/recode.so
 
 #%files session
 #%defattr(644,root,root,755)
-#%attr(755,root,root) %{_pkglibdir}/php/session.so
+#%attr(755,root,root) %{extensionsdir}/session.so
 
 %files gettext
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/gettext.so
+%attr(755,root,root) %{extensionsdir}/gettext.so
 
 %files imap
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/imap.so
+%attr(755,root,root) %{extensionsdir}/imap.so
 
 %files snmp
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/snmp.so
+%attr(755,root,root) %{extensionsdir}/snmp.so
 
 %if %{?bcond_on_java:1}%{!?bcond_on_java:0}
 %files java
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/libphp_java.so
+%attr(755,root,root) %{extensionsdir}/libphp_java.so
 %endif
 
 %if %{?bcond_off_ldap:0}%{!?bcond_off_ldap:1}
 %files ldap
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/ldap.so
+%attr(755,root,root) %{extensionsdir}/ldap.*
 %endif
 
 %files sockets
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/sockets.so
+%attr(755,root,root) %{extensionsdir}/sockets.so
 
 %files mcrypt
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/mcrypt.so
+%attr(755,root,root) %{extensionsdir}/mcrypt.so
 
 %files mhash
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/mhash.so
+%attr(755,root,root) %{extensionsdir}/mhash.so
 
 %files odbc
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_pkglibdir}/php/odbc.so
+%attr(755,root,root) %{extensionsdir}/odbc.so
 
 %files doc
 %defattr(644,root,root,755)
