@@ -62,13 +62,13 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.9
-%define	_rc	RC2
-Release:	0.%{_rc}
+%define	_rc	RC3
+Release:	0.%{_rc}.1
 Epoch:		0
 Group:		Libraries
 License:	PHP
 Source0:	http://downloads.php.net/ilia/php-%{version}%{_rc}.tar.bz2
-# Source0-md5:	d3c074be9ff17515328b097e7ce04a56
+# Source0-md5:	19eb426cd91a3d52c583ab827f127785
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -1721,6 +1721,14 @@ ln -sf ../../lib/php/build $RPM_BUILD_ROOT%{_libdir}/php/build
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.la
 
+for i in cli cgi fcgi;
+do
+	mv -f $RPM_BUILD_ROOT%{_bindir}/php{,4}.$i
+done
+mv -f $RPM_BUILD_ROOT%{_bindir}/php{,4}
+mv -f $RPM_BUILD_ROOT%{_mandir}/man1/php{,4}.1
+
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -2349,20 +2357,20 @@ fi
 
 %files fcgi
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/php.fcgi
+%attr(755,root,root) %{_bindir}/php4.fcgi
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cgi-fcgi.ini
 
 %files cgi
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/php.cgi
-%attr(755,root,root) %{_bindir}/php
+%attr(755,root,root) %{_bindir}/php4.cgi
+%attr(755,root,root) %{_bindir}/php4
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cgi.ini
 
 %files cli
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/php.cli
+%attr(755,root,root) %{_bindir}/php4.cli
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cli.ini
-%{_mandir}/man1/php.1*
+%{_mandir}/man1/php4.1*
 
 %files common
 %defattr(644,root,root,755)
