@@ -184,9 +184,8 @@ fi
 %post mysql
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "activating module 'mysql.so' in /etc/httpd/php.ini" 1>&2
-	sed -e 's|^;extension=mysql.so|extension=mysql.so|g' \
-	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
-	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
+	perl -pi -e 's|^;extension=mysql.so|extension=mysql.so|g' \
+	%{_sysconfdir}/httpd/php.ini
 fi
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
@@ -195,9 +194,8 @@ fi
 %postun mysql
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'mysql.so' in /etc/httpd/php.ini" 1>&2
-	sed -e 's|^extension=mysql.so|;extension=mysql.so|g' \
-	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
-	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
+	perl -pi -e 's|^extension=mysql.so|;extension=mysql.so|g' \
+	%{_sysconfdir}/httpd/php.ini
 fi
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
@@ -206,9 +204,8 @@ fi
 %post gd
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "activating module 'gd.so' in /etc/httpd/php.ini" 1>&2
-	sed -e 's|^;extension=gd.so|extension=gd.so|g' \
-	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
-	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
+	perl -pi -e 's|^;extension=gd.so|extension=gd.so|g' \
+	%{_sysconfdir}/httpd/php.ini
 fi
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
@@ -217,9 +214,8 @@ fi
 %postun gd
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'gd.so' in /etc/httpd/php.ini" 1>&2
-	sed -e 's|^extension=gd.so|;extension=gd.so|g' \
-	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
-	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
+	perl -pi -e 's|^extension=gd.so|;extension=gd.so|g' \
+	%{_sysconfdir}/httpd/php.ini
 fi
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
@@ -228,9 +224,8 @@ fi
 %post xml
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "activating module 'xml.so' in /etc/httpd/php.ini" 1>&2
-	sed -e 's|^;extension=xml.so|extension=xml.so|g' \
-	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
-	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
+	perl -pi -e 's|^;extension=xml.so|extension=xml.so|g' \
+	%{_sysconfdir}/httpd/php.ini
 fi
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
@@ -239,9 +234,8 @@ fi
 %postun xml
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'xml.so' in /etc/httpd/php.ini" 1>&2
-	sed -e 's|^extension=xml.so|;extension=xml.so|g' \
-	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
-	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
+	perl -pi -e 's|^extension=xml.so|;extension=xml.so|g' \
+	%{_sysconfdir}/httpd/php.ini
 fi
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
@@ -250,9 +244,8 @@ fi
 %post java
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "activating module 'libphp_java.so' in /etc/httpd/php.ini" 1>&2
-	sed -e 's|^;extension=libphp_java.so|extension=libphp_java.so|g' \
-	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
-	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
+	perl -pi -e 's|^;extension=libphp_java.so|extension=libphp_java.so|g' \
+	%{_sysconfdir}/httpd/php.ini
 fi
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
@@ -261,9 +254,8 @@ fi
 %postun java
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
 	echo "deactivating module 'libphp_java.so' in /etc/httpd/php.ini" 1>&2
-	sed -e 's|^extension=libphp_java.so|;extension=libphp_java.so|g' \
-	%{_sysconfdir}/httpd/php.ini > %{_sysconfdir}/httpd/php.ini.new
-	mv %{_sysconfdir}/httpd/php.ini.new %{_sysconfdir}/httpd/php.ini
+	perl -pi -e 's|^extension=libphp_java.so|;extension=libphp_java.so|g' \
+	%{_sysconfdir}/httpd/php.ini
 fi
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
