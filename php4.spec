@@ -53,7 +53,7 @@ BuildRequires:	gdbm-devel
 # BuildRequires:	jdk
 %{?bcond_on_java:BuildRequires:	kaffe-devel}
 BuildRequires:	libjpeg-devel
-BuildRequires:	libltdl-devel > 1.4
+BuildRequires:	libltdl-devel >= 1.4
 BuildRequires:	libpng >= 1.0.8
 BuildRequires:	libtiff-devel
 BuildRequires:	mm-devel >= 1.1.3
