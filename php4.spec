@@ -1,6 +1,8 @@
 #
 # TODO:
 # - fastcgi option in cgi SAPI? or separate fcgi SAPI?
+# - check and (remove || update) session-unregister patch
+# - fix libtool problem (apache2 vs cgi $CC mismatch)
 #
 # Automatic pear requirements finding:
 %include	/usr/lib/rpm/macros.php
@@ -38,7 +40,7 @@
 # _without_mnogosearch	- without mnogosearch extension module
 # _without_msession	- without msession extension module
 # _without_odbc		- without ODBC extension module
-# _without_openssl	- without OpenSSL support and OpenSSL extension module
+# _without_openssl	- without OpenSSL support and OpenSSL extension (module)
 # _without_pcre		- without PCRE extension module
 # _without_pdf		- without PDF extension module
 # _without_pgsql	- without PostgreSQL extension module
@@ -82,20 +84,21 @@ Patch5:		%{name}-libpq_fs_h_path.patch
 Patch6:		%{name}-wddx-fix.patch
 Patch7:		%{name}-cpdf-fix.patch
 Patch8:		%{name}-hyperwave-fix.patch
-Patch9:		%{name}-odbc-fix.patch
+Patch9:		%{name}-xslt-gcc33.patch
+#Patch9:	%{name}-odbc-fix.patch	-- obsolete
 Patch10:	%{name}-java-norpath.patch
 Patch11:	%{name}-mcal-shared-lib.patch
 Patch12:	%{name}-msession-shared-lib.patch
 Patch13:	%{name}-build_modules.patch
 Patch14:	%{name}-sapi-ini-file.patch
 Patch15:	%{name}-dl-zlib.patch
-Patch16:	%{name}-dl-pcre.patch
+#Patch16:	%{name}-dl-pcre.patch	-- obsolete
 Patch17:	%{name}-session-unregister.patch
 Patch18:	%{name}-ini.patch
 Patch19:	%{name}-acam.patch
 Patch20:	%{name}-xmlrpc-fix.patch
 Patch21:	%{name}-libtool.patch
-Patch22:	%{name}-db4.patch
+#Patch22:	%{name}-db4.patch	-- obsolete
 Patch23:	%{name}-threads-acfix.patch
 Patch24:	%{name}-tsrmlsfetchgcc2.patch
 Patch25:	%{name}-mnogosearch-php-extension-1.68.patch
@@ -1304,17 +1307,16 @@ Repozytorium Aplikacji.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-#%patch7 -p1
+%patch7 -p1
 %patch8 -p1
-#%patch9 -p1
+%patch9 -p1
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
-#%patch16 -p1
-%patch17 -p1
+#%patch17 -p1	-- TODO s/name/s_name/ - if patch still necessary
 cp php.ini-dist php.ini
 %patch18 -p1
 # for ac2.53b/am1.6b - AC_LANG_CXX has AM_CONDITIONAL, so cannot be invoked
@@ -1322,7 +1324,6 @@ cp php.ini-dist php.ini
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
-%patch22 -p1
 %patch23 -p1
 %patch24 -p1
 %patch25 -p1
@@ -1412,7 +1413,7 @@ for i in cgi cli apxs ; do
 	--with-mysql=shared,/usr \
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	%{?_with_oci8:--with-oci8=shared} \
-	%{!?_without_openssl:--with-openssl=shared} \
+	%{!?_without_openssl:--with-openssl} \
 	%{?_with_oracle:--with-oracle=shared} \
 	%{?_without_pcre:--without-pcre-regex}%{!?_without_pcre:--with-pcre-regex=shared} \
 	%{!?_without_pdf:--with-pdflib=shared} \
@@ -1434,6 +1435,7 @@ for i in cgi cli apxs ; do
 	--with-zip=shared \
 	--with-zlib=shared \
 	--with-zlib-dir=shared,/usr
+# --with-openssl=shared not supported in 4.3.2
 
 cp -f Makefile Makefile.$i
 # left for debugging purposes
@@ -2222,11 +2224,12 @@ fi
 %attr(755,root,root) %{extensionsdir}/odbc.so
 %endif
 
-%if %{?_without_openssl:0}%{!?_without_openssl:1}
-%files openssl
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/openssl.so
-%endif
+# shared openssl module not supported in 4.3.2
+#%if %{?_without_openssl:0}%{!?_without_openssl:1}
+#%files openssl
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/openssl.so
+#%endif
 
 %if %{?_with_oracle:1}%{!?_with_oracle:0}
 %files oracle
