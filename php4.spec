@@ -61,13 +61,15 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
-Version:	4.3.2
-Release:	1
+Version:	4.3.3
+%define		_rc	RC2
+Release:	0.%{_rc}.1
 Epoch:		3
 Group:		Libraries
 License:	PHP
-# Source0-md5:	8aec1bb2dbcca1c92835c71e2e30d9c5
-Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
+#Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
+Source0:	http://downloads.php.net/ilia/%{name}-%{version}%{_rc}.tar.bz2
+# Source0-md5:	bc8cda0bd523c653d0900a460117c2af
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -1295,7 +1297,7 @@ PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
 Repozytorium Aplikacji.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}%{_rc}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -1303,7 +1305,8 @@ Repozytorium Aplikacji.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
+# Looks like most of fixes are already applied... however it refuses to compile
+#%patch7 -p1
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
@@ -1324,7 +1327,8 @@ cp php.ini-dist php.ini
 %patch22 -p1
 %patch23 -p1
 %patch24 -p1
-%patch25 -p1
+# Obsolete ?
+#%patch25 -p1
 %patch26 -p1
 %patch27 -p1
 
