@@ -4,59 +4,56 @@
 # - make sure that session-unregister patch is no longer needed
 #   (any crash reports related to session modules?)
 #
-# Automatic pear requirements finding:
-%include	/usr/lib/rpm/macros.php
-
+# Conditional build:
+%bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
+%bcond_with	fdf		# with FDF (PDF forms) module		(BR: proprietary lib)
+%bcond_with	interbase_inst	# use InterBase install., not Firebird	(BR: proprietary libs)
+%bcond_with	java		# with Java extension module		(BR: jdk)
+%bcond_with	oci8		# with Oracle oci8 extension module	(BR: proprietary libs)
+%bcond_with	oracle		# with oracle extension module		(BR: proprietary libs)
+%bcond_without	cpdf		# without cpdf extension module
+%bcond_without	curl		# without CURL extension module
+%bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
+%bcond_without	fribidi		# without FriBiDi extension module
+%bcond_without	gif		# build GD extension module with gd library without GIF support
+%bcond_without	imap		# without IMAP extension module
+%bcond_without	interbase	# without InterBase extension module
+%bcond_without	ldap		# without LDAP extension module
+%bcond_without	mhash		# without mhash extension module
+%bcond_without	ming		# without ming extension module
+%bcond_without	mm		# without mm support for session storage
+%bcond_without	mnogosearch	# without mnogosearch extension module
+%bcond_without	msession	# without msession extension module
+%bcond_without	mssql		# without MS SQL extension module
+%bcond_without	odbc		# without ODBC extension module
+%bcond_without	openssl		# without OpenSSL support and OpenSSL extension (module)
+%bcond_without	pcre		# without PCRE extension module
+%bcond_without	pdf		# without PDF extension module
+%bcond_without	pgsql		# without PostgreSQL extension module
+%bcond_without	aspell		# without pspell extension module
+%bcond_without	recode		# without recode extension module
+%bcond_without	qtdom		# without QT DOM extension module
+%bcond_without	snmp		# without SNMP extension module
+%bcond_without	sybase		# without Sybase and Sybase-CT extension modules
+%bcond_without	wddx		# without WDDX extension module
+%bcond_without	xmlrpc		# without XML-RPC extension module
+%bcond_without	xml		# without XML and DOMXML extension modules
+%bcond_without	xslt		# without XSLT extension module
+%bcond_without	yaz		# without YAZ extension module
+#
 %define	_apache2	%(rpm -q apache-devel 2> /dev/null | grep -Eq '\\-2\\.[0-9]+\\.' && echo 1 || echo 0)
 %define	apxs		/usr/sbin/apxs
-
+# some problems with apache 2.x
 %if %{_apache2}
-%define	_without_recode	1
-%define	_without_mm	1
+%undefine	with_recode
+%undefine	with_mm
 %endif
-
+# x86-only libs
 %ifnarch %{ix86}
-%define	_without_interbase	1
-%define	_without_msession	1
+%undefine	with_interbase
+%undefine	with_msession
 %endif
-
-# Conditional build:
-# _with_db3		- use db3 packages instead of db (4.x) for Berkeley DB support
-# _with_fdf		- with FDF (PDF forms) module		(BR: proprietary lib)
-# _with_interbase_inst	- use InterBase install., not Firebird	(BR: proprietary libs)
-# _with_java		- with Java extension module		(BR: jdk)
-# _with_oci8		- with Oracle oci8 extension module	(BR: proprietary libs)
-# _with_oracle		- with oracle extension module		(BR: proprietary libs)
-# _without_cpdf		- without cpdf extension module
-# _without_curl		- without CURL extension module
-# _without_domxslt	- without DOM XSLT/EXSLT support in DOM XML extension module
-# _without_fribidi	- without FriBiDi extension module
-# _without_gif		- build GD extension module with gd library without GIF support
-# _without_imap		- without IMAP extension module
-# _without_interbase	- without InterBase extension module
-# _without_ldap		- without LDAP extension module
-# _without_mhash	- without mhash extension module
-# _without_ming		- without ming extension module
-# _without_mm		- without mm support for session storage
-# _without_mnogosearch	- without mnogosearch extension module
-# _without_msession	- without msession extension module
-# _without_mssql	- without MS SQL extension module
-# _without_odbc		- without ODBC extension module
-# _without_openssl	- without OpenSSL support and OpenSSL extension (module)
-# _without_pcre		- without PCRE extension module
-# _without_pdf		- without PDF extension module
-# _without_pgsql	- without PostgreSQL extension module
-# _without_aspell	- without pspell extension module
-# _without_recode	- without recode extension module
-# _without_qtdom	- without QT DOM extension module
-# _without_snmp		- without SNMP extension module
-# _without_sybase	- without Sybase and Sybase-CT extension modules
-# _without_wddx		- without WDDX extension module
-# _without_xmlrpc	- without XML-RPC extension module
-# _without_xml		- without XML and DOMXML extension modules
-# _without_xslt		- without XSLT extension module
-# _without_yaz		- without YAZ extension module
-
+%include	/usr/lib/rpm/macros.php
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
@@ -111,38 +108,40 @@ Patch28:	%{name}-db-shared.patch
 Patch29:	%{name}-sybase-fix.patch
 Patch30:	%{name}-mssql-fix.patch
 Patch31:	%{name}-phpize_fixes.patch
+Patch32:	%{name}-db42.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
-%{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
+%{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 BuildRequires:	apache-devel
+%{?with_pspell:BuildRequires:	aspell-devel}
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
 BuildRequires:	bzip2-devel
 BuildRequires:	cracklib-devel >= 2.7-15
-%{!?_without_curl:BuildRequires:	curl-devel >= 7.9.8 }
+%{?with_curl:BuildRequires:	curl-devel >= 7.9.8 }
 BuildRequires:	cyrus-sasl-devel
-%{?_with_db3:BuildRequires:	db3-devel >= 3.1}
-%{!?_with_db3:BuildRequires:	db-devel >= 4.0}
+%{?with_db3:BuildRequires:	db3-devel >= 3.1}
+%{!?with_db3:BuildRequires:	db-devel >= 4.0}
 BuildRequires:	elfutils-devel
-%if %(expr %{?_without_xml:0}%{!?_without_xml:1} + %{?_without_xmlrpc:0}%{!?_without_xmlrpc:1})
+%if %{with xml} || %{with xmlrpc}
 BuildRequires:	expat-devel
 %endif
-%{?_with_fdf:BuildRequires:	fdftk-devel}
+%{?with_fdf:BuildRequires:	fdftk-devel}
 BuildRequires:	flex
-%if %(expr %{?_without_mssql:0}%{!?_without_mssql:1} + %{?_without_sybase:0}%{!?_without_sybase:1})
+%if %{with mssql} || %{with sybase}
 BuildRequires:	freetds-devel
 %endif
 BuildRequires:	freetype-devel >= 2.0
-%{!?_without_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
+%{?with_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
 BuildRequires:	gd-devel >= 2.0.1
-%{!?_without_gif:BuildRequires:	gd-devel(gif)}
-%{?_without_gif:BuildConflicts:	gd-devel(gif)}
+%{?with_gif:BuildRequires:	gd-devel(gif)}
+%{!?with_gif:BuildConflicts:	gd-devel(gif)}
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
-%{!?_without_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2 }
-%{?_with_java:BuildRequires:	jdk >= 1.1}
-%{!?_without_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
+%{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2 }
+%{?with_java:BuildRequires:	jdk >= 1.1}
+%{?with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libltdl-devel >= 1.4
 BuildRequires:	libmcal-devel
@@ -150,36 +149,35 @@ BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libtiff-devel
 BuildRequires:	libtool >= 1.4.3
-%{!?_without_xml:BuildRequires:	libxml2-devel >= 2.2.7}
-%{!?_without_domxslt:BuildRequires:	libxslt-devel >= 1.0.3}
-%{!?_without_mhash:BuildRequires:	mhash-devel}
-%{!?_without_ming:BuildRequires:	ming-devel >= 0.1.0}
-%{!?_without_mm:BuildRequires:	mm-devel >= 1.3.0}
-%{!?_without_mnogosearch:BuildRequires:	mnogosearch-devel >= 3.2.6}
+%{?with_xml:BuildRequires:	libxml2-devel >= 2.2.7}
+%{?with_domxslt:BuildRequires:	libxslt-devel >= 1.0.3}
+%{?with_mhash:BuildRequires:	mhash-devel}
+%{?with_ming:BuildRequires:	ming-devel >= 0.1.0}
+%{?with_mm:BuildRequires:	mm-devel >= 1.3.0}
+%{?with_mnogosearch:BuildRequires:	mnogosearch-devel >= 3.2.6}
 BuildRequires:	mysql-devel >= 3.23.32
 BuildRequires:	ncurses-devel
-%{!?_without_ldap:BuildRequires:	openldap-devel >= 2.0}
-%if %(expr %{?_without_openssl:0}%{!?_without_openssl:1} + %{?_without_ldap:0}%{!?_without_ldap:1})
+%{?with_ldap:BuildRequires:	openldap-devel >= 2.0}
+%if %{with openssl} || %{with ldap}
 BuildRequires:	openssl-devel >= 0.9.7c
 %endif
 BuildRequires:	pam-devel
-%{!?_without_pdf:BuildRequires:	pdflib-devel >= 4.0.0}
+%{?with_pdf:BuildRequires:	pdflib-devel >= 4.0.0}
 BuildRequires:	%{__perl}
-%{!?_without_msession:BuildRequires:	phoenix-devel}
-%{!?_without_pgsql:BuildRequires:	postgresql-devel}
-%{!?_without_pgsql:BuildRequires:	postgresql-backend-devel >= 7.2}
-%{!?_without_pspell:BuildRequires:	aspell-devel}
-%{!?_without_qtdom:BuildRequires:	qt-devel >= 2.2.0}
+%{?with_msession:BuildRequires:	phoenix-devel}
+%{?with_pgsql:BuildRequires:	postgresql-devel}
+%{?with_pgsql:BuildRequires:	postgresql-backend-devel >= 7.2}
+%{?with_qtdom:BuildRequires:	qt-devel >= 2.2.0}
 BuildRequires:	readline-devel
-%{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
+%{?with_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-100
 BuildRequires:	rpmbuild(macros) >= 1.120
-%{!?_without_xslt:BuildRequires:	sablotron-devel >= 0.96}
+%{?with_xslt:BuildRequires:	sablotron-devel >= 0.96}
 BuildRequires:	t1lib-devel
-%{!?_without_snmp:BuildRequires:	net-snmp-devel >= 5.0.7}
-%{!?_without_odbc:BuildRequires:	unixODBC-devel}
-%{!?_without_xmlrpc:BuildRequires:	xmlrpc-epi-devel}
-%{!?_without_yaz:BuildRequires:	yaz-devel >= 1.9}
+%{?with_snmp:BuildRequires:	net-snmp-devel >= 5.0.7}
+%{?with_odbc:BuildRequires:	unixODBC-devel}
+%{?with_xmlrpc:BuildRequires:	xmlrpc-epi-devel}
+%{?with_yaz:BuildRequires:	yaz-devel >= 1.9}
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	zziplib-devel
@@ -645,8 +643,8 @@ Summary(pl):	Modu³ GD dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}
 Requires:	%{name}-common = %{epoch}:%{version}
-%{!?_without_gif:Requires:	gd(gif)}
-%{!?_without_gif:Provides:	%{name}-gd(gif) = %{epoch}:%{version}-%{release}}
+%{?with_gif:Requires:	gd(gif)}
+%{?with_gif:Provides:	%{name}-gd(gif) = %{epoch}:%{version}-%{release}}
 
 %description gd
 This is a dynamic shared object (DSO) for PHP that will add GD
@@ -737,7 +735,7 @@ Summary(pl):	Modu³ bazy danych InterBase/Firebird dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}
 Requires:	%{name}-common = %{epoch}:%{version}
-%{?_with_interbase_inst:Autoreq:	false}
+%{?with_interbase_inst:Autoreq:	false}
 
 %description interbase
 This is a dynamic shared object (DSO) for PHP that will add InterBase
@@ -1508,6 +1506,7 @@ cp php.ini-dist php.ini
 %patch29 -p1
 %patch30 -p1
 %patch31 -p0
+%patch32 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
@@ -1557,26 +1556,26 @@ for i in cgi cli apxs ; do
 	--enable-safe-mode \
 	--enable-sockets=shared \
 	--enable-ucd-snmp-hack \
-	%{!?_without_wddx:--enable-wddx=shared} \
-	%{?_without_xml:--disable-xml}%{!?_without_xml:--enable-xml=shared} \
-	%{!?_without_xslt:--enable-xslt=shared} \
+	%{?with_wddx:--enable-wddx=shared} \
+	%{!?with_xml:--disable-xml}%{?with_xml:--enable-xml=shared} \
+	%{?with_xslt:--enable-xslt=shared} \
 	--enable-yp=shared \
 	--with-bz2=shared \
-	%{!?_without_cpdf:--with-cpdflib=shared} \
+	%{?with_cpdf:--with-cpdflib=shared} \
 	--with-crack=shared \
-	%{?_without_curl:--without-curl}%{!?_without_curl:--with-curl=shared} \
+	%{!?with_curl:--without-curl}%{?with_curl:--with-curl=shared} \
 	--with-db=shared \
-	%{?_with_db3:--with-db3}%{!?_with_db3:--with-db4} \
+	%{?with_db3:--with-db3}%{!?with_db3:--with-db4} \
 	--with-dbase=shared \
-	%{!?_without_xml:--with-dom=shared} \
-	%{!?_without_domxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
-%if %(expr %{?_without_xml:0}%{!?_without_xml:1} + %{?_without_xmlrpc:0}%{!?_without_xmlrpc:1})
+	%{?with_xml:--with-dom=shared} \
+	%{?with_domxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
+%if %{with xml} || %{with xmlrpc}
 	--with-expat-dir=shared,/usr \
 %else
 	--without-expat-dir \
 %endif
-	%{?_with_fdf:--with-fdftk=shared} \
-	%{!?_without_fribidi:--with-fribidi=shared} \
+	%{?with_fdf:--with-fdftk=shared} \
+	%{?with_fribidi:--with-fribidi=shared} \
 	--with-iconv=shared \
 	--with-filepro=shared \
 	--with-freetype-dir=shared \
@@ -1585,45 +1584,45 @@ for i in cgi cli apxs ; do
 	--with-gdbm \
 	--with-gmp=shared \
 	--with-hyperwave=shared \
-	%{!?_without_imap:--with-imap=shared --with-imap-ssl} \
-	%{!?_without_interbase:--with-interbase=shared%{!?_with_interbase_inst:,/usr}} \
-	%{?_with_java:--with-java=/usr/lib/java} \
+	%{?with_imap:--with-imap=shared --with-imap-ssl} \
+	%{?with_interbase:--with-interbase=shared%{!?with_interbase_inst:,/usr}} \
+	%{?with_java:--with-java=/usr/lib/java} \
 	--with-jpeg-dir=shared,/usr \
-	%{!?_without_ldap:--with-ldap=shared} \
+	%{?with_ldap:--with-ldap=shared} \
 	--with-mcal=shared,/usr \
 	--with-mcrypt=shared \
-	%{!?_without_mhash:--with-mhash=shared} \
+	%{?with_mhash:--with-mhash=shared} \
 	--with-mime-magic=shared,/usr/share/file/magic.mime \
-	%{!?_without_ming:--with-ming=shared} \
-	%{!?_without_mm:--with-mm} \
-	%{?_without_mnogosearch:--without-mnogosearch}%{!?_without_mnogosearch:--with-mnogosearch=shared,/usr} \
-	%{!?_without_msession:--with-msession=shared}%{?_without_msession:--without-msession} \
-	%{!?_without_mssql:--with-mssql=shared} \
+	%{?with_ming:--with-ming=shared} \
+	%{?with_mm:--with-mm} \
+	%{!?with_mnogosearch:--without-mnogosearch}%{?with_mnogosearch:--with-mnogosearch=shared,/usr} \
+	%{?with_msession:--with-msession=shared}%{!?with_msession:--without-msession} \
+	%{?with_mssql:--with-mssql=shared} \
 	--with-mysql=shared,/usr \
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-ncurses=shared \
-	%{?_with_oci8:--with-oci8=shared} \
-	%{!?_without_openssl:--with-openssl} \
-	%{?_with_oracle:--with-oracle=shared} \
-	%{?_without_pcre:--without-pcre-regex}%{!?_without_pcre:--with-pcre-regex=shared} \
-	%{!?_without_pdf:--with-pdflib=shared} \
+	%{?with_oci8:--with-oci8=shared} \
+	%{?with_openssl:--with-openssl} \
+	%{?with_oracle:--with-oracle=shared} \
+	%{!?with_pcre:--without-pcre-regex}%{?with_pcre:--with-pcre-regex=shared} \
+	%{?with_pdf:--with-pdflib=shared} \
 	--with-pear=%{php_pear_dir} \
-	%{?_without_pgsql:--without-pgsql}%{!?_without_pgsql:--with-pgsql=shared,/usr} \
+	%{!?with_pgsql:--without-pgsql}%{?with_pgsql:--with-pgsql=shared,/usr} \
 	--with-png-dir=shared,/usr \
-	%{!?_without_pspell:--with-pspell=shared} \
+	%{?with_pspell:--with-pspell=shared} \
 	--with-readline=shared \
-	%{!?_without_recode:--with-recode=shared} \
+	%{?with_recode:--with-recode=shared} \
 	--with-regex=php \
-	%{!?_without_qtdom:--with-qtdom=shared} \
+	%{?with_qtdom:--with-qtdom=shared} \
 	--without-sablot-js \
-	%{!?_without_snmp:--with-snmp=shared} \
-	%{!?_without_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
+	%{?with_snmp:--with-snmp=shared} \
+	%{?with_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
 	--with-t1lib=shared \
 	--with-tiff-dir=shared,/usr \
-	%{!?_without_odbc:--with-unixODBC=shared} \
-	%{?_without_xmlrpc:--without-xmlrpc}%{!?_without_xmlrpc:--with-xmlrpc=shared,/usr} \
-	%{!?_without_xslt:--with-xslt-sablot=shared} \
-	%{!?_without_yaz:--with-yaz=shared} \
+	%{?with_odbc:--with-unixODBC=shared} \
+	%{!?with_xmlrpc:--without-xmlrpc}%{?with_xmlrpc:--with-xmlrpc=shared,/usr} \
+	%{?with_xslt:--with-xslt-sablot=shared} \
+	%{?with_yaz:--with-yaz=shared} \
 	--with-zip=shared \
 	--with-zlib=shared \
 	--with-zlib-dir=shared,/usr
@@ -1636,7 +1635,7 @@ done
 
 # for now session_mm doesn't work with shared session module...
 # --enable-session=shared
-# %{?_without_mm:--with-mm=shared,no}%{!?_without_mm:--with-mm=shared}
+# %{!?with_mm:--with-mm=shared,no}%{?with_mm:--with-mm=shared}
 
 # TODO:
 #	--with-qtdom=shared
@@ -1675,7 +1674,7 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} 
 # compatibility (/usr/bin/php used to be CGI SAPI)
 ln -sf php.cgi $RPM_BUILD_ROOT%{_bindir}/php
 
-%{?_with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{extensionsdir}}
+%{?with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{extensionsdir}}
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 install %{SOURCE6} %{SOURCE7} %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}
@@ -2368,7 +2367,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/calendar.so
 
-%if 0%{!?_without_cpdf:1}
+%if %{with cpdf}
 %files cpdf
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/cpdf.so
@@ -2382,7 +2381,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/ctype.so
 
-%if 0%{!?_without_curl:1}
+%if %{with curl}
 %files curl
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/curl.so
@@ -2408,13 +2407,13 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/dio.so
 
-%if 0%{!?_without_xml:1}
+%if %{with xml}
 %files domxml
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/domxml.so
 %endif
 
-%if 0%{?_with_fdf:1}
+%if %{with fdf}
 %files fdf
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/fdf.so
@@ -2428,7 +2427,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/filepro.so
 
-%if 0%{!?_without_fribidi:1}
+%if %{with fribidi}
 %files fribidi
 %defattr(644,root,root,755)
 %doc ext/fribidi/{CREDITS,README}
@@ -2459,26 +2458,26 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/iconv.so
 
-%if 0%{!?_without_imap:1}
+%if %{with imap}
 %files imap
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/imap.so
 %endif
 
-%if 0%{!?_without_interbase:1}
+%if %{with interbase}
 %files interbase
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/interbase.so
 %endif
 
-%if 0%{?_with_java:1}
+%if %{with java}
 %files java
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/java.so
 %{extensionsdir}/php_java.jar
 %endif
 
-%if 0%{!?_without_ldap:1}
+%if %{with ldap}
 %files ldap
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/ldap.so
@@ -2496,7 +2495,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mcrypt.so
 
-%if 0%{!?_without_mhash:1}
+%if %{with mhash}
 %files mhash
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mhash.so
@@ -2506,25 +2505,25 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mime_magic.so
 
-%if %{!?_without_ming:1}%{?_without_ming:0}
+%if %{with ming}
 %files ming
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/ming.so
 %endif
 
-%if %{!?_without_mnogosearch:1}%{?_without_mnogosearch:0}
+%if %{with mnogosearch}
 %files mnogosearch
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mnogosearch.so
 %endif
 
-%if %{?_without_msession:0}%{!?_without_msession:1}
+%if %{with msession}
 %files msession
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/msession.so
 %endif
 
-%if %{?_without_mssql:0}%{!?_without_mssql:1}
+%if %{with mssql}
 %files mssql
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mssql.so
@@ -2538,26 +2537,26 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/ncurses.so
 
-%if 0%{?_with_oci8:1}
+%if %{with oci8}
 %files oci8
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/oci8.so
 %endif
 
-%if 0%{!?_without_odbc:1}
+%if %{with odbc}
 %files odbc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/odbc.so
 %endif
 
 # shared openssl module not supported in 4.3.2
-#%if 0%{!?_without_openssl:1}
+#%if %{with openssl}
 #%files openssl
 #%defattr(644,root,root,755)
 #%attr(755,root,root) %{extensionsdir}/openssl.so
 #%endif
 
-%if 0%{?_with_oracle:1}
+%if %{with oracle}
 %files oracle
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/oracle.so
@@ -2571,19 +2570,19 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pcntl.so
 
-%if 0%{!?_without_pcre:1}
+%if %{with pcre}
 %files pcre
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pcre.so
 %endif
 
-%if 0%{!?_without_pdf:1}
+%if %{with pdf}
 %files pdf
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pdf.so
 %endif
 
-%if 0%{!?_without_pgsql:1}
+%if %{with pgsql}
 %files pgsql
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pgsql.so
@@ -2593,13 +2592,13 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/posix.so
 
-%if 0%{!?_without_pspell:1}
+%if %{with pspell}
 %files pspell
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pspell.so
 %endif
 
-%if 0%{!?_without_qtdom:1}
+%if %{with qtdom}
 %files qtdom
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/qtdom.so
@@ -2609,7 +2608,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/readline.so
 
-%if 0%{!?_without_recode:1}
+%if %{with recode}
 %files recode
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/recode.so
@@ -2624,7 +2623,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/shmop.so
 
-%if 0%{!?_without_snmp:1}
+%if %{with snmp}
 %files snmp
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/snmp.so
@@ -2634,7 +2633,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/sockets.so
 
-%if 0%{!?_without_sybase:1}
+%if %{with sybase}
 %files sybase
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/sybase.so
@@ -2656,31 +2655,31 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/sysvshm.so
 
-%if 0%{!?_without_wddx:1}
+%if %{with wddx}
 %files wddx
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/wddx.so
 %endif
 
-%if 0%{!?_without_xml:1}
+%if %{with xml}
 %files xml
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/xml.so
 %endif
 
-%if 0%{!?_without_xmlrpc:1}
+%if %{with xmlrpc}
 %files xmlrpc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/xmlrpc.so
 %endif
 
-%if 0%{!?_without_xslt:1}
+%if %{with xslt}
 %files xslt
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/xslt.so
 %endif
 
-%if 0%{!?_without_yaz:1}
+%if %{with yaz}
 %files yaz
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/yaz.so
