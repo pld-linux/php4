@@ -68,7 +68,7 @@ Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на серв
 Name:		php4
 Version:	4.3.10
 Release:	1%{?with_hardened:hardened}
-Epoch:		0
+Epoch:		3
 Group:		Libraries
 License:	PHP
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
