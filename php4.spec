@@ -45,7 +45,7 @@
 # _without_pcre		- without PCRE extension module
 # _without_pdf		- without PDF extension module
 # _without_pgsql	- without PostgreSQL extension module
-# _without_pspell	- without pspell extension module
+# _without_aspell	- without pspell extension module
 # _without_recode	- without recode extension module
 # _without_qtdom	- without QT DOM extension module
 # _without_snmp		- without SNMP extension module
@@ -163,7 +163,7 @@ BuildRequires:	%{__perl}
 %{!?_without_msession:BuildRequires:	phoenix-devel}
 %{!?_without_pgsql:BuildRequires:	postgresql-devel}
 %{!?_without_pgsql:BuildRequires:	postgresql-backend-devel >= 7.2}
-%{!?_without_pspell:BuildRequires:	pspell-devel}
+%{!?_without_pspell:BuildRequires:	aspell-devel}
 %{!?_without_qtdom:BuildRequires:	qt-devel >= 2.2.0}
 BuildRequires:	readline-devel
 %{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
