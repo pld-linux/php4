@@ -25,6 +25,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -32,6 +33,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -52,7 +54,7 @@ Patch7:		%{name}-fastcgi.patch
 Patch8:		%{name}-ac250.patch
 Patch9:		%{name}-mailsecurity2.patch
 Patch10:	%{name}-oracle9.patch
-Patch11:	%{name}-no_php_pcre_in_SAPI_c.patch
+Patch11:	%{name}-no_%{name}_pcre_in_SAPI_c.patch
 # Some new patches from bugs.php.net (adasi)
 Patch101:	%{name}-register_shutdown_function.patch
 Patch102:	%{name}-domxml_node.patch
@@ -116,7 +118,7 @@ Obsoletes:	phpfi
 Obsoletes:	apache-mod_php
 
 %define		_sysconfdir	/etc/php
-%define 	extensionsdir %{_libdir}/php
+%define		extensionsdir	%{_libdir}/php
 %define		peardir		%{_datadir}/pear
 
 %description
@@ -166,6 +168,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -173,6 +176,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -192,6 +196,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -199,6 +204,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 
@@ -217,6 +223,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -224,6 +231,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -245,6 +253,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -252,6 +261,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -274,6 +284,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -281,6 +292,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -303,6 +315,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -310,6 +323,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -333,6 +347,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -340,6 +355,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -363,6 +379,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -370,6 +387,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -393,6 +411,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -400,6 +419,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -422,6 +442,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -429,6 +450,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -453,6 +475,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -460,6 +483,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -479,6 +503,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -486,6 +511,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -506,6 +532,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -513,6 +540,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -532,6 +560,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -539,6 +568,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -559,6 +589,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -566,6 +597,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -585,6 +617,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -592,6 +625,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -611,6 +645,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -618,6 +653,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -639,6 +675,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -646,6 +683,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -666,6 +704,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -673,6 +712,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -693,6 +733,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -700,6 +741,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -719,6 +761,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -726,6 +769,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -747,6 +791,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -754,6 +799,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -774,6 +820,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -781,6 +828,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -801,6 +849,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -808,6 +857,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -828,6 +878,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -835,6 +886,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -857,6 +909,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -864,6 +917,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -884,6 +938,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -891,6 +946,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -911,6 +967,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -918,6 +975,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -938,6 +996,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -945,6 +1004,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -965,6 +1025,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -972,6 +1033,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -992,6 +1054,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -999,6 +1062,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -1019,6 +1083,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -1026,6 +1091,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -1046,6 +1112,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -1053,6 +1120,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -1073,12 +1141,15 @@ Group(da):	NetvФrks/DФmoner
 Group(de):	Netzwerkwesen/Server
 Group(es):	Red/Servidores
 Group(fr):	RИseau/Serveurs
+Group(is):	Net/PЗkar
 Group(it):	Rete/Demoni
 Group(no):	Nettverks/Daemoner
 Group(pl):	Sieciowe/Serwery
 Group(pt):	Rede/Servidores
-Group(ru):	Сетевые/Демоны
+Group(ru):	Сеть/Демоны
+Group(sl):	Omre╬ni/Stre╬niki
 Group(sv):	NДtverk/Demoner
+Group(uk):	Мережа/Демони
 Obsoletes:	php-manual
 
 %description doc
@@ -1098,13 +1169,16 @@ Group(da):	Udvikling/Sprog/PHP
 Group(de):	Entwicklung/Sprachen/PHP
 Group(es):	Desarrollo/Lenguajes/PHP
 Group(fr):	Development/Langues/PHP
+Group(is):	чrСunartСl/ForritunarmАl/PHP
 Group(it):	Sviluppo/Linguaggi/PHP
 Group(ja):	Ё╚х╞/╦ю╦Л/PHP
 Group(no):	Utvikling/ProgrammeringssprЕk/PHP
 Group(pl):	Programowanie/JЙzyki/PHP
 Group(pt):	Desenvolvimento/Linguagens/PHP
 Group(ru):	Разработка/Языки/PHP
+Group(sl):	Razvoj/Jeziki/PHP
 Group(sv):	Utveckling/SprЕk/PHP
+Group(uk):	Розробка/Мови/PHP
 
 %description pear
 PEAR - PHP Extension and Application Repository.
@@ -1122,13 +1196,16 @@ Group(da):	Udvikling/Sprog/PHP
 Group(de):	Entwicklung/Sprachen/PHP
 Group(es):	Desarrollo/Lenguajes/PHP
 Group(fr):	Development/Langues/PHP
+Group(is):	чrСunartСl/ForritunarmАl/PHP
 Group(it):	Sviluppo/Linguaggi/PHP
 Group(ja):	Ё╚х╞/╦ю╦Л/PHP
 Group(no):	Utvikling/ProgrammeringssprЕk/PHP
 Group(pl):	Programowanie/JЙzyki/PHP
 Group(pt):	Desenvolvimento/Linguagens/PHP
 Group(ru):	Разработка/Языки/PHP
+Group(sl):	Razvoj/Jeziki/PHP
 Group(sv):	Utveckling/SprЕk/PHP
+Group(uk):	Розробка/Мови/PHP
 
 %description domxml
 DOM XML module.
@@ -1145,13 +1222,16 @@ Group(da):	Udvikling/Sprog/PHP
 Group(de):	Entwicklung/Sprachen/PHP
 Group(es):	Desarrollo/Lenguajes/PHP
 Group(fr):	Development/Langues/PHP
+Group(is):	чrСunartСl/ForritunarmАl/PHP
 Group(it):	Sviluppo/Linguaggi/PHP
 Group(ja):	Ё╚х╞/╦ю╦Л/PHP
 Group(no):	Utvikling/ProgrammeringssprЕk/PHP
 Group(pl):	Programowanie/JЙzyki/PHP
 Group(pt):	Desenvolvimento/Linguagens/PHP
 Group(ru):	Разработка/Языки/PHP
+Group(sl):	Razvoj/Jeziki/PHP
 Group(sv):	Utveckling/SprЕk/PHP
+Group(uk):	Розробка/Мови/PHP
 Requires:	%{name}-common = %{version}
 
 %description devel
@@ -1169,6 +1249,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -1176,6 +1257,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -1196,6 +1278,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -1203,6 +1286,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -1223,6 +1307,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -1230,6 +1315,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -1250,6 +1336,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -1257,6 +1344,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
@@ -1278,6 +1366,7 @@ Group(da):	Biblioteker
 Group(de):	Bibliotheken
 Group(es):	Bibliotecas
 Group(fr):	Librairies
+Group(is):	AПgerПasЖfn
 Group(it):	Librerie
 Group(ja):	╔И╔╓╔ж╔И╔Й
 Group(no):	Biblioteker
@@ -1285,6 +1374,7 @@ Group(pl):	Biblioteki
 Group(pt):	Bibliotecas
 Group(pt_BR):	Bibliotecas
 Group(ru):	Библиотеки
+Group(sl):	Knji╬nice
 Group(sv):	Bibliotek
 Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
