@@ -61,14 +61,16 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
-Version:	4.3.4
-Release:	4
+Version:	4.3.5
+%define	_pre	RC1
+%define	_version	4.3.5%{_pre}
+Release:	0.%{_pre}
 Epoch:		3
 Group:		Libraries
 License:	PHP
 #Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
-Source0:	http://downloads.php.net/ilia/%{name}-%{version}.tar.bz2
-# Source0-md5:	b9dd601863e08e52e3c4d5e02c2627cf
+Source0:	http://downloads.php.net/ilia/%{name}-%{_version}.tar.bz2
+# Source0-md5:	54e55ce2c0bc6b5488497cf54376ff48
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -91,25 +93,23 @@ Patch11:	%{name}-mcal-shared-lib.patch
 Patch12:	%{name}-msession-shared-lib.patch
 Patch13:	%{name}-build_modules.patch
 Patch14:	%{name}-sapi-ini-file.patch
-Patch15:	%{name}-ncurses.patch
-Patch16:	%{name}-no-metaccld.patch
-Patch17:	%{name}-session-unregister.patch
-Patch18:	%{name}-ini.patch
-Patch19:	%{name}-acam.patch
-Patch20:	%{name}-xmlrpc-fix.patch
-Patch21:	%{name}-libtool.patch
-Patch22:	%{name}-allow-db31.patch
-Patch23:	%{name}-threads-acfix.patch
-Patch24:	%{name}-tsrmlsfetchgcc2.patch
-Patch25:	%{name}-qt.patch
-Patch26:	%{name}-no_pear_install.patch
-Patch27:	%{name}-zlib.patch
-Patch28:	%{name}-db-shared.patch
-Patch29:	%{name}-sybase-fix.patch
-Patch30:	%{name}-mssql-fix.patch
-Patch31:	%{name}-phpize_fixes.patch
-Patch32:	%{name}-db42.patch
-Patch33:	%{name}-lib64.patch
+Patch15:	%{name}-no-metaccld.patch
+Patch16:	%{name}-session-unregister.patch
+Patch17:	%{name}-ini.patch
+Patch18:	%{name}-acam.patch
+Patch19:	%{name}-xmlrpc-fix.patch
+Patch20:	%{name}-libtool.patch
+Patch21:	%{name}-allow-db31.patch
+Patch22:	%{name}-threads-acfix.patch
+Patch23:	%{name}-tsrmlsfetchgcc2.patch
+Patch24:	%{name}-qt.patch
+Patch25:	%{name}-no_pear_install.patch
+Patch26:	%{name}-zlib.patch
+Patch27:	%{name}-db-shared.patch
+Patch28:	%{name}-sybase-fix.patch
+Patch29:	%{name}-mssql-fix.patch
+Patch30:	%{name}-db42.patch
+Patch31:	%{name}-lib64.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1472,7 +1472,7 @@ PEAR/*.php), dostarczanych z PHP, zainstaluj odpowiednie pakiety
 php-pear-* (php-pear-PEAR, php-pear-Archive_Tar, itp).
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{_version}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -1490,11 +1490,11 @@ php-pear-* (php-pear-PEAR, php-pear-Archive_Tar, itp).
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
-%patch17 -p1
 cp php.ini-dist php.ini
-%patch18 -p1
+%patch17 -p1
 # for ac2.53b/am1.6b - AC_LANG_CXX has AM_CONDITIONAL, so cannot be invoked
 # conditionally...
+%patch18 -p1
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
@@ -1507,10 +1507,8 @@ cp php.ini-dist php.ini
 %patch28 -p1
 %patch29 -p1
 %patch30 -p1
-%patch31 -p0
-%patch32 -p1
 %ifarch amd64
-%patch33 -p1
+%patch31 -p1
 %endif
 
 %build
