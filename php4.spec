@@ -8,8 +8,9 @@
 #    - pfpro,
 #    - ircg,
 #   These extensions BuildRequires proprietary libraries...
-# - fix building of mono, sybase and sqlite extensions
-# - test if php cgi segfaults after ctrl+d when overload.so is loaded
+# - fix building of mono, sybase extensions
+# - test if php.cgi segfaults after ctrl+d when overload.so is loaded
+# - build simplexml as shared (now it's static)
 #
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
@@ -39,7 +40,9 @@
 %bcond_without	pgsql		# without PostgreSQL extension module
 %bcond_without	pspell		# without pspell extension module
 %bcond_without	recode		# without recode extension module
+%bcond_without	simplexml	# without simplexml extension module
 %bcond_without	snmp		# without SNMP extension module
+%bcond_without	sqlite		# without SQLite extension module
 %bcond_without	tidy		# without Tidy extension module
 %bcond_without	wddx		# without WDDX extension module
 %bcond_without	xmlrpc		# without XML-RPC extension module
@@ -50,8 +53,6 @@
 %bcond_with	mono		# without Mono extensions module
 %bcond_with	yaz		# without YAZ extension module
 # Breaks build
-%bcond_with	simplexml	# without simplexml extension module
-%bcond_with	sqlite		# without SQLite extension module
 %bcond_with	sybase		# without Sybase and Sybase-CT extension modules
 #
 %define	_apache2	%(rpm -q apache-devel 2> /dev/null | grep -Eq '\\-2\\.[0-9]+\\.' && echo 1 || echo 0)
@@ -1487,7 +1488,7 @@ for i in fcgi cgi cli apxs ; do
 	--enable-session \
 	--enable-shared \
 	--enable-shmop=shared \
-	%{?with_simplexml:--enable-simplexml=shared} \
+	%{?with_simplexml:--enable-simplexml} \
 	--enable-sysvmsg=shared \
 	--enable-sysvsem=shared \
 	--enable-sysvshm=shared \
@@ -2538,7 +2539,8 @@ fi
 %attr(755,root,root) %{extensionsdir}/xml.so
 %endif
 
-%if %{with simplexml}
+# FIXME: build as shared module
+%if 0 && %{with simplexml}
 %files simplexml
 %defattr(644,root,root,755)
 %attr(755,roor,root) %{extensionsdir}/simplexml.so
