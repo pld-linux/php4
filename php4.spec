@@ -654,7 +654,7 @@ Summary(pl):	Modu³ GD dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}
 Requires:	%{name}-common = %{epoch}:%{version}
-Requires:	gd >= 2.0.20
+Requires:	gd >= 2.0.1
 %{?with_gif:Requires:	gd(gif)}
 %{?with_gif:Provides:	%{name}-gd(gif) = %{epoch}:%{version}-%{release}}
 
