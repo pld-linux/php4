@@ -41,7 +41,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.2.2
-Release:	7
+Release:	8
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1417,7 +1417,7 @@ install %{SOURCE1} .
 
 mv -f Zend/LICENSE{,.Zend}
 
-mkdir $RPM_BUILD_ROOT%{php_pear_dir}/{Auth,Science}
+mkdir $RPM_BUILD_ROOT%{php_pear_dir}/{Auth,Science,HTML/Template}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -2250,6 +2250,7 @@ fi
 %dir %{php_pear_dir}/DB
 %dir %{php_pear_dir}/File
 %dir %{php_pear_dir}/HTML
+%dir %{php_pear_dir}/HTML/Template
 %dir %{php_pear_dir}/HTTP
 %dir %{php_pear_dir}/Image
 %dir %{php_pear_dir}/Mail
