@@ -1,0 +1,8 @@
+- updated to 4.0RC1
+- problems with pgsql module -- compiled in libphp4.so
+- problems with gd module -- compiled in libphp4.so
+- probably impossible to compile mysql as a module -- compiled in libphp4.so
+- mysql has its own library -- BuildPreq: mysql-devel doesn't need anymore?
+- added some `-l pl' translations
+- %%{_sbindir}/apxs -> %%{_sbindir}/apxs
+- %%post unhash 'AddType' in httpd.conf
