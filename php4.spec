@@ -1343,11 +1343,11 @@ if [ "$1" = "0" ]; then
 fi
 	
 %post java
-%{_sbindir}/php-module-install install libphp_java %{_sysconfdir}/php.ini
+%{_sbindir}/php-module-install install java %{_sysconfdir}/php.ini
 
 %preun java
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove libphp_java %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove java %{_sysconfdir}/php.ini
 fi
 
 %post ldap
@@ -1722,7 +1722,7 @@ fi
 %if %{?_with_java:1}%{!?_with_java:0}
 %files java
 %defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/libphp_java.so
+%attr(755,root,root) %{extensionsdir}/java.so
 %{_libdir}/php_java.jar
 %endif
 
