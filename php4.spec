@@ -826,22 +826,31 @@ Dokumentacja dla pakietu PHP. Mo¿na j± równie¿ ogl±daæ poprzez serwer
 WWW.
 
 %package pear
-Summary:	PEAR
+Summary:	PEAR - PHP Extension and Application Repository
+Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
 Group:		Development/Languages/PHP
 Group(de):	Entwicklung/Sprachen/PHP
 Group(pl):	Programowanie/Jêzyki/PHP
 
 %description pear
-PEAR.
+PEAR - PHP Extension and Application Repository.
+
+%description pear -l pl
+PEAR (PHP Extension and Application Repository) - Rozszerzenie PHP i
+Repozytorium Aplikacji.
 
 %package domxml
-Summary:        XML
+Summary:        DOM XML module
+Summary(pl):	Modu³ DOM XML
 Group:          Development/Languages/PHP
 Group(de):	Entwicklung/Sprachen/PHP
 Group(pl):	Programowanie/Jêzyki/PHP
 
 %description domxml
-XML.
+DOM XML module.
+
+%description domxml -l pl
+Modu³ DOM XML.
 
 %package devel
 Summary:	Files for PHP modules development
