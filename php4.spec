@@ -12,13 +12,13 @@
 # _without_odbc   - without ODBC support
 # _without_snmp   - without SNMP support
 # _without_sablot - without sablot support
-# _with_pcre	- with pcre support
+# _without_pcre	- with pcre support
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.1.1
-Release:	0.1
+Release:	1
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -46,6 +46,8 @@ Patch7:		%{name}-fastcgi.patch
 Patch8:		%{name}-ac250.patch
 Patch9:		%{name}-mailsecurity2.patch
 Patch10:	%{name}-oracle9.patch
+Patch11:	%{name}-%{version}-no_php_pcre_in_SAPI_c.patch
+
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -478,7 +480,7 @@ functions support to PHP.
 
 %description posix -l pl
 Modu³ PHP umo¿liwiaj±cy korzystanie z funkcji POSIX.
-%if %{?_with_pcre:1}%{!?_with_pcre:0}
+%if %{!?_without_pcre:1}%{?_without_pcre:0}
 %package pcre
 Summary:	PCRE extension module for PHP
 Summary(pl):	Modu³ PCRE dla PHP
@@ -993,7 +995,7 @@ Modu³ PHP dodaj±cy obs³ugê libcpdf.
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
-
+%patch11 -p1
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
 
@@ -1063,7 +1065,7 @@ for i in cgi apxs ; do
 	%{?_with_oracle:--with-oracle=shared} \
 	%{?_with_oci8:--with-oci8=shared} \
 	--with-pear=%{peardir} \
-	%{?_with_pcre:--with-pcre-regex=shared }\
+	%{!?_without_pcre:--with-pcre-regex=shared }\
 	--with-pdflib=shared \
 	--with-pgsql=shared,%{_prefix} \
 	--with-png-dir=shared \
@@ -1317,11 +1319,11 @@ if [ "$1" = "0" ]; then
 fi
 %endif
 
-%if %{?_with_pcre:1}%{!?_with_pcre:0}
+%if %{!?_without_pcre:1}%{?_without_pcre:0}
 %post pcre
 %{_sbindir}/php-module-install install pcre %{_sysconfdir}/php.ini
 %endif
-%if %{?_with_pcre:1}%{!?_with_pcre:0}
+%if %{!?_without_pcre:1}%{?_without_pcre:0}
 %preun pcre
 if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove pcre %{_sysconfdir}/php.ini
@@ -1551,7 +1553,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/filepro.so
 
-%if %{?_with_pcre:1}%{!?_with_pcre:0}
+%if %{!?_without_pcre:1}%{?_without_pcre:0}
 %files pcre
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pcre.so
