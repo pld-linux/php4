@@ -62,8 +62,8 @@ Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сер
 Name:		php
 Version:	4.3.8
 %define	_rc	%{nil}
-Release:	3
-Epoch:		4
+Release:	2
+Epoch:		3
 Group:		Libraries
 License:	PHP
 Source0:	http://downloads.php.net/ilia/%{name}-%{version}%{_rc}.tar.bz2
