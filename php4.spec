@@ -131,7 +131,7 @@ gzip -9nf CODING_STANDARDS CREDITS FAQ* ChangeLog FUNCTION_LIST.txt \
 	MAINTAINERS MODULES_STATUS NEWS TODO*
 
 %post
-/usr/sbin/apxs -e -a -n php %{_pkglibdir}/libphp4.so 1>&2
+/usr/sbin/apxs -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
@@ -139,7 +139,7 @@ fi
 
 %preun
 if [ "$1" = "0" ]; then
-	/usr/sbin/apxs -e -A -n php %{_pkglibdir}/libphp4.so 1>&2
+	/usr/sbin/apxs -e -A -n php4 %{_pkglibdir}/libphp4.so 1>&2
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
