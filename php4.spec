@@ -53,6 +53,7 @@ Patch10:	%{name}-session-fix-shared.patch
 Patch11:	%{name}-hyperwave-fix.patch
 Patch12:	%{name}-openssl-for-ext-only.patch
 Patch13:	%{name}-java-fix.patch
+Patch14:	%{name}-iconv-fix.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache-devel
@@ -903,6 +904,7 @@ Summary:	wddx extension module for PHP
 Summary(pl):	Modu³ wddx dla PHP
 Group:		Libraries
 PreReq:		%{name}-common = %{version}
+PreReq:		%{name}-session = %{version}
 
 %description wddx
 This is a dynamic shared object (DSO) for Apache that will add wddx
@@ -984,6 +986,7 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
