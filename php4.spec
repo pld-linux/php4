@@ -56,6 +56,7 @@ BuildRequires:	libjpeg-devel
 BuildRequires:	libltdl-devel >= 1.4
 BuildRequires:	libpng >= 1.0.8
 BuildRequires:	libtiff-devel
+BuildRequires:	libtool
 BuildRequires:	mm-devel >= 1.1.3
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?bcond_off_ldap:BuildRequires: openldap-devel >= 2.0}
@@ -720,6 +721,7 @@ Pliki potrzebne do kompilacji modu³ów PHP.
 %patch11 -p1
 
 %build
+libtoolize --copy --force
 CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
 ./buildconf
 %configure \
