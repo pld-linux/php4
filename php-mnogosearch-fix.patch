@@ -5,7 +5,7 @@ diff -ur php-4.3.7-orig/ext/mnogosearch/config.m4 php-4.3.7-patched/ext/mnogosea
      PHP_ADD_INCLUDE($MNOGOSEARCH_INCDIR)
      
      AC_DEFINE(HAVE_MNOGOSEARCH,1,[ ])
-+    MNOGOSEARCH_CFLAGS="$CPPFLAGS -DNOT_USED_OR_REPLACED"
++    MNOGOSEARCH_CFLAGS="-DNOT_USED_OR_REPLACED"
      
      PHP_SUBST(MNOGOSEARCH_SHARED_LIBADD)
 -    PHP_NEW_EXTENSION(mnogosearch, php_mnogo.c, $ext_shared)
