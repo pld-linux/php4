@@ -211,8 +211,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		extensionsdir	%{_libdir}/php4
 %if %{_apache2}
 %define		httpdir		/home/services/httpd
+%define		apachelib	%{_libdir}/apache
 %else
 %define		httpdir		/home/services/apache
+%define		apachelib	%{_libdir}/apache1
 %endif
 %define		_ulibdir	%{_prefix}/lib
 
@@ -1769,13 +1771,8 @@ done
 
 # fix install paths, avoid evil rpaths
 %{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
-%if %{_apache2}
-%{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}/apache'|" libphp4.la
-%{__perl} -pi -e 's|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |' libphp4.la
-%else
-%{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}/apache1'|" libphp4.la
-%{__perl} -pi -e 's|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache1 |' libphp4.la
-%endif
+%{__perl} -pi -e "s|^libdir=.*|libdir='%{apachelib}'|" libphp4.la
+%{__perl} -pi -e 's|^(relink_command=.* -rpath )[^ ]*/libs |$1%{apachelib} |' libphp4.la
 
 # for fcgi: -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0
 # -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1(die) -DHAVE_SYS_PARAM_H=1
@@ -1795,23 +1792,19 @@ rm -rf sapi/cgi/.libs sapi/cgi/*.lo
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%if %{_apache2}
-install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} \
+install -d $RPM_BUILD_ROOT{%{_libdir}/php,%{apachelib},%{_sysconfdir}/{apache,cgi}} \
 	$RPM_BUILD_ROOT%{httpdir}/icons \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/run/php \
+%if %{_apache2}
 	$RPM_BUILD_ROOT/etc/httpd/httpd.conf
 %else
-install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache1},%{_sysconfdir}/{apache,cgi}} \
-	$RPM_BUILD_ROOT%{httpdir}/icons \
-	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
-	$RPM_BUILD_ROOT/var/run/php \
 	$RPM_BUILD_ROOT/etc/apache/apache.conf
 %endif
 
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
-	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache%{?with_apache1:1} ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi ; \$(LIBTOOL) --mode=install install sapi/fcgi/php $RPM_BUILD_ROOT%{_bindir}/php.fcgi" \
+	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{apachelib} ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi ; \$(LIBTOOL) --mode=install install sapi/fcgi/php $RPM_BUILD_ROOT%{_bindir}/php.fcgi" \
 	INSTALL_CLI="\$(LIBTOOL) --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php.cli"
 
 ln -sf php.cli $RPM_BUILD_ROOT%{_bindir}/php
@@ -1840,7 +1833,7 @@ install -d $RPM_BUILD_ROOT%{php_pear_dir}/{Archive,Console,Crypt,HTML/Template,I
 #ln -sf ../../lib/php/build $RPM_BUILD_ROOT%{_libdir}/php/build
 #%%endif
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.la
+rm -f $RPM_BUILD_ROOT%{apachelib}/libphp4.la
 
 for i in cli cgi fcgi;
 do
@@ -2476,10 +2469,8 @@ fi
 %defattr(644,root,root,755)
 %if %{_apache2}
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php4.conf
-%attr(755,root,root) %{_libdir}/apache/libphp4.so
-%else
-%attr(755,root,root) %{_libdir}/apache1/libphp4.so
 %endif
+%attr(755,root,root) %{apachelib}/libphp4.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 
 %files fcgi
