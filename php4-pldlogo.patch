@@ -13,7 +13,7 @@ diff -uar php-4.0.6orig/ext/standard/info.c php-4.0.6/ext/standard/info.c
 +                  if (SG(request_info).request_uri) {
 +                    PUTS(SG(request_info).request_uri);
 +                  }
-+                  PUTS("?="PHP_LOGO_GUID"\" border=\"0\" align=\"right\" alt=\"PHP logo\"></a>\n");
++                  PUTS("?="PLD_LOGO_GUID"\" border=\"0\" align=\"right\" alt=\"PHP logo\"></a>\n");
 +                }
 +                php_printf("This server is using PLD GNU/Linux OS:<BR>");
 +                php_printf("More informations at www.pld.org.pl");
