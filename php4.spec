@@ -30,7 +30,7 @@
 %bcond_without	pgsql		# without PostgreSQL extension module
 %bcond_without	pspell		# without pspell extension module
 %bcond_without	recode		# without recode extension module
-%bcond_without	qtdom		# without QT DOM extension module
+%bcond_without	qtdom		# without Qt DOM extension module
 %bcond_without	snmp		# without SNMP extension module
 %bcond_without	sybase		# without Sybase and Sybase-CT extension modules
 %bcond_without	wddx		# without WDDX extension module
@@ -1211,18 +1211,18 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z pspella. Pozwala on na
 sprawdzanie pisowni s³owa i sugerowanie poprawek.
 
 %package qtdom
-Summary:	QT DOM extension module for PHP
-Summary(pl):	Modu³ QT DOM dla PHP
+Summary:	Qt DOM extension module for PHP
+Summary(pl):	Modu³ Qt DOM dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-qtdom = %{epoch}:%{version}-%{release}
 
 %description qtdom
-This PHP module adds QT DOM functions support.
+This PHP module adds Qt DOM functions support.
 
 %description qtdom -l pl
-Modu³ PHP dodaj±cy obs³ugê funkcji QT DOM.
+Modu³ PHP dodaj±cy obs³ugê funkcji Qt DOM.
 
 %package readline
 Summary:	readline extension module for PHP
