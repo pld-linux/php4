@@ -11,6 +11,7 @@
 %bcond_with	java		# with Java extension module		(BR: jdk)
 %bcond_with	oci8		# with Oracle oci8 extension module	(BR: proprietary libs)
 %bcond_with	oracle		# with oracle extension module		(BR: proprietary libs)
+%bcond_with	apache1		# build with apache1
 %bcond_without	cpdf		# without cpdf extension module
 %bcond_without	curl		# without CURL extension module
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
@@ -40,8 +41,12 @@
 %bcond_without	xslt		# without XSLT extension module
 %bcond_without	yaz		# without YAZ extension module
 #
-%define	_apache2	%(rpm -q apache-devel 2> /dev/null | grep -Eq '\\-2\\.[0-9]+\\.' && echo 1 || echo 0)
+%define	_apache2	%{?with_apache1:0}%{?!with_apache1:1}
+%if %{_apache2}
 %define	apxs		/usr/sbin/apxs
+%else
+%define apxs		/usr/sbin/apxs1
+%endif
 # some problems with apache 2.x
 %if %{_apache2}
 %undefine	with_recode
@@ -115,7 +120,11 @@ Patch32:	%{name}-gd_imagerotate_enable.patch
 #Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
+%if %{_apache2}
 BuildRequires:	apache-devel
+%else
+BuildRequires:  apache1-devel
+%endif
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	automake >= 1.4d
@@ -191,8 +200,7 @@ BuildRequires:	apr-util-devel >= 1:1.0.0
 PreReq:		apache >= 2.0.40
 Requires:	apache(modules-api) = %{apache_modules_api}
 %else
-PreReq:		apache(EAPI) < 2.0.0
-PreReq:		apache(EAPI) >= 1.3.9
+PreReq:		apache1(EAPI) >= 1.3.9
 Requires(post,preun):	%{apxs}
 Requires(post,preun):	%{__perl}
 %endif
@@ -204,7 +212,11 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/php4
 %define		extensionsdir	%{_libdir}/php4
+%if %{_apache2}
 %define		httpdir		/home/services/httpd
+%else
+%define		httpdir		/home/services/apache
+%endif
 %define		_ulibdir	%{_prefix}/lib
 
 %description
@@ -1759,8 +1771,13 @@ done
 
 # fix install paths, avoid evil rpaths
 %{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
+%if %{_apache2}
 %{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}/apache'|" libphp4.la
 %{__perl} -pi -e 's|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |' libphp4.la
+%else
+%{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}/apache1'|" libphp4.la
+%{__perl} -pi -e 's|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache1 |' libphp4.la
+%endif
 
 # for fcgi: -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0
 # -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1(die) -DHAVE_SYS_PARAM_H=1
@@ -1780,15 +1797,24 @@ rm -rf sapi/cgi/.libs sapi/cgi/*.lo
 
 %install
 rm -rf $RPM_BUILD_ROOT
+%if %{_apache2}
 install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache},%{_sysconfdir}/{apache,cgi}} \
 	$RPM_BUILD_ROOT%{httpdir}/icons \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/run/php \
 	$RPM_BUILD_ROOT/etc/httpd/httpd.conf
+%else
+install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache1},%{_sysconfdir}/{apache,cgi}} \
+	$RPM_BUILD_ROOT%{httpdir}/icons \
+	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
+	$RPM_BUILD_ROOT/var/run/php \
+	$RPM_BUILD_ROOT/etc/apache/apache.conf
+%endif
+
 
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
-	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi ; \$(LIBTOOL) --mode=install install sapi/fcgi/php $RPM_BUILD_ROOT%{_bindir}/php.fcgi" \
+	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache%{?with_apache1:1} ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi ; \$(LIBTOOL) --mode=install install sapi/fcgi/php $RPM_BUILD_ROOT%{_bindir}/php.fcgi" \
 	INSTALL_CLI="\$(LIBTOOL) --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php.cli"
 
 ln -sf php.cli $RPM_BUILD_ROOT%{_bindir}/php
@@ -1801,7 +1827,10 @@ for i in %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE8}; do
 done
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{httpdir}/icons
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sbindir}
+%if %{_apache2}
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php4.conf
+%endif
+
 
 install %{SOURCE1} .
 
@@ -1831,12 +1860,16 @@ rm -rf $RPM_BUILD_ROOT
 %post
 %if ! %{_apache2}
 %{__perl} -pi -e 's|^#AddType application/x-httpd-php \.php|AddType application/x-httpd-php .php|' \
-	/etc/httpd/httpd.conf
+	/etc/apache/apache.conf
 %{apxs} -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
-%endif
+if [ -f /var/lock/subsys/apache ]; then
+	/etc/rc.d/init.d/apache restart 1>&2
+fi
+%else
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
+%endif
 
 %if %{_apache2}
 %postun
@@ -1851,9 +1884,9 @@ if [ "$1" = "0" ]; then
 	%{apxs} -e -A -n php4 %{_pkglibdir}/libphp4.so 1>&2
 	%{__perl} -pi -e \
 		's|^AddType application/x-httpd-php \.php|#AddType application/x-httpd-php .php|' \
-		/etc/httpd/httpd.conf
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
+		/etc/apache/apache.conf
+	if [ -f /var/lock/subsys/apache ]; then
+		/etc/rc.d/init.d/apache restart 1>&2
 	fi
 fi
 %endif
@@ -2447,8 +2480,10 @@ fi
 %defattr(644,root,root,755)
 %if %{_apache2}
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php4.conf
-%endif
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
+%else
+%attr(755,root,root) %{_libdir}/apache1/libphp4.so
+%endif
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 
 %files fcgi
@@ -2478,7 +2513,6 @@ fi
 %dir %{_sysconfdir}
 %attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
 %attr(770,root,http) %dir %verify(not group mode) /var/run/php
-
 %{httpdir}/icons/*
 %attr(755,root,root) %{_sbindir}/*
 %attr(755,root,root) %{_libdir}/libphp_common-*.so
