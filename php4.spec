@@ -62,7 +62,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.3.2
-Release:	0.1
+Release:	0.2
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -103,6 +103,7 @@ Patch21:	%{name}-libtool.patch
 Patch23:	%{name}-threads-acfix.patch
 Patch24:	%{name}-tsrmlsfetchgcc2.patch
 Patch25:	%{name}-mnogosearch-php-extension-1.68.patch
+Patch26:	%{name}-pear-install.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird-devel}}
@@ -1329,6 +1330,7 @@ cp php.ini-dist php.ini
 %patch23 -p1
 %patch24 -p1
 %patch25 -p1
+%patch26 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
