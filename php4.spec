@@ -109,6 +109,7 @@ Patch28:	%{name}-sybase-fix.patch
 Patch29:	%{name}-mssql-fix.patch
 Patch30:	%{name}-lib64.patch
 Patch31:	%{name}-mnogosearch-fix.patch
+Patch32:	%{name}-nohttpd.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1521,6 +1522,7 @@ cp php.ini-dist php.ini
 %patch30 -p1
 %endif
 %patch31 -p1
+%patch32 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
