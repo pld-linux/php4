@@ -1025,7 +1025,7 @@ for i in cgi apxs ; do
 	--enable-magic-quotes \
 	--enable-mbstring=shared --disable-mbstr-enc-trans --enable-mbregex \
 	--enable-overload=shared \
-	--enable-pcntl=shared \
+	--disable-pcntl \
 	--enable-posix=shared \
 	--enable-session=shared \
 	--enable-shared \
