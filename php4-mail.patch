@@ -27,6 +27,8 @@ diff -urN php-4.2.3.org/ext/standard/mail.c php-4.2.3/ext/standard/mail.c
  	if (sendmail) {
 -		fprintf(sendmail, "To: %s\n", to);
 -		fprintf(sendmail, "Subject: %s\n", subject);
++		TSRMLS_FETCH();
++		
 +		if ((to != NULL) && (strlen(to)!=0)) { 
 +			fprintf(sendmail, "To: %s\n", to);
 +		}
@@ -34,8 +36,6 @@ diff -urN php-4.2.3.org/ext/standard/mail.c php-4.2.3/ext/standard/mail.c
 +			fprintf(sendmail, "Subject: %s\n", subject);
 +		}
 +
-+		TSRMLS_FETCH();
-+		
 +		if (PG(http_globals)[TRACK_VARS_SERVER]) {
 +			zval **remote_addr, **server_name, **server_port,
 +				**request_uri, **http_user_agent;
