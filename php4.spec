@@ -137,7 +137,7 @@ BuildRequires:	libmcal-devel
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	libpng >= 1.0.8
 BuildRequires:	libtiff-devel
-BuildRequires:	libtool >= 0:1.4.2-9
+BuildRequires:	libtool >= 0:1.4.3
 %{!?_without_xml:BuildRequires:	libxml2-devel >= 2.2.7}
 %{!?_without_domxslt:BuildRequires:	libxslt-devel >= 1.0.3}
 %{!?_without_mhash:BuildRequires:	mhash-devel}
