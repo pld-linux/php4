@@ -23,12 +23,12 @@
  	REGISTER_LONG_CONSTANT("GD_BUNDLED", 1, CONST_CS | CONST_PERSISTENT);
  #else
  	REGISTER_LONG_CONSTANT("GD_BUNDLED", 0, CONST_CS | CONST_PERSISTENT);
-@@ -1088,7 +1088,6 @@
+@@ -1121,7 +1121,6 @@
  /* }}} */
  #endif
  
 -#ifdef HAVE_GD_BUNDLED
- /* {{{ proto int imagerotate(int src_im, float angle, int bgdcolor)
+ /* {{{ proto resource imagerotate(resource src_im, float angle, int bgdcolor)
     Rotate an image using a custom angle */
  PHP_FUNCTION(imagerotate)
 @@ -1118,7 +1117,6 @@

@@ -23,12 +23,12 @@
 @@ -155,6 +155,7 @@
  dnl
  dnl
- AC_DEFUN(PTHREADS_ASSIGN_VARS,[
+ AC_DEFUN([PTHREADS_ASSIGN_VARS],[
 +if test "$pthreads_assign_done" != "yes" ; then
  if test -n "$ac_cv_pthreads_lib"; then
    LIBS="$LIBS -l$ac_cv_pthreads_lib"
  fi
-@@ -163,4 +164,6 @@
+@@ -162,4 +163,6 @@
  if test -n "$ac_cv_pthreads_cflags"; then
    CFLAGS="$CFLAGS $ac_cv_pthreads_cflags"
  fi
