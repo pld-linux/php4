@@ -35,7 +35,7 @@ Patch5:		%{name}-no_libnsl.patch
 Patch6:		%{name}-DESTDIR.patch
 Patch7:		%{name}-gd-shared.patch
 Patch8:		%{name}-apache-fixes.patch
-Patch9:		%{name}-system-expat.patch
+#Patch9:		%{name}-system-expat.patch
 Patch10:	%{name}-quotes.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
