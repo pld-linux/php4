@@ -46,6 +46,7 @@ Patch12:	%{name}-ac250.patch
 Patch13:	%{name}-pearinstall.patch
 #Patch14:	%{name}-linking.patch
 #Patch15:	%{name}-pldlogo.patch
+Patch16:	%{name}-oracle9.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -813,6 +814,7 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki curl.
 %patch12 -p1
 %patch13 -p1
 #%patch14 -p1
+%patch16 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
