@@ -16,7 +16,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.6
-Release:	3
+Release:	4
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -81,7 +81,7 @@ BuildRequires:	recode-devel >= 3.5d-3
 BuildRequires:	t1lib-devel
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
 BuildRequires:	zlib-devel >= 1.0.9
-%{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.1-8}
+%{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.2}
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	mhash-devel
 BuildRequires:	bzip2-devel
