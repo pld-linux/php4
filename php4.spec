@@ -62,7 +62,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.3.2
-Release:	0.5
+Release:	1
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1382,6 +1382,7 @@ for i in cgi cli apxs ; do
 	%{!?_without_cpdf:--with-cpdflib=shared} \
 	--with-crack=shared \
 	%{?_without_curl:--without-curl}%{!?_without_curl:--with-curl=shared} \
+	--with-db \
 	%{?_with_db3:--with-db3}%{!?_with_db3:--with-db4} \
 	--with-dbase=shared \
 	%{!?_without_xml:--with-dom=shared} \
