@@ -16,7 +16,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.6
-Release:	4
+Release:	3
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -45,8 +45,7 @@ Patch11:	%{name}-shared.patch
 Patch12:	%{name}-ac250.patch
 Patch13:	%{name}-pearinstall.patch
 #Patch14:	%{name}-linking.patch
-#Patch15:	%{name}-pldlogo.patch
-Patch16:	%{name}-oracle9.patch
+Patch15:	%{name}-pldlogo.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -75,13 +74,12 @@ BuildRequires:	mysql-devel >= 3.23.32
 BuildRequires:	pam-devel
 BuildRequires:	pdflib-devel >= 4.0.0
 #BuildRequires:	libxml-devel >= 2.0.0
-BuildRequires:	libxml2-devel >= 2.2.7
 BuildRequires:	postgresql-devel
 BuildRequires:	recode-devel >= 3.5d-3
 BuildRequires:	t1lib-devel
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
 BuildRequires:	zlib-devel >= 1.0.9
-%{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.2}
+%{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.1-8}
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	mhash-devel
 BuildRequires:	bzip2-devel
@@ -727,7 +725,6 @@ WWW.
 %package pear
 Summary:	PEAR
 Group:		Development/Languages/PHP
-Group(pl):	Programowanie/Jêzyki/PHP
 
 %description pear
 PEAR.
@@ -735,7 +732,6 @@ PEAR.
 %package domxml
 Summary:        XML
 Group:          Development/Languages/PHP
-Group(pl):	Programowanie/Jêzyki/PHP
 
 %description domxml
 XML.
@@ -744,7 +740,6 @@ XML.
 Summary:	Files for PHP modules development
 Summary(pl):	Pliki do kompilacji modu³ów PHP
 Group:		Development/Languages/PHP
-Group(pl):	Programowanie/Jêzyki/PHP
 Requires:	%{name}-common = %{version}
 
 %description devel
@@ -817,7 +812,7 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki curl.
 %patch12 -p1
 %patch13 -p1
 #%patch14 -p1
-%patch16 -p1
+%patch15 -p1
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
