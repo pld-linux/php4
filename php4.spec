@@ -139,7 +139,7 @@ BuildRequires:	libtool >= 0:1.4.2-9
 BuildRequires:	mysql-devel >= 3.23.32
 %{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
 %if %(expr %{?_without_openssl:0}%{!?_without_openssl:1} + %{?_without_ldap:0}%{!?_without_ldap:1})
-BuildRequires:	openssl-devel >= 0.9.6a
+BuildRequires:	openssl-devel >= 0.9.7
 %endif
 BuildRequires:	pam-devel
 %{!?_without_pdf:BuildRequires:	pdflib-devel >= 4.0.0}
