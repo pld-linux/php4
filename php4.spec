@@ -275,7 +275,7 @@ PHP as CLI interpreter.
 PHP jako interpreter dziaЁaj╠cy z linii poleceЯ.
 
 %package common
-Summary:	Common files nneded by both apache module and CGI
+Summary:	Common files needed by both apache module and CGI
 Summary(pl):	WspСlne pliki dla moduЁu apache'a i programu CGI
 Summary(ru):	Разделяемые библиотеки для php
 Summary(uk):	Б╕бл╕отеки сп╕льного використання для php
