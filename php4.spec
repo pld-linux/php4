@@ -25,7 +25,7 @@ Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
-Version:	4.2.0RC3
+Version:	4.2.0RC4
 Release:	1
 Epoch:		1
 Group:		Libraries
@@ -816,7 +816,7 @@ Shared Memory Operations support to PHP.
 Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej.
 
 %prep
-%setup -q -n %{name}-%(echo %{version} | sed -e "s#\.#_#g")
+%setup -q
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -830,7 +830,7 @@ install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
 
 %build
-CFLAGS="%{rpmcflags} -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
+CFLAGS="%{rpmcflags} -DEAPI=1 -I%{_prefix}/X11R6/include"; export CFLAGS
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 ./buildconf
 libtoolize --copy --force
