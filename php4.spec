@@ -62,7 +62,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.3.2
-Release:	0.2
+Release:	0.3
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -85,7 +85,6 @@ Patch6:		%{name}-wddx-fix.patch
 Patch7:		%{name}-cpdf-fix.patch
 Patch8:		%{name}-hyperwave-fix.patch
 Patch9:		%{name}-xslt-gcc33.patch
-#Patch9:	%{name}-odbc-fix.patch	-- obsolete
 Patch10:	%{name}-java-norpath.patch
 Patch11:	%{name}-mcal-shared-lib.patch
 Patch12:	%{name}-msession-shared-lib.patch
@@ -93,13 +92,12 @@ Patch13:	%{name}-build_modules.patch
 Patch14:	%{name}-sapi-ini-file.patch
 Patch15:	%{name}-dl-zlib.patch
 Patch16:	%{name}-no-metaccld.patch
-#Patch16:	%{name}-dl-pcre.patch	-- obsolete
 Patch17:	%{name}-session-unregister.patch
 Patch18:	%{name}-ini.patch
 Patch19:	%{name}-acam.patch
 Patch20:	%{name}-xmlrpc-fix.patch
 Patch21:	%{name}-libtool.patch
-#Patch22:	%{name}-db4.patch	-- obsolete
+Patch22:	%{name}-allow-db31.patch
 Patch23:	%{name}-threads-acfix.patch
 Patch24:	%{name}-tsrmlsfetchgcc2.patch
 Patch25:	%{name}-mnogosearch-php-extension-1.68.patch
@@ -115,7 +113,7 @@ BuildRequires:	bzip2-devel
 BuildRequires:	cracklib-devel >= 2.7-15
 %{!?_without_curl:BuildRequires:	curl-devel >= 7.9.8 }
 BuildRequires:	cyrus-sasl-devel
-%{?_with_db3:BuildRequires:	db3-devel}
+%{?_with_db3:BuildRequires:	db3-devel >= 3.1}
 %{!?_with_db3:BuildRequires:	db-devel >= 4.0}
 %if %(expr %{?_without_xml:0}%{!?_without_xml:1} + %{?_without_xmlrpc:0}%{!?_without_xmlrpc:1})
 BuildRequires:	expat-devel
@@ -1313,7 +1311,7 @@ Repozytorium Aplikacji.
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
-#%patch17 -p1	-- TODO s/name/s_name/ - if patch still necessary
+%patch17 -p1
 cp php.ini-dist php.ini
 %patch18 -p1
 # for ac2.53b/am1.6b - AC_LANG_CXX has AM_CONDITIONAL, so cannot be invoked
@@ -1321,6 +1319,7 @@ cp php.ini-dist php.ini
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
+%patch22 -p1
 %patch23 -p1
 %patch24 -p1
 %patch25 -p1
