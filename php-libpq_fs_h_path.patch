@@ -1,11 +1,12 @@
---- php-4.3.0/ext/pgsql/php_pgsql.h~    Mon Feb 25 15:16:28 2002
-+++ php-4.3.0/ext/pgsql/php_pgsql.h     Mon Feb 25 15:16:28 2002
+diff -burN php-5.0.0b3/ext/pgsql/php_pgsql.h php-5.0.0b3-libpq_fs_h_path/ext/pgsql/php_pgsql.h
+--- php-5.0.0b3/ext/pgsql/php_pgsql.h	2003-12-05 02:03:35.000000000 +0100
++++ php-5.0.0b3-libpq_fs_h_path/ext/pgsql/php_pgsql.h	2003-12-26 22:30:20.000000000 +0100
 @@ -43,7 +43,7 @@
- #define PHPAPI __declspec(dllimport)
+ #define PHP_PGSQL_API __declspec(dllimport)
  #endif
  #else
 -#include <libpq/libpq-fs.h>
 +#include <postgresql/server/libpq/libpq-fs.h>
+ #define PHP_PGSQL_API /* nothing special */
  #endif
  
- #ifdef HAVE_PG_CONFIG_H

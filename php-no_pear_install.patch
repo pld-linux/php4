@@ -1,7 +1,6 @@
-diff -burN php-4.3.5RC1.orig/configure.in php-4.3.5RC1/configure.in
---- php-4.3.5RC1.orig/configure.in	2004-02-05 10:28:06.283736312 +0100
-+++ php-4.3.5RC1/configure.in	2004-02-05 10:31:29.388859640 +0100
-@@ -1138,7 +1138,7 @@
+--- php-5.0.0b3.orig/configure.in	2003-12-24 17:30:44.000000000 +0100
++++ php-5.0.0b3/configure.in	2003-12-24 17:31:45.000000000 +0100
+@@ -1149,7 +1149,7 @@
  CXXFLAGS="$CXXFLAGS $standard_libtool_flag"
  
  all_targets='$(OVERALL_TARGET) $(PHP_MODULES) $(PHP_CLI_TARGET)'
