@@ -48,7 +48,7 @@ Patch7:		%{name}-fastcgi.patch
 Patch8:		%{name}-ac250.patch
 Patch9:		%{name}-mailsecurity2.patch
 Patch10:	%{name}-oracle9.patch
-Patch11:	%{name}-%{version}-no_php_pcre_in_SAPI_c.patch
+Patch11:	%{name}-no_php_pcre_in_SAPI_c.patch
 
 Icon:		php4.gif
 URL:		http://www.php.net/
