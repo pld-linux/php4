@@ -60,7 +60,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.3.2
-Release:	1
+Release:	0.1
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -68,8 +68,6 @@ License:	PHP
 Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
 Source1:	FAQ.%{name}
 Source2:	zend.gif
-# Source3-md5:	d89cb5124f95d2c30fb0d0e2dfe5de4e
-Source3:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
 Source4:	%{name}-module-install
 Source5:	%{name}-mod_%{name}.conf
 Source6:	%{name}-cgi.ini
@@ -337,24 +335,6 @@ PHP. Пакет включает исходный код этих расширений. Вместо повторной
 компиляции бинарного файла php для добавления, например, поддержки
 oracle, установите этот пакет для компилирования отдельных расширений.
 Подробности - в файле SELF-CONTAINED-EXTENSIONS.
-
-%package doc
-Summary:	Online manual for PHP
-Summary(pl):	Dokumentacja dla PHP
-Summary(pt_BR):	Manual da linguagem PHP, em formato HTML
-Group:		Networking/Daemons
-Obsoletes:	php-manual
-
-%description doc
-Comprehensive documentation for PHP, viewable through your web server,
-too!
-
-%description doc -l pl
-Dokumentacja dla pakietu PHP. Mo©na j╠ rСwnie© ogl╠daФ poprzez serwer
-WWW.
-
-%description doc -l pt_BR
-Manual da linguagem PHP, em formato HTML.
 
 %package bcmath
 Summary:	bcmath extension module for PHP
@@ -1324,16 +1304,16 @@ Repozytorium Aplikacji.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
+#%patch7 -p1
 %patch8 -p1
-%patch9 -p1
+#%patch9 -p1
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
-%patch16 -p1
+#%patch16 -p1
 %patch17 -p1
 cp php.ini-dist php.ini
 %patch18 -p1
@@ -1347,13 +1327,10 @@ cp php.ini-dist php.ini
 %patch24 -p1
 %patch25 -p1
 
-install -d manual
-bzip2 -dc %{SOURCE3} | tar -xf - -C manual
-
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
-./buildconf
+./buildconf --force
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
@@ -2081,10 +2058,6 @@ fi
 %{_libdir}/libphp_common.la
 %{_includedir}/php
 %{_libdir}/php/build
-
-%files doc
-%defattr(644,root,root,755)
-%doc manual/*
 
 %files bcmath
 %defattr(644,root,root,755)
