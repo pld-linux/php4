@@ -1,9 +1,14 @@
+#
+#   oracle - with oracle support 
+#   oci8   - with oci8 support
+#	
 Summary:	The PHP HTML-embedded scripting language for use with Apache.
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache.
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache.
 Name:		php
-Version:	4.0.3RC1
+Version:	4.0.3
 Release:	1
+Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -27,7 +32,7 @@ BuildRequires:	apache(EAPI)-devel
 BuildRequires:	zip
 BuildRequires:	bison
 BuildRequires:	flex
-#BuildRequires:	db-devel >= 3.0.55
+BuildRequires:	db3-devel >= 3.1.17
 BuildRequires:	freetype-devel
 BuildRequires:	gd-devel >= 1.8.3
 BuildRequires:	gdbm-devel
@@ -606,15 +611,16 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
 	--with-snmp=shared \
 	--with-openssl \
 	--with-gdbm \
-	--with-ndbm \
+	--with-db3 \
 	--enable-yp=shared \
 	--with-xml=shared \
 	--enable-xml=shared \
 	--with-zlib=shared \
 	--with-mcrypt=shared \
 	--enable-sockets=shared \
-	--with-db2=yes \
-	%{?oracle:--with-oracle=shared} %{?oci8:--with-oci8=shared}
+	%{?oracle:--with-oracle=shared} \
+	%{?oci8:--with-oci8=shared} \
+	--without-db2 
 
 
 
