@@ -39,7 +39,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.2.1
-Release:	8
+Release:	9
 Epoch:		3
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -922,7 +922,6 @@ Summary(pl):	PEAR - Rozszerzenie PHP i Repozytorium Aplikacji
 Group:		Development/Languages/PHP
 Requires:	%{name}-pcre = %{version}
 Requires:	%{name}-pear
-Requires:	%{name}-xml = %{version}
 
 %description pear-additional_classes
 PEAR - PHP Extension and Application Repository. Additional classes
