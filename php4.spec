@@ -815,6 +815,7 @@ Summary(pl):	Dokumentacja dla PHP
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
 Group(pl):	Sieciowe/Serwery
+Obsoletes:	php-manual
 
 %description doc
 Comprehensive documentation for PHP, viewable through your web server,
