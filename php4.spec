@@ -59,14 +59,16 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
-Version:	4.3.1
-Release:	4
+Version:	4.3.2
+Release:	1
 Epoch:		3
 Group:		Libraries
 License:	PHP
+# Source0-md5:	8aec1bb2dbcca1c92835c71e2e30d9c5
 Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
 Source1:	FAQ.%{name}
 Source2:	zend.gif
+# Source3-md5:	d89cb5124f95d2c30fb0d0e2dfe5de4e
 Source3:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
 Source4:	%{name}-module-install
 Source5:	%{name}-mod_%{name}.conf
