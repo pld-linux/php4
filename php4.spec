@@ -199,7 +199,7 @@ PreReq:		apache(EAPI) >= 1.3.9
 Requires(post,preun):	%{apxs}
 Requires(post,preun):	%{__perl}
 %endif
-PreReq:		%{name}-common = %{epoch}:%{version}
+PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	phpfi
 Obsoletes:	apache-mod_php
