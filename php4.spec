@@ -10,7 +10,7 @@
 # _without_ldap   - without LDAP support
 # _without_odbc   - without ODBC support
 # _without_snmp   - without SNMP support
-#
+# _with_pcre	- with pcre support
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
@@ -33,21 +33,8 @@ Source2:	%{name}.ini
 Source3:	zend.gif
 Source4:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
 Source5:	%{name}-module-install
-#Patch0:		%{name}-imap.patch
-#Patch1:		%{name}-mysql-socket.patch
-#Patch2:		%{name}-mail.patch
-#Patch3:		%{name}-link-libs.patch
-#Patch4:		%{name}-session-path.patch
-#Patch5:		%{name}-am_ac_lt.patch
-#Patch6:		%{name}-fastcgi.patch
-#Patch7:		%{name}-shared.patch
-#Patch8:		%{name}-ac250.patch
-#Patch9:		%{name}-pearinstall.patch
-Patch10:	%{name}-pldlogo.patch
-#Patch11:	%{name}-libxml2.patch
-#Patch12:	%{name}-mailsecurity2.patch
-#Patch13:	%{name}-ZVAL.patch
-#Patch14:	%{name}-oracle9.patch
+Patch0:		%{name}-shared.patch
+Patch1:		%{name}-pldlogo.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -479,7 +466,7 @@ functions support to PHP.
 
 %description posix -l pl
 Modu³ PHP umo¿liwiaj±cy korzystanie z funkcji POSIX.
-
+%if %{?_with_pcre:1}%{!?_with_pcre:0}
 %package pcre
 Summary:	PCRE extension module for PHP
 Summary(pl):	Modu³ PCRE dla PHP
@@ -500,7 +487,7 @@ Compatible Regular Expression support to PHP.
 %description pcre -l pl
 Modu³ PHP umo¿liwiaj±cy korzystanie z perlowych wyra¿eñ regularnych
 (Perl Compatible Regular Expressions)
-
+%endif
 %package sysvsem
 Summary:	SysV sem extension module for PHP
 Summary(pl):	Modu³ SysV sem dla PHP
@@ -963,21 +950,8 @@ ming.
 
 %prep
 %setup  -q
-#%patch0 -p1
-#%patch1 -p1
-#%patch2 -p1
-#%patch3 -p1
-#%patch4 -p1 
-#%patch5 -p1
-#%patch6 -p1
-#%patch7 -p1
-#%patch8 -p1
-#%patch9 -p1
-%patch10 -p1
-#%patch11 -p1
-#%patch12 -p1
-#%patch13 -p1
-#%patch14 -p1
+%patch0 -p1
+%patch1 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
@@ -1048,7 +1022,7 @@ for i in cgi apxs ; do
 	%{?_with_oracle:--with-oracle=shared} \
 	%{?_with_oci8:--with-oci8=shared} \
 	--with-pear=%{peardir} \
-	--with-pcre-regex=shared \
+	%{?_with_pcre:--with-pcre-regex=shared }\
 	--with-pdflib=shared \
 	--with-pgsql=shared,%{_prefix} \
 	--with-png-dir=shared \
@@ -1297,15 +1271,16 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove oracle %{_sysconfdir}/php.ini
 fi
 %endif
-
+%if %{?_with_pcre:1}%{!?_with_pcre:0}
 %post pcre
 %{_sbindir}/php-module-install install pcre %{_sysconfdir}/php.ini
-
+%endif
+%if %{?_with_pcre:1}%{!?_with_pcre:0}
 %preun pcre
 if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove pcre %{_sysconfdir}/php.ini
 fi
-
+%endif
 %post pgsql
 %{_sbindir}/php-module-install install pgsql %{_sysconfdir}/php.ini
 
@@ -1510,9 +1485,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/filepro.so
 
+%if %{?_with_pcre:1}%{!?_with_pcre:0}
 %files pcre
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/pcre.so
+%endif
 
 %files posix
 %defattr(644,root,root,755)
