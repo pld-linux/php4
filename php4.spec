@@ -196,9 +196,9 @@ Requires(post,preun):	%{__perl}
 %endif
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
-Obsoletes:	php >= 5.0
 Obsoletes:	phpfi
 Obsoletes:	apache-mod_php
+Conflicts:	php >= 3:5.0.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/php4
@@ -323,6 +323,7 @@ Group:		Libraries
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
 Provides:	php-session = %{epoch}:%{version}-%{release}
 Provides:	php-common = %{epoch}:%{version}-%{release}
+Conflicts:	php-common >= 3:5.0.0
 
 %description common
 Common files needed by both apache module and CGI.
