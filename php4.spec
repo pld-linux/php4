@@ -3,13 +3,14 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache.
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache.
 Name:		php
 Version:	4.0.3RC1
-Release:	0.1
+Release:	1
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 License:	The PHP license (see "LICENSE" file included in distribution)
 Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.gz
-Source1:	FAQ.php
+Source1:	FAQ.%{name}
 Source2:	%{name}.ini
 Source3:	zend.gif
 Source4:	http://www.php.net/distributions/manual.tar.gz
@@ -35,6 +36,7 @@ BuildRequires:	imap-devel >= 4.7b-1
 # BuildRequires:	jdk
 BuildRequires:	kaffe-devel
 BuildRequires:	libjpeg-devel
+BuildRequires:	libltdl-devel
 BuildRequires:	libpng >= 1.0.8
 BuildRequires:	libtiff-devel
 BuildRequires:	mm-devel >= 1.1.3
@@ -98,6 +100,7 @@ zosta³a z jêzyków: C, Java i Perl.
 Summary:	MySQL database module for PHP4
 Summary(pl):	Modu³ bazy danych MySQL dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -115,6 +118,7 @@ Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych MySQL.
 Summary:	PostgreSQL database module for PHP4
 Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -132,44 +136,45 @@ Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych PostgreSQL.
 Summary:	Oracle 8 database module for PHP4
 Summary(pl):	Modu³ bazy danych Oracle 8 dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
 Autoreq:	false
 
 %description oci8
-This is a dynamic shared object (DSO) for Apache that will add
-Oracle 8 database support to PHP4. If you need back-end support for
-Oracle 8, you should install this package in addition to the main
-%{name} package.
+This is a dynamic shared object (DSO) for Apache that will add Oracle
+8 database support to PHP4. If you need back-end support for Oracle 8,
+you should install this package in addition to the main %{name}
+package.
 
 %description oci8 -l pl
-Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych Oracle 8.
-}
+Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych Oracle 8. }
 
 %package oracle
 Summary:	Oracle 7 database module for PHP4
 Summary(pl):	Modu³ bazy danych Oracle 7 dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
 Autoreq:	false
 
 %description oracle
-This is a dynamic shared object (DSO) for Apache that will add
-Oracle 7 database support to PHP4. If you need back-end support for
-Oracle 7, you should install this package in addition to the main
-%{name} package.
+This is a dynamic shared object (DSO) for Apache that will add Oracle
+7 database support to PHP4. If you need back-end support for Oracle 7,
+you should install this package in addition to the main %{name}
+package.
 
 %description oracle -l pl
-Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych Oracle 7.
-}
+Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych Oracle 7. }
 
 %package gd
 Summary:	GD extension module for PHP4
 Summary:	Modu³ GD dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -186,6 +191,7 @@ PHP.
 Summary:	Java extension module for PHP4
 Summary(pl):	Modu³ Javy dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -201,6 +207,7 @@ for creating and invoking methods on Java objects from PHP.
 Summary:	XML extension module for PHP4
 Summary(pl):	Modu³ XML dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -218,6 +225,7 @@ main %{name} package.
 Summary:	DBA extension module for PHP4
 Summary(pl):	Modu³ DBA dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -232,6 +240,7 @@ flat-file databases (DBA) support to PHP4.
 Summary:	Calendar extension module for PHP4
 Summary(pl):	Modu³ funkcji kalendarza dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -246,6 +255,7 @@ calendar support to PHP4.
 Summary:	DBase extension module for PHP4
 Summary(pl):	Modu³ DBase dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -260,6 +270,7 @@ support to PHP4.
 Summary:	FilePro extension module for PHP4
 Summary(pl):	Modu³ FilePro dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -274,6 +285,7 @@ support to PHP4.
 Summary:	POSIX extension module for PHP4
 Summary(pl):	Modu³ POSIX dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -288,6 +300,7 @@ functions support to PHP4.
 Summary:	PCRE extension module for PHP4
 Summary(pl):	Modu³ PCRE dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -302,6 +315,7 @@ Compatible Regular Expression support to PHP4.
 Summary:	SysV sem extension module for PHP4
 Summary(pl):	Modu³ SysV sem dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -316,6 +330,7 @@ semafores support to PHP4.
 Summary:	SysV shm extension module for PHP4
 Summary(pl):	Modu³ SysV shm dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -330,6 +345,7 @@ Shared Memory support to PHP4.
 Summary:	NIS (yp) extension module for PHP4
 Summary(pl):	Modu³ NIS (yp) dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -344,6 +360,7 @@ This is a dynamic shared object (DSO) for Apache that will add NIS
 Summary:	bcmath extension module for PHP4
 Summary(pl):	Modu³ bcmath dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -358,6 +375,7 @@ style precision math functions support to PHP4.
 Summary:	FTP extension module for PHP4
 Summary(pl):	Modu³ FTP dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -372,6 +390,7 @@ support to PHP4.
 Summary:	Zlib extension module for PHP4
 Summary(pl):	Modu³ zlib dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -386,6 +405,7 @@ commpresion (zlib) support to PHP4.
 Summary:	exifextension module for PHP4
 Summary(pl):	Modu³ exif dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -400,6 +420,7 @@ support to PHP4.
 Summary:	recodeextension module for PHP4
 Summary(pl):	Modu³ recode dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -414,6 +435,7 @@ support to PHP4.
 Summary:	sessionextension module for PHP4
 Summary(pl):	Modu³ session dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -428,6 +450,7 @@ support to PHP4.
 Summary:	gettextextension module for PHP4
 Summary(pl):	Modu³ gettext dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -443,6 +466,7 @@ support to PHP4.
 Summary:	snmpextension module for PHP4
 Summary(pl):	Modu³ snmp dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -457,6 +481,7 @@ support to PHP4.
 Summary:	imapextension module for PHP4
 Summary(pl):	Modu³ imap dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -471,6 +496,7 @@ support to PHP4.
 Summary:	LDAP extension module for PHP4
 Summary(pl):	Modu³ LDAP dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -485,6 +511,7 @@ support to PHP4.
 Summary:	sockets extension module for PHP4
 Summary(pl):	Modu³ socket dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -499,6 +526,7 @@ support to PHP4.
 Summary:	mcrypt extension module for PHP4
 Summary(pl):	Modu³ mcrypt dla PHP4
 Group:		Libraries
+Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Requires:	%{name} = %{version}
@@ -513,6 +541,7 @@ support to PHP4.
 Summary:	Online manual for PHP4
 Summary(pl):	Dokumentacja dla PHP4
 Group:		Networking/Daemons
+Group(de):	Netzwerkwesen/Server
 Group(pl):	Sieciowe/Serwery
 
 %description doc
@@ -533,8 +562,7 @@ WWW.
 %patch5 -p1
 
 %build
-LDFLAGS="-s"; export LDFLAGS
-CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
+CFLAGS="$RPM_OPT_FLAGS -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
 ./buildconf
 %configure \
 	--with-apxs=%{_sbindir}/apxs \
@@ -590,7 +618,7 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 
 
 
-# TODO --with-pspell=/usr,shared (brak pspella)
+# TODO --with-pspell=/usr,shared (pspell missing)
 #	--with-unixODBC=shared (nie jest shared)
 #	--with-mhash=shared (brak libmhash)
 #	--with-curl=shared (brak libcurl)
@@ -630,13 +658,9 @@ tar zxf %{SOURCE4}
 ln -s manual.html index.html
 cd -
 
-strip --strip-unneeded	\
-	$RPM_BUILD_ROOT%{_pkglibdir}/*.so \
-	$RPM_BUILD_ROOT%{_pkglibdir}/php/*.so
-
 install %{SOURCE1} .
 gzip -9nf CODING_STANDARDS CREDITS FUNCTION_LIST.txt \
-      EXTENSIONS  NEWS TODO* LICENSE Zend/LICENSE \
+      EXTENSIONS NEWS TODO* LICENSE Zend/LICENSE \
       Zend/ZEND_CHANGES README.SELF-CONTAINED-EXTENSIONS README.EXT_SKEL
 
 %post
@@ -1392,15 +1416,15 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_pkglibdir}/php/libphp_java.so
 
 %files ldap
-%defattr(644,root,root,755) 
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/ldap.so
 
 %files sockets
-%defattr(644,root,root,755) 
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/sockets.so
 
 %files mcrypt
-%defattr(644,root,root,755) 
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/mcrypt.so
 
 %files doc
