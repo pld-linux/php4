@@ -1,0 +1,11 @@
+--- php-4.3.4RC1/configure.in	2003-09-29 23:48:15.000000000 +0000
++++ php-4.3.4RC1.orig/configure.in	2003-10-01 14:11:53.000000000 +0000
+@@ -1129,7 +1129,7 @@
+ CXXFLAGS="$CXXFLAGS $standard_libtool_flag"
+ 
+ all_targets='$(OVERALL_TARGET) $(PHP_MODULES) $(PHP_CLI_TARGET)'
+-install_targets="install-sapi install-modules $install_pear install-build install-headers install-programs"
++install_targets="install-sapi install-modules install-build install-headers install-programs"
+ if test "$PHP_SAPI" != "cgi"; then
+   install_targets="$PHP_INSTALL_CLI_TARGET $install_targets"
+ fi
