@@ -4,7 +4,6 @@
 #   (any crash reports related to session modules?)
 #
 # Conditional build:
-%bcond_without	db3		# do not use db3 packages instead of db (4.x) for Berkeley DB support
 %bcond_with	fdf		# with FDF (PDF forms) module		(BR:proprietary lib)
 %bcond_with	fribidi		# with FriBiDi extension module
 %bcond_with	interbase	# with InterBase extension module
@@ -15,6 +14,7 @@
 %bcond_with	qtdom		# with QT DOM extension module
 %bcond_without	cpdf		# without cpdf extension module
 %bcond_without	curl		# without CURL extension module
+%bcond_without	db3		# use db packages instead of db3 (3.x) for Berkeley DB support
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
 %bcond_without	gif		# build GD extension module with gd library without GIF support
 %bcond_without	imap		# without IMAP extension module
@@ -65,7 +65,7 @@ Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сер
 Name:		php
 Version:	4.3.8
 %define	_rc	%{nil}
-Release:	0.2
+Release:	0.3
 Epoch:		3
 Group:		Libraries
 License:	PHP
