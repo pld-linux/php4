@@ -60,13 +60,13 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
-Version:	4.3.5
-Release:	1
+Version:	4.3.6
+Release:	0.RC1
 Epoch:		3
 Group:		Libraries
 License:	PHP
-Source0:	http://downloads.php.net/ilia/%{name}-%{version}.tar.bz2
-# Source0-md5:	29e61c125ac6278897c6c219f5d100d1
+Source0:	http://downloads.php.net/ilia/%{name}-%{version}RC1.tar.bz2
+# Source0-md5:	7d196e4ed7b460be6cab18f2cdd1ef1d
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -1478,7 +1478,7 @@ PEAR/*.php), dostarczanych z PHP, zainstaluj odpowiednie pakiety
 php-pear-* (php-pear-PEAR, php-pear-Archive_Tar, itp).
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}RC1
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -1488,7 +1488,8 @@ php-pear-* (php-pear-PEAR, php-pear-Archive_Tar, itp).
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
-%patch9 -p1
+# Not really needed?
+#%patch9 -p1
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
