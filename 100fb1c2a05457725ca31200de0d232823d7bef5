@@ -1,0 +1,6 @@
+- added xml-expat-fix patch to fix finding libexpat.so for XML module
+- link-libs patch is back (now it only removes -lnsl from libphp4.so)
+- wddx patch is back (different fix than before)
+- changed xmlrpc-fix patch (different fix than before)
+- added one more fix to msession-shared-lib patch
+- use system libgd instead of internal version
