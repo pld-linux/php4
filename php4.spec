@@ -146,7 +146,7 @@ BuildRequires:	openssl-devel >= 0.9.7
 %endif
 BuildRequires:	pam-devel
 %{!?_without_pdf:BuildRequires:	pdflib-devel >= 4.0.0}
-BuildRequires:	perl
+BuildRequires:	%{__perl}
 %{!?_without_msession:BuildRequires:	phoenix-devel}
 %{!?_without_pgsql:BuildRequires:	postgresql-devel}
 %{!?_without_pgsql:BuildRequires:	postgresql-backend-devel >= 7.2}
@@ -171,7 +171,7 @@ PreReq:		apache >= 2.0.40
 PreReq:		apache(EAPI) < 2.0.0
 PreReq:		apache(EAPI) >= 1.3.9
 Requires(post,preun):	%{apxs}
-Requires(post,preun):	perl
+Requires(post,preun):	%{__perl}
 %endif
 PreReq:		%{name}-common = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
