@@ -77,7 +77,7 @@ Summary(ru):	PHP Версии 5 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 5 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	5.0.0
-Release:	3
+Release:	3.1
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1478,6 +1478,7 @@ for i in fcgi cgi cli apxs ; do
 	`[ $i = fcgi ] && echo --enable-fastcgi --with-fastcgi=/usr` \
 %if %{_apache2}
 	`[ $i = apxs ] && echo --with-apxs2=%{apxs}` \
+	--enable-experimental-zts \
 %else
 	`[ $i = apxs ] && echo --with-apxs=%{apxs}` \
 %endif
