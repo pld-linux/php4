@@ -67,7 +67,7 @@ License:	PHP
 Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
 Source1:	FAQ.%{name}
 Source2:	zend.gif
-Source3:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.bz2
+Source3:	http://www.php.net/distributions/manual/%{name}_manual_en.tar.gz
 Source4:	%{name}-module-install
 Source5:	%{name}-mod_%{name}.conf
 Source6:	%{name}-cgi.ini
