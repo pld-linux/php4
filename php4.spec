@@ -2,8 +2,8 @@ Summary:	The PHP HTML-embedded scripting language for use with Apache.
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache.
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache.
 Name:		php
-Version:	4.0.2
-Release:	0.2
+Version:	4.0.3RC1
+Release:	0.1
 Group:		Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
@@ -19,6 +19,7 @@ Patch1:		%{name}-mysql-socket.patch
 Patch2:		%{name}-mail.patch
 Patch3:		%{name}-ldap.patch
 Patch4:		%{name}-bcmath.patch
+Patch5:		%{name}-no_libnsl.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -48,6 +49,7 @@ BuildRequires:	t1lib-devel
 BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	ucd-snmp-devel >= 4.1
 BuildRequires:	libmcrypt-devel >= 2.4.4
+BuildRequires:	libltdl-devel
 Requires:	apache(EAPI) >= 1.3.9
 Prereq:		/usr/sbin/apxs
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -125,6 +127,44 @@ PostgreSQL, you should install this package in addition to the main
 
 %description pgsql -l pl
 Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych PostgreSQL.
+
+%package oci8
+Summary:	Oracle 8 database module for PHP4
+Summary(pl):	Modu³ bazy danych Oracle 8 dla PHP4
+Group:		Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Requires:	%{name} = %{version}
+Autoreq:	false
+
+%description oci8
+This is a dynamic shared object (DSO) for Apache that will add
+Oracle 8 database support to PHP4. If you need back-end support for
+Oracle 8, you should install this package in addition to the main
+%{name} package.
+
+%description oci8 -l pl
+Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych Oracle 8.
+}
+
+%package oracle
+Summary:	Oracle 7 database module for PHP4
+Summary(pl):	Modu³ bazy danych Oracle 7 dla PHP4
+Group:		Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Requires:	%{name} = %{version}
+Autoreq:	false
+
+%description oracle
+This is a dynamic shared object (DSO) for Apache that will add
+Oracle 7 database support to PHP4. If you need back-end support for
+Oracle 7, you should install this package in addition to the main
+%{name} package.
+
+%description oracle -l pl
+Modu³ PHP4 umo¿liwiaj±cy dostêp do bazy danych Oracle 7.
+}
 
 %package gd
 Summary:	GD extension module for PHP4
@@ -490,6 +530,7 @@ WWW.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 LDFLAGS="-s"; export LDFLAGS
@@ -543,7 +584,9 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 	--enable-xml=shared \
 	--with-zlib=shared \
 	--with-mcrypt=shared \
-	--enable-sockets=shared 
+	--enable-sockets=shared \
+	--with-db2=yes \
+	%{?oracle:--with-oracle=shared} %{?oci8:--with-oci8=shared}
 
 
 
@@ -660,6 +703,46 @@ if [ "$1" = "0" ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
 fi
+
+%{?oracle:%post oracle}
+%{?oracle:if [ -f %{_sysconfdir}/httpd/php.ini ]; then}
+%{?oracle:	echo "activating module 'oracle.so' in /etc/httpd/php.ini" 1>&2}
+%{?oracle:	perl -pi -e 's|^;extension=oracle.so|extension=oracle.so|g' %{_sysconfdir}/httpd/php.ini}
+%{?oracle:fi}
+%{?oracle:if [ -f /var/lock/subsys/httpd ]; then}
+%{?oracle:	/etc/rc.d/init.d/httpd restart 1>&2}
+%{?oracle:fi}
+
+%{?oracle:%preun oracle}
+%{?oracle:if [ "$1" = "0" ]; then}
+%{?oracle:	if [ -f %{_sysconfdir}/httpd/php.ini ]; then}
+%{?oracle:		echo "deactivating module 'oracle.so' in /etc/httpd/php.ini" 1>&2}
+%{?oracle:		perl -pi -e 's|^extension=oracle.so|;extension=oracle.so|g' {_sysconfdir}/httpd/php.ini}
+%{?oracle:	fi}
+%{?oracle:	if [ -f /var/lock/subsys/httpd ]; then}
+%{?oracle:		/etc/rc.d/init.d/httpd restart 1>&2}
+%{?oracle:	fi}
+%{?oracle:fi}
+
+%{?oci8:%post oci8}
+%{?oci8:if [ -f %{_sysconfdir}/httpd/php.ini ]; then}
+%{?oci8:	echo "activating module 'oci8.so' in /etc/httpd/php.ini" 1>&2}
+%{?oci8:	perl -pi -e 's|^;extension=oci8.so|extension=oci8.so|g' %{_sysconfdir}/httpd/php.ini}
+%{?oci8:fi}
+%{?oci8:if [ -f /var/lock/subsys/httpd ]; then}
+%{?oci8:	/etc/rc.d/init.d/httpd restart 1>&2}
+%{?oci8:fi}
+
+%{?oci8:%preun oci8}
+%{?oci8:if [ "$1" = "0" ]; then}
+%{?oci8:	if [ -f %{_sysconfdir}/httpd/php.ini ]; then}
+%{?oci8:		echo "deactivating module 'oci8.so' in /etc/httpd/php.ini" 1>&2}
+%{?oci8:		perl -pi -e 's|^extension=oci8.so|;extension=oci8.so|g' %{_sysconfdir}/httpd/php.ini}
+%{?oci8:	fi}
+%{?oci8:	if [ -f /var/lock/subsys/httpd ]; then}
+%{?oci8:		/etc/rc.d/init.d/httpd restart 1>&2}
+%{?oci8:	fi}
+%{?oci8:fi}
 
 %post gd
 if [ -f %{_sysconfdir}/httpd/php.ini ]; then
@@ -1215,6 +1298,14 @@ rm -rf $RPM_BUILD_ROOT
 %files pgsql
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/pgsql.so
+
+%{?oracle:%files oracle}
+%{?oracle:%defattr(644,root,root,755)}
+%{?oracle:%attr(755,root,root) %{_pkglibdir}/php/oracle.so}
+
+%{?oci8:%files oci8}
+%{?oci8:%defattr(644,root,root,755)}
+%{?oci8:%attr(755,root,root) %{_pkglibdir}/php/oci8.so}
 
 %files gd
 %defattr(644,root,root,755)
