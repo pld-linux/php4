@@ -16,7 +16,7 @@ diff -uar php-4.0.6orig/ext/standard/info.c php-4.0.6/ext/standard/info.c
 +                  PUTS("?="PLD_LOGO_GUID"\" border=\"0\" align=\"right\" alt=\"PLD logo\"></a>\n");
 +                }
 +                php_printf("This server is using PLD Linux. <BR>");
-+                php_printf("More informations at <a href=\"http://www.pld.org.pl/\">http://www.pld.org.pl/</a>.");
++                php_printf("More information at <a href=\"http://www.pld.org.pl/\">http://www.pld.org.pl/</a>.");
 +                php_printf("</BR>\n");
 +                php_info_print_box_end(); 
 +                efree(php_uname);
