@@ -40,10 +40,10 @@ if [ "$#" = 3 ]; then
 	MODNAME="$2"
 	INIFILE="$3"
 
-	if [ "$1" = "install"]; then
+	if [ "$1" = "install" ]; then
 		install
 	else
-		if [ "$1" = "remove"]; then
+		if [ "$1" = "remove" ]; then
 			remove
 		else
 			usage
