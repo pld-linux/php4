@@ -53,7 +53,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.2.3
-Release:	4
+Release:	5
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -139,7 +139,7 @@ BuildRequires:	perl
 %{!?_without_pgsql:BuildRequires:	postgresql-backend-devel >= 7.2}
 %{!?_without_pspell:BuildRequires:	pspell-devel}
 %{!?_without_recode:BuildRequires:	recode-devel >= 3.5d-3}
-BuildRequires:	rpm-php-pearprov >= 4.0.2-80
+BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 %{!?_without_xslt:BuildRequires:	sablotron-devel}
 BuildRequires:	t1lib-devel
 %{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.3}
