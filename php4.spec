@@ -28,7 +28,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.2.0
-Release:	1
+Release:	2
 Epoch:		2
 Group:		Libraries
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -411,18 +411,18 @@ support to PHP.
 Modu³ PHP dodaj±cy obs³ugê plików EXIF.
 
 %package filepro
-Summary:	FilePro extension module for PHP
-Summary(pl):	Modu³ FilePro dla PHP
+Summary:	filePro extension module for PHP
+Summary(pl):	Modu³ filePro dla PHP
 Group:		Libraries
 PreReq:		%{name}-common = %{version}
 
 %description filepro
-This is a dynamic shared object (DSO) for Apache that will add FilePro
-support to PHP.
+This is a dynamic shared object (DSO) for Apache that will add PHP
+support for read-only access to filePro databases.
 
 %description filepro -l pl
 Dynamiczny obiekt wspó³dzielony (DSO) dla Apache'a, dodaj±cy do PHP
-wsparcie dla FilePro.
+mo¿liwo¶æ dostêpu (tylko do odczytu) do baz danych filePro.
 
 %package ftp
 Summary:	FTP extension module for PHP
@@ -638,12 +638,12 @@ Autoreq:	false
 
 %description oci8
 This is a dynamic shared object (DSO) for Apache that will add Oracle
-8 database support to PHP. If you need back-end support for Oracle 8,
-you should install this package in addition to the main %{name}
-package.
+7 and Oracle 8 database support to PHP through Oracle8 Call-Interface
+(OCI8).
 
 %description oci8 -l pl
-Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 8.
+Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 7 i Oracle 8
+poprzez interfejs Oracle8 Call-Interface (OCI8).
 
 %package odbc
 Summary:	ODBC extension module for PHP
@@ -685,9 +685,7 @@ Autoreq:	false
 
 %description oracle
 This is a dynamic shared object (DSO) for Apache that will add Oracle
-7 database support to PHP. If you need back-end support for Oracle 7,
-you should install this package in addition to the main %{name}
-package.
+7 database support to PHP.
 
 %description oracle -l pl
 Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 7.
@@ -720,13 +718,15 @@ This is a dynamic shared object (DSO) for Apache that will add process
 spawning and control support to PHP. It supports functions like
 fork(), waitpid(), signal() etc.
 
-Warning: this is an experimental module.
+Warning: this is an experimental module. Also, don't use it in
+webserver environment!
 
 %description pcntl -l pl
 Modu³ PHP umo¿liwiaj±cy tworzenie nowych procesów i kontrolê nad nimi.
 Obs³uguje funkcje takie jak fork(), waitpid(), signal() i podobne.
 
-Uwaga: to jest modu³ eksperymentalny.
+Uwaga: to jest modu³ eksperymentalny. Ponadto nie jest przeznaczony do
+u¿ywania z serwerem WWW - nie próbuj tego!
 
 %package pcre
 Summary:	PCRE extension module for PHP
@@ -868,10 +868,11 @@ PreReq:		%{name}-common = %{version}
 
 %description sybase-ct
 This is a dynamic shared object (DSO) for Apache that will add
-Sybase database support through CT-lib to PHP.
+Sybase and MS SQL databases support through CT-lib to PHP.
 
 %description sybase-ct -l pl
-Modu³ PHP dodaj±cy obs³ugê baz danych Sybase poprzez CT-lib.
+Modu³ PHP dodaj±cy obs³ugê baz danych Sybase oraz MS SQL poprzez
+CT-lib.
 
 %package sysvsem
 Summary:	SysV sem extension module for PHP
@@ -1781,9 +1782,10 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/overload.so
 
-%files pcntl
-%defattr(644,root,root,755)
-%attr(755,root,root) %{extensionsdir}/pcntl.so
+# disabled in 4.2.0 - it segfaults
+#%files pcntl
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/pcntl.so
 
 %files pcre
 %defattr(644,root,root,755)
