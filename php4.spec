@@ -1127,11 +1127,11 @@ if [ "$1" = "0" ]; then
 fi
 
 %post pdf
-%{_sbindir}/php-module-install install libpdf_php %{_sysconfdir}/php.ini
+%{_sbindir}/php-module-install install pdf %{_sysconfdir}/php.ini
 
 %preun pdf
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php-module-install remove libpdf_php %{_sysconfdir}/php.ini
+	%{_sbindir}/php-module-install remove pdf %{_sysconfdir}/php.ini
 fi
 
 %preun domxml
