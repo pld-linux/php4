@@ -1,17 +1,18 @@
 Summary:	The PHP HTML-embedded scripting language for use with Apache.
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache.
 Name:		php
-Version:	4.0b3
+Version:	4.0b4pl1
 Release:	1
 Group:		Libraries
 Group(pl):	X11/Programowanie/Biblioteki
 Group:		Biblioteki
 License:	GPL
-Icon:		php4.gif
 Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.gz
 Source1:	FAQ.php
 Source2:	php.ini
 Source3:	zend.gif
+Icon:		php4.gif
+URL:		http://www.php.net/
 BuildRequires:	apache-devel
 BuildRequires:	zlib-devel
 BuildRoot:	/tmp/%{name}-%{version}-root
@@ -37,10 +38,7 @@ PHP jest jêzykiem skryptowym
 %setup -q 
 
 %build
-libtoolize --copy --force
-aclocal
-autoheader
-autoconf
+./buildconf
 %configure \
 	--with-apxs=%{_sbindir}/apxs \
 	--with-config-file-path=%{_sysconfdir}/httpd \
