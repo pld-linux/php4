@@ -711,6 +711,23 @@ Files for PHP modules development.
 %description devel -l pl
 Pliki potrzebne do kompilacji modu³ów PHP.
 
+%package curl
+Summary:	curl extension module for PHP
+Summary(pl):	Modu³ curl dla PHP
+Group:		Libraries
+Group(de):	Libraries
+Group(es):	Bibliotecas
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+PreReq:		%{name}-common = %{version}
+
+%description curl
+This is a dynamic shared object (DSO) for Apache that will add curl
+support to PHP.
+
+%description curl -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki curl.
+
 %prep
 %setup  -q
 %patch1 -p1
@@ -1114,6 +1131,14 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove zlib %{_sysconfdir}/php.ini
 fi
 
+%post curl
+%{_sbindir}/php-module-install install curl %{_sysconfdir}/php.ini
+
+%preun curl
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove curl %{_sysconfdir}/php.ini
+fi
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -1307,3 +1332,7 @@ rm -rf $RPM_BUILD_ROOT
 %files doc
 %defattr(644,root,root,755)
 %doc manual/*
+
+%files curl
+%defattr(644,root,root,755)
+%attr(755,root,root) %{extensionsdir}/curl.so
