@@ -7,7 +7,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.4
-Release:	1
+Release:	1.1
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -15,16 +15,14 @@ Group(fr):	Librairies
 Group(pl):	Biblioteki
 License:	The PHP license (see "LICENSE" file included in distribution)
 Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.gz
-Source1:	FAQ.%{name}
+Source1:	FAQ.php
 Source2:	%{name}.ini
 Source3:	zend.gif
 Source4:	http://www.php.net/distributions/manual.tar.gz
-Source5:	http://www.php.net/extra/number4.tar.gz
+Source5:	php-module-install
 Patch0:		%{name}-imap.patch
 Patch1:		%{name}-mysql-socket.patch
 Patch2:		%{name}-mail.patch
-Patch3:		%{name}-ldap.patch
-Patch4:		%{name}-bcmath.patch
 Patch5:		%{name}-no_libnsl.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
@@ -39,24 +37,31 @@ BuildRequires:	gdbm-devel
 BuildRequires:	imap-devel >= 4.7b-1
 # I think jdk is better for java
 # BuildRequires:	jdk
-BuildRequires:	kaffe-devel
+%{?bcond_on_java:BuildRequires:	kaffe-devel}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libltdl-devel
 BuildRequires:	libpng >= 1.0.8
 BuildRequires:	libtiff-devel
 BuildRequires:	mm-devel >= 1.1.3
-BuildRequires:	openldap-devel
+%{!?bcond_off_ldap:BuildRequires: openldap-devel >= 2.0}
 BuildRequires:	pam-devel
 BuildRequires:	pdflib-devel >= 3.0
 #BuildRequires:	libxml-devel >= 2.0.0
 BuildRequires:	postgresql-devel
 BuildRequires:	recode-devel >= 3.5
 BuildRequires:	t1lib-devel
-# BuildRequires:	unixODBC-devel
+BuildRequires:	unixODBC-devel
 BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	ucd-snmp-devel >= 4.1
 BuildRequires:	libmcrypt-devel >= 2.4.4
+BuildRequires:	mhash-devel
 BuildRequires:	libltdl-devel
+BuildRequires:	bzip2-devel
+BuildRequires:	gmp-devel
+BuildRequires:	curl-devel
+%if %(expr %{?bcond_on_openssl:1}%{!?bcond_on_openssl:0} + %{!?bcond_off_ldap:1}%{?bcond_off_ldap:0})
+BuildRequires:	openssl-devel >= 0.9.6
+%endif
 Requires:	apache(EAPI) >= 1.3.9
 Prereq:		/usr/sbin/apxs
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -108,7 +113,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description mysql
 This is a dynamic shared object (DSO) for Apache that will add MySQL
@@ -126,7 +131,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description pgsql
 This is a dynamic shared object (DSO) for Apache that will add
@@ -144,7 +149,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 Autoreq:	false
 
 %description oci8
@@ -163,7 +168,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 Autoreq:	false
 
 %description oracle
@@ -182,7 +187,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description gd
 This is a dynamic shared object (DSO) for Apache that will add GD
@@ -192,6 +197,7 @@ PHP.
 
 %description gd -l pl
 
+%if %{?bcond_on_java:1}%{!?bcond_on_java:0}
 %package java
 Summary:	Java extension module for PHP
 Summary(pl):	Modu³ Javy dla PHP
@@ -199,7 +205,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description java
 This is a dynamic shared object (DSO) for Apache that will add JAVA
@@ -207,6 +213,7 @@ support to PHP. This extension provides a simple and effective means
 for creating and invoking methods on Java objects from PHP.
 
 %description java -l pl
+%endif
 
 %package xml
 Summary:	XML extension module for PHP
@@ -215,7 +222,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description xml
 This is a dynamic shared object (DSO) for Apache that will add XML
@@ -233,13 +240,28 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description dba
 This is a dynamic shared object (DSO) for Apache that will add
 flat-file databases (DBA) support to PHP.
 
 #%description dba -l pl
+
+%package odbc
+Summary:	ODBC extension module for PHP
+Summary(pl):	Modu³ ODBC dla PHP
+Group:		Libraries
+Group(de):	Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+PreReq:	%{name} = %{version}
+
+%description odbc
+This is a dynamic shared object (DSO) for Apache that will add
+ODBC support to PHP.
+
+#%description odbc -l pl
 
 %package calendar
 Summary:	Calendar extension module for PHP
@@ -248,7 +270,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description calendar
 This is a dynamic shared object (DSO) for Apache that will add
@@ -263,7 +285,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description dbase
 This is a dynamic shared object (DSO) for Apache that will add DBase
@@ -278,7 +300,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description filepro
 This is a dynamic shared object (DSO) for Apache that will add FilePro
@@ -293,7 +315,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description posix
 This is a dynamic shared object (DSO) for Apache that will add POSIX
@@ -308,7 +330,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description pcre
 This is a dynamic shared object (DSO) for Apache that will add Perl
@@ -323,7 +345,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description sysvsem
 This is a dynamic shared object (DSO) for Apache that will add SysV
@@ -338,7 +360,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description sysvshm
 This is a dynamic shared object (DSO) for Apache that will add SysV
@@ -353,7 +375,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description yp
 This is a dynamic shared object (DSO) for Apache that will add NIS
@@ -368,7 +390,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description bcmath
 This is a dynamic shared object (DSO) for Apache that will add bc
@@ -383,7 +405,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description ftp
 This is a dynamic shared object (DSO) for Apache that will add FTP
@@ -398,7 +420,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description zlib
 This is a dynamic shared object (DSO) for Apache that will add
@@ -413,7 +435,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description exif
 This is a dynamic shared object (DSO) for Apache that will add exif
@@ -428,7 +450,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description recode
 This is a dynamic shared object (DSO) for Apache that will add recode
@@ -443,7 +465,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description session
 This is a dynamic shared object (DSO) for Apache that will add session
@@ -458,7 +480,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description gettext
 This is a dynamic shared object (DSO) for Apache that will add gettext
@@ -474,7 +496,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description snmp
 This is a dynamic shared object (DSO) for Apache that will add snmp
@@ -489,7 +511,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description imap
 This is a dynamic shared object (DSO) for Apache that will add imap
@@ -504,7 +526,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description ldap
 This is a dynamic shared object (DSO) for Apache that will add LDAP
@@ -519,7 +541,7 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description sockets
 This is a dynamic shared object (DSO) for Apache that will add sockets
@@ -534,13 +556,29 @@ Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-Requires:	%{name} = %{version}
+PreReq:	%{name} = %{version}
 
 %description mcrypt
 This is a dynamic shared object (DSO) for Apache that will add mcrypt
 support to PHP.
 
 #%description mcrypt -l pl
+
+%package mhash
+Summary:	mhash extension module for PHP
+Summary(pl):	Modu³ mhash dla PHP
+Group:		Libraries
+Group(de):	Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+PreReq:	%{name} = %{version}
+
+%description mhash
+This is a dynamic shared object (DSO) for Apache that will add mhash
+support to PHP.
+
+#%description mcrypt -l pl
+
 
 %package doc
 Summary:	Online manual for PHP
@@ -558,19 +596,17 @@ Dokumentacja dla pakietu PHP. Mo¿na j± równie¿ ogl±daæ poprzez serwer
 WWW.
 
 %prep
-%setup  -q -a 5
+%setup  -q
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%patch4 -p1
 %patch5 -p1
 
 %build
-CFLAGS="$RPM_OPT_FLAGS -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
+CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 ./buildconf
 %configure \
-	--with-apxs=%{_sbindir}/apxs \
+	--with-apxs=/usr/sbin/apxs \
 	--with-config-file-path=%{_sysconfdir}/httpd \
 	--with-exec-dir=%{_bindir} \
 	--disable-debug \
@@ -581,21 +617,23 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
 	--enable-trans-sid \
 	--enable-sysvsem=shared \
 	--enable-sysvshm=shared \
+	--enable-shmop=shared \
 	--enable-session \
 	--enable-exif=shared \
 	--with-regex=system \
 	--with-gettext=shared \
-	--with-ldap=shared \
+	%{!?bcond_off_ldap:--with-ldap=shared} \
 	--with-mysql=shared \
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-gd=shared \
+	 --enable-gd-imgstrttf \
 	--with-dbase=shared \
 	--with-filepro=shared \
 	--enable-ftp=shared \
 	--with-hyperwave \
 	--with-pdflib=shared \
 	--with-cpdflib=shared \
-	--with-java \
+	%{?bcond_on_java:--with-java} \
 	--with-pgsql=shared,/usr \
 	--with-imap=shared \
 	--enable-bcmath=shared \
@@ -618,16 +656,21 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
 	--with-zlib=shared \
 	--with-mcrypt=shared \
 	--enable-sockets=shared \
-	%{?oracle:--with-oracle=shared} \
-	%{?oci8:--with-oci8=shared} \
+	--with-bz2=shared \
+	--with-ctype=shared \
+	--with-mhash=shared \
+	--with-curl=shared \
+	--with-gmp=shared \
+	%{?bcond_on_openssl:--with-openssl} \
+	--with-unixODBC=shared \
+	%{?bcond_on_oracle:--with-oracle=shared} \
+	%{?bcond_on_oci8:--with-oci8=shared} \
 	--without-db2 
 
 
 
 # TODO --with-pspell=/usr,shared (pspell missing)
 #	--with-unixODBC=shared (nie jest shared)
-#	--with-mhash=shared (brak libmhash)
-#	--with-curl=shared (brak libcurl)
 
 #	--with-db3 \
 
@@ -651,18 +694,18 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I%{_prefix}/X11R6/include"; export CFLAGS
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_pkglibdir}/php,%{_sysconfdir}/httpd} \
-		$RPM_BUILD_ROOT/home/httpd/html/{icons,docs,docs/php4-doc}
+		$RPM_BUILD_ROOT/home/httpd/html/{icons,docs,docs/php4-doc} \
+		$RPM_BUILD_ROOT/%{_sbindir}
 
 install .libs/*.so	$RPM_BUILD_ROOT%{_pkglibdir}
 install modules/*.so	$RPM_BUILD_ROOT%{_pkglibdir}/php
 
 install %{SOURCE2}		$RPM_BUILD_ROOT%{_sysconfdir}/httpd/php.ini
 install %{SOURCE3} php4.gif	$RPM_BUILD_ROOT/home/httpd/html/icons
+install %{SOURCE5} $RPM_BUILD_ROOT/%{_sbindir}
 
-cd $RPM_BUILD_ROOT/home/httpd/html/docs/php4-doc
-tar zxf %{SOURCE4}
-ln -s manual.html index.html
-cd -
+tar zxf %{SOURCE4} -C $RPM_BUILD_ROOT/home/httpd/html/docs/php4-doc
+ln -s manual.html $RPM_BUILD_ROOT/home/httpd/html/docs/php4-doc/index.html
 
 install %{SOURCE1} .
 gzip -9nf CODING_STANDARDS CREDITS FUNCTION_LIST.txt \
@@ -690,617 +733,253 @@ if [ "$1" = "0" ]; then
 	fi
 fi
 
-%post mysql
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'mysql.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=mysql.so|extension=mysql.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun mysql
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'mysql.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=mysql.so|;extension=mysql.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%post pgsql
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'pgsql.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=pgsql.so|extension=pgsql.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun pgsql
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'pgsql.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=pgsql.so|;extension=pgsql.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%{?oracle:%post oracle}
-%{?oracle:if [ -f %{_sysconfdir}/httpd/php.ini ]; then}
-%{?oracle:	echo "activating module 'oracle.so' in /etc/httpd/php.ini" 1>&2}
-%{?oracle:	perl -pi -e 's|^;extension=oracle.so|extension=oracle.so|g' %{_sysconfdir}/httpd/php.ini}
-%{?oracle:fi}
-%{?oracle:if [ -f /var/lock/subsys/httpd ]; then}
-%{?oracle:	/etc/rc.d/init.d/httpd restart 1>&2}
-%{?oracle:fi}
-
-%{?oracle:%preun oracle}
-%{?oracle:if [ "$1" = "0" ]; then}
-%{?oracle:	if [ -f %{_sysconfdir}/httpd/php.ini ]; then}
-%{?oracle:		echo "deactivating module 'oracle.so' in /etc/httpd/php.ini" 1>&2}
-%{?oracle:		perl -pi -e 's|^extension=oracle.so|;extension=oracle.so|g' {_sysconfdir}/httpd/php.ini}
-%{?oracle:	fi}
-%{?oracle:	if [ -f /var/lock/subsys/httpd ]; then}
-%{?oracle:		/etc/rc.d/init.d/httpd restart 1>&2}
-%{?oracle:	fi}
-%{?oracle:fi}
-
-%{?oci8:%post oci8}
-%{?oci8:if [ -f %{_sysconfdir}/httpd/php.ini ]; then}
-%{?oci8:	echo "activating module 'oci8.so' in /etc/httpd/php.ini" 1>&2}
-%{?oci8:	perl -pi -e 's|^;extension=oci8.so|extension=oci8.so|g' %{_sysconfdir}/httpd/php.ini}
-%{?oci8:fi}
-%{?oci8:if [ -f /var/lock/subsys/httpd ]; then}
-%{?oci8:	/etc/rc.d/init.d/httpd restart 1>&2}
-%{?oci8:fi}
-
-%{?oci8:%preun oci8}
-%{?oci8:if [ "$1" = "0" ]; then}
-%{?oci8:	if [ -f %{_sysconfdir}/httpd/php.ini ]; then}
-%{?oci8:		echo "deactivating module 'oci8.so' in /etc/httpd/php.ini" 1>&2}
-%{?oci8:		perl -pi -e 's|^extension=oci8.so|;extension=oci8.so|g' %{_sysconfdir}/httpd/php.ini}
-%{?oci8:	fi}
-%{?oci8:	if [ -f /var/lock/subsys/httpd ]; then}
-%{?oci8:		/etc/rc.d/init.d/httpd restart 1>&2}
-%{?oci8:	fi}
-%{?oci8:fi}
-
-%post gd
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'gd.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=gd.so|extension=gd.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun gd
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'gd.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=gd.so|;extension=gd.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%post xml
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'xml.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=xml.so|extension=xml.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun xml
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'xml.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=xml.so|;extension=xml.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%post dba
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'dba.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=dba.so|extension=dba.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun dba
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'dba.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=dba.so|;extension=dba.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%post calendar
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'calendar.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=calendar.so|extension=calendar.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun calendar
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'calendar.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=calendar.so|;extension=calendar.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%post dbase
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'dbase.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=dbase.so|extension=dbase.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun dbase
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'dbase.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=dbase.so|;extension=dbase.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-
-%post java
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'libphp_java.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=libphp_java.so|extension=libphp_java.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun java
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'libphp_java.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=libphp_java.so|;extension=libphp_java.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%post filepro
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'filepro.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=filepro.so|extension=filepro.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun filepro
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'filepro.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=filepro.so|;extension=filepro.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%post pcre
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'pcre.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=pcre.so|extension=pcre.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun pcre
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'pcre.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=pcre.so|;extension=pcre.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%post posix
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'posix.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=posix.so|extension=posix.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun posix
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'posix.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=posix.so|;extension=posix.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%post sysvsem
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'sysvsem.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=sysvsem.so|extension=sysvsem.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun sysvsem
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'sysvsem.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=sysvsem.so|;extension=sysvsem.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%post sysvshm
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'sysvshm.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=sysvshm.so|extension=sysvshm.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun sysvshm
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'sysvshm.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=sysvshm.so|;extension=sysvshm.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%post yp
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'yp.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=yp.so|extension=yp.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun yp
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'yp.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=yp.so|;extension=yp.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%post ftp
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'ftp.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=ftp.so|extension=ftp.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun ftp
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'ftp.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=ftp.so|;extension=ftp.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%post zlib
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'zlib.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=zlib.so|extension=zlib.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun zlib
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'zlib.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=zlib.so|;extension=zlib.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
 
 %post bcmath
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'bcmath.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=bcmath.so|extension=bcmath.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
+%{_sbindir}/php-module-install install bcmath /etc/httpd/php.ini
 
 %preun bcmath
 if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'bcmath.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=bcmath.so|;extension=bcmath.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi	
+        %{_sbindir}/php-module-install remove bcmath /etc/httpd/php.ini
+fi
+
+%post calendar
+%{_sbindir}/php-module-install install calendar /etc/httpd/php.ini
+
+%preun calendar
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove calendar /etc/httpd/php.ini
+fi
+
+%post dba
+%{_sbindir}/php-module-install install dba /etc/httpd/php.ini
+
+%preun dba
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove dba /etc/httpd/php.ini
+fi
+
+%post dbase
+%{_sbindir}/php-module-install install dbase /etc/httpd/php.ini
+
+%preun dbase
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove dbase /etc/httpd/php.ini
 fi
 
 %post exif
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'exif.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=exif.so|extension=exif.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
+%{_sbindir}/php-module-install install exif /etc/httpd/php.ini
 
 %preun exif
 if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'exif.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=exif.so|;extension=exif.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+        %{_sbindir}/php-module-install remove exif /etc/httpd/php.ini
 fi
 
-%post recode
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'recode.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=recode.so|extension=recode.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
+%post filepro
+%{_sbindir}/php-module-install install filepro /etc/httpd/php.ini
 
-%preun recode
+%preun filepro
 if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'recode.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=recode.so|;extension=recode.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+        %{_sbindir}/php-module-install remove filepro /etc/httpd/php.ini
 fi
 
-#%post session
-#if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-#	echo "activating module 'session.so' in /etc/httpd/php.ini" 1>&2
-#	perl -pi -e 's|^;extension=session.so|extension=session.so|g' \
-#	%{_sysconfdir}/httpd/php.ini
-#fi
-#if [ -f /var/lock/subsys/httpd ]; then
-#	/etc/rc.d/init.d/httpd restart 1>&2
-#fi
-#
-#%preun session
-#if [ "$1" = "0" ]; then
-#if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-#	echo "deactivating module 'session.so' in /etc/httpd/php.ini" 1>&2
-#	perl -pi -e 's|^extension=session.so|;extension=session.so|g' \
-#	%{_sysconfdir}/httpd/php.ini
-#fi
-#if [ -f /var/lock/subsys/httpd ]; then
-#	/etc/rc.d/init.d/httpd restart 1>&2
-#fi
-#fi
+%post ftp
+%{_sbindir}/php-module-install install ftp /etc/httpd/php.ini
+
+%preun ftp
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove ftp /etc/httpd/php.ini
+fi
+
+%post gd
+%{_sbindir}/php-module-install install gd /etc/httpd/php.ini
+
+%preun gd
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove gd /etc/httpd/php.ini
+fi
 
 %post gettext
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'gettext.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=gettext.so|extension=gettext.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
+%{_sbindir}/php-module-install install gettext /etc/httpd/php.ini
 
 %preun gettext
 if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'gettext.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=gettext.so|;extension=gettext.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%post snmp
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'snmp.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=snmp.so|extension=snmp.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun snmp
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'snmp.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=snmp.so|;extension=snmp.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+        %{_sbindir}/php-module-install remove gettext /etc/httpd/php.ini
 fi
 
 %post imap
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'imap.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=imap.so|extension=imap.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
+%{_sbindir}/php-module-install install imap /etc/httpd/php.ini
 
 %preun imap
 if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'imap.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=imap.so|;extension=imap.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+        %{_sbindir}/php-module-install remove imap /etc/httpd/php.ini
 fi
 
+%if %{?bond_on_java:1}%{!?bond_on_java:0}
+%post java
+%{_sbindir}/php-module-install install libphp_java /etc/httpd/php.ini
+
+%preun java
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove libphp_java /etc/httpd/php.ini
+fi
+%endif
+
+%if %{?bcond_off_ldap:0}%{!?bcond_off_ldap:1}
 %post ldap
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'ldap.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=ldap.so|extension=ldap.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
+%{_sbindir}/php-module-install install ldap /etc/httpd/php.ini
 
 %preun ldap
 if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'ldap.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=ldap.so|;extension=ldap.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+        %{_sbindir}/php-module-install remove ldap /etc/httpd/php.ini
 fi
-
-%post sockets
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'sockets.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=sockets.so|extension=sockets.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%preun sockets
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'sockets.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=sockets.so|;extension=sockets.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
+%endif
 
 %post mcrypt
-if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-	echo "activating module 'mcrypt.so' in /etc/httpd/php.ini" 1>&2
-	perl -pi -e 's|^;extension=mcrypt.so|extension=mcrypt.so|g' \
-	%{_sysconfdir}/httpd/php.ini
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
+%{_sbindir}/php-module-install install mcrypt /etc/httpd/php.ini
 
 %preun mcrypt
 if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/httpd/php.ini ]; then
-		echo "deactivating module 'mcrypt.so' in /etc/httpd/php.ini" 1>&2
-		perl -pi -e 's|^extension=mcrypt.so|;extension=mcrypt.so|g' \
-		%{_sysconfdir}/httpd/php.ini
-	fi
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+        %{_sbindir}/php-module-install remove mcrypt /etc/httpd/php.ini
+fi
+
+%post mhash
+%{_sbindir}/php-module-install install mhash /etc/httpd/php.ini
+
+%preun mhash
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove mhash /etc/httpd/php.ini
+fi
+
+%post mysql
+%{_sbindir}/php-module-install install mysql /etc/httpd/php.ini
+
+%preun mysql
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove mysql /etc/httpd/php.ini
+fi
+
+%if %{?bcond_on_oci8:1}%{!?bcond_on_oci8:0}
+%post oci8
+%{_sbindir}/php-module-install install oci8 /etc/httpd/php.ini
+
+%preun oci8
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove oci8 /etc/httpd/php.ini
+fi
+%endif
+
+%post odbc
+%{_sbindir}/php-module-install install odbc /etc/httpd/php.ini
+
+%preun odbc
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove odbc /etc/httpd/php.ini
+fi
+
+%if %{?bcond_on_oracle:1}%{!?bcond_on_oracle:0}
+%post oracle
+%{_sbindir}/php-module-install install oracle /etc/httpd/php.ini
+
+%preun oracle
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove oracle /etc/httpd/php.ini
+fi
+%endif
+
+%post pcre
+%{_sbindir}/php-module-install install pcre /etc/httpd/php.ini
+
+%preun pcre
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove pcre /etc/httpd/php.ini
+fi
+
+%post pgsql
+%{_sbindir}/php-module-install install pgsql /etc/httpd/php.ini
+
+%preun pgsql
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove pgsql /etc/httpd/php.ini
+fi
+
+%post posix
+%{_sbindir}/php-module-install install posix /etc/httpd/php.ini
+
+%preun posix
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove posix /etc/httpd/php.ini
+fi
+
+%post recode
+%{_sbindir}/php-module-install install recode /etc/httpd/php.ini
+
+%preun recode
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove recode /etc/httpd/php.ini
+fi
+
+%post session
+%{_sbindir}/php-module-install install session /etc/httpd/php.ini
+
+%preun session
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove session /etc/httpd/php.ini
+fi
+
+%post snmp
+%{_sbindir}/php-module-install install snmp /etc/httpd/php.ini
+
+%preun snmp
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove snmp /etc/httpd/php.ini
+fi
+
+%post sockets
+%{_sbindir}/php-module-install install sockets /etc/httpd/php.ini
+
+%preun sockets
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove sockets /etc/httpd/php.ini
+fi
+
+%post sysvsem
+%{_sbindir}/php-module-install install sysvsem /etc/httpd/php.ini
+
+%preun sysvsem
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove sysvsem /etc/httpd/php.ini
+fi
+
+%post sysvshm
+%{_sbindir}/php-module-install install sysvshm /etc/httpd/php.ini
+
+%preun sysvshm
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove sysvshm /etc/httpd/php.ini
+fi
+
+%post xml
+%{_sbindir}/php-module-install install xml /etc/httpd/php.ini
+
+%preun xml
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove xml /etc/httpd/php.ini
+fi
+
+%post yp
+%{_sbindir}/php-module-install install yp /etc/httpd/php.ini
+
+%preun yp
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove yp /etc/httpd/php.ini
+fi
+
+%post zlib
+%{_sbindir}/php-module-install install zlib /etc/httpd/php.ini
+
+%preun zlib
+if [ "$1" = "0" ]; then
+        %{_sbindir}/php-module-install remove zlib /etc/httpd/php.ini
 fi
 
 %clean
@@ -1320,6 +999,7 @@ rm -rf $RPM_BUILD_ROOT
 /home/httpd/html/icons/*
 
 %attr(755,root,root) %{_pkglibdir}/libphp4.so
+%attr(755,root,root) %{_sbindir}/*
 
 %files mysql
 %defattr(644,root,root,755)
@@ -1329,13 +1009,17 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/pgsql.so
 
-%{?oracle:%files oracle}
-%{?oracle:%defattr(644,root,root,755)}
-%{?oracle:%attr(755,root,root) %{_pkglibdir}/php/oracle.so}
+%if %{?bcond_on_oracle:1}%{!?bcond_on_oracle:0}
+%files oracle
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_pkglibdir}/php/oracle.so
+%endif
 
-%{?oci8:%files oci8}
-%{?oci8:%defattr(644,root,root,755)}
-%{?oci8:%attr(755,root,root) %{_pkglibdir}/php/oci8.so}
+%if  %{?bcond_on_oci8:1}%{!?bcond_on_oci8:0}
+%files oci8
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_pkglibdir}/php/oci8.so
+%endif
 
 %files gd
 %defattr(644,root,root,755)
@@ -1417,13 +1101,17 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/snmp.so
 
+%if %{?bcond_on_java:1}%{!?bcond_on_java:0}
 %files java
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/libphp_java.so
+%endif
 
+%if %{?bcond_off_ldap:0}%{!?bcond_off_ldap:1}
 %files ldap
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/ldap.so
+%endif
 
 %files sockets
 %defattr(644,root,root,755)
@@ -1432,6 +1120,14 @@ rm -rf $RPM_BUILD_ROOT
 %files mcrypt
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_pkglibdir}/php/mcrypt.so
+
+%files mhash
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_pkglibdir}/php/mhash.so
+
+%files odbc
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_pkglibdir}/php/odbc.so
 
 %files doc
 %defattr(644,root,root,755)
