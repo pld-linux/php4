@@ -23,6 +23,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 License:	The PHP license (see "LICENSE" file included in distribution)
 Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.gz
 Source1:	FAQ.php
@@ -44,6 +47,7 @@ Patch10:	%{name}-pldlogo.patch
 Patch11:	%{name}-libxml2.patch
 Patch12:	%{name}-mailsecurity2.patch
 Patch13:	%{name}-ZVAL.patch
+Patch14:	%{name}-oracle9.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -72,13 +76,13 @@ BuildRequires:	mysql-devel >= 3.23.32
 %{!?_without_ldap:BuildRequires: openldap-devel >= 2.0}
 BuildRequires:	pam-devel
 BuildRequires:	pdflib-devel >= 4.0.0
-#BuildRequires:	libxml-devel >= 2.0.0
+BuildRequires:	libxml-devel >= 2.2.7
 BuildRequires:	postgresql-devel
 BuildRequires:	recode-devel >= 3.5d-3
 BuildRequires:	t1lib-devel
 %{!?_without_odbc:BuildRequires: unixODBC-devel}
 BuildRequires:	zlib-devel >= 1.0.9
-%{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.1-8}
+%{!?_without_snmp:BuildRequires: ucd-snmp-devel >= 4.2.2}
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	mhash-devel
 BuildRequires:	bzip2-devel
@@ -148,6 +152,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description cgi
@@ -164,6 +171,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 
 %description common
 Common files needed by both apache module and CGI.
@@ -179,6 +189,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description mysql
@@ -197,6 +210,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 PreReq:		pdflib
 
@@ -216,6 +232,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description pgsql
@@ -235,6 +254,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 Autoreq:	false
 
@@ -255,6 +277,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 Autoreq:	false
 
@@ -275,6 +300,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description gd
@@ -295,6 +323,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description java
@@ -314,6 +345,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description xml
@@ -335,6 +369,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description dba
@@ -351,6 +388,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description odbc
@@ -368,6 +408,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description calendar
@@ -384,6 +427,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description dbase
@@ -401,6 +447,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description filepro
@@ -417,6 +466,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description posix
@@ -434,6 +486,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description pcre
@@ -452,6 +507,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description sysvsem
@@ -469,6 +527,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description sysvshm
@@ -486,6 +547,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description yp
@@ -502,6 +566,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description bcmath
@@ -520,6 +587,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description ftp
@@ -536,6 +606,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description zlib
@@ -553,6 +626,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description exif
@@ -569,6 +645,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 Requires:	recode >= 3.5d-3
 
@@ -586,6 +665,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description session
@@ -602,6 +684,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description gettext
@@ -618,6 +703,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description snmp
@@ -634,6 +722,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description imap
@@ -650,6 +741,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description ldap
@@ -666,6 +760,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description sockets
@@ -682,6 +779,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description mcrypt
@@ -698,6 +798,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description mhash
@@ -724,6 +827,8 @@ WWW.
 %package pear
 Summary:	PEAR
 Group:		Development/Languages/PHP
+Group(de):	Entwicklung/Sprachen/PHP
+Group(pl):	Programowanie/JЙzyki/PHP
 
 %description pear
 PEAR.
@@ -731,6 +836,8 @@ PEAR.
 %package domxml
 Summary:        XML
 Group:          Development/Languages/PHP
+Group(de):	Entwicklung/Sprachen/PHP
+Group(pl):	Programowanie/JЙzyki/PHP
 
 %description domxml
 XML.
@@ -739,6 +846,8 @@ XML.
 Summary:	Files for PHP modules development
 Summary(pl):	Pliki do kompilacji moduЁСw PHP
 Group:		Development/Languages/PHP
+Group(de):	Entwicklung/Sprachen/PHP
+Group(pl):	Programowanie/JЙzyki/PHP
 Requires:	%{name}-common = %{version}
 
 %description devel
@@ -755,6 +864,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description curl
@@ -772,8 +884,11 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
-#
+
 %description xslt
 This is a dynamic shared object (DSO) for Apache that will add xslt
 support to PHP.
@@ -789,6 +904,9 @@ Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	Библиотеки
+Group(uk):	Б╕бл╕отеки
 PreReq:		%{name}-common = %{version}
 
 %description wddx
@@ -814,6 +932,7 @@ ModuЁ PHP umo©liwiaj╠cy korzystanie z wddx.
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
