@@ -2258,7 +2258,6 @@ fi
 %files pear-additional_classes
 %defattr(644,root,root,755)
 %attr(644,root,root) %{php_pear_dir}/Crypt/HCEMD5.php
-%attr(644,root,root) %{php_pear_dir}/Date/Calc.php
 %attr(644,root,root) %{php_pear_dir}/File/Passwd.php
 %attr(644,root,root) %{php_pear_dir}/HTML/Form.php
 %attr(644,root,root) %{php_pear_dir}/HTML/IT*.php
