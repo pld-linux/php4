@@ -77,7 +77,7 @@ BuildRequires:	curl-devel
 %if %(expr %{?bcond_on_openssl:1}%{!?bcond_on_openssl:0} + %{!?bcond_off_ldap:1}%{?bcond_off_ldap:0})
 BuildRequires:	openssl-devel >= 0.9.6a
 %endif
-Requires:	apache(EAPI) >= 1.3.9
+Prereq:		apache(EAPI) >= 1.3.9
 Prereq:		perl
 Prereq:		%{_sbindir}/apxs
 PreReq:		%{name}-common = %{version}
