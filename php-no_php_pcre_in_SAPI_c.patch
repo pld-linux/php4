@@ -1,29 +1,25 @@
-diff -urN php-4_2_0RC3.org/main/SAPI.c php-4_2_0RC3/main/SAPI.c
---- php-4_2_0RC3.org/main/SAPI.c	Sat Apr 13 01:18:30 2002
-+++ php-4_2_0RC3/main/SAPI.c	Sat Apr 13 01:38:42 2002
+--- ./main/SAPI.c.org	Sat Jul 27 15:15:42 2002
++++ ./main/SAPI.c	Sat Sep  7 11:13:49 2002
 @@ -27,9 +27,6 @@
  #include "SAPI.h"
  #include "ext/standard/php_string.h"
  #include "ext/standard/pageinfo.h"
--#if HAVE_PCRE || HAVE_BUNDLED_PCRE
+-#if (HAVE_PCRE || HAVE_BUNDLED_PCRE) && !defined(COMPILE_DL_PCRE)
 -#include "ext/pcre/php_pcre.h"
 -#endif
  #ifdef ZTS
  #include "TSRM.h"
  #endif
-@@ -465,65 +462,8 @@
- 			} else if (!STRCASECMP(header_line, "WWW-Authenticate")) { /* HTTP Authentication */
- 				int newlen;
- 				char *result, *newheader;
--#if HAVE_PCRE || HAVE_BUNDLED_PCRE
--				zval *repl_temp;
--				char *ptr = colon_offset+1;
--				int ptr_len=0, result_len = 0;
--#endif
- 
+@@ -480,62 +477,6 @@
  				SG(sapi_headers).http_response_code = 401; /* authentication-required */
--#if HAVE_PCRE || HAVE_BUNDLED_PCRE
--				if(PG(safe_mode)) {
+ 
+ 				if(PG(safe_mode)) 
+-#if (HAVE_PCRE || HAVE_BUNDLED_PCRE) && !defined(COMPILE_DL_PCRE)
+-				{
+-					zval *repl_temp;
+-					char *ptr = colon_offset+1;
+-					int ptr_len=0, result_len = 0;
+-
 -					myuid = php_getuid();
 -
 -					ptr_len = strlen(ptr);
@@ -74,10 +70,10 @@ diff -urN php-4_2_0RC3.org/main/SAPI.c php-4_2_0RC3/main/SAPI.c
 -					efree(repl_temp);
 -				} 
 -#else
- 				if(PG(safe_mode)) {
+ 				{
  					myuid = php_getuid();
  					result = emalloc(32);
-@@ -534,7 +474,6 @@
+@@ -546,7 +487,6 @@
  					sapi_header.header_len = newlen;
  					efree(result);
  				} 

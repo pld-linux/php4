@@ -1,37 +1,13 @@
-diff -urN php-4.2.1RC2.org/configure.in php-4.2.1RC2/configure.in
---- php-4.2.1RC2.org/configure.in	Sat May 11 20:49:22 2002
-+++ php-4.2.1RC2/configure.in	Sat May 11 21:05:41 2002
-@@ -297,6 +297,7 @@
- 
- if test "$php_no_nsl_checks" != "yes"; then
- 
-+AC_CHECK_FUNC(gethostname,[true], [
- AC_CHECK_LIB(nsl, gethostname, [
-  PHP_ADD_LIBRARY(nsl)
-  AC_DEFINE(HAVE_LIBNSL,1,[ ]) ],[
-@@ -304,6 +305,7 @@
-   PHP_ADD_LIBRARY(nsl)
-   AC_DEFINE(HAVE_LIBNSL,1,[ ]) ], [])
- ])
-+])
- 
- fi
- 
-diff -urN php-4.2.1RC2.org/ext/gmp/config.m4 php-4.2.1RC2/ext/gmp/config.m4
---- php-4.2.1RC2.org/ext/gmp/config.m4	Sat May 11 20:49:22 2002
-+++ php-4.2.1RC2/ext/gmp/config.m4	Sat May 11 21:05:41 2002
-@@ -21,5 +21,6 @@
- 
-   PHP_EXTENSION(gmp, $ext_shared)
-   AC_DEFINE(HAVE_GMP, 1, [ ])
--  PHP_ADD_LIBRARY_WITH_PATH(gmp, $GMP_DIR/lib)
-+  PHP_ADD_LIBRARY_WITH_PATH(gmp, $GMP_DIR/lib, GMP_SHARED_LIBADD)
+--- ./ext/gmp/config.m4.org	Mon Jun 24 09:55:32 2002
++++ ./ext/gmp/config.m4	Sat Sep  7 11:02:51 2002
+@@ -23,3 +23,4 @@
+   PHP_SUBST(GMP_SHARED_LIBADD)
+   PHP_ADD_LIBRARY_WITH_PATH(gmp, $GMP_DIR/lib, GMP_SHARED_LIBADD)
  fi
 +PHP_SUBST(GMP_SHARED_LIBADD)
-diff -urN php-4.2.1RC2.org/ext/xslt/config.m4 php-4.2.1RC2/ext/xslt/config.m4
---- php-4.2.1RC2.org/ext/xslt/config.m4	Sat May 11 20:49:24 2002
-+++ php-4.2.1RC2/ext/xslt/config.m4	Sat May 11 21:09:39 2002
-@@ -81,7 +82,7 @@
+--- ./ext/xslt/config.m4.org	Thu May  2 12:24:03 2002
++++ ./ext/xslt/config.m4	Sat Sep  7 11:03:45 2002
+@@ -81,7 +81,7 @@
        found_js=no
        AC_CHECK_LIB(js, JS_GetRuntime, found_js=yes)
        if test "$found_js" = "yes"; then
@@ -40,9 +16,8 @@ diff -urN php-4.2.1RC2.org/ext/xslt/config.m4 php-4.2.1RC2/ext/xslt/config.m4
        fi
      fi
  
-diff -urN php-4.2.1RC2.org/ext/yp/Makefile.in php-4.2.1RC2/ext/yp/Makefile.in
---- php-4.2.1RC2.org/ext/yp/Makefile.in	Sat May 11 20:49:24 2002
-+++ php-4.2.1RC2/ext/yp/Makefile.in	Sat May 11 21:05:41 2002
+--- ./ext/yp/Makefile.in.org	Tue May  2 03:21:26 2000
++++ ./ext/yp/Makefile.in	Sat Sep  7 11:05:11 2002
 @@ -2,5 +2,6 @@
  LTLIBRARY_NAME    = libyp.la
  LTLIBRARY_SOURCES = yp.c
@@ -50,9 +25,8 @@ diff -urN php-4.2.1RC2.org/ext/yp/Makefile.in php-4.2.1RC2/ext/yp/Makefile.in
 +LTLIBRARY_SHARED_LIBADD = $(NSL_SHARED_LIBADD)
  
  include $(top_srcdir)/build/dynlib.mk
-diff -urN php-4.2.1RC2.org/ext/yp/config.m4 php-4.2.1RC2/ext/yp/config.m4
---- php-4.2.1RC2.org/ext/yp/config.m4	Sat May 11 20:49:24 2002
-+++ php-4.2.1RC2/ext/yp/config.m4	Sat May 11 21:05:41 2002
+--- ./ext/yp/config.m4.org	Fri Nov 30 20:00:10 2001
++++ ./ext/yp/config.m4	Sat Sep  7 11:06:31 2002
 @@ -6,8 +6,11 @@
  [  --enable-yp             Include YP support.])
  
@@ -66,3 +40,21 @@ diff -urN php-4.2.1RC2.org/ext/yp/config.m4 php-4.2.1RC2/ext/yp/config.m4
    case $host_alias in
    *solaris*)
      AC_DEFINE(SOLARIS_YP,1,[ ]) ;;
+--- ./configure.in.org	Fri Sep  6 01:20:49 2002
++++ ./configure.in	Sat Sep  7 11:01:54 2002
+@@ -292,6 +292,7 @@
+ 
+ if test "$php_no_nsl_checks" != "yes"; then
+ 
++AC_CHECK_FUNC(gethostname,[true], [
+ AC_CHECK_LIB(nsl, gethostname, [
+  PHP_ADD_LIBRARY(nsl)
+  AC_DEFINE(HAVE_LIBNSL,1,[ ]) ],[
+@@ -299,6 +300,7 @@
+   PHP_ADD_LIBRARY(nsl)
+   AC_DEFINE(HAVE_LIBNSL,1,[ ]) ], [])
+ ])
++])
+ 
+ fi
+ 
