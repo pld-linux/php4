@@ -14,7 +14,6 @@
 %bcond_without	curl		# without CURL extension module
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
 %bcond_without	fribidi		# without FriBiDi extension module
-%bcond_without	gif		# build GD extension module with gd library without GIF support
 %bcond_without	imap		# without IMAP extension module
 %bcond_without	interbase	# without InterBase extension module
 %bcond_without	ldap		# without LDAP extension module
@@ -72,8 +71,9 @@ Source0:	http://downloads.php.net/ilia/%{name}-%{version}%{_rc}.tar.bz2
 # Source0-md5:	e8ab484fcb94cd2e0d7ecfd0762cfd33
 Source1:	FAQ.%{name}
 Source2:	zend.gif
-Source4:	%{name}-module-install
-Source5:	%{name}-mod_%{name}.conf
+Source3:	%{name}-module-install
+Source4:	%{name}-mod_%{name}.conf
+Source5:	%{name}-cgi-fcgi.ini
 Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Source8:	%{name}-cli.ini
@@ -113,13 +113,13 @@ Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 BuildRequires:	apache-devel
-%{?with_pspell:BuildRequires:	aspell-devel}
+%{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
 BuildRequires:	bzip2-devel
 BuildRequires:	cracklib-devel >= 2.7-15
-%{?with_curl:BuildRequires:	curl-devel >= 7.12.0 }
+%{?with_curl:BuildRequires:	curl-devel >= 7.12.0}
 BuildRequires:	cyrus-sasl-devel
 %{?with_db3:BuildRequires:	db3-devel >= 3.1}
 %{!?with_db3:BuildRequires:	db-devel >= 4.0}
@@ -128,18 +128,17 @@ BuildRequires:	elfutils-devel
 BuildRequires:	expat-devel
 %endif
 %{?with_fdf:BuildRequires:	fdftk-devel}
+BuildRequires:	file >= 4.00
 BuildRequires:	flex
 %if %{with mssql} || %{with sybase}
 BuildRequires:	freetds-devel
 %endif
 BuildRequires:	freetype-devel >= 2.0
 %{?with_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
-BuildRequires:	gd-devel >= 2.0.20
-%{?with_gif:BuildRequires:	gd-devel(gif)}
-%{!?with_gif:BuildConflicts:	gd-devel(gif)}
+BuildRequires:	gd-devel >= 2.0.28
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
-%{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2 }
+%{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2}
 %{?with_java:BuildRequires:	jdk >= 1.1}
 %{?with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
 BuildRequires:	libjpeg-devel
@@ -655,9 +654,8 @@ Summary(pl):	Modu³ GD dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	gd >= 2.0.20
-%{?with_gif:Requires:	gd(gif)}
-%{?with_gif:Provides:	%{name}-gd(gif) = %{epoch}:%{version}-%{release}}
+Requires:	gd >= 2.0.28
+Provides:	%{name}-gd(gif) = %{epoch}:%{version}-%{release}
 
 %description gd
 This is a dynamic shared object (DSO) for PHP that will add GD
@@ -1698,11 +1696,10 @@ ln -sf php.cgi $RPM_BUILD_ROOT%{_bindir}/php
 %{?with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{extensionsdir}}
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
-install %{SOURCE6} %{SOURCE7} %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}
-install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi-fcgi.ini
+install %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{httpdir}/icons
-install %{SOURCE4} $RPM_BUILD_ROOT%{_sbindir}
-install %{SOURCE5} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
+install %{SOURCE3} $RPM_BUILD_ROOT%{_sbindir}
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
 
 install %{SOURCE1} .
 
