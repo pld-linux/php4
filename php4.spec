@@ -279,6 +279,7 @@ Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-fcgi = %{epoch}:%{version}-%{release}
 Provides:	php-program = %{epoch}:%{version}-%{release}
+Provides:	%{name}-program = %{epoch}:%{version}-%{release}
 
 %description fcgi
 php4 as FastCGI program.
@@ -293,6 +294,7 @@ Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-cgi = %{epoch}:%{version}-%{release}
 Provides:	php-program = %{epoch}:%{version}-%{release}
+Provides:	%{name}-program = %{epoch}:%{version}-%{release}
 
 %description cgi
 php4 as CGI program.
@@ -307,6 +309,7 @@ Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-cli = %{epoch}:%{version}-%{release}
 Provides:	php-program = %{epoch}:%{version}-%{release}
+Provides:	%{name}-program = %{epoch}:%{version}-%{release}
 
 %description cli
 php4 as CLI interpreter.
@@ -1006,8 +1009,8 @@ Um módulo para aplicações PHP que usam bancos de dados MySQL.
 Summary:	ncurses module for PHP
 Summary(pl):	Modu³ ncurses dla PHP
 Group:		Libraries
-Requires(post,preun):	php-program = %{epoch}:%{version}-%{release}
-Requires:	php-program = %{epoch}:%{version}-%{release}
+Requires(post,preun):	%{name}-cli = %{epoch}:%{version}-%{release}
+Requires:	%{name}-cli = %{epoch}:%{version}-%{release}
 Provides:	php-ncurses = %{epoch}:%{version}-%{release}
 
 %description ncurses
@@ -1112,8 +1115,8 @@ Uwaga: to jest modu³ eksperymentalny.
 Summary:	Process Control extension module for PHP
 Summary(pl):	Modu³ Process Control dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Requires(post,preun):	%{name}-program = %{epoch}:%{version}-%{release}
+Requires:	%{name}-program = %{epoch}:%{version}-%{release}
 Provides:	php-pcntl = %{epoch}:%{version}-%{release}
 
 %description pcntl
@@ -1231,8 +1234,8 @@ Modu³ PHP dodaj±cy obs³ugê funkcji Qt DOM.
 Summary:	readline extension module for PHP
 Summary(pl):	Modu³ readline dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Requires(post,preun):	%{name}-cli = %{epoch}:%{version}-%{release}
+Requires:	%{name}-cli = %{epoch}:%{version}-%{release}
 Provides:	php-readline = %{epoch}:%{version}-%{release}
 
 %description readline
