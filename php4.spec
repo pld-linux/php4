@@ -1,6 +1,5 @@
 #
 # TODO:
-# - pear - isn't built now, what is still needed???
 # - fastcgi option in cgi SAPI? or separate fcgi SAPI?
 #
 # Automatic pear requirements finding:
@@ -59,7 +58,7 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.3.0
-Release:	0.6
+Release:	0.7
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1352,7 +1351,6 @@ PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
 for i in cgi cli apxs ; do
 %configure \
 	`[ $i = cgi ] && echo --enable-discard-path` \
-	`[ $i != cli ] && echo --disable-cli` \
 	`[ $i = cli ] && echo --disable-cgi` \
 	`[ $i = fcgi ] && echo --enable-fastcgi --with-fastcgi=/usr` \
 %if %{_apache2}
