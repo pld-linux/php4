@@ -61,12 +61,13 @@ Summary(ru):	PHP Версии 4 -- язык препроцессирования HTML-файлов, выполняемый на
 Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php
 Version:	4.3.6
-Release:	0.RC1
+%define	_rc	RC2
+Release:	0.%{_rc}
 Epoch:		3
 Group:		Libraries
 License:	PHP
-Source0:	http://downloads.php.net/ilia/%{name}-%{version}RC1.tar.bz2
-# Source0-md5:	7d196e4ed7b460be6cab18f2cdd1ef1d
+Source0:	http://downloads.php.net/ilia/%{name}-%{version}%{_rc}.tar.bz2
+# Source0-md5:	0bf89373a60f65cd37c1e3e652e278f5
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source4:	%{name}-module-install
@@ -1478,7 +1479,7 @@ PEAR/*.php), dostarczanych z PHP, zainstaluj odpowiednie pakiety
 php-pear-* (php-pear-PEAR, php-pear-Archive_Tar, itp).
 
 %prep
-%setup -q -n %{name}-%{version}RC1
+%setup -q -n %{name}-%{version}%{_rc}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
