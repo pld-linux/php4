@@ -1,7 +1,14 @@
 #
-#   oracle - with oracle support 
-#   oci8   - with oci8 support
-#	
+# Conditional build:
+# bcond_on_oracle  - with oracle support 
+# bcond_on_oci8    - with oci8 support
+# bcond_on_java    - with Java support
+# bcond_on_openssl - with OpenSSL support
+# bcond_off_imap   - without IMAP support
+# bcond_off_ldap   - without LDAP support
+# bcond_off_odbc   - without ODBC support
+# bcond_off_snmp   - without SNMP support
+#
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
@@ -11,6 +18,7 @@ Release:	0.6
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 License:	The PHP license (see "LICENSE" file included in distribution)
@@ -23,7 +31,7 @@ Source5:	php-module-install
 Patch0:		%{name}-imap.patch
 Patch1:		%{name}-mysql-socket.patch
 Patch2:		%{name}-mail.patch
-#Patch5:	%{name}-no_libnsl.patch
+Patch5:		%{name}-no_libnsl.patch
 Patch6:		%{name}-DESTDIR.patch
 Patch7:		%{name}-gd-shared.patch
 Patch8:		%{name}-apache-fixes.patch
@@ -38,7 +46,7 @@ BuildRequires:	db3-devel >= 3.1.17
 BuildRequires:	freetype-devel
 BuildRequires:	gd-devel >= 1.8.3
 BuildRequires:	gdbm-devel
-BuildRequires:	imap-devel >= 4.7b-1
+%{!?bcond_off_imap:BuildRequires: imap-devel >= 4.7b-1}
 # I think jdk is better for java
 # BuildRequires:	jdk
 %{?bcond_on_java:BuildRequires:	kaffe-devel}
@@ -55,9 +63,9 @@ BuildRequires:	pdflib-devel >= 3.0
 BuildRequires:	postgresql-devel
 BuildRequires:	recode-devel >= 3.5
 BuildRequires:	t1lib-devel
-BuildRequires:	unixODBC-devel
+%{!?bcond_off_odbc:BuildRequires: unixODBC-devel}
 BuildRequires:	zlib-devel >= 1.0.9
-BuildRequires:	ucd-snmp-devel >= 4.1
+%{!?bcond_off_snmp:BuildRequires: ucd-snmp-devel >= 4.1}
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	mhash-devel
 BuildRequires:	bzip2-devel
@@ -118,6 +126,7 @@ Summary:	MySQL database module for PHP
 Summary(pl):	Modu³ bazy danych MySQL dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -130,12 +139,12 @@ should install this package in addition to the main %{name} package.
 %description mysql -l pl
 Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych MySQL.
 
-
 %package pgsql
 Summary:	PostgreSQL database module for PHP
 Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -154,6 +163,7 @@ Summary:	Oracle 8 database module for PHP
 Summary(pl):	Modu³ bazy danych Oracle 8 dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -166,13 +176,14 @@ you should install this package in addition to the main %{name}
 package.
 
 %description oci8 -l pl
-Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 8. }
+Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 8.
 
 %package oracle
 Summary:	Oracle 7 database module for PHP
 Summary(pl):	Modu³ bazy danych Oracle 7 dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -185,13 +196,14 @@ you should install this package in addition to the main %{name}
 package.
 
 %description oracle -l pl
-Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 7. }
+Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 7.
 
 %package gd
 Summary:	GD extension module for PHP
 Summary:	Modu³ GD dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -203,13 +215,15 @@ main %{name} package if you want to create and manipulate images with
 PHP.
 
 %description gd -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki GD - do obróbki obrazków
+z poziomu PHP.
 
-%if %{?bcond_on_java:1}%{!?bcond_on_java:0}
 %package java
 Summary:	Java extension module for PHP
 Summary(pl):	Modu³ Javy dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -220,13 +234,15 @@ support to PHP. This extension provides a simple and effective means
 for creating and invoking methods on Java objects from PHP.
 
 %description java -l pl
-%endif
+Modu³ PHP dodaj±cy wsparcie dla Javy. Umo¿liwia odwo³ywanie siê do
+obiektów Javy z poziomu PHP.
 
 %package xml
 Summary:	XML extension module for PHP
 Summary(pl):	Modu³ XML dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -238,13 +254,16 @@ define handlers for different XML events. If you want to be able to
 parse XML documents you should install this package in addition to the
 main %{name} package.
 
-#%description xml -l pl
+%description xml -l pl
+Modu³ PHP umo¿liwiaj±cy parsowanie plików XML i obs³ugê zdarzeñ
+zwi±zanych z tymi plikami.
 
 %package dba
 Summary:	DBA extension module for PHP
 Summary(pl):	Modu³ DBA dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -260,6 +279,7 @@ Summary:	ODBC extension module for PHP
 Summary(pl):	Modu³ ODBC dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -268,13 +288,15 @@ PreReq:	%{name} = %{version}
 This is a dynamic shared object (DSO) for Apache that will add
 ODBC support to PHP.
 
-#%description odbc -l pl
+%description odbc -l pl
+Modu³ PHP ze wsparciem dla ODBC.
 
 %package calendar
 Summary:	Calendar extension module for PHP
 Summary(pl):	Modu³ funkcji kalendarza dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -290,6 +312,7 @@ Summary:	DBase extension module for PHP
 Summary(pl):	Modu³ DBase dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -298,13 +321,15 @@ PreReq:	%{name} = %{version}
 This is a dynamic shared object (DSO) for Apache that will add DBase
 support to PHP.
 
-#%description dbase -l pl
+%description dbase -l pl
+Modu³ PHP ze wsparciem dla DBase.
 
 %package filepro
 Summary:	FilePro extension module for PHP
 Summary(pl):	Modu³ FilePro dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -320,6 +345,7 @@ Summary:	POSIX extension module for PHP
 Summary(pl):	Modu³ POSIX dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -328,13 +354,15 @@ PreReq:	%{name} = %{version}
 This is a dynamic shared object (DSO) for Apache that will add POSIX
 functions support to PHP.
 
-#%description posix -l pl
+%description posix -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z funkcji POSIX.
 
 %package pcre
 Summary:	PCRE extension module for PHP
 Summary(pl):	Modu³ PCRE dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -343,13 +371,16 @@ PreReq:	%{name} = %{version}
 This is a dynamic shared object (DSO) for Apache that will add Perl
 Compatible Regular Expression support to PHP.
 
-#%description pcre -l pl
+%description pcre -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z perlowych wyra¿eñ regularnych
+(Perl Compatible Regular Expressions)
 
 %package sysvsem
 Summary:	SysV sem extension module for PHP
 Summary(pl):	Modu³ SysV sem dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -358,13 +389,15 @@ PreReq:	%{name} = %{version}
 This is a dynamic shared object (DSO) for Apache that will add SysV
 semafores support to PHP.
 
-#%description sysvsem -l pl
+%description sysvsem -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z semaforów SysV.
 
 %package sysvshm
 Summary:	SysV shm extension module for PHP
 Summary(pl):	Modu³ SysV shm dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -373,13 +406,15 @@ PreReq:	%{name} = %{version}
 This is a dynamic shared object (DSO) for Apache that will add SysV
 Shared Memory support to PHP.
 
-#%description sysvshm -l pl
+%description sysvshm -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej SysV.
 
 %package yp
 Summary:	NIS (yp) extension module for PHP
 Summary(pl):	Modu³ NIS (yp) dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -395,6 +430,7 @@ Summary:	bcmath extension module for PHP
 Summary(pl):	Modu³ bcmath dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -403,13 +439,16 @@ PreReq:	%{name} = %{version}
 This is a dynamic shared object (DSO) for Apache that will add bc
 style precision math functions support to PHP.
 
-#%description bcmath -l pl
+%description bcmath -l pl
+Modu³ PHP umo¿liwiaj±cy korzystanie z dok³adnych funkcji matematycznych
+takich jak w programie bc.
 
 %package ftp
 Summary:	FTP extension module for PHP
 Summary(pl):	Modu³ FTP dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -425,21 +464,24 @@ Summary:	Zlib extension module for PHP
 Summary(pl):	Modu³ zlib dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
 
 %description zlib
 This is a dynamic shared object (DSO) for Apache that will add
-commpresion (zlib) support to PHP.
+compression (zlib) support to PHP.
 
-#%description zlib -l pl
+%description zlib -l pl
+Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji (poprzez bibliotekê zlib).
 
 %package exif
 Summary:	exifextension module for PHP
 Summary(pl):	Modu³ exif dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -455,6 +497,7 @@ Summary:	recodeextension module for PHP
 Summary(pl):	Modu³ recode dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -470,6 +513,7 @@ Summary:	sessionextension module for PHP
 Summary(pl):	Modu³ session dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -485,6 +529,7 @@ Summary:	gettextextension module for PHP
 Summary(pl):	Modu³ gettext dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -495,12 +540,12 @@ support to PHP.
 
 #%description gettext -l pl
 
-
 %package snmp
 Summary:	snmpextension module for PHP
 Summary(pl):	Modu³ snmp dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -516,6 +561,7 @@ Summary:	imapextension module for PHP
 Summary(pl):	Modu³ imap dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -531,6 +577,7 @@ Summary:	LDAP extension module for PHP
 Summary(pl):	Modu³ LDAP dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -546,6 +593,7 @@ Summary:	sockets extension module for PHP
 Summary(pl):	Modu³ socket dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -561,6 +609,7 @@ Summary:	mcrypt extension module for PHP
 Summary(pl):	Modu³ mcrypt dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -576,6 +625,7 @@ Summary:	mhash extension module for PHP
 Summary(pl):	Modu³ mhash dla PHP
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 PreReq:	%{name} = %{version}
@@ -585,7 +635,6 @@ This is a dynamic shared object (DSO) for Apache that will add mhash
 support to PHP.
 
 #%description mcrypt -l pl
-
 
 %package doc
 Summary:	Online manual for PHP
@@ -621,7 +670,7 @@ Files for PHP modules development.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-#%patch5 -p1
+%patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
@@ -652,7 +701,7 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 	--with-mysql=shared,/usr \
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-gd=shared \
-	 --enable-gd-imgstrttf \
+	--enable-gd-imgstrttf \
 	--with-dbase=shared \
 	--with-filepro=shared \
 	--enable-ftp=shared \
@@ -661,7 +710,7 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 	--with-cpdflib=shared \
 	%{?bcond_on_java:--with-java} \
 	--with-pgsql=shared,/usr \
-	--with-imap=shared \
+	%{!?bcond_off_imap:--with-imap=shared} \
 	--enable-bcmath=shared \
 	--enable-calendar=shared \
 	--with-mm \
@@ -672,8 +721,7 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 	--with-recode=shared \
 	--enable-ucd-snmp-hack \
 	--enable-dba=shared \
-	--with-snmp=shared \
-	--with-openssl \
+	%{!?bcond_off_snmp:--with-snmp=shared} \
 	--with-gdbm \
 	--with-db3 \
 	--enable-yp=shared \
@@ -688,15 +736,12 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI -I/usr/X11R6/include"; export CFLAGS
 	--with-curl=shared \
 	--with-gmp=shared \
 	%{?bcond_on_openssl:--with-openssl} \
-	--with-unixODBC=shared \
+	%{!?bcond_off_odbc:--with-unixODBC=shared} \
 	%{?bcond_on_oracle:--with-oracle=shared} \
 	%{?bcond_on_oci8:--with-oci8=shared} \
 	--without-db2 
 
-
-
 # TODO --with-pspell=/usr,shared (pspell missing)
-
 
 # --with-dom need libxml >= 2.2.7 \
 
@@ -727,25 +772,22 @@ gzip -9nf CODING_STANDARDS CREDITS FUNCTION_LIST.txt \
 
 %post
 /usr/sbin/apxs -e -a -n php4 %{_pkglibdir}/libphp4.so 1>&2
-perl -pi -e 's|^#AddType application/x-httpd-php .php|AddType application/x-httpd-php .php|'
+perl -pi -e 's|^#AddType application/x-httpd-php \.php|AddType application/x-httpd-php .php|' \
+	/etc/httpd/httpd.conf
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
-%postun
-perl -pi -e 's|^AddType application/x-httpd-php .php|#AddType application/x-httpd-php .php|'
-if [ -f /var/lock/subsys/httpd ]; then
-      /etc/rc.d/init.d/httpd restart 1>&2
 fi
 
 %preun
 if [ "$1" = "0" ]; then
 	/usr/sbin/apxs -e -A -n php4 %{_pkglibdir}/libphp4.so 1>&2
+	perl -pi -e \
+		's|^AddType application/x-httpd-php \.php|#AddType application/x-httpd-php .php|' \
+		/etc/httpd/httpd.conf
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
 fi
-
 
 %post bcmath
 %{_sbindir}/php-module-install install bcmath %{_sysconfdir}/apache/php.ini
@@ -819,6 +861,7 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove gettext %{_sysconfdir}/apache/php.ini
 fi
 
+%if %{?bcond_off_imap:0}%{!?bcond_off_imap:1}
 %post imap
 %{_sbindir}/php-module-install install imap %{_sysconfdir}/apache/php.ini
 
@@ -826,6 +869,7 @@ fi
 if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove imap %{_sysconfdir}/apache/php.ini
 fi
+%endif
 
 %if %{?bond_on_java:1}%{!?bond_on_java:0}
 %post java
@@ -881,6 +925,7 @@ if [ "$1" = "0" ]; then
 fi
 %endif
 
+%if %{?bcond_off_odbc:0}%{!?bcond_off_odbc:1}
 %post odbc
 %{_sbindir}/php-module-install install odbc %{_sysconfdir}/apache/php.ini
 
@@ -888,6 +933,7 @@ fi
 if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove odbc %{_sysconfdir}/apache/php.ini
 fi
+%endif
 
 %if %{?bcond_on_oracle:1}%{!?bcond_on_oracle:0}
 %post oracle
@@ -939,6 +985,7 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove session %{_sysconfdir}/apache/php.ini
 fi
 
+%if %{?bcond_off_snmp:0}%{!?bcond_off_snmp:1}
 %post snmp
 %{_sbindir}/php-module-install install snmp %{_sysconfdir}/apache/php.ini
 
@@ -946,6 +993,7 @@ fi
 if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove snmp %{_sysconfdir}/apache/php.ini
 fi
+%endif
 
 %post sockets
 %{_sbindir}/php-module-install install sockets %{_sysconfdir}/apache/php.ini
@@ -1006,7 +1054,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/apache/*
 
-
 /home/httpd/html/icons/*
 
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
@@ -1041,7 +1088,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/php/XML
 %{_libdir}/php/*.php
 
-
 %files mysql
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mysql.*
@@ -1056,7 +1102,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{extensionsdir}/oracle.so
 %endif
 
-%if  %{?bcond_on_oci8:1}%{!?bcond_on_oci8:0}
+%if %{?bcond_on_oci8:1}%{!?bcond_on_oci8:0}
 %files oci8
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/oci8.so
@@ -1134,13 +1180,17 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/gettext.so
 
+%if %{?bcond_off_imap:0}%{!?bcond_off_imap:1}
 %files imap
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/imap.so
+%endif
 
+%if %{?bcond_off_snmp:0}%{!?bcond_off_snmp:1}
 %files snmp
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/snmp.so
+%endif
 
 %if %{?bcond_on_java:1}%{!?bcond_on_java:0}
 %files java
@@ -1166,9 +1216,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/mhash.so
 
+%if %{?bcond_off_odbc:0}%{!?bcond_off_odbc:1}
 %files odbc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/odbc.so
+%endif
 
 %files doc
 %defattr(644,root,root,755)
