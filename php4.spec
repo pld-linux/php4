@@ -49,7 +49,7 @@ BuildRequires:	zip
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	db3-devel >= 3.1.17
-BuildRequires:	freetype1-devel
+BuildRequires:	freetype-devel >= 2.0
 BuildRequires:	gd-devel >= 1.8.3
 BuildRequires:	gdbm-devel
 %{!?_without_imap:BuildRequires: imap-devel >= 1:2001-0.BETA.200107022325.2 }
@@ -795,7 +795,7 @@ for i in cgi apxs ; do
 	--with-mysql=shared,/usr \
 	--with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-gd=shared \
-	--enable-gd-imgstrttf \
+	--enable-gd-native-ttf \
 	--with-dbase=shared \
 	--with-filepro=shared \
 	--enable-ftp=shared \
@@ -810,7 +810,7 @@ for i in cgi apxs ; do
 	--with-mm \
 	--with-pcre-regex=shared \
 	--enable-posix=shared \
-	--with-ttf \
+	--with-freetype-dir=shared \
 	--with-t1lib \
 	--with-recode=shared \
 	--enable-ucd-snmp-hack \
