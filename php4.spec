@@ -40,9 +40,6 @@
 %bcond_without	xslt		# without XSLT extension module
 %bcond_without	yaz		# without YAZ extension module
 #
-# Automatic pear requirements finding:
-%include       /usr/lib/rpm/macros.php
-#
 %define	_apache2	%(rpm -q apache-devel 2> /dev/null | grep -Eq '\\-2\\.[0-9]+\\.' && echo 1 || echo 0)
 %define	apxs		/usr/sbin/apxs
 # some problems with apache 2.x
@@ -57,6 +54,7 @@
 %ifnarch %{ix86}
 %undefine	with_msession
 %endif
+# Automatic pear requirements finding:
 %include	/usr/lib/rpm/macros.php
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
