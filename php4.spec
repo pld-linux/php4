@@ -124,6 +124,7 @@ Patch30:	%{name}-mnogosearch-fix.patch
 Patch31:	%{name}-stupidapache_version.patch 
 Patch32:	%{name}-gd_imagerotate_enable.patch
 Patch33:	%{name}-uint32_t.patch
+Patch34:	%{name}-install_gd_headers.patch
 #Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1609,6 +1610,7 @@ cp php.ini-dist php.ini
 %endif
 %patch32 -p1
 %patch33 -p1
+%patch34 -p1
 
 %{?with_hardened:zcat %{SOURCE9} | patch -p1}
 
