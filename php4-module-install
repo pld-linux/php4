@@ -28,7 +28,7 @@ if [ -f ${INIFILE} ] && grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.s
 	echo "deactivating module '${MODNAME}.so' in ${INIFILE}" 1>&2
 	grep -v "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" > ${TMPFILE} < ${INIFILE}
 	mv ${TMPFILE} ${INIFILE}
-				
+	chmod 644 ${INIFILE}
 fi
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
