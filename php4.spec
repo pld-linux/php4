@@ -4,6 +4,8 @@
 # _with_oci8    - with oci8 support
 # _with_java    - with Java support
 # _with_openssl - with OpenSSL support
+# _with_wddx    - with WDDX support
+# _with_xslt    - with XSLT support
 # _without_imap   - without IMAP support
 # _without_ldap   - without LDAP support
 # _without_odbc   - without ODBC support
@@ -84,6 +86,9 @@ BuildRequires:	curl-devel
 %if %(expr %{?_with_openssl:1}%{!?_with_openssl:0} + %{!?_without_ldap:1}%{?_without_ldap:0})
 BuildRequires:	openssl-devel >= 0.9.6a
 %endif
+BuildRequires:	sablotron-devel
+BuildRequires:	expat-devel
+BuildRequires:	w3c-libwww-devel
 Prereq:		apache(EAPI) >= 1.3.9
 Prereq:		perl
 Prereq:		%{_sbindir}/apxs
@@ -754,8 +759,42 @@ PreReq:		%{name}-common = %{version}
 This is a dynamic shared object (DSO) for Apache that will add curl
 support to PHP.
 
-%description curl -l pl
-Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki curl.
+#%description curl -l pl
+#Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki curl.
+#
+#%package xslt
+#Summary:	xslt extension module for PHP
+#Summary(pl):	Modu³ xslt dla PHP
+#Group:		Libraries
+#Group(de):	Libraries
+#Group(es):	Bibliotecas
+#Group(fr):	Librairies
+#Group(pl):	Biblioteki
+#PreReq:		%{name}-common = %{version}
+#
+#%description xslt
+#This is a dynamic shared object (DSO) for Apache that will add xslt
+#support to PHP.
+#
+#%description xslt -l pl
+#Modu³ PHP umo¿liwiaj±cy korzystanie z technologii xslt.
+
+#%package wddx
+#Summary:	wddx extension module for PHP
+#Summary(pl):	Modu³ wddx dla PHP
+#Group:		Libraries
+#Group(de):	Libraries
+#Group(es):	Bibliotecas
+#Group(fr):	Librairies
+#Group(pl):	Biblioteki
+#PreReq:		%{name}-common = %{version}
+#
+#%description wddx
+#This is a dynamic shared object (DSO) for Apache that will add wddx
+#support to PHP.
+#
+#%description wddx -l pl
+#Modu³ PHP umo¿liwiaj±cy korzystanie z wddx.
 
 %prep
 %setup  -q
@@ -842,6 +881,9 @@ for i in cgi apxs ; do
 	%{?_with_oci8:--with-oci8=shared} \
 	--without-db2 \
 	--with-dom=shared \
+    %{?_with_xslt:--enable-xslt=shared} \
+    %{?_with_xslt:--with-xslt-sablot=shared} \
+    %{?_with_xslt:--enable-wddx=shared} \
 	--with-pear=%{peardir}
 done
 
@@ -1187,6 +1229,22 @@ if [ "$1" = "0" ]; then
         %{_sbindir}/php-module-install remove curl %{_sysconfdir}/php.ini
 fi
 
+#%post xslt
+#%{_sbindir}/php-module-install install xslt %{_sysconfdir}/php.ini
+#
+#%preun xslt
+#if [ "$1" = "0" ]; then
+#        %{_sbindir}/php-module-install remove xslt %{_sysconfdir}/php.ini
+#fi
+#
+#%post wddx
+#%{_sbindir}/php-module-install install wddx %{_sysconfdir}/php.ini
+#
+#%preun wddx
+#if [ "$1" = "0" ]; then
+#        %{_sbindir}/php-module-install remove wddx %{_sysconfdir}/php.ini
+#fi
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -1378,3 +1436,11 @@ rm -rf $RPM_BUILD_ROOT
 %files curl
 %defattr(644,root,root,755)
 %attr(755,root,root) %{extensionsdir}/curl.so
+
+#%files xslt
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/xslt.so
+#
+#%files wddx
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{extensionsdir}/wddx.so
