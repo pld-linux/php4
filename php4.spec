@@ -73,8 +73,9 @@ Source0:	http://downloads.php.net/ilia/%{name}-%{version}%{_rc}.tar.bz2
 # Source0-md5:	e8ab484fcb94cd2e0d7ecfd0762cfd33
 Source1:	FAQ.%{name}
 Source2:	zend.gif
-Source4:	%{name}-module-install
-Source5:	%{name}-mod_%{name}.conf
+Source3:	%{name}-module-install
+Source4:	%{name}-mod_%{name}.conf
+Source5:	%{name}-cgi-fcgi.ini
 Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Source8:	%{name}-cli.ini
@@ -1732,11 +1733,10 @@ ln -sf php.cgi $RPM_BUILD_ROOT%{_bindir}/php
 %{?with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{extensionsdir}}
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
-install %{SOURCE6} %{SOURCE7} %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}
-install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi-fcgi.ini
+install %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{httpdir}/icons
-install %{SOURCE4} $RPM_BUILD_ROOT%{_sbindir}
-install %{SOURCE5} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
+install %{SOURCE3} $RPM_BUILD_ROOT%{_sbindir}
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php.conf
 
 install %{SOURCE1} .
 
