@@ -815,6 +815,10 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z wddx.
 %patch12 -p1
 %patch13 -p1
 
+mkdir manual
+bzip2 -dc %{SOURCE4} | tar -- xf -C manual
+ln -s manual.html manual/index.html
+
 %build
 CFLAGS="%{rpmcflags} -DEAPI -I/usr/X11R6/include"; export CFLAGS
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
@@ -930,9 +934,6 @@ install %{SOURCE2}		$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 install %{SOURCE3} php4.gif	$RPM_BUILD_ROOT/home/httpd/icons
 install %{SOURCE5} $RPM_BUILD_ROOT/%{_sbindir}
 
-mkdir manual
-tar zxf %{SOURCE4} -C manual
-ln -s manual.html manual/index.html
 
 install %{SOURCE1} .
 gzip -9nf CODING_STANDARDS CREDITS \
