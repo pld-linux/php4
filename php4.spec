@@ -43,7 +43,7 @@ Version:	4.2.2
 Release:	6
 Epoch:		3
 Group:		Libraries
-License:	The PHP license (see "LICENSE" file included in distribution)
+License:	PHP
 Source0:	http://www.php.net/distributions/%{name}-%{version}.tar.bz2
 Source1:	FAQ.%{name}
 Source2:	zend.gif
