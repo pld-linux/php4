@@ -105,7 +105,6 @@ Patch22:	%{name}-allow-db31.patch
 Patch23:	%{name}-threads-acfix.patch
 Patch24:	%{name}-tsrmlsfetchgcc2.patch
 Patch25:	%{name}-qt.patch
-#Patch26:	%{name}-pear-install.patch
 Patch26:	%{name}-no_pear_install.patch
 Patch27:	%{name}-zlib.patch
 Patch28:	%{name}-db-shared.patch
