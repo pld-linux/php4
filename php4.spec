@@ -17,7 +17,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.1.1
-Release:	2
+Release:	3
 Epoch:		1
 Group:		Libraries
 Group(cs):	Knihovny
@@ -56,9 +56,9 @@ Patch9:		%{name}-mailsecurity2.patch
 Patch10:	%{name}-oracle9.patch
 Patch11:	%{name}-no_%{name}_pcre_in_SAPI_c.patch
 # Some new patches from bugs.php.net (adasi)
-Patch101:	%{name}-register_shutdown_function.patch
-Patch102:	%{name}-domxml_node.patch
-Patch103:	%{name}-image_c.patch
+#Patch101:	%{name}-register_shutdown_function.patch
+#Patch102:	%{name}-domxml_node.patch
+#Patch103:	%{name}-image_c.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
 BuildRequires:	apache(EAPI)-devel
@@ -1400,9 +1400,9 @@ Modu³ PHP dodaj±cy obs³ugê libcpdf.
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
-%patch101 -p1
-%patch102 -p1
-%patch103 -p1
+#%patch101 -p1
+#%patch102 -p1
+#%patch103 -p1
 
 install -d manual
 bzip2 -dc %{SOURCE4} | tar -xf - -C manual
