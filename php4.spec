@@ -111,6 +111,7 @@ Patch28:	%{name}-db-shared.patch
 Patch29:	%{name}-sybase-fix.patch
 Icon:		php4.gif
 URL:		http://www.php.net/
+%{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird}}
 %{!?_without_interbase:%{!?_with_interbase_inst:BuildRequires:	Firebird-devel}}
 BuildRequires:	apache-devel
 BuildRequires:	autoconf >= 2.53
