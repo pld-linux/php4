@@ -7,7 +7,7 @@ Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP -- u¿ywany wraz z serwerem Apache
 Name:		php
 Version:	4.0.4pl1
-Release:	0.4
+Release:	0.5
 Epoch:		1
 Group:		Libraries
 Group(de):	Libraries
@@ -72,7 +72,8 @@ Prereq:		/usr/sbin/apxs
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/php
-%define 	extensionsdir 	%{_libdir}/php/extensions/no-debug-non-zts-%(egrep '#define ZEND_MODULE_API_NO ' %{_builddir}/%{buildsubdir}/Zend/modules.h|sed 's/#define ZEND_MODULE_API_NO //')
+# check ZEND_MODULE_API_NO in  Zend/modules.h
+%define 	extensionsdir 	%{_libdir}/php/extensions/no-debug-non-zts-20001214
 
 %description
 PHP is an HTML-embedded scripting language. PHP attempts to make it
