@@ -64,7 +64,7 @@ Summary(uk):	PHP Верс╕╖ 4 -- мова препроцесування HTML-файл╕в, виконувана на сер
 Name:		php
 Version:	4.3.7
 %define	_rc	%{nil}
-Release:	2
+Release:	3
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -119,7 +119,7 @@ BuildRequires:	automake >= 1.4d
 BuildRequires:	bison
 BuildRequires:	bzip2-devel
 BuildRequires:	cracklib-devel >= 2.7-15
-%{?with_curl:BuildRequires:	curl-devel >= 7.9.8 }
+%{?with_curl:BuildRequires:	curl-devel >= 7.12.0 }
 BuildRequires:	cyrus-sasl-devel
 %{?with_db3:BuildRequires:	db3-devel >= 3.1}
 %{!?with_db3:BuildRequires:	db-devel >= 4.0}
