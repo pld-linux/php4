@@ -180,6 +180,7 @@ CFLAGS="$RPM_OPT_FLAGS -DEAPI"; export CFLAGS
 	--with-regex=system \
 	--with-gettext \
 	--with-mysql \
+   --enable-versioning \
 	--with-gd \
 	--with-dbase \
 	--with-filepro \
