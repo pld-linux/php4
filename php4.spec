@@ -206,11 +206,10 @@ Requires:		apache >= 2.0.52-2
 Requires:	apache(modules-api) = %{apache_modules_api}
 %else
 BuildRequires:	apache1-devel >= 1.3.33-2
-Requires:		apache1(EAPI) >= 1.3.9
+Requires:		apache1(EAPI) >= 1.3.33-2
 Requires:		apache(mod_mime)
 Requires(post,preun):	%{apxs}
 Requires(post,preun):	%{__perl}
-Conflicts:	apache1 < 1.3.33-2
 %endif
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
