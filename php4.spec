@@ -90,7 +90,7 @@ Patch11:	%{name}-mcal-shared-lib.patch
 Patch12:	%{name}-msession-shared-lib.patch
 Patch13:	%{name}-build_modules.patch
 Patch14:	%{name}-sapi-ini-file.patch
-Patch15:	%{name}-dl-zlib.patch
+
 Patch16:	%{name}-no-metaccld.patch
 Patch17:	%{name}-session-unregister.patch
 Patch18:	%{name}-ini.patch
@@ -100,7 +100,7 @@ Patch21:	%{name}-libtool.patch
 Patch22:	%{name}-allow-db31.patch
 Patch23:	%{name}-threads-acfix.patch
 Patch24:	%{name}-tsrmlsfetchgcc2.patch
-Patch25:	%{name}-mnogosearch-php-extension-1.68.patch
+Patch25:	%{name}-mnogosearch-update.patch
 Patch26:	%{name}-pear-install.patch
 Patch27:	%{name}-zlib.patch
 Icon:		php4.gif
@@ -1310,7 +1310,7 @@ Repozytorium Aplikacji.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
-#%patch15 -p1
+
 %patch16 -p1
 %patch17 -p1
 cp php.ini-dist php.ini
