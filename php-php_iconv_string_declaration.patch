@@ -1,0 +1,11 @@
+--- php-4.2.1/ext/iconv/iconv.c.old	Wed Jun 26 12:48:27 2002
++++ php-4.2.1/ext/iconv/iconv.c	Wed Jun 26 12:50:16 2002
+@@ -87,7 +87,7 @@
+ ZEND_GET_MODULE(iconv)
+ #endif
+ 
+-static int php_iconv_string(const char * in_str, unsigned int in_len, char ** out_str, unsigned int * out_len, const char * in_encoding, const char * out_encoding, int *err TSRMLS_DC);
++static int php_iconv_string(const char *in_p, size_t in_len, char **out, size_t *out_len, const char *in_charset, const char *out_charset, int *err TSRMLS_DC);
+ 
+ /* {{{ PHP_INI
+  */
