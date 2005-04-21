@@ -75,7 +75,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.11
-Release:	1%{?with_hardened:hardened}
+Release:	1.4%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1604,9 +1604,7 @@ cp php.ini-dist php.ini
 %patch29 -p1
 %endif
 %patch30 -p1
-%if %{_apache2}
 %patch31
-%endif
 %patch32 -p1
 %patch33 -p1
 %patch34 -p1
@@ -1635,10 +1633,10 @@ for i in fcgi cgi cli apxs ; do
 	`[ $i = cli ] && echo --disable-cgi` \
 	`[ $i = fcgi ] && echo --enable-fastcgi --with-fastcgi=/usr` \
 %if %{_apache2}
-	`[ $i = apxs ] && echo --with-apxs2=%{apxs}` \
+	`[ $i = apxs ] && echo --with-apxs2=%{apxs} --with-apache-version=%(rpm -q --qf '%%{version}' apache-apxs)` \
 	--enable-experimental-zts \
 %else
-	`[ $i = apxs ] && echo --with-apxs=%{apxs}` \
+	`[ $i = apxs ] && echo --with-apxs=%{apxs} --with-apache-version=%(rpm -q --qf '%%{version}' apache1-apxs)` \
 %endif
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
