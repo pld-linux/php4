@@ -1854,7 +1854,7 @@ fi
 
 %preun bcmath
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove bcmath %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove bcmath %{_sysconfdir}/php.ini
 fi
 
 %post bzip2
@@ -1862,7 +1862,7 @@ fi
 
 %preun bzip2
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove bz2 %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove bz2 %{_sysconfdir}/php.ini
 fi
 
 %post calendar
@@ -1870,7 +1870,7 @@ fi
 
 %preun calendar
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove calendar %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove calendar %{_sysconfdir}/php.ini
 fi
 
 %post cpdf
@@ -1878,7 +1878,7 @@ fi
 
 %preun cpdf
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove cpdf %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove cpdf %{_sysconfdir}/php.ini
 fi
 
 %post crack
@@ -1886,7 +1886,7 @@ fi
 
 %preun crack
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove crack %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove crack %{_sysconfdir}/php.ini
 fi
 
 %post ctype
@@ -1894,7 +1894,7 @@ fi
 
 %preun ctype
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove ctype %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ctype %{_sysconfdir}/php.ini
 fi
 
 %post curl
@@ -1902,7 +1902,7 @@ fi
 
 %preun curl
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove curl %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove curl %{_sysconfdir}/php.ini
 fi
 
 %post db
@@ -1910,7 +1910,7 @@ fi
 
 %preun db
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove db %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove db %{_sysconfdir}/php.ini
 fi
 
 %post dba
@@ -1918,7 +1918,7 @@ fi
 
 %preun dba
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove dba %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dba %{_sysconfdir}/php.ini
 fi
 
 %post dbase
@@ -1926,7 +1926,7 @@ fi
 
 %preun dbase
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove dbase %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dbase %{_sysconfdir}/php.ini
 fi
 
 %post dbx
@@ -1934,7 +1934,7 @@ fi
 
 %preun dbx
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove dbx %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dbx %{_sysconfdir}/php.ini
 fi
 
 %post dio
@@ -1942,7 +1942,7 @@ fi
 
 %preun dio
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove dio %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dio %{_sysconfdir}/php.ini
 fi
 
 %post domxml
@@ -1950,7 +1950,7 @@ fi
 
 %preun domxml
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove domxml %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove domxml %{_sysconfdir}/php.ini
 fi
 
 %post exif
@@ -1958,7 +1958,7 @@ fi
 
 %preun exif
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove exif %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove exif %{_sysconfdir}/php.ini
 fi
 
 %post fdf
@@ -1966,7 +1966,7 @@ fi
 
 %preun fdf
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove fdf %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove fdf %{_sysconfdir}/php.ini
 fi
 
 %post filepro
@@ -1974,7 +1974,7 @@ fi
 
 %preun filepro
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove filepro %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove filepro %{_sysconfdir}/php.ini
 fi
 
 %post fribidi
@@ -1982,7 +1982,7 @@ fi
 
 %preun fribidi
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove fribidi %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove fribidi %{_sysconfdir}/php.ini
 fi
 
 %post ftp
@@ -1990,7 +1990,7 @@ fi
 
 %preun ftp
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove ftp %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ftp %{_sysconfdir}/php.ini
 fi
 
 %post gd
@@ -1998,7 +1998,7 @@ fi
 
 %preun gd
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove gd %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gd %{_sysconfdir}/php.ini
 fi
 
 %post gettext
@@ -2006,7 +2006,7 @@ fi
 
 %preun gettext
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove gettext %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gettext %{_sysconfdir}/php.ini
 fi
 
 %post gmp
@@ -2014,7 +2014,7 @@ fi
 
 %preun gmp
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove gmp %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gmp %{_sysconfdir}/php.ini
 fi
 
 %post hyperwave
@@ -2022,7 +2022,7 @@ fi
 
 %preun hyperwave
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove hyperwave %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove hyperwave %{_sysconfdir}/php.ini
 fi
 
 %post iconv
@@ -2030,7 +2030,7 @@ fi
 
 %preun iconv
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove iconv %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove iconv %{_sysconfdir}/php.ini
 fi
 
 %post imap
@@ -2038,7 +2038,7 @@ fi
 
 %preun imap
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove imap %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove imap %{_sysconfdir}/php.ini
 fi
 
 %post interbase
@@ -2046,7 +2046,7 @@ fi
 
 %preun interbase
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove interbase %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove interbase %{_sysconfdir}/php.ini
 fi
 
 %post java
@@ -2054,7 +2054,7 @@ fi
 
 %preun java
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove java %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove java %{_sysconfdir}/php.ini
 fi
 
 %post ldap
@@ -2062,7 +2062,7 @@ fi
 
 %preun ldap
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove ldap %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ldap %{_sysconfdir}/php.ini
 fi
 
 %post mbstring
@@ -2070,7 +2070,7 @@ fi
 
 %preun mbstring
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove mbstring %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mbstring %{_sysconfdir}/php.ini
 fi
 
 %post mcal
@@ -2078,7 +2078,7 @@ fi
 
 %preun mcal
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove mcal %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mcal %{_sysconfdir}/php.ini
 fi
 
 %post mcrypt
@@ -2086,7 +2086,7 @@ fi
 
 %preun mcrypt
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove mcrypt %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mcrypt %{_sysconfdir}/php.ini
 fi
 
 %post mhash
@@ -2094,7 +2094,7 @@ fi
 
 %preun mhash
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove mhash %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mhash %{_sysconfdir}/php.ini
 fi
 
 %post mime_magic
@@ -2102,7 +2102,7 @@ fi
 
 %preun mime_magic
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove mime_magic %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mime_magic %{_sysconfdir}/php.ini
 fi
 
 %post ming
@@ -2110,7 +2110,7 @@ fi
 
 %preun ming
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove ming %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ming %{_sysconfdir}/php.ini
 fi
 
 %post mnogosearch
@@ -2118,7 +2118,7 @@ fi
 
 %preun mnogosearch
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove mnogosearch %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mnogosearch %{_sysconfdir}/php.ini
 fi
 
 %post msession
@@ -2126,7 +2126,7 @@ fi
 
 %preun msession
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove msession %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove msession %{_sysconfdir}/php.ini
 fi
 
 %post mssql
@@ -2134,7 +2134,7 @@ fi
 
 %preun mssql
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove mssql %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mssql %{_sysconfdir}/php.ini
 fi
 
 %post mysql
@@ -2142,7 +2142,7 @@ fi
 
 %preun mysql
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove mysql %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mysql %{_sysconfdir}/php.ini
 fi
 
 %post ncurses
@@ -2156,10 +2156,10 @@ fi
 %preun ncurses
 if [ "$1" = "0" ]; then
 	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-	%{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cgi.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cgi.ini
 	fi
 	if [ -f %{_sysconfdir}/php-cli.ini ]; then
-	%{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cli.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cli.ini
 	fi
 fi
 
@@ -2168,7 +2168,7 @@ fi
 
 %preun oci8
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove oci8 %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove oci8 %{_sysconfdir}/php.ini
 fi
 
 %post odbc
@@ -2176,7 +2176,7 @@ fi
 
 %preun odbc
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove odbc %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove odbc %{_sysconfdir}/php.ini
 fi
 
 %post openssl
@@ -2184,7 +2184,7 @@ fi
 
 %preun openssl
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove openssl %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove openssl %{_sysconfdir}/php.ini
 fi
 
 %post oracle
@@ -2192,7 +2192,7 @@ fi
 
 %preun oracle
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove oracle %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove oracle %{_sysconfdir}/php.ini
 fi
 
 %post overload
@@ -2200,7 +2200,7 @@ fi
 
 %preun overload
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove overload %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove overload %{_sysconfdir}/php.ini
 fi
 
 %post pcntl
@@ -2214,10 +2214,10 @@ fi
 %preun pcntl
 if [ "$1" = "0" ]; then
 	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-	%{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
 	fi
 	if [ -f %{_sysconfdir}/php-cli.ini ]; then
-	%{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cli.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cli.ini
 	fi
 fi
 
@@ -2226,7 +2226,7 @@ fi
 
 %preun pcre
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove pcre %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcre %{_sysconfdir}/php.ini
 fi
 
 %post pdf
@@ -2234,7 +2234,7 @@ fi
 
 %preun pdf
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove pdf %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pdf %{_sysconfdir}/php.ini
 fi
 
 %post pgsql
@@ -2242,7 +2242,7 @@ fi
 
 %preun pgsql
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove pgsql %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pgsql %{_sysconfdir}/php.ini
 fi
 
 %post posix
@@ -2250,7 +2250,7 @@ fi
 
 %preun posix
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove posix %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove posix %{_sysconfdir}/php.ini
 fi
 
 %post pspell
@@ -2258,7 +2258,7 @@ fi
 
 %preun pspell
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove pspell %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pspell %{_sysconfdir}/php.ini
 fi
 
 %post qtdom
@@ -2266,7 +2266,7 @@ fi
 
 %preun qtdom
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove qtdom %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove qtdom %{_sysconfdir}/php.ini
 fi
 
 %post readline
@@ -2280,10 +2280,10 @@ fi
 %preun readline
 if [ "$1" = "0" ]; then
 	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-	%{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cgi.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cgi.ini
 	fi
 	if [ -f %{_sysconfdir}/php-cli.ini ]; then
-	%{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cli.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cli.ini
 	fi
 fi
 
@@ -2292,7 +2292,7 @@ fi
 
 %preun recode
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove recode %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove recode %{_sysconfdir}/php.ini
 fi
 
 %post session
@@ -2300,7 +2300,7 @@ fi
 
 %preun session
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove session %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove session %{_sysconfdir}/php.ini
 fi
 
 %post shmop
@@ -2308,7 +2308,7 @@ fi
 
 %preun shmop
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove shmop %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove shmop %{_sysconfdir}/php.ini
 fi
 
 %post snmp
@@ -2316,7 +2316,7 @@ fi
 
 %preun snmp
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove snmp %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove snmp %{_sysconfdir}/php.ini
 fi
 
 %post sockets
@@ -2324,7 +2324,7 @@ fi
 
 %preun sockets
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove sockets %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sockets %{_sysconfdir}/php.ini
 fi
 
 %post sybase
@@ -2332,7 +2332,7 @@ fi
 
 %preun sybase
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove sybase %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sybase %{_sysconfdir}/php.ini
 fi
 
 %post sybase-ct
@@ -2340,7 +2340,7 @@ fi
 
 %preun sybase-ct
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove sybase_ct %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sybase_ct %{_sysconfdir}/php.ini
 fi
 
 %post sysvmsg
@@ -2348,7 +2348,7 @@ fi
 
 %preun sysvmsg
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove sysvmsg %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sysvmsg %{_sysconfdir}/php.ini
 fi
 
 %post sysvsem
@@ -2356,7 +2356,7 @@ fi
 
 %preun sysvsem
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove sysvsem %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sysvsem %{_sysconfdir}/php.ini
 fi
 
 %post sysvshm
@@ -2364,7 +2364,7 @@ fi
 
 %preun sysvshm
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove sysvshm %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sysvshm %{_sysconfdir}/php.ini
 fi
 
 %post wddx
@@ -2372,7 +2372,7 @@ fi
 
 %preun wddx
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove wddx %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove wddx %{_sysconfdir}/php.ini
 fi
 
 %post xml
@@ -2380,7 +2380,7 @@ fi
 
 %preun xml
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove xml %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove xml %{_sysconfdir}/php.ini
 fi
 
 %post xmlrpc
@@ -2388,7 +2388,7 @@ fi
 
 %preun xmlrpc
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove xmlrpc %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove xmlrpc %{_sysconfdir}/php.ini
 fi
 
 %post xslt
@@ -2396,7 +2396,7 @@ fi
 
 %preun xslt
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove xslt %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove xslt %{_sysconfdir}/php.ini
 fi
 
 %post yaz
@@ -2404,7 +2404,7 @@ fi
 
 %preun yaz
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove yaz %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove yaz %{_sysconfdir}/php.ini
 fi
 
 %post yp
@@ -2412,7 +2412,7 @@ fi
 
 %preun yp
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove yp %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove yp %{_sysconfdir}/php.ini
 fi
 
 %post zip
@@ -2420,7 +2420,7 @@ fi
 
 %preun zip
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove zip %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove zip %{_sysconfdir}/php.ini
 fi
 
 %post zlib
@@ -2428,7 +2428,7 @@ fi
 
 %preun zlib
 if [ "$1" = "0" ]; then
-	%{_sbindir}/php4-module-install remove zlib %{_sysconfdir}/php.ini
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove zlib %{_sysconfdir}/php.ini
 fi
 
 %files
