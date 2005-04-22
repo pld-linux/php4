@@ -11,8 +11,6 @@
 %bcond_with	java		# with Java extension module		(BR: jdk)
 %bcond_with	oci8		# with Oracle oci8 extension module	(BR: proprietary libs)
 %bcond_with	oracle		# with oracle extension module		(BR: proprietary libs)
-%bcond_without	apache1		# don't build apache1 module
-%bcond_without	apache2		# don't build apache2 module
 %bcond_without	cpdf		# without cpdf extension module
 %bcond_without	curl		# without CURL extension module
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
@@ -42,20 +40,14 @@
 %bcond_without	xslt		# without XSLT extension module
 %bcond_without	yaz		# without YAZ extension module
 
-%if %{with apache1}
 %define apxs1		/usr/sbin/apxs1
-%define	_apache1_confdir /etc/apache/conf.d
-%endif
-%if %{with apache2}
 %define	apxs2		/usr/sbin/apxs
-%define	_apache2_confdir /etc/httpd/httpd.conf
-%endif
 
 # some problems with apache 2.x
-%if %{with apache2}
-%undefine	with_recode
-%undefine	with_mm
-%endif
+#%if %{with apache2}
+#%undefine	with_recode
+#%undefine	with_mm
+#%endif
 
 %ifnarch %{ix86} amd64 sparc sparcv9 alpha ppc
 %undefine	with_interbase
@@ -200,19 +192,19 @@ BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	zziplib-devel
 # apache 1.3 vs apache 2.0
-%if %{with apache2}
+#%if %{with apache2}
 BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.0.0
 Requires:		apache >= 2.0.52-2
 Requires:	apache(modules-api) = %{apache_modules_api}
-%endif
-%if %{with apache1}
+#%endif
+#%if %{with apache1}
 BuildRequires:	apache1-devel >= 1.3.33-2
 Requires:		apache1(EAPI) >= 1.3.33-2
 Requires:		apache(mod_mime)
 Requires(post,preun):	%{__perl}
-%endif
+#%endif
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
 Obsoletes:	phpfi
@@ -223,10 +215,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		extensionsdir	%{_libdir}/php4
 %if %{with apache2}
 %define		httpdir		/home/services/httpd
-%define		apachelib	%{_libdir}/apache
 %else
 %define		httpdir		/home/services/apache
-%define		apachelib	%{_libdir}/apache1
 %endif
 %define		_ulibdir	%{_prefix}/lib
 
@@ -2522,7 +2512,7 @@ fi
 %if %{with apache1}
 %files apache1
 %defattr(644,root,root,755)
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_apache1_confdir}/*_mod_php4.conf
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/apache/conf.d/*_mod_php4.conf
 %attr(755,root,root) %{_libdir}/apache1/libphp4.so
 #%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 %endif
@@ -2530,7 +2520,7 @@ fi
 %if %{with apache2}
 %files apache
 %defattr(644,root,root,755)
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_apache2_confdir}/*_mod_php4.conf
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php4.conf
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
 #%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 %endif
