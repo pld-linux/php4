@@ -1,17 +1,17 @@
 ===================================================================
 RCS file: /repository/php-src/acinclude.m4,v
-retrieving revision 1.283
-retrieving revision 1.284
-diff -p --unified=3 -r1.283 -r1.284
---- ./acinclude.m4	2004/12/30 07:08:35	1.283
-+++ ./acinclude.m4	2004/12/30 14:50:05	1.284
+retrieving revision 1.218.2.42
+retrieving revision 1.218.2.43
+diff -p --unified=3 -r1.218.2.42 -r1.218.2.43
+--- ./acinclude.m4	2004/12/30 07:02:15	1.218.2.42
++++ ./acinclude.m4	2004/12/30 14:54:34	1.218.2.43
 @@ -1,4 +1,4 @@
--dnl $Id$
-+dnl $Id$
+-dnl $Id$ -*- autoconf -*-
++dnl $Id$ -*- autoconf -*-
  dnl
  dnl This file contains local autoconf functions.
 
-@@ -1577,6 +1577,64 @@ AC_DEFUN([PHP_CHECK_FRAMEWORK], [
+@@ -1584,6 +1584,64 @@ AC_DEFUN([PHP_CHECK_FRAMEWORK], [
    ])
  ])
 
@@ -50,7 +50,7 @@ diff -p --unified=3 -r1.283 -r1.284
 +    fi
 +
 +    for i in $PHP_KERBEROS; do
-+      if test -f $i/$PHP_LIBDIR/libkrb5.a || test -f $i/$PHP_LIBDIR/libkrb5.$SHLIB_SUFFIX_NAME; then
++      if test -f $i/lib/libkrb5.a || test -f $i/lib/libkrb5.$SHLIB_SUFFIX_NAME; then
 +        PHP_KERBEROS_DIR=$i
 +        break
 +      fi
@@ -58,7 +58,7 @@ diff -p --unified=3 -r1.283 -r1.284
 +
 +    if test "$PHP_KERBEROS_DIR"; then
 +      found_kerberos=yes
-+      PHP_ADD_LIBPATH($PHP_KERBEROS_DIR/$PHP_LIBDIR, $1)
++      PHP_ADD_LIBPATH($PHP_KERBEROS_DIR/lib, $1)
 +      PHP_ADD_LIBRARY(gssapi_krb5, 1, $1)
 +      PHP_ADD_LIBRARY(krb5, 1, $1)
 +      PHP_ADD_LIBRARY(k5crypto, 1, $1)
@@ -76,7 +76,7 @@ diff -p --unified=3 -r1.283 -r1.284
  dnl
  dnl PHP_SETUP_OPENSSL(shared-add [, action-found [, action-not-found]])
  dnl
-@@ -1587,13 +1645,20 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
+@@ -1594,13 +1652,20 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
    unset OPENSSL_INCDIR
    unset OPENSSL_LIBDIR
 
@@ -98,7 +98,7 @@ diff -p --unified=3 -r1.283 -r1.284
      if $PKG_CONFIG --atleast-version=0.9.6 openssl; then
        found_openssl=yes
        OPENSSL_LIBS=`$PKG_CONFIG --libs openssl`
-@@ -1607,15 +1672,16 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
+@@ -1614,15 +1679,16 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
        PHP_EVAL_LIBLINE($OPENSSL_LIBS, $1)
        PHP_EVAL_INCLINE($OPENSSL_INCS)
      fi
@@ -121,7 +121,7 @@ diff -p --unified=3 -r1.283 -r1.284
        if test -r $i/include/openssl/evp.h; then
          OPENSSL_INCDIR=$i/include
        fi
-@@ -1673,11 +1739,11 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
+@@ -1680,11 +1746,11 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
      PHP_ADD_LIBPATH($OPENSSL_LIBDIR, $1)
    fi
 
@@ -135,11 +135,11 @@ diff -p --unified=3 -r1.283 -r1.284
  ifelse([$3],[],,[else $3])
    fi===================================================================
 RCS file: /repository/php-src/ext/imap/config.m4,v
-retrieving revision 1.66
-retrieving revision 1.67
-diff -p --unified=3 -r1.66 -r1.67
---- ./ext/imap/config.m4	2004/12/30 07:08:36	1.66
-+++ ./ext/imap/config.m4	2004/12/30 14:50:06	1.67
+retrieving revision 1.49.2.13
+retrieving revision 1.49.2.14
+diff -p --unified=3 -r1.49.2.13 -r1.49.2.14
+--- ./ext/imap/config.m4	2004/12/30 07:02:17	1.49.2.13
++++ ./ext/imap/config.m4	2004/12/30 14:54:35	1.49.2.14
 @@ -1,5 +1,5 @@
  dnl
 -dnl $Id$
@@ -147,7 +147,7 @@ diff -p --unified=3 -r1.66 -r1.67
  dnl
 
  AC_DEFUN([IMAP_INC_CHK],[if test -r "$i$1/c-client.h"; then
-@@ -43,41 +43,16 @@ AC_DEFUN([PHP_IMAP_TEST_BUILD], [
+@@ -55,41 +55,16 @@ AC_DEFUN([PHP_IMAP_TEST_BUILD], [
  ])
 
  AC_DEFUN([PHP_IMAP_KRB_CHK], [
@@ -167,7 +167,7 @@ diff -p --unified=3 -r1.66 -r1.67
 -    fi
 -
 -    for i in $SEARCH_PATHS; do
--      if test -f $i/$PHP_LIBDIR/libkrb5.a || test -f $i/$PHP_LIBDIR/libkrb5.$SHLIB_SUFFIX_NAME; then
+-      if test -f $i/lib/libkrb5.a || test -f $i/lib/libkrb5.$SHLIB_SUFFIX_NAME; then
 -        PHP_KERBEROS_DIR=$i
 -        break
 -      fi
@@ -184,7 +184,7 @@ diff -p --unified=3 -r1.66 -r1.67
        ])
 -    fi
 -    AC_DEFINE(HAVE_IMAP_KRB,1,[ ])
--    PHP_ADD_LIBPATH($PHP_KERBEROS_DIR/$PHP_LIBDIR, IMAP_SHARED_LIBADD)
+-    PHP_ADD_LIBPATH($PHP_KERBEROS_DIR/lib, IMAP_SHARED_LIBADD)
 -    PHP_ADD_LIBRARY(gssapi_krb5, 1, IMAP_SHARED_LIBADD)
 -    PHP_ADD_LIBRARY(krb5, 1, IMAP_SHARED_LIBADD)
 -    PHP_ADD_LIBRARY(k5crypto, 1, IMAP_SHARED_LIBADD)
@@ -194,7 +194,7 @@ diff -p --unified=3 -r1.66 -r1.67
    else
      AC_EGREP_HEADER(auth_gss, $IMAP_INC_DIR/linkage.h, [
        AC_MSG_ERROR([This c-client library is built with Kerberos support.
-@@ -86,31 +61,26 @@ AC_DEFUN([PHP_IMAP_KRB_CHK], [
+@@ -98,31 +73,26 @@ AC_DEFUN([PHP_IMAP_KRB_CHK], [
        ])
      ])
    fi
@@ -216,11 +216,11 @@ diff -p --unified=3 -r1.66 -r1.67
 -  AC_MSG_CHECKING([whether SSL libraries are needed for c-client])
 -
    if test "$PHP_IMAP_SSL" != "no"; then
--    AC_MSG_RESULT([$PHP_IMAP_SSL/$PHP_LIBDIR])
+-    AC_MSG_RESULT([$PHP_IMAP_SSL/lib])
 -    AC_DEFINE(HAVE_IMAP_SSL,1,[ ])
 -    PHP_ADD_LIBRARY_DEFER(ssl,    1, IMAP_SHARED_LIBADD)
 -    PHP_ADD_LIBRARY_DEFER(crypto, 1, IMAP_SHARED_LIBADD)
--    PHP_ADD_LIBPATH($PHP_IMAP_SSL/$PHP_LIBDIR, IMAP_SHARED_LIBADD)
+-    PHP_ADD_LIBPATH($PHP_IMAP_SSL/lib, IMAP_SHARED_LIBADD)
 -  else
 -    AC_MSG_RESULT(no)
 +    PHP_SETUP_OPENSSL(IMAP_SHARED_LIBADD,
@@ -242,29 +242,29 @@ diff -p --unified=3 -r1.66 -r1.67
    fi
  ])
 
-@@ -118,8 +88,14 @@ AC_DEFUN([PHP_IMAP_SSL_CHK], [
+@@ -130,8 +100,14 @@ AC_DEFUN([PHP_IMAP_SSL_CHK], [
  PHP_ARG_WITH(imap,for IMAP support,
  [  --with-imap[=DIR]       Include IMAP support. DIR is the c-client install prefix.])
 
 -if test "$PHP_IMAP" != "no"; then
 +PHP_ARG_WITH(kerberos,for IMAP Kerberos support,
 +[  --with-kerberos[=DIR]     IMAP: Include Kerberos support. DIR is the Kerberos install prefix.], no, no)
-+
+
 +PHP_ARG_WITH(imap-ssl,for IMAP SSL support,
 +[  --with-imap-ssl[=DIR]     IMAP: Include SSL support. DIR is the OpenSSL install prefix.], no, no)
-
++
 +
 +if test "$PHP_IMAP" != "no"; then
      PHP_SUBST(IMAP_SHARED_LIBADD)
      PHP_NEW_EXTENSION(imap, php_imap.c, $ext_shared)
      AC_DEFINE(HAVE_IMAP,1,[ ])===================================================================
 RCS file: /repository/php-src/ext/openssl/config0.m4,v
-retrieving revision 1.2
-retrieving revision 1.3
-diff -p --unified=3 -r1.2 -r1.3
---- ./ext/openssl/config0.m4	2003/06/24 14:05:24	1.2
-+++ ./ext/openssl/config0.m4	2004/12/30 14:50:06	1.3
-@@ -1,15 +1,23 @@
+retrieving revision 1.2.2.2
+retrieving revision 1.2.2.3
+diff -p --unified=3 -r1.2.2.2 -r1.2.2.3
+--- ./ext/openssl/config0.m4	2003/11/29 12:07:45	1.2.2.2
++++ ./ext/openssl/config0.m4	2004/12/30 14:54:35	1.2.2.3
+@@ -1,22 +1,28 @@
  dnl
 -dnl $Id$
 +dnl $Id$
@@ -286,8 +286,15 @@ diff -p --unified=3 -r1.2 -r1.3
 +
    PHP_SETUP_OPENSSL(OPENSSL_SHARED_LIBADD,
    [
--    PHP_NEW_EXTENSION(openssl, openssl.c xp_ssl.c, $ext_shared)
+-    PHP_NEW_EXTENSION(openssl, openssl.c, $ext_shared)
 -    PHP_SUBST(OPENSSL_SHARED_LIBADD)
-     AC_DEFINE(HAVE_OPENSSL_EXT,1,[ ])
+-
+     if test "$ext_shared" = "yes"; then
+       AC_DEFINE(HAVE_OPENSSL_SHARED_EXT,1,[ ])
+     else
+       AC_DEFINE(HAVE_OPENSSL_EXT,1,[ ])
+     fi
+-
    ], [
      AC_MSG_ERROR([OpenSSL check failed. Please check config.log for more information.])
+   ])
