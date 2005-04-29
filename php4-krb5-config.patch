@@ -138,8 +138,8 @@ RCS file: /repository/php-src/ext/imap/config.m4,v
 retrieving revision 1.66
 retrieving revision 1.67
 diff -p --unified=3 -r1.66 -r1.67
---- ./ext/imap/config/config.m4	2004/12/30 07:08:36	1.66
-+++ ./ext/imap/config/config.m4	2004/12/30 14:50:06	1.67
+--- ./ext/imap/config.m4	2004/12/30 07:08:36	1.66
++++ ./ext/imap/config.m4	2004/12/30 14:50:06	1.67
 @@ -1,5 +1,5 @@
  dnl
 -dnl $Id$
