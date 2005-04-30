@@ -75,7 +75,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.11
-Release:	3.2%{?with_hardened:hardened}
+Release:	3.3%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -89,8 +89,8 @@ Source5:	%{name}-cgi-fcgi.ini
 Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Source8:	%{name}-cli.ini
-Source9:	http://www.hardened-php.net/hardened-php-4.3.10-0.2.6.patch.gz
-# Source9-md5:	0072677fefb4ed8900f2db0a6b317572
+Source9:	http://www.hardened-php.net/hardened-php-4.3.11-0.2.7.patch.gz
+# Source9-md5:	c649f58458a39532889ed82f1aebee34
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-xml-expat-fix.patch
