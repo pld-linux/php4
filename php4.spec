@@ -1601,7 +1601,7 @@ cp php.ini-dist php.ini
 %patch26 -p1
 %patch27 -p1
 %patch28 -p1
-%ifarch amd64
+%if "%{_lib}" == "lib64"
 %patch29 -p1
 %endif
 %patch30 -p1
@@ -1802,7 +1802,7 @@ install %{SOURCE1} .
 cp -f Zend/LICENSE{,.Zend}
 
 # Is it really needed? Breaks installation of php4-devel (when replacing php-devel)
-#%%ifarch amd64
+#%%if "%{_lib}" == "lib64"
 #ln -sf ../../lib/php/build $RPM_BUILD_ROOT%{_libdir}/php/build
 #%%endif
 
