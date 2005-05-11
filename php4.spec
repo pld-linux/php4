@@ -57,7 +57,7 @@
 %undefine	with_mm
 %endif
 
-%ifnarch %{ix86} amd64 sparc sparcv9 alpha ppc
+%ifnarch %{ix86} %{x8664} sparc sparcv9 alpha ppc
 %undefine	with_interbase
 %endif
 
@@ -187,7 +187,7 @@ BuildRequires:	%{__perl}
 BuildRequires:	readline-devel
 %{?with_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-100
-BuildRequires:	rpmbuild(macros) >= 1.120
+BuildRequires:	rpmbuild(macros) >= 1.213
 %{?with_xslt:BuildRequires:	sablotron-devel >= 0.96}
 BuildRequires:	t1lib-devel
 %{?with_snmp:BuildRequires:	net-snmp-devel >= 5.0.7}
