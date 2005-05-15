@@ -40,7 +40,8 @@
 %bcond_without	xslt		# without XSLT extension module
 %bcond_without	yaz		# without YAZ extension module
 
-%define	_apache2	%{nil} # just for better diffs from HEAD
+# just for better diffs from HEAD
+%define	_apache2	0
 %define apxs1		/usr/sbin/apxs1
 %define	apxs2		/usr/sbin/apxs
 
@@ -1650,20 +1651,25 @@ sapis="fcgi cgi cli
 	apxs2
 "
 
+# Apache2 CFLAGS. should be harmless for other SAPIs.
+CFLAGS="$CFLAGS $(%{_bindir}/apr-1-config --cppflags --includes) $(%{_bindir}/apu-1-config --includes)"
+
+APACHE1_VERSION=%(rpm -q --qf '%%{version}' apache1-apxs)
+APACHE2_VERSION=%(rpm -q --qf '%%{version}' apache-apxs)
+
 # leave apxs2 last, as we change CFLAGS (TODO: fix this)
 for sapi in $sapis; do
 	rm -rf build-$sapi
 	mkdir -p build-$sapi
 	cd build-$sapi
 
-	[ $sapi = apxs2 ] && CFLAGS="$CFLAGS `%{_bindir}/apr-1-config --cppflags --includes` `%{_bindir}/apu-1-config --includes`"
 	../%configure \
 	--enable-experimental-zts \
 	$([ $sapi = cgi ] && echo --enable-discard-path) \
 	$([ $sapi = cli ] && echo --disable-cgi) \
 	$([ $sapi = fcgi ] && echo --enable-fastcgi --with-fastcgi=/usr) \
-	$([ $sapi = apxs1 ] && echo --with-apxs=%{apxs1} --with-apache-version=%(rpm -q --qf '%%{version}' apache1-apxs)) \
-	$([ $sapi = apxs2 ] && echo --with-apxs2=%{apxs2} --with-apache-version=%(rpm -q --qf '%%{version}' apache-apxs)) \
+	$([ $sapi = apxs1 ] && echo --with-apxs=%{apxs1} --with-apache-version=$APACHE1_VERSION) \
+	$([ $sapi = apxs2 ] && echo --with-apxs2=%{apxs2} --with-apache-version=$APACHE2_VERSION) \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
@@ -1777,9 +1783,10 @@ for sapi in $sapis; do
 		# for fcgi: -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0
 		# -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1(die) -DHAVE_SYS_PARAM_H=1
 		# -DPHP_FASTCGI=1 -DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1
-
+# TODO: --disable-discard-path --enable-path-info-check --disable-force-cgi-redirect
 		%{__make} sapi/cgi/php \
 			CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0 -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1 -DHAVE_SYS_PARAM_H=1 -DPHP_FASTCGI=1 -DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1"
+
 #		cp -r sapi/cgi sapi/fcgi
 #		rm -rf sapi/cgi/.libs sapi/cgi/*.lo
 	;;
@@ -1787,6 +1794,7 @@ for sapi in $sapis; do
 		# notes:
 		# -DENABLE_CHROOT_FUNC=1 (cgi,fcgi) is used in ext/standard/dir.c (libphp_common)
 		# -DPHP_WRITE_STDOUT is used also for cli, but not set by its config.m4
+# TODO: --enable-discard-path --enable-path-info-check --disable-force-cgi-redirect
 
 		%{__make} sapi/cgi/php \
 			CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=1 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0 -DPHP_WRITE_STDOUT=1"
@@ -1825,9 +1833,11 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}/{apache,cg
 	$RPM_BUILD_ROOT%{_mandir}/man1
 
 # install apache DSO module
-install build-apxs1/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache1
+install build-apxs1/.libs/libphp4.so $RPM_BUILD_ROOT%(apxs1 -q LIBEXECDIR 2>/dev/null)
+install build-apxs1/.libs/libphp4.so $RPM_BUILD_ROOT%(apxs1 -q LIBEXECDIR 2>/dev/null)
+
 # install apache2 DSO module
-install build-apxs2/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache
+install build-apxs2/.libs/libphp4.so $RPM_BUILD_ROOT%(apxs1 -q LIBEXECDIR 2>/dev/null)
 
 # whose common to choose?
 install build-apxs1/.libs/libphp_common.so $RPM_BUILD_ROOT%{_libdir}
@@ -2508,13 +2518,13 @@ fi
 %files -n apache1-mod_php4
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/apache/conf.d/*_mod_php4.conf
-%attr(755,root,root) %{_libdir}/apache1/libphp4.so
+%attr(755,root,root) %(apxs1 -q LIBEXECDIR 2>/dev/null)/libphp4.so
 #%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 
 %files -n apache-mod_php4
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php4.conf
-%attr(755,root,root) %{_libdir}/apache/libphp4.so
+%attr(755,root,root) %(apxs -q LIBEXECDIR 2>/dev/null)/libphp4.so
 #%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 
 %files fcgi
