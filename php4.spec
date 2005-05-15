@@ -285,25 +285,27 @@ PHP4 - це мова написання скрипт╕в, що вбудовуються в HTML-код. PHP
 ма╓те також встановити пакет %{name}-common. Якщо вам потр╕бен
 ╕нтерпретатор PHP в якост╕ модуля apache, встанов╕ть пакет apache-php.
 
-%if %{with apache1}
-%package apache1
-Summary:	apache1 module
+#%if %{with apache1}
+%package -n apache1-mod_php4
+Summary:	PHP DSO module for apache 1.3.x
 Group:		Development/Languages/PHP
 Provides:	%{name} = %{epoch}:%{version}-%{release}
+Obsoletes:	php4
 
-%description apache1
-apache1 module
-%endif
+%description -n apache1-mod_php4
+PHP DSO module for apache 1.3.x
+#%endif
 
-%if %{with apache2}
-%package apache
-Summary:	apache module
+#%if %{with apache2}
+%package -n apache-mod_php4
+Summary:	PHP DSO module for apache 2.x
 Group:		Development/Languages/PHP
 Provides:	%{name} = %{epoch}:%{version}-%{release}
+Obsoletes:	php4
 
-%description apache
-apache 2.x module
-%endif
+%description -n apache-mod_php4
+PHP DSO module for apache 2.x
+#%endif
 
 %package fcgi
 Summary:	php4 as FastCGI program
@@ -1631,10 +1633,10 @@ sed -i -e 's#apu-config#apu-1-config#g' sapi/apache*/*.m4
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
 
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
-./buildconf --force
-%{__libtoolize}
-%{__aclocal}
-%{__autoconf}
+#./buildconf --force
+#%%{__libtoolize}
+#%%{__aclocal}
+#%%{__autoconf}
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
 
 # for now session_mm doesn't work with shared session module...
@@ -1642,12 +1644,8 @@ PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
 # %{!?with_mm:--with-mm=shared,no}%{?with_mm:--with-mm=shared}
 
 sapis="fcgi cgi cli
-%if %{with apache1}
 	apxs1
-%endif
-%if %{with apache2}
 	apxs2
-%endif
 "
 
 # leave apxs2 last, as we change CFLAGS (TODO: fix this)
@@ -2505,21 +2503,17 @@ fi
 #%attr(755,root,root) %{apachelib}/libphp4.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 
-%if %{with apache1}
-%files apache1
+%files -n apache1-mod_php4
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/apache/conf.d/*_mod_php4.conf
 %attr(755,root,root) %{_libdir}/apache1/libphp4.so
 #%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
-%endif
 
-%if %{with apache2}
-%files apache
+%files -n apache-mod_php4
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php4.conf
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
 #%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
-%endif
 
 %files fcgi
 %defattr(644,root,root,755)
