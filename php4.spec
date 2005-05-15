@@ -40,16 +40,17 @@
 %bcond_without	xslt		# without XSLT extension module
 %bcond_without	yaz		# without YAZ extension module
 
+%define	_apache2	%{nil} # just for better diffs from HEAD
 %define apxs1		/usr/sbin/apxs1
 %define	apxs2		/usr/sbin/apxs
 
 # some problems with apache 2.x
-#%if %{with apache2}
-#%undefine	with_recode
-#%undefine	with_mm
-#%endif
+%if %{_apache2}
+%undefine	with_recode
+%undefine	with_mm
+%endif
 
-%ifnarch %{ix86} amd64 sparc sparcv9 alpha ppc
+%ifnarch %{ix86} %{x8664} sparc sparcv9 alpha ppc
 %undefine	with_interbase
 %endif
 
@@ -82,8 +83,8 @@ Source5:	%{name}-cgi-fcgi.ini
 Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Source8:	%{name}-cli.ini
-Source9:	http://www.hardened-php.net/hardened-php-4.3.10-0.2.6.patch.gz
-# Source9-md5:	0072677fefb4ed8900f2db0a6b317572
+Source9:	http://www.hardened-php.net/hardened-php-4.3.11-0.2.7.patch.gz
+# Source9-md5:	c649f58458a39532889ed82f1aebee34
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-xml-expat-fix.patch
@@ -148,6 +149,7 @@ BuildRequires:	gd-devel(gif)
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
 %{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2}
+%{?with_imap:buildrequires:	heimdal-devel}
 %{?with_java:BuildRequires:	jdk >= 1.1}
 %{?with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
 BuildRequires:	libjpeg-devel
@@ -179,7 +181,7 @@ BuildRequires:	%{__perl}
 BuildRequires:	readline-devel
 %{?with_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-100
-BuildRequires:	rpmbuild(macros) >= 1.120
+BuildRequires:	rpmbuild(macros) >= 1.213
 %{?with_xslt:BuildRequires:	sablotron-devel >= 0.96}
 BuildRequires:	sed >= 4.0
 BuildRequires:	t1lib-devel
@@ -1614,7 +1616,7 @@ cp php.ini-dist php.ini
 %patch26 -p1
 %patch27 -p1
 %patch28 -p1
-%ifarch amd64
+%if "%{_lib}" == "lib64"
 %patch29 -p1
 %endif
 %patch30 -p1
@@ -1633,10 +1635,10 @@ sed -i -e 's#apu-config#apu-1-config#g' sapi/apache*/*.m4
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
 
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
-#./buildconf --force
-#%%{__libtoolize}
-#%%{__aclocal}
-#%%{__autoconf}
+./buildconf --force
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
 
 # for now session_mm doesn't work with shared session module...
