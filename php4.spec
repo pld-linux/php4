@@ -1830,6 +1830,8 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}/{apache,cg
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/run/php \
 	$RPM_BUILD_ROOT{/etc/apache/conf.d,/etc/httpd/httpd.conf} \
+	$RPM_BUILD_ROOT%(apxs1 -q LIBEXECDIR 2>/dev/null) \
+	$RPM_BUILD_ROOT%(apxs -q LIBEXECDIR 2>/dev/null) \
 	$RPM_BUILD_ROOT%{_mandir}/man1
 
 # install apache DSO module
@@ -1837,7 +1839,7 @@ install build-apxs1/.libs/libphp4.so $RPM_BUILD_ROOT%(apxs1 -q LIBEXECDIR 2>/dev
 install build-apxs1/.libs/libphp4.so $RPM_BUILD_ROOT%(apxs1 -q LIBEXECDIR 2>/dev/null)
 
 # install apache2 DSO module
-install build-apxs2/.libs/libphp4.so $RPM_BUILD_ROOT%(apxs1 -q LIBEXECDIR 2>/dev/null)
+install build-apxs2/.libs/libphp4.so $RPM_BUILD_ROOT%(apxs -q LIBEXECDIR 2>/dev/null)
 
 # whose common to choose?
 install build-apxs1/.libs/libphp_common.so $RPM_BUILD_ROOT%{_libdir}
