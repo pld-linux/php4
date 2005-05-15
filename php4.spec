@@ -1723,10 +1723,10 @@ for sapi in $sapis; do
 		--with-gdbm \
 		--with-gmp=shared \
 		--with-hyperwave=shared \
-		%{?with_imap:--with-imap=shared --with-imap-ssl} \
+		%{?with_imap:--with-imap=shared --with-imap-ssl --with-kerberos} \
 		%{?with_interbase:--with-interbase=shared%{!?with_interbase_inst:,/usr}} \
 		%{?with_java:--with-java=%{_libdir}/java} \
-		--with-jpeg-dir=shared,/usr \
+		--with-jpeg-dir=/usr \
 		%{?with_ldap:--with-ldap=shared} \
 		--with-mcal=shared,/usr \
 		--with-mcrypt=shared \
@@ -1741,13 +1741,13 @@ for sapi in $sapis; do
 		--with-mysql-sock=/var/lib/mysql/mysql.sock \
 		--with-ncurses=shared \
 		%{?with_oci8:--with-oci8=shared} \
-		%{?with_openssl:--with-openssl=/usr} \
+		%{?with_openssl:--with-openssl=shared,/usr} \
 		%{?with_oracle:--with-oracle=shared} \
 		%{!?with_pcre:--without-pcre-regex}%{?with_pcre:--with-pcre-regex=shared} \
 		%{?with_pdf:--with-pdflib=shared} \
 		--with-pear=%{php_pear_dir} \
 		%{!?with_pgsql:--without-pgsql}%{?with_pgsql:--with-pgsql=shared,/usr} \
-		--with-png-dir=shared,/usr \
+		--with-png-dir=/usr \
 		%{?with_pspell:--with-pspell=shared} \
 		--with-readline=shared \
 		%{?with_recode:--with-recode=shared} \
@@ -1757,7 +1757,7 @@ for sapi in $sapis; do
 		%{?with_snmp:--with-snmp=shared} \
 		%{?with_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
 		--with-t1lib=shared \
-		--with-tiff-dir=shared,/usr \
+		--with-tiff-dir=/usr \
 		%{?with_odbc:--with-unixODBC=shared} \
 		%{!?with_xmlrpc:--without-xmlrpc}%{?with_xmlrpc:--with-xmlrpc=shared,/usr} \
 		%{?with_xslt:--with-xslt-sablot=shared} \
