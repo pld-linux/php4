@@ -69,7 +69,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.11
-Release:	4.2%{?with_hardened:hardened}
+Release:	4.3%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -209,11 +209,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/php4
 %define		extensionsdir	%{_libdir}/php4
-%if %{with apache2}
-%define		httpdir		/home/services/httpd
-%else
-%define		httpdir		/home/services/apache
-%endif
 %define		_ulibdir	%{_prefix}/lib
 
 %description
@@ -1870,7 +1865,8 @@ install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 for i in %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE8}; do
 	install $i $RPM_BUILD_ROOT%{_sysconfdir}/$(basename $i|sed -e "s@php4@php@g")
 done
-install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{httpdir}/icons
+install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/httpd/icons
+install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/apache/icons
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/apache/conf.d/70_mod_php4.conf
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php4.conf
@@ -2523,12 +2519,14 @@ fi
 # - really share config with apache1/apache2?
 # - name it by real sapi name? (apxs, apxs2?)
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
+/home/services/apache/icons/*
 
 %files -n apache-mod_php4
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php4.conf
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
+/home/services/httpd/icons/*
 
 %files fcgi
 %defattr(644,root,root,755)
@@ -2561,12 +2559,6 @@ fi
 %dir %{_sysconfdir}
 %attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
 %attr(770,root,http) %dir %verify(not group mode) /var/run/php
-# FIXME
-# httpdir is currently apache2 specific
-# - move to /usr/share/php/php.gif
-# - remove completely?
-# - put to apacheX-mod_php4 package? <- YES THIS ONE
-%{httpdir}/icons/*
 %attr(755,root,root) %{_sbindir}/*
 %attr(755,root,root) %{_libdir}/libphp_common-*.so
 %dir %{extensionsdir}
