@@ -13,7 +13,7 @@ if [ -f ${INIFILE} ] && ! grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}
 	echo "extension=${MODNAME}.so" >> ${INIFILE}
 fi
 # restart only if there's module installed
-if [ -f /etc/httpd/httpd.conf/*_mod_php4.conf ] && [ -f /var/lock/subsys/httpd ]; then
+if [ -f /etc/httpd/httpd.conf/??_mod_php4.conf ] && [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 if [ -f /etc/apache/conf.d/??_mod_php4.conf ] && [ -f /var/lock/subsys/apache ]; then
@@ -35,7 +35,7 @@ if [ -f ${INIFILE} ] && grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.s
 	chmod 644 ${INIFILE}
 fi
 # restart only if there's module installed
-if [ -f /etc/httpd/httpd.conf/*_mod_php4.conf ] && [ -f /var/lock/subsys/httpd ]; then
+if [ -f /etc/httpd/httpd.conf/??_mod_php4.conf ] && [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 if [ -f /etc/apache/conf.d/??_mod_php4.conf ] && [ -f /var/lock/subsys/apache ]; then
