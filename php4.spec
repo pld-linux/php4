@@ -69,7 +69,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.11
-Release:	4.1%{?with_hardened:hardened}
+Release:	4.2%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -291,6 +291,7 @@ Requires(post,preun):	%{__perl}
 Requires:	apache1(EAPI) >= 1.3.33-2
 Requires:	apache(mod_mime)
 Provides:	%{name} = %{epoch}:%{version}-%{release}
+Provides:	php = %{epoch}:%{version}-%{release}
 Obsoletes:	php4 <= 3:4.3.11-4
 
 %description -n apache1-mod_php4
@@ -303,6 +304,7 @@ PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	apache >= 2.0.52-2
 Requires:	apache(modules-api) = %{apache_modules_api}
 Provides:	%{name} = %{epoch}:%{version}-%{release}
+Provides:	php = %{epoch}:%{version}-%{release}
 Obsoletes:	php4 <= 3:4.3.11-4
 
 %description -n apache-mod_php4
