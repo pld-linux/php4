@@ -2,7 +2,6 @@
 # TODO:
 # - make additional headers added by mail patch configurable
 # - /var/run/php group not owned
-#
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
 %bcond_with	fdf		# with FDF (PDF forms) module		(BR: proprietary lib)
@@ -46,10 +45,43 @@
 %define	apxs2		/usr/sbin/apxs
 
 # some problems with apache 2.x
-%if %{_apache2}
+%if 0 && %{_apache2}
 %undefine	with_recode
 %undefine	with_mm
 %endif
+
+# disabble mm because:
+%undefine	with_mm
+#/bin/sh /home/builder/rpm/BUILD/php-4.3.11/build-fcgi/libtool --silent
+#--preserve-dup-deps --mode=compile i686-pld-linux-gcc  -Iext/session/
+#-I/home/builder/rpm/BUILD/php-4.3.11/ext/session/ -DPHP_ATOM_INC
+#-I/home/builder/rpm/BUILD/php-4.3.11/build-fcgi/include
+#-I/home/builder/rpm/BUILD/php-4.3.11/build-fcgi/main
+#-I/home/builder/rpm/BUILD/php-4.3.11 -I/usr/include/libxml2
+#-I/usr/include/freetype2 -I/usr/include/imap
+#-I/home/builder/rpm/BUILD/php-4.3.11/ext/mbstring/mbregex
+#-I/home/builder/rpm/BUILD/php-4.3.11/ext/mbstring/libmbfl
+#-I/home/builder/rpm/BUILD/php-4.3.11/ext/mbstring/libmbfl/mbfl
+#-I/usr/include/mcal -I/usr/include/mysql -I/usr/include/ncurses
+#-I/usr/include/pspell -I/usr/include/qt -I/usr/include/xmlrpc-epi
+#-I/home/builder/rpm/BUILD/php-4.3.11/build-fcgi/TSRM
+#-I/home/builder/rpm/BUILD/php-4.3.11/build-fcgi/Zend
+#-I/home/builder/rpm/BUILD/php-4.3.11/main
+#-I/home/builder/rpm/BUILD/php-4.3.11/Zend
+#-I/home/builder/rpm/BUILD/php-4.3.11/TSRM
+#-I/home/builder/rpm/BUILD/php-4.3.11/build-fcgi/  -D_REENTRANT  -O2
+#-march=pentium3 -mfpmath=sse -msse -mmmx -fomit-frame-pointer
+#-falign-functions=4 -pipe   -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1
+#-DFORCE_CGI_REDIRECT=0 -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1
+#-DHAVE_LIBNSL=1 -DHAVE_SYS_PARAM_H=1 -DPHP_FASTCGI=1
+#-DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1  -c
+#/home/builder/rpm/BUILD/php-4.3.11/ext/session/mod_mm.c -o
+#ext/session/mod_mm.lo
+#/home/builder/rpm/BUILD/php-4.3.11/ext/session/mod_mm.c:37:3: #error
+#mm is not thread-safe
+#make: *** [ext/session/mod_mm.lo] Error 1
+#error: Bad exit status from /var/tmp/rpm-tmp.44418 (%%build)
+#
 
 %ifnarch %{ix86} %{x8664} sparc sparcv9 alpha ppc
 %undefine	with_interbase
@@ -69,7 +101,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.11
-Release:	4.3%{?with_hardened:hardened}
+Release:	4.5%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1631,10 +1663,13 @@ sed -i -e 's#apu-config#apu-1-config#g' sapi/apache*/*.m4
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
 
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
+if [ ! -f built-conf ]; then
 ./buildconf --force
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
+touch built-conf
+fi
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
 
 # for now session_mm doesn't work with shared session module...
@@ -1649,9 +1684,6 @@ sapis="fcgi cgi cli
 # Apache2 CFLAGS. should be harmless for other SAPIs.
 CFLAGS="$CFLAGS $(%{_bindir}/apr-1-config --cppflags --includes) $(%{_bindir}/apu-1-config --includes)"
 
-APACHE1_VERSION=%(rpm -q --qf '%%{version}' apache1-apxs)
-APACHE2_VERSION=%(rpm -q --qf '%%{version}' apache-apxs)
-
 # leave apxs2 last, as we change CFLAGS (TODO: fix this)
 for sapi in $sapis; do
 	rm -rf build-$sapi
@@ -1660,11 +1692,35 @@ for sapi in $sapis; do
 
 	../%configure \
 	--enable-experimental-zts \
-	$([ $sapi = cgi ] && echo --enable-discard-path) \
-	$([ $sapi = cli ] && echo --disable-cgi) \
-	$([ $sapi = fcgi ] && echo --enable-fastcgi --with-fastcgi=/usr) \
-	$([ $sapi = apxs1 ] && echo --with-apxs=%{apxs1} --with-apache-version=$APACHE1_VERSION) \
-	$([ $sapi = apxs2 ] && echo --with-apxs2=%{apxs2} --with-apache-version=$APACHE2_VERSION) \
+	`
+	case $sapi in
+	cgi)
+		echo --enable-discard-path
+		echo %{?with_recode:--with-recode=shared}
+		echo %{?with_mm:--with-mm}
+	;;
+	cli)
+		echo --disable-cgi
+		echo %{?with_recode:--with-recode=shared}
+		echo %{?with_mm:--with-mm}
+	;;
+	fcgi)
+		echo --enable-fastcgi --with-fastcgi=/usr
+		echo %{?with_recode:--with-recode=shared}
+		echo %{?with_mm:--with-mm}
+	;;
+	apxs1)
+		ver=%(rpm -q --qf '%%{version}' apache1-apxs)
+		echo --with-apxs=%{apxs1} --with-apache-version=$ver
+		echo %{?with_recode:--with-recode=shared}
+		echo %{?with_mm:--with-mm}
+	;;
+	apxs2)
+		ver=%(rpm -q --qf '%%{version}' apache-apxs)
+		echo --with-apxs2=%{apxs2} --with-apache-version=$ver
+	;;
+	esac
+	` \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
@@ -1734,7 +1790,6 @@ for sapi in $sapis; do
 	%{?with_mhash:--with-mhash=shared} \
 	--with-mime-magic=shared,/usr/share/file/magic.mime \
 	%{?with_ming:--with-ming=shared} \
-	%{?with_mm:--with-mm} \
 	%{!?with_mnogosearch:--without-mnogosearch}%{?with_mnogosearch:--with-mnogosearch=shared,/usr} \
 	%{?with_msession:--with-msession=shared}%{!?with_msession:--without-msession} \
 	%{?with_mssql:--with-mssql=shared} \
@@ -1751,7 +1806,6 @@ for sapi in $sapis; do
 	--with-png-dir=/usr \
 	%{?with_pspell:--with-pspell=shared} \
 	--with-readline=shared \
-	%{?with_recode:--with-recode=shared} \
 	--with-regex=php \
 	%{?with_qtdom:--with-qtdom=shared} \
 	--without-sablot-js \
