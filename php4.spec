@@ -316,7 +316,7 @@ Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Requires(post,preun):	%{__perl}
 Requires:	apache1(EAPI) >= 1.3.33-2
-Requires:	apache(mod_mime)
+Requires:	apache1-mod_mime
 Provides:	%{name} = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
 Obsoletes:	php4 <= 3:4.3.11-4
