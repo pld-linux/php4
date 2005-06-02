@@ -38,50 +38,23 @@
 %bcond_without	xml		# without XML and DOMXML extension modules
 %bcond_without	xslt		# without XSLT extension module
 %bcond_without	yaz		# without YAZ extension module
+%bcond_without	apache1		# disable building apache1 module
+%bcond_without	apache2		# disable building apache2 module
+%bcond_with	zts		# enable-experimental-zts
 
-# just for better diffs from HEAD
-%define	_apache2	0
 %define apxs1		/usr/sbin/apxs1
 %define	apxs2		/usr/sbin/apxs
 
-# some problems with apache 2.x
-%if 0 && %{_apache2}
-%undefine	with_recode
-%undefine	with_mm
+# apache2 needs zts
+%if %{with apache2}
+%define		with_zts 1
 %endif
 
-# disabble mm because:
+# mm is not thread safe
+# ext/session/mod_mm.c:37:3: #error mm is not thread-safe
+%if %{with zts}
 %undefine	with_mm
-#/bin/sh /home/builder/rpm/BUILD/php-4.3.11/build-fcgi/libtool --silent
-#--preserve-dup-deps --mode=compile i686-pld-linux-gcc  -Iext/session/
-#-I/home/builder/rpm/BUILD/php-4.3.11/ext/session/ -DPHP_ATOM_INC
-#-I/home/builder/rpm/BUILD/php-4.3.11/build-fcgi/include
-#-I/home/builder/rpm/BUILD/php-4.3.11/build-fcgi/main
-#-I/home/builder/rpm/BUILD/php-4.3.11 -I/usr/include/libxml2
-#-I/usr/include/freetype2 -I/usr/include/imap
-#-I/home/builder/rpm/BUILD/php-4.3.11/ext/mbstring/mbregex
-#-I/home/builder/rpm/BUILD/php-4.3.11/ext/mbstring/libmbfl
-#-I/home/builder/rpm/BUILD/php-4.3.11/ext/mbstring/libmbfl/mbfl
-#-I/usr/include/mcal -I/usr/include/mysql -I/usr/include/ncurses
-#-I/usr/include/pspell -I/usr/include/qt -I/usr/include/xmlrpc-epi
-#-I/home/builder/rpm/BUILD/php-4.3.11/build-fcgi/TSRM
-#-I/home/builder/rpm/BUILD/php-4.3.11/build-fcgi/Zend
-#-I/home/builder/rpm/BUILD/php-4.3.11/main
-#-I/home/builder/rpm/BUILD/php-4.3.11/Zend
-#-I/home/builder/rpm/BUILD/php-4.3.11/TSRM
-#-I/home/builder/rpm/BUILD/php-4.3.11/build-fcgi/  -D_REENTRANT  -O2
-#-march=pentium3 -mfpmath=sse -msse -mmmx -fomit-frame-pointer
-#-falign-functions=4 -pipe   -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1
-#-DFORCE_CGI_REDIRECT=0 -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1
-#-DHAVE_LIBNSL=1 -DHAVE_SYS_PARAM_H=1 -DPHP_FASTCGI=1
-#-DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1  -c
-#/home/builder/rpm/BUILD/php-4.3.11/ext/session/mod_mm.c -o
-#ext/session/mod_mm.lo
-#/home/builder/rpm/BUILD/php-4.3.11/ext/session/mod_mm.c:37:3: #error
-#mm is not thread-safe
-#make: *** [ext/session/mod_mm.lo] Error 1
-#error: Bad exit status from /var/tmp/rpm-tmp.44418 (%%build)
-#
+%endif
 
 %ifnarch %{ix86} %{x8664} sparc sparcv9 alpha ppc
 %undefine	with_interbase
@@ -101,7 +74,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.11
-Release:	4.5%{?with_hardened:hardened}
+Release:	4.6%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1691,29 +1664,21 @@ for sapi in $sapis; do
 	cd build-$sapi
 
 	../%configure \
-	--enable-experimental-zts \
+	%{?with_zts:--enable-experimental-zts} \
 	`
 	case $sapi in
 	cgi)
 		echo --enable-discard-path
-		echo %{?with_recode:--with-recode=shared}
-		echo %{?with_mm:--with-mm}
 	;;
 	cli)
 		echo --disable-cgi
-		echo %{?with_recode:--with-recode=shared}
-		echo %{?with_mm:--with-mm}
 	;;
 	fcgi)
 		echo --enable-fastcgi --with-fastcgi=/usr
-		echo %{?with_recode:--with-recode=shared}
-		echo %{?with_mm:--with-mm}
 	;;
 	apxs1)
 		ver=%(rpm -q --qf '%%{version}' apache1-apxs)
 		echo --with-apxs=%{apxs1} --with-apache-version=$ver
-		echo %{?with_recode:--with-recode=shared}
-		echo %{?with_mm:--with-mm}
 	;;
 	apxs2)
 		ver=%(rpm -q --qf '%%{version}' apache-apxs)
@@ -1752,6 +1717,8 @@ for sapi in $sapis; do
 	--enable-safe-mode \
 	--enable-sockets=shared \
 	--enable-ucd-snmp-hack \
+	%{?with_recode:--with-recode=shared} \
+	%{?with_mm:--with-mm} \
 	%{?with_wddx:--enable-wddx=shared} \
 	%{!?with_xml:--disable-xml}%{?with_xml:--enable-xml=shared} \
 	%{?with_xslt:--enable-xslt=shared} \
@@ -1822,10 +1789,12 @@ for sapi in $sapis; do
 	--with-zlib-dir=shared,/usr
 
 	# copied from debian/rules
+%if %{with zts}
 	cp ../Zend/zend_ini_scanner.c ../Zend/zend_language_scanner.c \
 	../Zend/zend_ini_parser.h ../Zend/zend_language_parser.h \
 	../Zend/zend_ini_parser.c ../Zend/zend_language_parser.c \
 	Zend/
+%endif
 
 	case "$sapi" in
 	fcgi)
