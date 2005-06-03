@@ -46,7 +46,7 @@
 %define	apxs2		/usr/sbin/apxs
 
 # apache2 needs zts
-%if %{with apache2}
+%if %{with apache2x}
 %define		with_zts 1
 %endif
 
@@ -74,7 +74,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.11
-Release:	4.6%{?with_hardened:hardened}
+Release:	4.9%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1664,6 +1664,7 @@ for sapi in $sapis; do
 	cd build-$sapi
 
 	../%configure \
+	--cache-file=../config.cache \
 	%{?with_zts:--enable-experimental-zts} \
 	`
 	case $sapi in
@@ -1689,112 +1690,18 @@ for sapi in $sapis; do
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
-	--enable-memory-limit \
-	--enable-bcmath=shared \
-	--enable-calendar=shared \
-	--enable-ctype=shared \
-	--enable-dba=shared \
-	--enable-dbx=shared \
-	--enable-dio=shared \
-	--enable-exif=shared \
-	--enable-ftp=shared \
-	--enable-filepro=shared \
-	--enable-gd-native-ttf \
-	--enable-magic-quotes \
-	--enable-mbstring=shared,all \
-	--enable-mbregex \
-	--enable-overload=shared \
-	--enable-pcntl=shared \
-	--enable-posix=shared \
-	--enable-session \
 	--enable-shared \
-	--enable-shmop=shared \
-	--enable-sysvmsg=shared \
-	--enable-sysvsem=shared \
-	--enable-sysvshm=shared \
+	--enable-magic-quotes \
+	--enable-memory-limit \
 	--enable-track-vars \
-	--enable-trans-sid \
 	--enable-safe-mode \
-	--enable-sockets=shared \
-	--enable-ucd-snmp-hack \
-	%{?with_recode:--with-recode=shared} \
-	%{?with_mm:--with-mm} \
-	%{?with_wddx:--enable-wddx=shared} \
-	%{!?with_xml:--disable-xml}%{?with_xml:--enable-xml=shared} \
-	%{?with_xslt:--enable-xslt=shared} \
-	--enable-yp=shared \
-	--with-bz2=shared \
-	%{?with_cpdf:--with-cpdflib=shared} \
-	--with-crack=shared \
-	%{!?with_curl:--without-curl}%{?with_curl:--with-curl=shared} \
-	--with-db=shared \
-	%{?with_db3:--with-db3}%{!?with_db3:--with-db4} \
-	--with-dbase=shared \
-	%{?with_xml:--with-dom=shared} \
-	%{?with_domxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
-%if %{with xml} || %{with xmlrpc}
-	--with-expat-dir=shared,/usr \
-%else
-	--without-expat-dir \
-%endif
-	%{?with_fdf:--with-fdftk=shared} \
-	%{?with_fribidi:--with-fribidi=shared} \
-	--with-iconv=shared \
-	--with-filepro=shared \
-	--with-freetype-dir=shared \
-	--with-gettext=shared \
-	--with-gd=shared,/usr \
-	--with-gdbm \
-	--with-gmp=shared \
-	--with-hyperwave=shared \
-	%{?with_imap:--with-imap=shared --with-imap-ssl --with-kerberos} \
-	%{?with_interbase:--with-interbase=shared%{!?with_interbase_inst:,/usr}} \
-	%{?with_java:--with-java=%{_libdir}/java} \
-	--with-jpeg-dir=/usr \
-	%{?with_ldap:--with-ldap=shared} \
-	--with-mcal=shared,/usr \
-	--with-mcrypt=shared \
-	%{?with_mhash:--with-mhash=shared} \
-	--with-mime-magic=shared,/usr/share/file/magic.mime \
-	%{?with_ming:--with-ming=shared} \
-	%{!?with_mnogosearch:--without-mnogosearch}%{?with_mnogosearch:--with-mnogosearch=shared,/usr} \
-	%{?with_msession:--with-msession=shared}%{!?with_msession:--without-msession} \
-	%{?with_mssql:--with-mssql=shared} \
-	--with-mysql=shared,/usr \
-	--with-mysql-sock=/var/lib/mysql/mysql.sock \
-	--with-ncurses=shared \
-	%{?with_oci8:--with-oci8=shared} \
-	%{?with_openssl:--with-openssl=shared,/usr} \
-	%{?with_oracle:--with-oracle=shared} \
-	%{!?with_pcre:--without-pcre-regex}%{?with_pcre:--with-pcre-regex=shared} \
-	%{?with_pdf:--with-pdflib=shared} \
-	--with-pear=%{php_pear_dir} \
-	%{!?with_pgsql:--without-pgsql}%{?with_pgsql:--with-pgsql=shared,/usr} \
-	--with-png-dir=/usr \
-	%{?with_pspell:--with-pspell=shared} \
-	--with-readline=shared \
-	--with-regex=php \
-	%{?with_qtdom:--with-qtdom=shared} \
-	--without-sablot-js \
-	%{?with_snmp:--with-snmp=shared} \
-	%{?with_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
-	--with-t1lib=shared \
-	--with-tiff-dir=/usr \
-	%{?with_odbc:--with-unixODBC=shared} \
-	%{!?with_xmlrpc:--without-xmlrpc}%{?with_xmlrpc:--with-xmlrpc=shared,/usr} \
-	%{?with_xslt:--with-xslt-sablot=shared} \
-	%{?with_yaz:--with-yaz=shared} \
-	--with-zip=shared \
-	--with-zlib=shared \
-	--with-zlib-dir=shared,/usr
+	--disable-all 
 
-	# copied from debian/rules
-%if %{with zts}
+	# copied from debian/rules, reasons unknown (yet)
 	cp ../Zend/zend_ini_scanner.c ../Zend/zend_language_scanner.c \
 	../Zend/zend_ini_parser.h ../Zend/zend_language_parser.h \
 	../Zend/zend_ini_parser.c ../Zend/zend_language_parser.c \
 	Zend/
-%endif
 
 	case "$sapi" in
 	fcgi)
@@ -1841,6 +1748,113 @@ for sapi in $sapis; do
 	cd ..
 done
 
+# build modules
+%if 1
+%configure \
+	--cache-file=config.cache \
+	%{?with_zts:--enable-experimental-zts} \
+	\
+	--with-config-file-path=%{_sysconfdir} \
+	--with-exec-dir=%{_bindir} \
+	--%{!?debug:dis}%{?debug:en}able-debug \
+	--enable-shared \
+	--enable-magic-quotes \
+	--enable-memory-limit \
+	--enable-track-vars \
+	--enable-safe-mode \
+	\
+	--enable-bcmath=shared \
+	--enable-calendar=shared \
+	--enable-ctype=shared \
+	--enable-dba=shared \
+	--enable-dbx=shared \
+	--enable-dio=shared \
+	--enable-exif=shared \
+	--enable-ftp=shared \
+	--enable-filepro=shared \
+	--enable-mbstring=shared,all --enable-mbregex \
+	--enable-overload=shared \
+	--enable-pcntl=shared \
+	--enable-posix=shared \
+	--enable-session --enable-trans-sid \
+	--enable-shmop=shared \
+	--enable-sysvmsg=shared \
+	--enable-sysvsem=shared \
+	--enable-sysvshm=shared \
+	--enable-sockets=shared \
+	%{?with_recode:--with-recode=shared} \
+	%{?with_mm:--with-mm} \
+	%{?with_wddx:--enable-wddx=shared} \
+	%{!?with_xml:--disable-xml}%{?with_xml:--enable-xml=shared} \
+	%{?with_xslt:--enable-xslt=shared} \
+	--enable-yp=shared \
+	--with-bz2=shared \
+	%{?with_cpdf:--with-cpdflib=shared} \
+	--with-crack=shared \
+	%{!?with_curl:--without-curl}%{?with_curl:--with-curl=shared} \
+	--with-db=shared \
+	%{?with_db3:--with-db3}%{!?with_db3:--with-db4} \
+	--with-dbase=shared \
+	%{?with_xml:--with-dom=shared} \
+	%{?with_domxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
+%if %{with xml} || %{with xmlrpc}
+	--with-expat-dir=shared,/usr \
+%else
+	--without-expat-dir \
+%endif
+	%{?with_fdf:--with-fdftk=shared} \
+	%{?with_fribidi:--with-fribidi=shared} \
+	--with-iconv=shared \
+	--with-filepro=shared \
+	--with-freetype-dir=shared \
+	--with-gettext=shared \
+	--with-gd=shared,/usr --enable-gd-native-ttf \
+	--with-gdbm \
+	--with-gmp=shared \
+	--with-hyperwave=shared \
+	%{?with_imap:--with-imap=shared --with-imap-ssl --with-kerberos} \
+	%{?with_interbase:--with-interbase=shared%{!?with_interbase_inst:,/usr}} \
+	%{?with_java:--with-java=%{_libdir}/java} \
+	--with-jpeg-dir=/usr \
+	%{?with_ldap:--with-ldap=shared} \
+	--with-mcal=shared,/usr \
+	--with-mcrypt=shared \
+	%{?with_mhash:--with-mhash=shared} \
+	--with-mime-magic=shared,/usr/share/file/magic.mime \
+	%{?with_ming:--with-ming=shared} \
+	%{!?with_mnogosearch:--without-mnogosearch}%{?with_mnogosearch:--with-mnogosearch=shared,/usr} \
+	%{?with_msession:--with-msession=shared}%{!?with_msession:--without-msession} \
+	%{?with_mssql:--with-mssql=shared} \
+	--with-mysql=shared,/usr --with-mysql-sock=/var/lib/mysql/mysql.sock \
+	--with-ncurses=shared \
+	%{?with_oci8:--with-oci8=shared} \
+	%{?with_openssl:--with-openssl=shared,/usr} \
+	%{?with_oracle:--with-oracle=shared} \
+	%{!?with_pcre:--without-pcre-regex}%{?with_pcre:--with-pcre-regex=shared} \
+	%{?with_pdf:--with-pdflib=shared} \
+	--with-pear=%{php_pear_dir} \
+	%{!?with_pgsql:--without-pgsql}%{?with_pgsql:--with-pgsql=shared,/usr} \
+	--with-png-dir=/usr \
+	%{?with_pspell:--with-pspell=shared} \
+	--with-readline=shared \
+	--with-regex=php \
+	%{?with_qtdom:--with-qtdom=shared} \
+	--without-sablot-js \
+	%{?with_snmp:--with-snmp=shared --enable-ucd-snmp-hack} \
+	%{?with_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
+	--with-t1lib=shared \
+	--with-tiff-dir=/usr \
+	%{?with_odbc:--with-unixODBC=shared} \
+	%{!?with_xmlrpc:--without-xmlrpc}%{?with_xmlrpc:--with-xmlrpc=shared,/usr} \
+	%{?with_xslt:--with-xslt-sablot=shared} \
+	%{?with_yaz:--with-yaz=shared} \
+	--with-zip=shared \
+	--with-zlib=shared \
+	--with-zlib-dir=shared,/usr
+%endif
+
+%{__make}
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}/{apache,cgi}} \
@@ -1850,9 +1864,7 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}/{apache,cg
 	$RPM_BUILD_ROOT{/etc/apache/conf.d,/etc/httpd/httpd.conf} \
 	$RPM_BUILD_ROOT%{_mandir}/man1
 
-install build-apxs1/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache1
-# install apache DSO module
-install build-apxs1/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache1
+# install apache1 DSO module
 install build-apxs1/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache1
 
 # install apache2 DSO module
@@ -1860,11 +1872,12 @@ install build-apxs2/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache
 
 # which sapi common to choose?
 install build-apxs1/.libs/libphp_common.so $RPM_BUILD_ROOT%{_libdir}
-install build-apxs1/libphp_common.la $RPM_BUILD_ROOT%{_libdir}
 install build-apxs1/.libs/libphp_common-*.so $RPM_BUILD_ROOT%{_libdir}
+install build-apxs1/libphp_common.la $RPM_BUILD_ROOT%{_libdir}
 
 # install the apache modules' files
-make -C build-apxs1 install-headers install-build install-modules install-programs INSTALL_ROOT=$RPM_BUILD_ROOT
+make install-headers install-build install-modules install-programs \
+	INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # install CGI
 install build-cgi/sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php4.cgi
@@ -1902,19 +1915,7 @@ cp -f Zend/LICENSE{,.Zend}
 #ln -sf ../../lib/php/build $RPM_BUILD_ROOT%{_libdir}/php/build
 #%%endif
 
-#%if %{with apache1}
-#sed -i -e 's,httpd,apache,' $RPM_BUILD_ROOT%{_sbindir}/php4-module-install
-#%endif
-
-rm -f $RPM_BUILD_ROOT%{_libdir}/apache{,1}/libphp4.la
-
-#for i in cli cgi fcgi;
-#do
-#	mv -f $RPM_BUILD_ROOT%{_bindir}/php{,4}.$i
-#done
-#ln -sf php4.cli $RPM_BUILD_ROOT%{_bindir}/php4
-#rm -f $RPM_BUILD_ROOT%{_bindir}/php
-#mv -f $RPM_BUILD_ROOT%{_mandir}/man1/php{,4}.1
+#rm -f $RPM_BUILD_ROOT%{_libdir}/apache{,1}/libphp4.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
