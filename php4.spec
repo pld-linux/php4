@@ -340,7 +340,7 @@ php4 as CLI interpreter.
 php4 jako interpreter dziaЁaj╠cy z linii poleceЯ.
 
 %package common
-Summary:	Common files needed by both apache module and CGI
+Summary:	Common files needed by all PHP SAPIs
 Summary(pl):	WspСlne pliki dla moduЁu apache'a i programu CGI
 Summary(ru):	Разделяемые библиотеки для php
 Summary(uk):	Б╕бл╕отеки сп╕льного використання для php
@@ -353,7 +353,7 @@ Provides:	php-session = %{epoch}:%{version}-%{release}
 Obsoletes:	php-session < 3:4.2.1-2
 
 %description common
-Common files needed by both apache module and CGI.
+Common files needed by all PHP SAPIs.
 
 %description common -l pl
 WspСlne pliki dla moduЁu apacha i programu CGI.
@@ -1639,6 +1639,7 @@ for i in fcgi cgi cli apxs ; do
 %else
 	`[ $i = apxs ] && echo --with-apxs=%{apxs} --with-apache-version=%(rpm -q --qf '%%{version}' apache1-apxs)` \
 %endif
+	--cache-file=config.cache \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
