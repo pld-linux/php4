@@ -74,7 +74,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.11
-Release:	4.9%{?with_hardened:hardened}
+Release:	4.13%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -292,7 +292,8 @@ Requires:	apache1(EAPI) >= 1.3.33-2
 Requires:	apache1-mod_mime
 Provides:	%{name} = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
-Obsoletes:	php4 <= 3:4.3.11-4
+Provides:	php4 = %{epoch}:%{version}-%{release}
+Obsoletes:	php4 <= 3:4.3.11-4.10
 
 %description -n apache1-mod_php4
 php4 as DSO module for apache 1.3.x.
@@ -305,7 +306,8 @@ Requires:	apache >= 2.0.52-2
 Requires:	apache(modules-api) = %{apache_modules_api}
 Provides:	%{name} = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
-Obsoletes:	php4 <= 3:4.3.11-4
+Provides:	php4 = %{epoch}:%{version}-%{release}
+Obsoletes:	php4 <= 3:4.3.11-4.10
 
 %description -n apache-mod_php4
 php4 as DSO module for apache 2.x.
@@ -356,7 +358,7 @@ php4 as CLI interpreter.
 php4 jako interpreter dziaЁaj╠cy z linii poleceЯ.
 
 %package common
-Summary:	Common files needed by both apache module and CGI
+Summary:	Common files needed by all PHP SAPIs
 Summary(pl):	WspСlne pliki dla moduЁu apache'a i programu CGI
 Summary(ru):	Разделяемые библиотеки для php
 Summary(uk):	Б╕бл╕отеки сп╕льного використання для php
@@ -369,7 +371,7 @@ Provides:	php-session = %{epoch}:%{version}-%{release}
 Obsoletes:	php-session < 3:4.2.1-2
 
 %description common
-Common files needed by both apache module and CGI.
+Common files needed by all PHP SAPIs.
 
 %description common -l pl
 WspСlne pliki dla moduЁu apacha i programu CGI.
@@ -1691,6 +1693,7 @@ for sapi in $sapis; do
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
 	--enable-shared \
+	--disable-static \
 	--enable-magic-quotes \
 	--enable-memory-limit \
 	--enable-track-vars \
