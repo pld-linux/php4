@@ -1764,6 +1764,8 @@ for sapi in $sapis; do
 	--with-png-dir=/usr \
 	%{?with_pspell:--with-pspell=shared} \
 	--with-readline=shared \
+	--with-regex=php \
+	%{?with_qtdom:--with-qtdom=shared} \
 	--without-sablot-js \
 	%{?with_snmp:--with-snmp=shared --enable-ucd-snmp-hack} \
 	%{?with_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
