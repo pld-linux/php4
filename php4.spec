@@ -1656,6 +1656,8 @@ sapis="fcgi cgi cli apxs1 apxs2"
 CFLAGS="$CFLAGS $(%{_bindir}/apr-1-config --cppflags --includes) $(%{_bindir}/apu-1-config --includes)"
 
 for sapi in $sapis; do
+	[ -f Makefile.$sapi ] && continue
+
 	%configure \
 	`
 	case $sapi in
@@ -1797,6 +1799,9 @@ sed -i -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
 %if %{with apache1}
 #%{__make} libphp4.la -f Makefile.apxs1
 %{__make} sapi/apache/libphp4.la -f Makefile.apxs1
+sed -i -e "
+s|^libdir=.*|libdir='%{_libdir}/apache1'|;
+s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache1 |" sapi/apache/libphp4.la
 #mv .libs/libphp4.so libphp4-apxs1.so
 #rm -f libphp4.la
 %endif
@@ -1804,6 +1809,9 @@ sed -i -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
 %if %{with apache2}
 #%{__make} libphp4.la -f Makefile.apxs2
 %{__make} sapi/apache2handler/libphp4.la -f Makefile.apxs2
+sed -i -e "
+s|^libdir=.*|libdir='%{_libdir}/apache'|;
+s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |" sapi/apache2handler/libphp4.la
 #mv -f .libs/libphp4.so libphp4-apxs2.so
 #rm -f libphp4.la
 %endif
@@ -1837,12 +1845,14 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}/{apache,cg
 
 # install apache1 DSO module
 %if %{with apache1}
-install libphp4-apxs1.so $RPM_BUILD_ROOT%{_libdir}/apache1/libphp4.so
+#install libphp4-apxs1.so $RPM_BUILD_ROOT%{_libdir}/apache1/libphp4.so
+libtool --silent --mode=install install sapi/apache/libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache1
 %endif
 
 # install apache2 DSO module
 %if %{with apache2}
-install libphp4-apxs2.so $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.so
+#install libphp4-apxs2.so $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.so
+libtool --silent --mode=install install sapi/apache2handler/libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache
 %endif
 
 #install .libs/libphp_common.so $RPM_BUILD_ROOT%{_libdir}
