@@ -210,7 +210,7 @@ BuildRequires:	apache1-devel >= 1.3.33-2
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
 Obsoletes:	phpfi
-Obsoletes:	apache-mod_php
+Obsoletes:	apache-mod_php < 1:4.1.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/php4
