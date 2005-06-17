@@ -215,7 +215,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/php4
 %define		extensionsdir	%{_libdir}/php4
-%define		_ulibdir	%{_prefix}/lib
 
 %description
 PHP is an HTML-embedded scripting language. PHP attempts to make it
