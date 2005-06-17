@@ -1798,20 +1798,31 @@ sed -i -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
 
 %if %{with apache1}
 #%{__make} libphp4.la -f Makefile.apxs1
+#sed -i -e "
+#s|^libdir=.*|libdir='sapi/apache'|;
+#s|^(relink_command=.* -rpath )[^ ]*/libs |$1sapi/apache |" libphp4.la
+#
+#libtool --silent --mode=install cp libphp4.la `pwd`/sapi/apache
+#rm -f libphp4.la .libs/libphp4.so
+
 %{__make} sapi/apache/libphp4.la -f Makefile.apxs1
 sed -i -e "
 s|^libdir=.*|libdir='%{_libdir}/apache1'|;
 s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache1 |" sapi/apache/libphp4.la
+
 #mv .libs/libphp4.so libphp4-apxs1.so
-#rm -f libphp4.la
 %endif
 
 %if %{with apache2}
 #%{__make} libphp4.la -f Makefile.apxs2
+#libtool --silent --mode=install cp libphp4.la `pwd`/sapi/apache2handler
+#rm -f libphp4.la .libs/libphp4.so
+
 %{__make} sapi/apache2handler/libphp4.la -f Makefile.apxs2
 sed -i -e "
 s|^libdir=.*|libdir='%{_libdir}/apache'|;
 s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |" sapi/apache2handler/libphp4.la
+
 #mv -f .libs/libphp4.so libphp4-apxs2.so
 #rm -f libphp4.la
 %endif
@@ -1844,15 +1855,18 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}/{apache,cg
 	$RPM_BUILD_ROOT%{_mandir}/man1
 
 # install apache1 DSO module
+# LIBTOOL GURUS COULD LOOK AT THIS MESS AND THROW THEIR GOOD IDEAS HERE
 %if %{with apache1}
+install sapi/apache/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache1/libphp4.so
+#libtool --silent --mode=install install sapi/apache/libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache1
 #install libphp4-apxs1.so $RPM_BUILD_ROOT%{_libdir}/apache1/libphp4.so
-libtool --silent --mode=install install sapi/apache/libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache1
 %endif
 
 # install apache2 DSO module
 %if %{with apache2}
+install sapi/apache2handler/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.so
 #install libphp4-apxs2.so $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.so
-libtool --silent --mode=install install sapi/apache2handler/libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache
+#libtool --silent --mode=install install sapi/apache2handler/libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache
 %endif
 
 #install .libs/libphp_common.so $RPM_BUILD_ROOT%{_libdir}
