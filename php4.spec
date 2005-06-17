@@ -2,6 +2,12 @@
 # TODO:
 # - make additional headers added by mail patch configurable
 # - /var/run/php group not owned
+# TODO both apx build:
+# - what to do with main package?
+# - pl for apache-mod_php4 apache1-mod_php4
+# - Obsoletes apache-mod_php and phpfi are whose? apache2 apache1 module? both? neither?
+# - how to ensure proper sapi upgrade? (look apache1-mod_php4 preable)
+# - should the apache-mod_php4 provide php{,4} package?
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
 %bcond_with	fdf		# with FDF (PDF forms) module		(BR: proprietary lib)
@@ -44,11 +50,6 @@
 
 %define apxs1		/usr/sbin/apxs1
 %define	apxs2		/usr/sbin/apxs
-
-# apache2 needs zts
-%if %{with apache2x}
-%define		with_zts 1
-%endif
 
 # mm is not thread safe
 # ext/session/mod_mm.c:37:3: #error mm is not thread-safe
@@ -287,12 +288,12 @@ Summary:	php4 DSO module for apache 1.3.x
 Group:		Development/Languages/PHP
 # TODO: how to ensure proper sapi upgrade? assume apache2 was on by default?
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
-Requires(post,preun):	%{__perl}
 Requires:	apache1(EAPI) >= 1.3.33-2
 Requires:	apache1-mod_mime
 Provides:	%{name} = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
 Provides:	php4 = %{epoch}:%{version}-%{release}
+# Obsolete last version when apache module was in main package
 Obsoletes:	php4 < 3:4.3.11-4.16
 
 %description -n apache1-mod_php4
@@ -307,6 +308,7 @@ Requires:	apache(modules-api) = %{apache_modules_api}
 Provides:	%{name} = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
 Provides:	php4 = %{epoch}:%{version}-%{release}
+# Obsolete last version when apache module was in main package
 Obsoletes:	php4 < 3:4.3.11-4.16
 
 %description -n apache-mod_php4
@@ -1923,27 +1925,27 @@ cp -f Zend/LICENSE{,.Zend}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post -n apache-mod_php4
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-
 %post -n apache1-mod_php4
 if [ -f /var/lock/subsys/apache ]; then
 	/etc/rc.d/init.d/apache restart 1>&2
-fi
-
-%postun -n apache-mod_php4
-if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
 fi
 
 %postun -n apache1-mod_php4
 if [ "$1" = "0" ]; then
 	if [ -f /var/lock/subsys/apache ]; then
 		/etc/rc.d/init.d/apache restart 1>&2
+	fi
+fi
+
+%post -n apache-mod_php4
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+%postun -n apache-mod_php4
+if [ "$1" = "0" ]; then
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
 fi
 
