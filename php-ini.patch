@@ -139,3 +139,14 @@
  
  ; Whether or not to enable the dl() function.  The dl() function does NOT work
  ; properly in multithreaded servers, such as IIS or Zeus, and is automatically
+--- php-5.0.4/php.ini~	2005-06-19 19:19:01.000000000 +0300
++++ php-5.0.4/php.ini	2005-06-19 19:19:21.000000000 +0300
+@@ -369,7 +369,7 @@
+ ; Log errors into a log file (server-specific log, stderr, or error_log (below))
+ ; As stated above, you're strongly advised to use error logging in place of
+ ; error displaying on production web sites.
+-log_errors = Off
++log_errors = On
+ 
+ ; Set maximum length of log_errors. In error_log information about the source is
+ ; added. The default is 1024 and 0 allows to not apply any maximum length at all.
