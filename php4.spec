@@ -125,6 +125,7 @@ Patch31:	%{name}-stupidapache_version.patch
 Patch32:	%{name}-gd_imagerotate_enable.patch
 Patch33:	%{name}-uint32_t.patch
 Patch34:	%{name}-install_gd_headers.patch
+Patch35:	%{name}-hardening-fix.patch
 #Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1610,7 +1611,10 @@ cp php.ini-dist php.ini
 %patch33 -p1
 %patch34 -p1
 
-%{?with_hardening:zcat %{SOURCE9} | patch -p1}
+%if %{with hardening}
+zcat %{SOURCE9} | patch -p1
+patch -p1 < %{PATCH35}
+%endif
 
 # new apr
 sed -i -e 's#apr-config#apr-1-config#g' sapi/apache*/*.m4
