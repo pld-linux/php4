@@ -91,7 +91,7 @@ Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Source8:	%{name}-cli.ini
 Source9:	http://www.hardened-php.net/hardening-patch-4.3.11-0.3.0.patch.gz
-# Source9-md5:	c649f58458a39532889ed82f1aebee34
+# Source9-md5:	afb80fb24545aab2f78996b4f8521809
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-xml-expat-fix.patch
