@@ -8,6 +8,7 @@
 # - Obsoletes apache-mod_php and phpfi are whose? apache2 apache1 module? both? neither?
 # - how to ensure proper sapi upgrade? (look apache1-mod_php4 preable)
 # - should the apache-mod_php4 provide php{,4} package?
+#
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
 %bcond_with	fdf		# with FDF (PDF forms) module		(BR: proprietary lib)
@@ -45,7 +46,7 @@
 %bcond_without	xslt		# without XSLT extension module
 %bcond_without	yaz		# without YAZ extension module
 %bcond_without	apache1		# disable building apache 1.3.x module
-%bcond_without	apache2		# disable building apache 2.0.x module
+%bcond_without	apache2		# disable building apache 2.x module
 %bcond_with	zts		# enable-experimental-zts
 
 %define apxs1		/usr/sbin/apxs1
@@ -75,7 +76,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.11
-Release:	4.20%{?with_hardened:hardened}
+Release:	4.21%{?with_hardened:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -200,14 +201,14 @@ BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	zziplib-devel
 # apache 1.3 vs apache 2.0
-#%if %{with apache2}
+%if %{with apache2}
 BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.0.0
-#%endif
-#%if %{with apache1}
+%endif
+%if %{with apache1}
 BuildRequires:	apache1-devel >= 1.3.33-2
-#%endif
+%endif
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
 Obsoletes:	phpfi
@@ -1641,7 +1642,7 @@ sed -i -e 's#apu-config#apu-1-config#g' sapi/apache*/*.m4
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
 
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
-if [ ! -f _built-conf ]; then
+if [ ! -f _built-conf ]; then # do just once, for debugging purposes
 ./buildconf --force
 %{__libtoolize}
 %{__aclocal}
@@ -1650,8 +1651,15 @@ touch _built-conf
 fi
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
 
-sapis="fcgi cgi cli apxs1 apxs2"
-#sapis=""
+sapis="
+fcgi cgi cli
+%if %{with apache1}
+apxs1
+%endif
+%if %{with apache2}
+apxs2
+%endif
+"
 
 # Apache2 CFLAGS. should be harmless for other SAPIs.
 CFLAGS="$CFLAGS $(%{_bindir}/apr-1-config --cppflags --includes) $(%{_bindir}/apu-1-config --includes)"
@@ -1783,6 +1791,7 @@ for sapi in $sapis; do
 	--with-zlib-dir=shared,/usr
 
 	cp -f Makefile Makefile.$sapi
+
 	# left for debugging purposes
 	cp -f main/php_config.h php_config.h.$sapi
 done
@@ -1798,34 +1807,17 @@ done
 sed -i -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
 
 %if %{with apache1}
-#%{__make} libphp4.la -f Makefile.apxs1
-#sed -i -e "
-#s|^libdir=.*|libdir='sapi/apache'|;
-#s|^(relink_command=.* -rpath )[^ ]*/libs |$1sapi/apache |" libphp4.la
-#
-#libtool --silent --mode=install cp libphp4.la `pwd`/sapi/apache
-#rm -f libphp4.la .libs/libphp4.so
-
-%{__make} sapi/apache/libphp4.la -f Makefile.apxs1
+%{__make} sapi LIBTOOL_SAPI=sapi/apache/libphp4.la -f Makefile.apxs1
 sed -i -e "
 s|^libdir=.*|libdir='%{_libdir}/apache1'|;
 s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache1 |" sapi/apache/libphp4.la
-
-#mv .libs/libphp4.so libphp4-apxs1.so
 %endif
 
 %if %{with apache2}
-#%{__make} libphp4.la -f Makefile.apxs2
-#libtool --silent --mode=install cp libphp4.la `pwd`/sapi/apache2handler
-#rm -f libphp4.la .libs/libphp4.so
-
-%{__make} sapi/apache2handler/libphp4.la -f Makefile.apxs2
+%{__make} sapi LIBTOOL_SAPI=sapi/apache2handler/libphp4.la -f Makefile.apxs2
 sed -i -e "
 s|^libdir=.*|libdir='%{_libdir}/apache'|;
 s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |" sapi/apache2handler/libphp4.la
-
-#mv -f .libs/libphp4.so libphp4-apxs2.so
-#rm -f libphp4.la
 %endif
 
 # for fcgi: -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0
@@ -1859,20 +1851,13 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}/{apache,cg
 # LIBTOOL GURUS COULD LOOK AT THIS MESS AND THROW THEIR GOOD IDEAS HERE
 %if %{with apache1}
 install sapi/apache/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache1/libphp4.so
-#libtool --silent --mode=install install sapi/apache/libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache1
-#install libphp4-apxs1.so $RPM_BUILD_ROOT%{_libdir}/apache1/libphp4.so
 %endif
 
 # install apache2 DSO module
 %if %{with apache2}
 install sapi/apache2handler/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.so
-#install libphp4-apxs2.so $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.so
-#libtool --silent --mode=install install sapi/apache2handler/libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache
 %endif
 
-#install .libs/libphp_common.so $RPM_BUILD_ROOT%{_libdir}
-#install .libs/libphp_common-*.so $RPM_BUILD_ROOT%{_libdir}
-#install libphp_common.la $RPM_BUILD_ROOT%{_libdir}
 libtool --silent --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir}
 
 # install the apache modules' files
@@ -1880,25 +1865,16 @@ make install-headers install-build install-modules install-programs \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # install CGI
-#install sapi/cgi/.libs/php $RPM_BUILD_ROOT%{_bindir}/php4.cgi
 libtool --silent --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php4.cgi
 
 # install FCGI
-#install sapi/fcgi/.libs/php $RPM_BUILD_ROOT%{_bindir}/php4.fcgi
 libtool --silent --mode=install install sapi/fcgi/php $RPM_BUILD_ROOT%{_bindir}/php4.fcgi
 
 # install CLI
-#install sapi/cli/.libs/php $RPM_BUILD_ROOT%{_bindir}/php4.cli
 libtool --silent --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php4.cli
 
 install sapi/cli/php.1 $RPM_BUILD_ROOT%{_mandir}/man1/php4.1
 ln -sf php4.cli $RPM_BUILD_ROOT%{_bindir}/php4
-
-#install='$(LIBTOOL) --silent --mode=install install'
-#%{__make} install \
-#	INSTALL_ROOT=$RPM_BUILD_ROOT \
-#	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{apachelib} ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi ; \$(LIBTOOL) --mode=install install sapi/fcgi/php $RPM_BUILD_ROOT%{_bindir}/php.fcgi" \
-#	INSTALL_CLI="\$(LIBTOOL) --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php.cli"
 
 %{?with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{extensionsdir}}
 
@@ -1906,6 +1882,7 @@ install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 for i in %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE8}; do
 	install $i $RPM_BUILD_ROOT%{_sysconfdir}/$(basename $i|sed -e "s@php4@php@g")
 done
+
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/httpd/icons
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/apache/icons
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sbindir}
@@ -1914,13 +1891,6 @@ install %{SOURCE4} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php4.conf
 install %{SOURCE1} .
 
 cp -f Zend/LICENSE{,.Zend}
-
-# Is it really needed? Breaks installation of php4-devel (when replacing php-devel)
-#%%ifarch amd64
-#ln -sf ../../lib/php/build $RPM_BUILD_ROOT%{_libdir}/php/build
-#%%endif
-
-#rm -f $RPM_BUILD_ROOT%{_libdir}/apache{,1}/libphp4.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
