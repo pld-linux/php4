@@ -12,7 +12,7 @@
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
 %bcond_with	fdf		# with FDF (PDF forms) module		(BR: proprietary lib)
-%bcond_with	hardened	# build with hardened patch applied (http://www.hardened-php.net/)
+%bcond_with	hardening	# build with hardening patch applied (http://www.hardened-php.net/)
 %bcond_with	interbase_inst	# use InterBase install., not Firebird	(BR: proprietary libs)
 %bcond_with	java		# with Java extension module		(BR: jdk)
 %bcond_with	oci8		# with Oracle oci8 extension module	(BR: proprietary libs)
@@ -76,7 +76,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.11
-Release:	4.21%{?with_hardened:hardened}
+Release:	4.22%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -90,7 +90,7 @@ Source5:	%{name}-cgi-fcgi.ini
 Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Source8:	%{name}-cli.ini
-Source9:	http://www.hardened-php.net/hardened-php-4.3.11-0.2.7.patch.gz
+Source9:	http://www.hardened-php.net/hardening-patch-4.3.11-0.3.0.patch.gz
 # Source9-md5:	c649f58458a39532889ed82f1aebee34
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
@@ -126,7 +126,8 @@ Patch31:	%{name}-stupidapache_version.patch
 Patch32:	%{name}-gd_imagerotate_enable.patch
 Patch33:	%{name}-uint32_t.patch
 Patch34:	%{name}-install_gd_headers.patch
-Patch35:	%{name}-both-apxs.patch
+Patch35:	%{name}-hardening-fix.patch
+Patch36:	%{name}-both-apxs.patch
 #Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1630,9 +1631,12 @@ cp php.ini-dist php.ini
 %patch32 -p1
 %patch33 -p1
 %patch34 -p1
-%patch35 -p1
+%patch36 -p1
 
-%{?with_hardened:zcat %{SOURCE9} | patch -p1}
+%if %{with hardening}
+zcat %{SOURCE9} | patch -p1
+patch -p1 < %{PATCH35}
+%endif
 
 # new apr
 sed -i -e 's#apr-config#apr-1-config#g' sapi/apache*/*.m4
