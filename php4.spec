@@ -89,8 +89,8 @@ Source5:	%{name}-cgi-fcgi.ini
 Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Source8:	%{name}-cli.ini
-Source9:	http://www.hardened-php.net/hardening-patch-4.3.11-0.3.0.patch.gz
-# Source9-md5:	afb80fb24545aab2f78996b4f8521809
+Source9:	http://www.hardened-php.net/hardening-patch-4.3.11-0.3.1.patch.gz
+# Source9-md5:	b231e363b60c8749fcafe1e24e8bacbb
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-xml-expat-fix.patch
@@ -125,7 +125,6 @@ Patch31:	%{name}-stupidapache_version.patch
 Patch32:	%{name}-gd_imagerotate_enable.patch
 Patch33:	%{name}-uint32_t.patch
 Patch34:	%{name}-install_gd_headers.patch
-Patch35:	%{name}-hardening-fix.patch
 #Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1613,7 +1612,6 @@ cp php.ini-dist php.ini
 
 %if %{with hardening}
 zcat %{SOURCE9} | patch -p1
-patch -p1 < %{PATCH35}
 %endif
 
 # new apr
