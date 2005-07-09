@@ -2504,9 +2504,6 @@ fi
 
 #%files
 #%defattr(644,root,root,755)
-#%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_apache_confdir}/*_mod_php4.conf
-#%attr(755,root,root) %{apachelib}/libphp4.so
-#%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 
 %files -n apache1-mod_php4
 %defattr(644,root,root,755)
