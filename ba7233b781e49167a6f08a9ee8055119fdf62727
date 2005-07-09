@@ -1,0 +1,4 @@
+- s/libxslt/libxslt-devel/ in BuildRequires
+- Don't use php.ini as source, which is, and will be outdated.
+  Use patch for original php.ini-dist instead
+- Include unchanged php.init-dist and php.ini-recommended in %doc
