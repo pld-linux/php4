@@ -25,15 +25,7 @@ install()
 deinstall()
 {
 	if [ -f ${INIFILE} ] && grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" ${INIFILE}; then
-		TMPFILE=`mktemp -q ${TMPDIR:-/tmp}/php-module-install.XXXXXX`
-		if [ $? -ne 0 ]; then
-			echo "$0: Can't create temp file, exiting..."
-			exit 1
-		fi
-		echo "deactivating module '${MODNAME}.so' in ${INIFILE}" 1>&2
-		grep -v "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" > ${TMPFILE} < ${INIFILE}
-		mv ${TMPFILE} ${INIFILE}
-		chmod 644 ${INIFILE}
+		sed -i -e "/^extension[[:space:]]*=[[:space:]]*${MODNAME}.so/d" ${INIFILE}
 	fi
 
 	# restart only if there's module installed
