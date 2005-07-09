@@ -1,0 +1,8 @@
+- started update to 4.3.2
+- commented out obsoleted patch16 (php-dl-pcre.patch) - applied upstream
+  (to be removed)
+- updated some patches
+- php-cpdf-fix.patch and php-odbc-fix.patch still need to be updated
+- removed manual (this will be in seperate spec)
+- fails on %configure (HGW why)
+- release 0.1, not finished yet
