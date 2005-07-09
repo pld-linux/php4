@@ -1,0 +1,5 @@
+- release 5.9
+- removed pear classes included in php - avaible now as separate packages
+- devel package for peaple who want to use cvs pear
+- additonal package with classes I couldn't find is pear packages...
+- STBR for tests
