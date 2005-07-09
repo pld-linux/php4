@@ -200,14 +200,13 @@ BuildRequires:	t1lib-devel
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	zziplib-devel
-# apache 1.3 vs apache 2.0
+%if %{with apache1}
+BuildRequires:	apache1-devel >= 1.3.33-2
+%endif
 %if %{with apache2}
 BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.0.0
-%endif
-%if %{with apache1}
-BuildRequires:	apache1-devel >= 1.3.33-2
 %endif
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
@@ -1662,7 +1661,6 @@ apxs1
 apxs2
 %endif
 "
-
 # Apache2 CFLAGS. should be harmless for other SAPIs.
 CFLAGS="$CFLAGS $(%{_bindir}/apr-1-config --cppflags --includes) $(%{_bindir}/apu-1-config --includes)"
 
@@ -1825,7 +1823,6 @@ s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |" sapi/apache2han
 # for fcgi: -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0
 # -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1(die) -DHAVE_SYS_PARAM_H=1
 # -DPHP_FASTCGI=1 -DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1
-
 %{__make} sapi/cgi/php -f Makefile.fcgi \
 	CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0 -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1 -DHAVE_SYS_PARAM_H=1 -DPHP_FASTCGI=1 -DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1"
 cp -r sapi/cgi sapi/fcgi
@@ -1834,10 +1831,10 @@ rm -rf sapi/cgi/.libs sapi/cgi/*.lo
 # notes:
 # -DENABLE_CHROOT_FUNC=1 (cgi,fcgi) is used in ext/standard/dir.c (libphp_common)
 # -DPHP_WRITE_STDOUT is used also for cli, but not set by its config.m4
-
 %{__make} sapi/cgi/php -f Makefile.cgi \
 	CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=1 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0 -DPHP_WRITE_STDOUT=1"
 
+# CLI
 %{__make} sapi/cli/php -f Makefile.cli
 
 %install
