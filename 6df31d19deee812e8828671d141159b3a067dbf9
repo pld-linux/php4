@@ -1,0 +1,2 @@
+- change %requires_eq apache to R: apache(modules-api) = %{apache_modules_api}
+- release 0.5
