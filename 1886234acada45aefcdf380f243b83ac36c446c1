@@ -1,0 +1,4 @@
+- updated to 4.3.4RC1
+- added BR: apr-devel
+- builds, fails on %install (when installing PEAR)
+- Not Finished Yet
