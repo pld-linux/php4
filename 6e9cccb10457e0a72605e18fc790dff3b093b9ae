@@ -1,0 +1,6 @@
+- merged build_modules patch from HEAD
+- fixed php-module-install: chmod 644 php.ini after deinstalling
+- mnogosearch must be < 3.2.5 (3.2.5 has different API)
+- back to statically compiled session - session_mm doesn't work with shared
+- new %doc
+- release 2, STBR-test
