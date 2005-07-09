@@ -2,6 +2,12 @@
 # TODO:
 # - make additional headers added by mail patch configurable
 # - /var/run/php group not owned
+# TODO both apx build:
+# - what to do with main package?
+# - pl for apache-mod_php4 apache1-mod_php4
+# - Obsoletes apache-mod_php and phpfi are whose? apache2 apache1 module? both? neither?
+# - how to ensure proper sapi upgrade? (look apache1-mod_php4 preable)
+# - should the apache-mod_php4 provide php{,4} package?
 #
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
@@ -11,7 +17,6 @@
 %bcond_with	java		# with Java extension module		(BR: jdk)
 %bcond_with	oci8		# with Oracle oci8 extension module	(BR: proprietary libs)
 %bcond_with	oracle		# with oracle extension module		(BR: proprietary libs)
-%bcond_with	apache1		# build with apache1
 %bcond_without	cpdf		# without cpdf extension module
 %bcond_without	curl		# without CURL extension module
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
@@ -40,20 +45,16 @@
 %bcond_without	xml		# without XML and DOMXML extension modules
 %bcond_without	xslt		# without XSLT extension module
 %bcond_without	yaz		# without YAZ extension module
-#
-%define	_apache2	%{?with_apache1:0}%{!?with_apache1:1}
+%bcond_without	apache1		# disable building apache 1.3.x module
+%bcond_without	apache2		# disable building apache 2.x module
+%bcond_with	zts		# enable-experimental-zts
 
-%if %{_apache2}
-%define	apxs		/usr/sbin/apxs
-%define	_apache_confdir /etc/httpd/httpd.conf
-%else
-%define apxs		/usr/sbin/apxs1
-%define	_apache_confdir /etc/apache/conf.d
-%endif
+%define apxs1		/usr/sbin/apxs1
+%define	apxs2		/usr/sbin/apxs
 
-# some problems with apache 2.x
-%if %{_apache2}
-%undefine	with_recode
+# mm is not thread safe
+# ext/session/mod_mm.c:37:3: #error mm is not thread-safe
+%if %{with zts}
 %undefine	with_mm
 %endif
 
@@ -75,7 +76,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.11
-Release:	4%{?with_hardening:hardened}
+Release:	4.23%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -125,6 +126,7 @@ Patch31:	%{name}-stupidapache_version.patch
 Patch32:	%{name}-gd_imagerotate_enable.patch
 Patch33:	%{name}-uint32_t.patch
 Patch34:	%{name}-install_gd_headers.patch
+Patch35:	%{name}-both-apxs.patch
 #Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -189,6 +191,7 @@ BuildRequires:	readline-devel
 BuildRequires:	rpm-php-pearprov >= 4.0.2-100
 BuildRequires:	rpmbuild(macros) >= 1.213
 %{?with_xslt:BuildRequires:	sablotron-devel >= 0.96}
+BuildRequires:	sed >= 4.0
 BuildRequires:	t1lib-devel
 %{?with_snmp:BuildRequires:	net-snmp-devel >= 5.0.7}
 %{?with_odbc:BuildRequires:	unixODBC-devel}
@@ -197,36 +200,18 @@ BuildRequires:	t1lib-devel
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
 BuildRequires:	zziplib-devel
-# apache 1.3 vs apache 2.0
-%if %{_apache2}
+%if %{with apache1}
+BuildRequires:	apache1-devel >= 1.3.33-2
+%endif
+%if %{with apache2}
 BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.0.0
-Requires:		apache >= 2.0.52-2
-Requires:	apache(modules-api) = %{apache_modules_api}
-%else
-BuildRequires:	apache1-devel >= 1.3.33-2
-Requires:		apache1(EAPI) >= 1.3.33-2
-Requires:		apache(mod_mime)
-Requires(post,preun):	%{apxs}
-Requires(post,preun):	%{__perl}
 %endif
-PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
-Provides:	php = %{epoch}:%{version}-%{release}
-Obsoletes:	phpfi
-Obsoletes:	apache-mod_php
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/php4
 %define		extensionsdir	%{_libdir}/php4
-%if %{_apache2}
-%define		httpdir		/home/services/httpd
-%define		apachelib	%{_libdir}/apache
-%else
-%define		httpdir		/home/services/apache
-%define		apachelib	%{_libdir}/apache1
-%endif
-%define		_ulibdir	%{_prefix}/lib
 
 %description
 PHP is an HTML-embedded scripting language. PHP attempts to make it
@@ -293,6 +278,40 @@ PHP4 - це мова написання скрипт╕в, що вбудовуються в HTML-код. PHP
 Цей пакет м╕стить самодостатню (CGI) верс╕ю ╕нтерпретатора мови. Ви
 ма╓те також встановити пакет %{name}-common. Якщо вам потр╕бен
 ╕нтерпретатор PHP в якост╕ модуля apache, встанов╕ть пакет apache-php.
+
+%package -n apache1-mod_php4
+Summary:	php4 DSO module for apache 1.3.x
+Group:		Development/Languages/PHP
+PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
+Requires:	apache1(EAPI) >= 1.3.33-2
+Requires:	apache1-mod_mime
+Provides:	%{name} = %{epoch}:%{version}-%{release}
+Provides:	php = %{epoch}:%{version}-%{release}
+Provides:	php4 = %{epoch}:%{version}-%{release}
+Obsoletes:	phpfi
+Obsoletes:	apache-mod_php < 1:4.1.1
+# Obsolete last version when apache module was in main package
+Obsoletes:	php4 < 3:4.3.11-4.16
+
+%description -n apache1-mod_php4
+php4 as DSO module for apache 1.3.x.
+
+%package -n apache-mod_php4
+Summary:	php4 DSO module for apache 2.x
+Group:		Development/Languages/PHP
+PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
+Requires:	apache >= 2.0.52-2
+Requires:	apache(modules-api) = %{apache_modules_api}
+Provides:	%{name} = %{epoch}:%{version}-%{release}
+Provides:	php = %{epoch}:%{version}-%{release}
+Provides:	php4 = %{epoch}:%{version}-%{release}
+Obsoletes:	phpfi
+Obsoletes:	apache-mod_php < 1:4.1.1
+# Obsolete last version when apache module was in main package
+Obsoletes:	php4 < 3:4.3.11-4.16
+
+%description -n apache-mod_php4
+php4 as DSO module for apache 2.x.
 
 %package fcgi
 Summary:	php4 as FastCGI program
@@ -1605,10 +1624,11 @@ cp php.ini-dist php.ini
 %patch29 -p1
 %endif
 %patch30 -p1
-%patch31
+%patch31 -p1
 %patch32 -p1
 %patch33 -p1
 %patch34 -p1
+%patch35 -p1
 
 %if %{with hardening}
 zcat %{SOURCE9} | patch -p1
@@ -1619,33 +1639,69 @@ sed -i -e 's#apr-config#apr-1-config#g' sapi/apache*/*.m4
 sed -i -e 's#apu-config#apu-1-config#g' sapi/apache*/*.m4
 
 %build
-%if %{_apache2}
-CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include `%{_bindir}/apr-1-config --cppflags --includes` `%{_bindir}/apu-1-config --includes`"
-%else
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
-%endif
+
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
+if [ ! -f _built-conf ]; then # configure once (for faster debugging purposes)
 ./buildconf --force
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
+touch _built-conf
+fi
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
-for i in fcgi cgi cli apxs ; do
-%configure \
-	`[ $i = cgi ] && echo --enable-discard-path` \
-	`[ $i = cli ] && echo --disable-cgi` \
-	`[ $i = fcgi ] && echo --enable-fastcgi --with-fastcgi=/usr` \
-%if %{_apache2}
-	`[ $i = apxs ] && echo --with-apxs2=%{apxs} --with-apache-version=%(rpm -q --qf '%%{version}' apache-apxs)` \
-	--enable-experimental-zts \
-%else
-	`[ $i = apxs ] && echo --with-apxs=%{apxs} --with-apache-version=%(rpm -q --qf '%%{version}' apache1-apxs)` \
+
+sapis="
+fcgi cgi cli
+%if %{with apache1}
+apxs1
 %endif
+%if %{with apache2}
+apxs2
+%endif
+"
+%if %{with apache2}
+# Apache2 CFLAGS. harmless for other SAPIs.
+CFLAGS="$CFLAGS $(%{_bindir}/apr-1-config --cppflags --includes) $(%{_bindir}/apu-1-config --includes)"
+%endif
+
+for sapi in $sapis; do
+	[ -f Makefile.$sapi ] && continue # skip if already configured (for faster debugging purposes)
+
+	%configure \
+	`
+	case $sapi in
+	cgi)
+		echo --enable-discard-path
+	;;
+	cli)
+		echo --disable-cgi
+	;;
+	fcgi)
+		echo --enable-fastcgi --with-fastcgi=/usr
+	;;
+	apxs1)
+		ver=%(rpm -q --qf '%%{version}' apache1-apxs)
+		echo --with-apxs=%{apxs1} --with-apache-version=$ver
+	;;
+	apxs2)
+		ver=%(rpm -q --qf '%%{version}' apache-apxs)
+		echo --with-apxs2=%{apxs2} --with-apache-version=$ver
+	;;
+	esac
+	` \
 	--cache-file=config.cache \
+	%{?with_zts:--enable-experimental-zts} \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
+	--enable-shared \
+	--disable-static \
+	--enable-magic-quotes \
 	--enable-memory-limit \
+	--enable-track-vars \
+	--enable-safe-mode \
+	\
 	--enable-bcmath=shared \
 	--enable-calendar=shared \
 	--enable-ctype=shared \
@@ -1655,24 +1711,18 @@ for i in fcgi cgi cli apxs ; do
 	--enable-exif=shared \
 	--enable-ftp=shared \
 	--enable-filepro=shared \
-	--enable-gd-native-ttf \
-	--enable-magic-quotes \
-	--enable-mbstring=shared,all \
-	--enable-mbregex \
+	--enable-mbstring=shared,all --enable-mbregex \
 	--enable-overload=shared \
 	--enable-pcntl=shared \
 	--enable-posix=shared \
-	--enable-session \
-	--enable-shared \
+	--enable-session --enable-trans-sid \
 	--enable-shmop=shared \
 	--enable-sysvmsg=shared \
 	--enable-sysvsem=shared \
 	--enable-sysvshm=shared \
-	--enable-track-vars \
-	--enable-trans-sid \
-	--enable-safe-mode \
 	--enable-sockets=shared \
-	--enable-ucd-snmp-hack \
+	%{?with_recode:--with-recode=shared} \
+	%{?with_mm:--with-mm} \
 	%{?with_wddx:--enable-wddx=shared} \
 	%{!?with_xml:--disable-xml}%{?with_xml:--enable-xml=shared} \
 	%{?with_xslt:--enable-xslt=shared} \
@@ -1697,7 +1747,7 @@ for i in fcgi cgi cli apxs ; do
 	--with-filepro=shared \
 	--with-freetype-dir=shared \
 	--with-gettext=shared \
-	--with-gd=shared,/usr \
+	--with-gd=shared,/usr --enable-gd-native-ttf \
 	--with-gdbm \
 	--with-gmp=shared \
 	--with-hyperwave=shared \
@@ -1711,12 +1761,10 @@ for i in fcgi cgi cli apxs ; do
 	%{?with_mhash:--with-mhash=shared} \
 	--with-mime-magic=shared,/usr/share/file/magic.mime \
 	%{?with_ming:--with-ming=shared} \
-	%{?with_mm:--with-mm} \
 	%{!?with_mnogosearch:--without-mnogosearch}%{?with_mnogosearch:--with-mnogosearch=shared,/usr} \
 	%{?with_msession:--with-msession=shared}%{!?with_msession:--without-msession} \
 	%{?with_mssql:--with-mssql=shared} \
-	--with-mysql=shared,/usr \
-	--with-mysql-sock=/var/lib/mysql/mysql.sock \
+	--with-mysql=shared,/usr --with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-ncurses=shared \
 	%{?with_oci8:--with-oci8=shared} \
 	%{?with_openssl:--with-openssl=shared,/usr} \
@@ -1728,11 +1776,10 @@ for i in fcgi cgi cli apxs ; do
 	--with-png-dir=/usr \
 	%{?with_pspell:--with-pspell=shared} \
 	--with-readline=shared \
-	%{?with_recode:--with-recode=shared} \
 	--with-regex=php \
 	%{?with_qtdom:--with-qtdom=shared} \
 	--without-sablot-js \
-	%{?with_snmp:--with-snmp=shared} \
+	%{?with_snmp:--with-snmp=shared --enable-ucd-snmp-hack} \
 	%{?with_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
 	--with-t1lib=shared \
 	--with-tiff-dir=/usr \
@@ -1744,26 +1791,39 @@ for i in fcgi cgi cli apxs ; do
 	--with-zlib=shared \
 	--with-zlib-dir=shared,/usr
 
-cp -f Makefile Makefile.$i
-# left for debugging purposes
-cp -f main/php_config.h php_config.h.$i
+	cp -f Makefile Makefile.$sapi
+
+	# left for debugging purposes
+	cp -f main/php_config.h php_config.h.$sapi
 done
 
 # for now session_mm doesn't work with shared session module...
 # --enable-session=shared
 # %{!?with_mm:--with-mm=shared,no}%{?with_mm:--with-mm=shared}
 
-%{__make}
+%{__make} build-modules
 
+%{__make} libphp_common.la
 # fix install paths, avoid evil rpaths
-%{__perl} -pi -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
-%{__perl} -pi -e "s|^libdir=.*|libdir='%{apachelib}'|" libphp4.la
-%{__perl} -pi -e 's|^(relink_command=.* -rpath )[^ ]*/libs |$1%{apachelib} |' libphp4.la
+sed -i -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
+
+%if %{with apache1}
+%{__make} sapi LIBTOOL_SAPI=sapi/apache/libphp4.la -f Makefile.apxs1
+sed -i -e "
+s|^libdir=.*|libdir='%{_libdir}/apache1'|;
+s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache1 |" sapi/apache/libphp4.la
+%endif
+
+%if %{with apache2}
+%{__make} sapi LIBTOOL_SAPI=sapi/apache2handler/libphp4.la -f Makefile.apxs2
+sed -i -e "
+s|^libdir=.*|libdir='%{_libdir}/apache'|;
+s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |" sapi/apache2handler/libphp4.la
+%endif
 
 # for fcgi: -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0
 # -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1(die) -DHAVE_SYS_PARAM_H=1
 # -DPHP_FASTCGI=1 -DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1
-
 %{__make} sapi/cgi/php -f Makefile.fcgi \
 	CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0 -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1 -DHAVE_SYS_PARAM_H=1 -DPHP_FASTCGI=1 -DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1"
 cp -r sapi/cgi sapi/fcgi
@@ -1772,82 +1832,91 @@ rm -rf sapi/cgi/.libs sapi/cgi/*.lo
 # notes:
 # -DENABLE_CHROOT_FUNC=1 (cgi,fcgi) is used in ext/standard/dir.c (libphp_common)
 # -DPHP_WRITE_STDOUT is used also for cli, but not set by its config.m4
-
 %{__make} sapi/cgi/php -f Makefile.cgi \
 	CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=1 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0 -DPHP_WRITE_STDOUT=1"
 
+# CLI
+%{__make} sapi/cli/php -f Makefile.cli
+
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_libdir}/php,%{apachelib},%{_sysconfdir}/{apache,cgi}} \
-	$RPM_BUILD_ROOT%{httpdir}/icons \
+install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}/{apache,cgi}} \
+	$RPM_BUILD_ROOT/home/services/{httpd,apache}/icons \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/run/php \
-	$RPM_BUILD_ROOT%{_apache_confdir}
+	$RPM_BUILD_ROOT{/etc/apache/conf.d,/etc/httpd/httpd.conf} \
+	$RPM_BUILD_ROOT%{_mandir}/man1
 
-%{__make} install \
-	INSTALL_ROOT=$RPM_BUILD_ROOT \
-	INSTALL_IT="\$(LIBTOOL) --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir} ; \$(LIBTOOL) --mode=install install libphp4.la $RPM_BUILD_ROOT%{apachelib} ; \$(LIBTOOL) --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php.cgi ; \$(LIBTOOL) --mode=install install sapi/fcgi/php $RPM_BUILD_ROOT%{_bindir}/php.fcgi" \
-	INSTALL_CLI="\$(LIBTOOL) --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php.cli"
+# install apache1 DSO module
+# LIBTOOL GURUS COULD LOOK AT THIS MESS AND THROW THEIR GOOD IDEAS HERE
+%if %{with apache1}
+install sapi/apache/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache1/libphp4.so
+%endif
 
-ln -sf php.cli $RPM_BUILD_ROOT%{_bindir}/php
+# install apache2 DSO module
+%if %{with apache2}
+install sapi/apache2handler/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.so
+%endif
+
+libtool --silent --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir}
+
+# install the apache modules' files
+make install-headers install-build install-modules install-programs \
+	INSTALL_ROOT=$RPM_BUILD_ROOT
+
+# install CGI
+libtool --silent --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php4.cgi
+
+# install FCGI
+libtool --silent --mode=install install sapi/fcgi/php $RPM_BUILD_ROOT%{_bindir}/php4.fcgi
+
+# install CLI
+libtool --silent --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php4.cli
+
+install sapi/cli/php.1 $RPM_BUILD_ROOT%{_mandir}/man1/php4.1
+ln -sf php4.cli $RPM_BUILD_ROOT%{_bindir}/php4
 
 %{?with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{extensionsdir}}
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 for i in %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE8}; do
- install $i $RPM_BUILD_ROOT%{_sysconfdir}/$(basename $i|sed -e "s@php4@php@g")
+	install $i $RPM_BUILD_ROOT%{_sysconfdir}/$(basename $i|sed -e "s@php4@php@g")
 done
-install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{httpdir}/icons
+
+install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/httpd/icons
+install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/apache/icons
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sbindir}
-install %{SOURCE4} $RPM_BUILD_ROOT%{_apache_confdir}/70_mod_php4.conf
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/apache/conf.d/70_mod_php4.conf
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php4.conf
 install %{SOURCE1} .
 
 cp -f Zend/LICENSE{,.Zend}
 
-# Is it really needed? Breaks installation of php4-devel (when replacing php-devel)
-#%%if "%{_lib}" == "lib64"
-#ln -sf ../../lib/php/build $RPM_BUILD_ROOT%{_libdir}/php/build
-#%%endif
-
-%if %{with apache1}
-sed -i -e 's,httpd,apache,' $RPM_BUILD_ROOT%{_sbindir}/php4-module-install
-%endif
-
-rm -f $RPM_BUILD_ROOT%{apachelib}/libphp4.la
-
-for i in cli cgi fcgi;
-do
-	mv -f $RPM_BUILD_ROOT%{_bindir}/php{,4}.$i
-done
-ln -sf php4.cli $RPM_BUILD_ROOT%{_bindir}/php4
-rm -f $RPM_BUILD_ROOT%{_bindir}/php
-mv -f $RPM_BUILD_ROOT%{_mandir}/man1/php{,4}.1
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-%if %{_apache2}
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-%else
+%post -n apache1-mod_php4
 if [ -f /var/lock/subsys/apache ]; then
 	/etc/rc.d/init.d/apache restart 1>&2
 fi
-%endif
 
-%postun
+%postun -n apache1-mod_php4
 if [ "$1" = "0" ]; then
-%if %{_apache2}
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-%else
 	if [ -f /var/lock/subsys/apache ]; then
 		/etc/rc.d/init.d/apache restart 1>&2
 	fi
-%endif
+fi
+
+%post -n apache-mod_php4
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+
+%postun -n apache-mod_php4
+if [ "$1" = "0" ]; then
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
+	fi
 fi
 
 %post	common -p /sbin/ldconfig
@@ -2151,19 +2220,19 @@ fi
 
 %post ncurses
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cgi.ini
+	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cgi.ini
 fi
 if [ -f %{_sysconfdir}/php-cli.ini ]; then
-%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cli.ini
+	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cli.ini
 fi
 
 %preun ncurses
 if [ "$1" = "0" ]; then
 	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cgi.ini
+		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cgi.ini
 	fi
 	if [ -f %{_sysconfdir}/php-cli.ini ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cli.ini
+		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cli.ini
 	fi
 fi
 
@@ -2218,10 +2287,10 @@ fi
 %preun pcntl
 if [ "$1" = "0" ]; then
 	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
+		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
 	fi
 	if [ -f %{_sysconfdir}/php-cli.ini ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cli.ini
+		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cli.ini
 	fi
 fi
 
@@ -2275,19 +2344,19 @@ fi
 
 %post readline
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cgi.ini
+	%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cgi.ini
 fi
 if [ -f %{_sysconfdir}/php-cli.ini ]; then
-%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cli.ini
+	%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cli.ini
 fi
 
 %preun readline
 if [ "$1" = "0" ]; then
 	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cgi.ini
+		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cgi.ini
 	fi
 	if [ -f %{_sysconfdir}/php-cli.ini ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cli.ini
+		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cli.ini
 	fi
 fi
 
@@ -2435,15 +2504,30 @@ if [ "$1" = "0" ]; then
 	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove zlib %{_sysconfdir}/php.ini
 fi
 
-%files
+#%files
+#%defattr(644,root,root,755)
+
+%files -n apache1-mod_php4
 %defattr(644,root,root,755)
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_apache_confdir}/*_mod_php4.conf
-%attr(755,root,root) %{apachelib}/libphp4.so
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/apache/conf.d/*_mod_php4.conf
+%attr(755,root,root) %{_libdir}/apache1/libphp4.so
+# FIXME
+# - really share config with apache1/apache2?
+# - name it by real sapi name? (apxs, apxs2?)
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
+/home/services/apache/icons/*
+
+%files -n apache-mod_php4
+%defattr(644,root,root,755)
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php4.conf
+%attr(755,root,root) %{_libdir}/apache/libphp4.so
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
+/home/services/httpd/icons/*
 
 %files fcgi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/php4.fcgi
+# FIXME why not php-fcgi.ini?
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cgi-fcgi.ini
 
 %files cgi
@@ -2455,6 +2539,9 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/php4.cli
 %attr(755,root,root) %{_bindir}/php4
+# TODO
+# - what about _bindir/php symlink?
+# - do it same way link /usr/src/linux is done, ie each package updates symlink
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cli.ini
 %{_mandir}/man1/php4.1*
 
@@ -2468,7 +2555,6 @@ fi
 %dir %{_sysconfdir}
 %attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
 %attr(770,root,http) %dir %verify(not group mode) /var/run/php
-%{httpdir}/icons/*
 %attr(755,root,root) %{_sbindir}/*
 %attr(755,root,root) %{_libdir}/libphp_common-*.so
 %dir %{extensionsdir}
@@ -2479,6 +2565,7 @@ fi
 %attr(755,root,root) %{_bindir}/phpize
 %attr(755,root,root) %{_bindir}/php-config
 %attr(755,root,root) %{_libdir}/libphp_common.so
+# FIXME: how exactly this is needed? as it contains libdir for apache1 or apache2
 %{_libdir}/libphp_common.la
 %{_includedir}/php
 %{_libdir}/php/build

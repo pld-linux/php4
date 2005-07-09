@@ -12,8 +12,12 @@ if [ -f ${INIFILE} ] && ! grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}
 	echo "activating module '${MODNAME}.so' in ${INIFILE}" 1>&2
 	echo "extension=${MODNAME}.so" >> ${INIFILE}
 fi
-if [ -f /var/lock/subsys/httpd ]; then
+# restart only if there's module installed
+if [ -f /etc/httpd/httpd.conf/??_mod_php4.conf ] && [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+if [ -f /etc/apache/conf.d/??_mod_php4.conf ] && [ -f /var/lock/subsys/apache ]; then
+	/etc/rc.d/init.d/apache restart 1>&2
 fi
 }
 
@@ -30,8 +34,12 @@ if [ -f ${INIFILE} ] && grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.s
 	mv ${TMPFILE} ${INIFILE}
 	chmod 644 ${INIFILE}
 fi
-if [ -f /var/lock/subsys/httpd ]; then
+# restart only if there's module installed
+if [ -f /etc/httpd/httpd.conf/??_mod_php4.conf ] && [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
+fi
+if [ -f /etc/apache/conf.d/??_mod_php4.conf ] && [ -f /var/lock/subsys/apache ]; then
+	/etc/rc.d/init.d/apache restart 1>&2
 fi
 }
 
