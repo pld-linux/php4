@@ -1,0 +1,5 @@
+- added bcond:
+-  _without_pspell,
+-  _without_mhash,
+-  _without_ming,
+-  _without_mnogosearch.
