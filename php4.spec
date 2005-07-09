@@ -76,7 +76,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.3.11
-Release:	4.23%{?with_hardening:hardened}
+Release:	4.24%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1808,14 +1808,14 @@ done
 sed -i -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
 
 %if %{with apache1}
-%{__make} sapi LIBTOOL_SAPI=sapi/apache/libphp4.la -f Makefile.apxs1
+%{__make} libtool-sapi LIBTOOL_SAPI=sapi/apache/libphp4.la -f Makefile.apxs1
 sed -i -e "
 s|^libdir=.*|libdir='%{_libdir}/apache1'|;
 s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache1 |" sapi/apache/libphp4.la
 %endif
 
 %if %{with apache2}
-%{__make} sapi LIBTOOL_SAPI=sapi/apache2handler/libphp4.la -f Makefile.apxs2
+%{__make} libtool-sapi LIBTOOL_SAPI=sapi/apache2handler/libphp4.la -f Makefile.apxs2
 sed -i -e "
 s|^libdir=.*|libdir='%{_libdir}/apache'|;
 s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |" sapi/apache2handler/libphp4.la
@@ -2555,7 +2555,7 @@ fi
 %dir %{_sysconfdir}
 %attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
 %attr(770,root,http) %dir %verify(not group mode) /var/run/php
-%attr(755,root,root) %{_sbindir}/*
+%attr(755,root,root) %{_sbindir}/php4-module-install
 %attr(755,root,root) %{_libdir}/libphp_common-*.so
 %dir %{extensionsdir}
 
