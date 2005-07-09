@@ -1642,7 +1642,7 @@ sed -i -e 's#apu-config#apu-1-config#g' sapi/apache*/*.m4
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
 
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
-if [ ! -f _built-conf ]; then # do just once, for debugging purposes
+if [ ! -f _built-conf ]; then # configure once (for faster debugging purposes)
 ./buildconf --force
 %{__libtoolize}
 %{__aclocal}
@@ -1666,7 +1666,7 @@ CFLAGS="$CFLAGS $(%{_bindir}/apr-1-config --cppflags --includes) $(%{_bindir}/ap
 %endif
 
 for sapi in $sapis; do
-	[ -f Makefile.$sapi ] && continue
+	[ -f Makefile.$sapi ] && continue # skip if already configured (for faster debugging purposes)
 
 	%configure \
 	`
