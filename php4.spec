@@ -1660,8 +1660,10 @@ apxs1
 apxs2
 %endif
 "
-# Apache2 CFLAGS. should be harmless for other SAPIs.
+%if %{with apache2}
+# Apache2 CFLAGS. harmless for other SAPIs.
 CFLAGS="$CFLAGS $(%{_bindir}/apr-1-config --cppflags --includes) $(%{_bindir}/apu-1-config --includes)"
+%endif
 
 for sapi in $sapis; do
 	[ -f Makefile.$sapi ] && continue
