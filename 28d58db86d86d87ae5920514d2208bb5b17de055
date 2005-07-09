@@ -1,0 +1,3 @@
+- updated -lib64.patch
+- fixed values of --with-{jpeg,png,tiff}-dir configure options
+- simplified %files (build gets installed in %{_libdir}/php/build)
