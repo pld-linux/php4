@@ -208,10 +208,6 @@ BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.0.0
 %endif
-PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
-Provides:	php = %{epoch}:%{version}-%{release}
-Obsoletes:	phpfi
-Obsoletes:	apache-mod_php < 1:4.1.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/php4
@@ -286,13 +282,14 @@ PHP4 - це мова написання скрипт╕в, що вбудовуються в HTML-код. PHP
 %package -n apache1-mod_php4
 Summary:	php4 DSO module for apache 1.3.x
 Group:		Development/Languages/PHP
-# TODO: how to ensure proper sapi upgrade? assume apache2 was on by default?
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	apache1(EAPI) >= 1.3.33-2
 Requires:	apache1-mod_mime
 Provides:	%{name} = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
 Provides:	php4 = %{epoch}:%{version}-%{release}
+Obsoletes:	phpfi
+Obsoletes:	apache-mod_php < 1:4.1.1
 # Obsolete last version when apache module was in main package
 Obsoletes:	php4 < 3:4.3.11-4.16
 
@@ -308,6 +305,8 @@ Requires:	apache(modules-api) = %{apache_modules_api}
 Provides:	%{name} = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
 Provides:	php4 = %{epoch}:%{version}-%{release}
+Obsoletes:	phpfi
+Obsoletes:	apache-mod_php < 1:4.1.1
 # Obsolete last version when apache module was in main package
 Obsoletes:	php4 < 3:4.3.11-4.16
 
