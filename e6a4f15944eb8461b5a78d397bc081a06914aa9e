@@ -1,0 +1,3 @@
+- fixed cpdf config (shared cpdf builds now; cpdf-fix patch based on pdf config)
+- BR libcpdf-devel with fixed libcpdf.so symlink
+- uncommented %clean (forgot about it before commit, as usual)
