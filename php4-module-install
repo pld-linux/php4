@@ -6,41 +6,43 @@ VERBOSE=""
 MODNAME=""
 INIFILE=""
 
-install ()
+install()
 {
-if [ -f ${INIFILE} ] && ! grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" ${INIFILE} ; then
-	echo "activating module '${MODNAME}.so' in ${INIFILE}" 1>&2
-	echo "extension=${MODNAME}.so" >> ${INIFILE}
-fi
-# restart only if there's module installed
-if [ -f /etc/httpd/httpd.conf/??_mod_php4.conf ] && [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-if [ -f /etc/apache/conf.d/??_mod_php4.conf ] && [ -f /var/lock/subsys/apache ]; then
-	/etc/rc.d/init.d/apache restart 1>&2
-fi
+	if [ -f ${INIFILE} ] && ! grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" ${INIFILE}; then
+		echo "activating module '${MODNAME}.so' in ${INIFILE}" 1>&2
+		echo "extension=${MODNAME}.so" >> ${INIFILE}
+	fi
+
+	# restart only if there's module installed
+	if [ -f /etc/httpd/httpd.conf/??_mod_php4.conf ] && [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
+	fi
+	if [ -f /etc/apache/conf.d/??_mod_php4.conf ] && [ -f /var/lock/subsys/apache ]; then
+		/etc/rc.d/init.d/apache restart 1>&2
+	fi
 }
 
 deinstall()
 {
-if [ -f ${INIFILE} ] && grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" ${INIFILE} ; then
-	TMPFILE=`mktemp -q /tmp/php-module-install.XXXXXX`
-	if [ $? -ne 0 ]; then
-		echo "$0: Can't create temp file, exiting..."
-		exit 1
+	if [ -f ${INIFILE} ] && grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" ${INIFILE}; then
+		TMPFILE=`mktemp -q /tmp/php-module-install.XXXXXX`
+		if [ $? -ne 0 ]; then
+			echo "$0: Can't create temp file, exiting..."
+			exit 1
+		fi
+		echo "deactivating module '${MODNAME}.so' in ${INIFILE}" 1>&2
+		grep -v "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" > ${TMPFILE} < ${INIFILE}
+		mv ${TMPFILE} ${INIFILE}
+		chmod 644 ${INIFILE}
 	fi
-	echo "deactivating module '${MODNAME}.so' in ${INIFILE}" 1>&2
-	grep -v "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" > ${TMPFILE} < ${INIFILE}
-	mv ${TMPFILE} ${INIFILE}
-	chmod 644 ${INIFILE}
-fi
-# restart only if there's module installed
-if [ -f /etc/httpd/httpd.conf/??_mod_php4.conf ] && [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-if [ -f /etc/apache/conf.d/??_mod_php4.conf ] && [ -f /var/lock/subsys/apache ]; then
-	/etc/rc.d/init.d/apache restart 1>&2
-fi
+
+	# restart only if there's module installed
+	if [ -f /etc/httpd/httpd.conf/??_mod_php4.conf ] && [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
+	fi
+	if [ -f /etc/apache/conf.d/??_mod_php4.conf ] && [ -f /var/lock/subsys/apache ]; then
+		/etc/rc.d/init.d/apache restart 1>&2
+	fi
 }
 
 usage()
