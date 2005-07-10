@@ -4,7 +4,6 @@
 # - /var/run/php group not owned
 # TODO both apx build:
 # - what to do with main package?
-# - pl for apache-mod_php4 apache1-mod_php4
 # - Obsoletes apache-mod_php and phpfi are whose? apache2 apache1 module? both? neither?
 # - how to ensure proper sapi upgrade? (look apache1-mod_php4 preable)
 # - should the apache-mod_php4 provide php{,4} package?
@@ -281,6 +280,7 @@ PHP4 - ÃÅ ÍÏ×Á ÎÁÐÉÓÁÎÎÑ ÓËÒÉÐÔ¦×, ÝÏ ×ÂÕÄÏ×ÕÀÔØÓÑ × HTML-ËÏÄ. PHP
 
 %package -n apache1-mod_php4
 Summary:	php4 DSO module for apache 1.3.x
+Summary(pl):	Modu³ DSO (Dynamic Shared Object) php4 dla apache 1.3.x
 Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	apache1(EAPI) >= 1.3.33-2
@@ -296,8 +296,12 @@ Obsoletes:	php4 < 3:4.3.11-4.16
 %description -n apache1-mod_php4
 php4 as DSO module for apache 1.3.x.
 
+%description -n apache1-mod_php4 -l pl
+php4 jako modu³ DSO (Dynamic Shared Object) dla apache 1.3.x.
+
 %package -n apache-mod_php4
 Summary:	php4 DSO module for apache 2.x
+Summary(pl):	Modu³ DSO (Dynamic Shared Object) php4 dla apache 2.x
 Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	apache >= 2.0.52-2
@@ -312,6 +316,9 @@ Obsoletes:	php4 < 3:4.3.11-4.16
 
 %description -n apache-mod_php4
 php4 as DSO module for apache 2.x.
+
+%description -n apache-mod_php4 -l pl
+php4 jako modu³ DSO (Dynamic Shared Object) dla apache 2.x.
 
 %package fcgi
 Summary:	php4 as FastCGI program
