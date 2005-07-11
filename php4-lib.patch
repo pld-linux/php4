@@ -1,0 +1,12 @@
+diff -urbB php-4.4.0.org/scripts/Makefile.frag php-4.4.0/scripts/Makefile.frag
+--- php-4.4.0.org/scripts/Makefile.frag	2005-06-08 12:34:41.000000000 +0200
++++ php-4.4.0/scripts/Makefile.frag	2005-07-11 21:45:28.048990352 +0200
+@@ -4,7 +4,7 @@
+ #
+ 
+ phpincludedir = $(includedir)/php
+-phpbuilddir = $(libdir)/build
++phpbuilddir = $(libdir)/php/build
+ 
+ BUILD_FILES = \
+ 	scripts/phpize.m4 \
