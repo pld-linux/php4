@@ -74,13 +74,13 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
-Version:	4.3.11
-Release:	5%{?with_hardening:hardened}
+Version:	4.4.0
+Release:	0.1%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
-# Source0-md5:	fbc67d240812136a9842bc1f2a217b7a
+# Source0-md5:	e85b606fe48198bfcd785e5a5b1c9613
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source3:	%{name}-module-install
@@ -2515,6 +2515,7 @@ fi
 #%files
 #%defattr(644,root,root,755)
 
+%if %{with apache1}
 %files -n apache1-mod_php4
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/apache/conf.d/*_mod_php4.conf
@@ -2524,13 +2525,16 @@ fi
 # - name it by real sapi name? (apxs, apxs2?)
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 /home/services/apache/icons/*
+%endif
 
+%if %{with apache2}
 %files -n apache-mod_php4
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php4.conf
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 /home/services/httpd/icons/*
+%endif
 
 %files fcgi
 %defattr(644,root,root,755)
@@ -2569,7 +2573,6 @@ fi
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/phpextdist
 %attr(755,root,root) %{_bindir}/phpize
 %attr(755,root,root) %{_bindir}/php-config
 %attr(755,root,root) %{_libdir}/libphp_common.so
@@ -2577,6 +2580,8 @@ fi
 %{_libdir}/libphp_common.la
 %{_includedir}/php
 %{_libdir}/php/build
+%{_mandir}/man1/php-config.1*
+%{_mandir}/man1/phpize.1*
 
 %files bcmath
 %defattr(644,root,root,755)
