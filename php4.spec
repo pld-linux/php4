@@ -98,6 +98,7 @@ Patch3:		%{name}-mail.patch
 Patch4:		%{name}-link-libs.patch
 Patch5:		%{name}-libpq_fs_h_path.patch
 Patch6:		%{name}-wddx-fix.patch
+Patch7:		%{name}-lib.patch
 Patch8:		%{name}-hyperwave-fix.patch
 Patch9:		%{name}-xslt-gcc33.patch
 Patch10:	%{name}-java-norpath.patch
@@ -1603,6 +1604,7 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji zlib.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 %patch8 -p1
 # Not really needed?
 #%patch9 -p1
