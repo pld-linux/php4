@@ -1,7 +1,7 @@
-diff -burN php-4.3.11.orig/acinclude.m4 php-4.3.11/acinclude.m4
---- php-4.3.11.orig/acinclude.m4	2005-04-04 18:43:11.261556288 +0200
-+++ php-4.3.11/acinclude.m4	2005-04-04 18:43:22.502847352 +0200
-@@ -1727,6 +1727,9 @@
+diff -urbB php-4.4.0.org/acinclude.m4 php-4.4.0/acinclude.m4
+--- php-4.4.0.org/acinclude.m4	2005-07-11 21:44:02.634975000 +0200
++++ php-4.4.0/acinclude.m4	2005-07-11 21:44:33.630263256 +0200
+@@ -1731,6 +1731,9 @@
        if test -r $i/lib/libssl.a -o -r $i/lib/libssl.$SHLIB_SUFFIX_NAME; then
          OPENSSL_LIBDIR=$i/lib
        fi
@@ -11,9 +11,9 @@ diff -burN php-4.3.11.orig/acinclude.m4 php-4.3.11/acinclude.m4
        test -n "$OPENSSL_INCDIR" && test -n "$OPENSSL_LIBDIR" && break
      done
  
-diff -burN php-4.3.11.orig/ext/cpdf/config.m4 php-4.3.11/ext/cpdf/config.m4
---- php-4.3.11.orig/ext/cpdf/config.m4	2005-04-04 18:43:10.833621344 +0200
-+++ php-4.3.11/ext/cpdf/config.m4	2005-04-04 18:43:22.503847200 +0200
+diff -urbB php-4.4.0.org/ext/cpdf/config.m4 php-4.4.0/ext/cpdf/config.m4
+--- php-4.4.0.org/ext/cpdf/config.m4	2004-12-30 08:02:16.000000000 +0100
++++ php-4.4.0/ext/cpdf/config.m4	2005-07-11 21:44:33.631263104 +0200
 @@ -4,7 +4,7 @@
    AC_ARG_WITH(jpeg-dir,
    [  --with-jpeg-dir[=DIR]     CPDF: Set the path to libjpeg install prefix.],[
@@ -77,9 +77,9 @@ diff -burN php-4.3.11.orig/ext/cpdf/config.m4 php-4.3.11/ext/cpdf/config.m4
        PHP_ADD_INCLUDE($CPDFLIB_INCLUDE)
        AC_DEFINE(HAVE_CPDFLIB,1,[Whether you have cpdflib])
        break
-diff -burN php-4.3.11.orig/ext/crack/config.m4 php-4.3.11/ext/crack/config.m4
---- php-4.3.11.orig/ext/crack/config.m4	2005-04-04 18:43:10.878614504 +0200
-+++ php-4.3.11/ext/crack/config.m4	2005-04-04 18:43:22.509846288 +0200
+diff -urbB php-4.4.0.org/ext/crack/config.m4 php-4.4.0/ext/crack/config.m4
+--- php-4.4.0.org/ext/crack/config.m4	2004-12-31 04:10:59.000000000 +0100
++++ php-4.4.0/ext/crack/config.m4	2005-07-11 21:44:33.631263104 +0200
 @@ -7,7 +7,7 @@
  
  if test "$PHP_CRACK" != "no"; then
@@ -89,9 +89,9 @@ diff -burN php-4.3.11.orig/ext/crack/config.m4 php-4.3.11/ext/crack/config.m4
      test -f $i/libcrack.$SHLIB_SUFFIX_NAME -o -f $i/libcrack.a && CRACK_LIBDIR=$i && break
      test -f $i/libcrack_krb5.$SHLIB_SUFFIX_NAME -o -f $i/libcrack_krb5.a && CRACK_LIBDIR=$i && break
    done
-diff -burN php-4.3.11.orig/ext/dba/config.m4 php-4.3.11/ext/dba/config.m4
---- php-4.3.11.orig/ext/dba/config.m4	2005-04-04 18:43:10.809624992 +0200
-+++ php-4.3.11/ext/dba/config.m4	2005-04-04 18:43:22.504847048 +0200
+diff -urbB php-4.4.0.org/ext/dba/config.m4 php-4.4.0/ext/dba/config.m4
+--- php-4.4.0.org/ext/dba/config.m4	2005-07-11 21:44:02.637974000 +0200
++++ php-4.4.0/ext/dba/config.m4	2005-07-11 21:44:33.632262952 +0200
 @@ -21,7 +21,7 @@
  dnl Assign INCLUDE/LFLAGS from PREFIX
  AC_DEFUN([PHP_DBA_STD_ASSIGN],[
@@ -148,9 +148,9 @@ diff -burN php-4.3.11.orig/ext/dba/config.m4 php-4.3.11/ext/dba/config.m4
          if test -n "$THIS_LIBS"; then
            break
          fi
-diff -burN php-4.3.11.orig/ext/domxml/config.m4 php-4.3.11/ext/domxml/config.m4
---- php-4.3.11.orig/ext/domxml/config.m4	2005-04-04 18:43:10.954602952 +0200
-+++ php-4.3.11/ext/domxml/config.m4	2005-04-04 19:09:02.534726920 +0200
+diff -urbB php-4.4.0.org/ext/domxml/config.m4 php-4.4.0/ext/domxml/config.m4
+--- php-4.4.0.org/ext/domxml/config.m4	2004-12-30 08:02:17.000000000 +0100
++++ php-4.4.0/ext/domxml/config.m4	2005-07-11 21:44:33.632262952 +0200
 @@ -50,7 +50,7 @@
  
    PHP_DOM_CHECK_VERSION
@@ -218,9 +218,9 @@ diff -burN php-4.3.11.orig/ext/domxml/config.m4 php-4.3.11/ext/domxml/config.m4
  
    PHP_ADD_INCLUDE($DOMEXSLT_DIR/include)
  
-diff -burN php-4.3.11.orig/ext/gd/config.m4 php-4.3.11/ext/gd/config.m4
---- php-4.3.11.orig/ext/gd/config.m4	2005-04-04 18:43:10.795627120 +0200
-+++ php-4.3.11/ext/gd/config.m4	2005-04-04 18:43:22.504847048 +0200
+diff -urbB php-4.4.0.org/ext/gd/config.m4 php-4.4.0/ext/gd/config.m4
+--- php-4.4.0.org/ext/gd/config.m4	2005-05-17 14:23:09.000000000 +0200
++++ php-4.4.0/ext/gd/config.m4	2005-07-11 21:44:33.633262800 +0200
 @@ -51,7 +51,7 @@
    if test "$PHP_JPEG_DIR" != "no"; then
  
@@ -326,7 +326,7 @@ diff -burN php-4.3.11.orig/ext/gd/config.m4 php-4.3.11/ext/gd/config.m4
      ])
    fi
  ])
-@@ -364,7 +364,7 @@
+@@ -365,7 +365,7 @@
    done
  
  dnl Library path
@@ -335,9 +335,9 @@ diff -burN php-4.3.11.orig/ext/gd/config.m4 php-4.3.11/ext/gd/config.m4
      test -f "$PHP_GD/$i/libgd.$SHLIB_SUFFIX_NAME" -o -f "$PHP_GD/$i/libgd.a" && GD_LIB="$PHP_GD/$i"
    done
  
-diff -burN php-4.3.11.orig/ext/imap/config.m4 php-4.3.11/ext/imap/config.m4
---- php-4.3.11.orig/ext/imap/config.m4	2005-04-04 18:43:10.840620280 +0200
-+++ php-4.3.11/ext/imap/config.m4	2005-04-04 18:43:22.505846896 +0200
+diff -urbB php-4.4.0.org/ext/imap/config.m4 php-4.4.0/ext/imap/config.m4
+--- php-4.4.0.org/ext/imap/config.m4	2005-01-11 05:56:57.000000000 +0100
++++ php-4.4.0/ext/imap/config.m4	2005-07-11 21:44:33.634262648 +0200
 @@ -160,13 +160,13 @@
  
      if test -r "$IMAP_DIR/c-client/c-client.a"; then
@@ -355,9 +355,9 @@ diff -burN php-4.3.11.orig/ext/imap/config.m4 php-4.3.11/ext/imap/config.m4
        IMAP_LIB_CHK(c-client)
      done
  
-diff -burN php-4.3.11.orig/ext/ldap/config.m4 php-4.3.11/ext/ldap/config.m4
---- php-4.3.11.orig/ext/ldap/config.m4	2005-04-04 18:43:10.845619520 +0200
-+++ php-4.3.11/ext/ldap/config.m4	2005-04-04 18:43:22.505846896 +0200
+diff -urbB php-4.4.0.org/ext/ldap/config.m4 php-4.4.0/ext/ldap/config.m4
+--- php-4.4.0.org/ext/ldap/config.m4	2005-05-08 18:06:24.000000000 +0200
++++ php-4.4.0/ext/ldap/config.m4	2005-07-11 21:44:33.634262648 +0200
 @@ -6,15 +6,15 @@
    if test -f $1/include/ldap.h; then
      LDAP_DIR=$1
@@ -377,9 +377,9 @@ diff -burN php-4.3.11.orig/ext/ldap/config.m4 php-4.3.11/ext/ldap/config.m4
    fi
  ])
  
-diff -burN php-4.3.11.orig/ext/mcal/config.m4 php-4.3.11/ext/mcal/config.m4
---- php-4.3.11.orig/ext/mcal/config.m4	2005-04-04 18:43:10.846619368 +0200
-+++ php-4.3.11/ext/mcal/config.m4	2005-04-04 18:43:59.287255272 +0200
+diff -urbB php-4.4.0.org/ext/mcal/config.m4 php-4.4.0/ext/mcal/config.m4
+--- php-4.4.0.org/ext/mcal/config.m4	2005-07-11 21:44:02.612978000 +0200
++++ php-4.4.0/ext/mcal/config.m4	2005-07-11 21:44:33.635262496 +0200
 @@ -19,7 +19,7 @@
      fi
    done
@@ -398,9 +398,9 @@ diff -burN php-4.3.11.orig/ext/mcal/config.m4 php-4.3.11/ext/mcal/config.m4
    fi
  
    PHP_ADD_INCLUDE($MCAL_INCLUDE)
-diff -burN php-4.3.11.orig/ext/ming/config.m4 php-4.3.11/ext/ming/config.m4
---- php-4.3.11.orig/ext/ming/config.m4	2005-04-04 18:43:10.849618912 +0200
-+++ php-4.3.11/ext/ming/config.m4	2005-04-04 18:43:22.505846896 +0200
+diff -urbB php-4.4.0.org/ext/ming/config.m4 php-4.4.0/ext/ming/config.m4
+--- php-4.4.0.org/ext/ming/config.m4	2003-07-11 09:48:33.000000000 +0200
++++ php-4.4.0/ext/ming/config.m4	2005-07-11 21:44:33.635262496 +0200
 @@ -9,7 +9,7 @@
    AC_CHECK_LIB(m, sin)
  
@@ -424,9 +424,9 @@ diff -burN php-4.3.11.orig/ext/ming/config.m4 php-4.3.11/ext/ming/config.m4
  
    AC_MSG_CHECKING([for destroySWFBlock])
    AC_TRY_RUN([
-diff -burN php-4.3.11.orig/ext/mssql/config.m4 php-4.3.11/ext/mssql/config.m4
---- php-4.3.11.orig/ext/mssql/config.m4	2005-04-04 18:43:10.888612984 +0200
-+++ php-4.3.11/ext/mssql/config.m4	2005-04-04 18:43:22.506846744 +0200
+diff -urbB php-4.4.0.org/ext/mssql/config.m4 php-4.4.0/ext/mssql/config.m4
+--- php-4.4.0.org/ext/mssql/config.m4	2004-12-08 19:59:11.000000000 +0100
++++ php-4.4.0/ext/mssql/config.m4	2005-07-11 21:44:33.635262496 +0200
 @@ -32,12 +32,12 @@
      fi
    fi  
@@ -443,9 +443,9 @@ diff -burN php-4.3.11.orig/ext/mssql/config.m4 php-4.3.11/ext/mssql/config.m4
  
    PHP_ADD_INCLUDE($MSSQL_INCDIR)
    PHP_ADD_LIBRARY_WITH_PATH(sybdb, $MSSQL_LIBDIR, MSSQL_SHARED_LIBADD)
-diff -burN php-4.3.11.orig/ext/mysql/config.m4 php-4.3.11/ext/mysql/config.m4
---- php-4.3.11.orig/ext/mysql/config.m4	2005-04-04 18:43:10.908609944 +0200
-+++ php-4.3.11/ext/mysql/config.m4	2005-04-04 18:43:22.506846744 +0200
+diff -urbB php-4.4.0.org/ext/mysql/config.m4 php-4.4.0/ext/mysql/config.m4
+--- php-4.4.0.org/ext/mysql/config.m4	2005-07-11 21:44:02.630975000 +0200
++++ php-4.4.0/ext/mysql/config.m4	2005-07-11 21:44:33.636262344 +0200
 @@ -22,7 +22,7 @@
      /var/run/mysqld/mysqld.sock \
      /var/tmp/mysql.sock \
@@ -476,21 +476,9 @@ diff -burN php-4.3.11.orig/ext/mysql/config.m4 php-4.3.11/ext/mysql/config.m4
      else
        PHP_ADD_LIBRARY(z,, MYSQL_SHARED_LIBADD)
        PHP_CHECK_LIBRARY(mysqlclient, mysql_errno, [], [
-diff -burN php-4.3.11.orig/ext/pgsql/config.m4 php-4.3.11/ext/pgsql/config.m4
---- php-4.3.11.orig/ext/pgsql/config.m4	2005-04-04 18:43:10.916608728 +0200
-+++ php-4.3.11/ext/pgsql/config.m4	2005-04-04 18:43:22.507846592 +0200
-@@ -26,7 +26,7 @@
-       fi
-     done
- 
--    for j in lib lib/pgsql lib/postgres lib/postgresql ""; do
-+    for j in lib64 lib64/pgsql lib64/postgres lib64/postgresql ""; do
-       if test -f "$i/$j/libpq.so" || test -f "$i/$j/libpq.a"; then 
-         PGSQL_LIBDIR=$i/$j
-       fi
-diff -burN php-4.3.11.orig/ext/xml/config.m4 php-4.3.11/ext/xml/config.m4
---- php-4.3.11.orig/ext/xml/config.m4	2005-04-04 18:43:10.831621648 +0200
-+++ php-4.3.11/ext/xml/config.m4	2005-04-04 18:43:22.507846592 +0200
+diff -urbB php-4.4.0.org/ext/xml/config.m4 php-4.4.0/ext/xml/config.m4
+--- php-4.4.0.org/ext/xml/config.m4	2005-07-11 21:44:02.598980000 +0200
++++ php-4.4.0/ext/xml/config.m4	2005-07-11 21:44:33.637262192 +0200
 @@ -31,7 +31,7 @@
      PHP_NEW_EXTENSION(xml, xml.c, $ext_shared)
  
@@ -509,9 +497,9 @@ diff -burN php-4.3.11.orig/ext/xml/config.m4 php-4.3.11/ext/xml/config.m4
      PHP_SUBST(XML_SHARED_LIBADD)
    fi
  fi
-diff -burN php-4.3.11.orig/ext/xmlrpc/config.m4 php-4.3.11/ext/xmlrpc/config.m4
---- php-4.3.11.orig/ext/xmlrpc/config.m4	2005-04-04 18:43:11.098581064 +0200
-+++ php-4.3.11/ext/xmlrpc/config.m4	2005-04-04 18:43:22.507846592 +0200
+diff -urbB php-4.4.0.org/ext/xmlrpc/config.m4 php-4.4.0/ext/xmlrpc/config.m4
+--- php-4.4.0.org/ext/xmlrpc/config.m4	2005-07-11 21:44:02.632975000 +0200
++++ php-4.4.0/ext/xmlrpc/config.m4	2005-07-11 21:44:33.637262192 +0200
 @@ -23,9 +23,9 @@
  
    testval=no
@@ -531,9 +519,9 @@ diff -burN php-4.3.11.orig/ext/xmlrpc/config.m4 php-4.3.11/ext/xmlrpc/config.m4
 -  PHP_ADD_LIBRARY_WITH_PATH(xmlrpc, $XMLRPC_DIR/lib, XMLRPC_SHARED_LIBADD)
 +  PHP_ADD_LIBRARY_WITH_PATH(xmlrpc, $XMLRPC_DIR/lib64, XMLRPC_SHARED_LIBADD)
  fi
-diff -burN php-4.3.11.orig/ext/xslt/config.m4 php-4.3.11/ext/xslt/config.m4
---- php-4.3.11.orig/ext/xslt/config.m4	2005-04-04 18:43:10.871615568 +0200
-+++ php-4.3.11/ext/xslt/config.m4	2005-04-04 18:51:47.171126112 +0200
+diff -urbB php-4.4.0.org/ext/xslt/config.m4 php-4.4.0/ext/xslt/config.m4
+--- php-4.4.0.org/ext/xslt/config.m4	2004-08-18 07:14:16.000000000 +0200
++++ php-4.4.0/ext/xslt/config.m4	2005-07-11 21:44:33.638262040 +0200
 @@ -98,10 +98,10 @@
  
      found_expat=no
@@ -596,9 +584,9 @@ diff -burN php-4.3.11.orig/ext/xslt/config.m4 php-4.3.11/ext/xslt/config.m4
  
    AC_DEFINE(HAVE_XSLT, 1, [ ])
  fi
-diff -burN php-4.3.11.orig/php.ini php-4.3.11/php.ini
---- php-4.3.11.orig/php.ini	2005-04-04 18:43:11.265555680 +0200
-+++ php-4.3.11/php.ini	2005-04-04 18:43:22.508846440 +0200
+diff -urbB php-4.4.0.org/php.ini php-4.4.0/php.ini
+--- php-4.4.0.org/php.ini	2005-07-11 21:44:02.628976000 +0200
++++ php-4.4.0/php.ini	2005-07-11 21:44:33.639261888 +0200
 @@ -489,7 +489,7 @@
  user_dir =
  
@@ -608,14 +596,14 @@ diff -burN php-4.3.11.orig/php.ini php-4.3.11/php.ini
  
  ; Whether or not to enable the dl() function.  The dl() function does NOT work
  ; properly in multithreaded servers, such as IIS or Zeus, and is automatically
-diff -burN php-4.3.11.orig/scripts/Makefile.frag php-4.3.11/scripts/Makefile.frag
---- php-4.3.11.orig/scripts/Makefile.frag	2005-04-04 18:43:11.253557504 +0200
-+++ php-4.3.11/scripts/Makefile.frag	2005-04-04 18:43:22.508846440 +0200
+diff -urbB php-4.4.0.org/scripts/Makefile.frag php-4.4.0/scripts/Makefile.frag
+--- php-4.4.0.org/scripts/Makefile.frag	2005-06-08 12:34:41.000000000 +0200
++++ php-4.4.0/scripts/Makefile.frag	2005-07-11 21:45:28.048990352 +0200
 @@ -4,7 +4,7 @@
  #
  
  phpincludedir = $(includedir)/php
--phpbuilddir = $(prefix)/lib/php/build
+-phpbuilddir = $(libdir)/build
 +phpbuilddir = $(libdir)/php/build
  
  BUILD_FILES = \

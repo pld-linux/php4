@@ -1,12 +1,12 @@
-diff -burN php-4.3.10.orig/scripts/Makefile.frag php-4.3.10/scripts/Makefile.frag
---- php-4.3.10.orig/scripts/Makefile.frag	2003-12-01 17:12:42.000000000 +0100
-+++ php-4.3.10/scripts/Makefile.frag	2005-02-10 23:11:49.428479472 +0100
-@@ -26,6 +26,8 @@
- 	/ \
- 	Zend \
- 	TSRM \
-+	ext/gd \
+diff -urbB php-4.4.0.org/scripts/Makefile.frag php-4.4.0/scripts/Makefile.frag
+--- php-4.4.0.org/scripts/Makefile.frag	2005-07-11 21:46:28.711768000 +0200
++++ php-4.4.0/scripts/Makefile.frag	2005-07-11 21:47:52.847977560 +0200
+@@ -37,6 +37,8 @@
+ 	include/ \
+ 	main/ \
+ 	regex/ \
++	ext/gd/ \
 +	ext/gd/libgd/ \
- 	ext/standard \
- 	ext/session \
- 	ext/xml \
+ 	ext/iconv/ \
+ 	ext/pgsql/ \
+ 	ext/standard/ \
