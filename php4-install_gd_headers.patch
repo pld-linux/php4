@@ -1,0 +1,12 @@
+diff -urbB php-4.4.0.org/scripts/Makefile.frag php-4.4.0/scripts/Makefile.frag
+--- php-4.4.0.org/scripts/Makefile.frag	2005-07-11 21:46:28.711768000 +0200
++++ php-4.4.0/scripts/Makefile.frag	2005-07-11 21:47:52.847977560 +0200
+@@ -37,6 +37,8 @@
+ 	include/ \
+ 	main/ \
+ 	regex/ \
++	ext/gd/ \
++	ext/gd/libgd/ \
+ 	ext/iconv/ \
+ 	ext/pgsql/ \
+ 	ext/standard/ \

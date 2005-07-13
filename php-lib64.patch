@@ -1,0 +1,455 @@
+diff -burN php-5.0.4RC1.orig/acinclude.m4 php-5.0.4RC1/acinclude.m4
+--- php-5.0.4RC1.orig/acinclude.m4	2005-03-15 18:21:05.158404416 +0100
++++ php-5.0.4RC1/acinclude.m4	2005-03-15 18:22:03.101595712 +0100
+@@ -1723,6 +1723,9 @@
+       if test -r $i/lib/libssl.a -o -r $i/lib/libssl.$SHLIB_SUFFIX_NAME; then
+         OPENSSL_LIBDIR=$i/lib
+       fi
++      if test -r $i/lib64/libssl.a -o -r $i/lib64/libssl.$SHLIB_SUFFIX_NAME; then
++        OPENSSL_LIBDIR=$i/lib64
++      fi
+       test -n "$OPENSSL_INCDIR" && test -n "$OPENSSL_LIBDIR" && break
+     done
+ 
+diff -burN php-5.0.4RC1.orig/ext/cpdf/config.m4 php-5.0.4RC1/ext/cpdf/config.m4
+--- php-5.0.4RC1.orig/ext/cpdf/config.m4	2005-03-15 18:21:04.537498808 +0100
++++ php-5.0.4RC1/ext/cpdf/config.m4	2005-03-15 18:23:06.693928208 +0100
+@@ -4,7 +4,7 @@
+   AC_ARG_WITH(jpeg-dir,
+   [  --with-jpeg-dir[=DIR]     CPDF: Set the path to libjpeg install prefix.],[
+     for i in $withval /usr/local /usr; do
+-      if test -f "$i/lib/libjpeg.$SHLIB_SUFFIX_NAME" -o -f "$i/lib/libjpeg.a"; then
++      if test -f "$i/lib64/libjpeg.$SHLIB_SUFFIX_NAME" -o -f "$i/lib64/libjpeg.a"; then
+         CPDF_JPEG_DIR=$i
+         break;
+       fi
+@@ -13,11 +13,11 @@
+       AC_MSG_ERROR([libjpeg.(a|so) not found.])
+     fi
+     PHP_CHECK_LIBRARY(jpeg, jpeg_read_header, [
+-      PHP_ADD_LIBRARY_WITH_PATH(jpeg, $CPDF_JPEG_DIR/lib, CPDF_SHARED_LIBADD)
++      PHP_ADD_LIBRARY_WITH_PATH(jpeg, $CPDF_JPEG_DIR/lib64, CPDF_SHARED_LIBADD)
+     ] ,[
+       AC_MSG_ERROR([CPDF: Problem with libjpeg.(a|so). Please check config.log for more information.])
+     ], [
+-      -L$CPDF_JPEG_DIR/lib
++      -L$CPDF_JPEG_DIR/lib64
+     ])
+   ],)
+ ])
+@@ -26,7 +26,7 @@
+   AC_ARG_WITH(tiff-dir,
+   [  --with-tiff-dir[=DIR]     CPDF: Set the path to libtiff install prefix.],[
+     for i in $withval /usr/local /usr; do
+-      if test -f "$i/lib/libtiff.$SHLIB_SUFFIX_NAME" -o -f "$i/lib/libtiff.a"; then
++      if test -f "$i/lib64/libtiff.$SHLIB_SUFFIX_NAME" -o -f "$i/lib64/libtiff.a"; then
+         CPDF_TIFF_DIR=$i
+         break;
+       fi
+@@ -35,11 +35,11 @@
+       AC_MSG_ERROR([libtiff.(a|so) not found.])
+     fi
+     PHP_CHECK_LIBRARY(tiff, TIFFOpen, [
+-      PHP_ADD_LIBRARY_WITH_PATH(tiff, $CPDF_TIFF_DIR/lib, CPDF_SHARED_LIBADD)
++      PHP_ADD_LIBRARY_WITH_PATH(tiff, $CPDF_TIFF_DIR/lib64, CPDF_SHARED_LIBADD)
+     ] ,[
+       AC_MSG_ERROR([CPDF: Problem with libtiff.(a|so). Please check config.log for more information.])
+     ], [
+-      -L$CPDF_TIFF_DIR/lib
++      -L$CPDF_TIFF_DIR/lib64
+     ])
+   ],)
+ ])
+@@ -65,13 +65,13 @@
+         ], [
+           AC_MSG_ERROR([Cpdflib module requires cpdflib >= 2.])
+         ], [
+-          -L$i/lib $CPDF_SHARED_LIBADD
++          -L$i/lib64 $CPDF_SHARED_LIBADD
+         ])
+       ], [
+-        -L$i/lib $CPDF_SHARED_LIBADD
++        -L$i/lib64 $CPDF_SHARED_LIBADD
+       ])
+ 
+-      PHP_ADD_LIBRARY_WITH_PATH($cpdf_libname, $i/lib, CPDF_SHARED_LIBADD)
++      PHP_ADD_LIBRARY_WITH_PATH($cpdf_libname, $i/lib64, CPDF_SHARED_LIBADD)
+       PHP_ADD_INCLUDE($CPDFLIB_INCLUDE)
+       AC_DEFINE(HAVE_CPDFLIB,1,[Whether you have cpdflib])
+       break
+diff -burN php-5.0.4RC1.orig/ext/dba/config.m4 php-5.0.4RC1/ext/dba/config.m4
+--- php-5.0.4RC1.orig/ext/dba/config.m4	2005-03-15 18:21:04.484506864 +0100
++++ php-5.0.4RC1/ext/dba/config.m4	2005-03-15 18:22:03.103595408 +0100
+@@ -21,7 +21,7 @@
+ dnl Assign INCLUDE/LFLAGS from PREFIX
+ AC_DEFUN([PHP_DBA_STD_ASSIGN],[
+   if test -n "$THIS_PREFIX" && test "$THIS_PREFIX" != "/usr"; then
+-    THIS_LFLAGS=$THIS_PREFIX/lib
++    THIS_LFLAGS=$THIS_PREFIX/lib64
+   fi
+ ])
+ 
+@@ -120,7 +120,7 @@
+         AC_DEFINE_UNQUOTED(GDBM_INCLUDE_FILE, "$THIS_INCLUDE", [ ])
+         AC_DEFINE(DBA_GDBM, 1, [ ]) 
+         THIS_LIBS=gdbm
+-      ], [], [-L$THIS_PREFIX/lib])
++      ], [], [-L$THIS_PREFIX/lib64])
+     fi
+     
+     PHP_DBA_STD_ASSIGN
+@@ -152,7 +152,7 @@
+           AC_DEFINE_UNQUOTED(NDBM_INCLUDE_FILE, "$THIS_INCLUDE", [ ])
+           AC_DEFINE(DBA_NDBM, 1, [ ]) 
+           THIS_LIBS=$LIB
+-        ], [], [-L$THIS_PREFIX/lib])
++        ], [], [-L$THIS_PREFIX/lib64])
+         if test -n "$THIS_LIBS"; then
+           break
+         fi
+@@ -170,8 +170,8 @@
+ dnl parameters(version, library list, function)
+ AC_DEFUN([PHP_DBA_DB_CHECK],[
+   for LIB in $2; do
+-    if test -f $THIS_PREFIX/lib/lib$LIB.a -o -f $THIS_PREFIX/lib/lib$LIB.$SHLIB_SUFFIX_NAME; then
+-      PHP_TEMP_LDFLAGS(-L$THIS_PREFIX/lib, -l$LIB,[
++    if test -f $THIS_PREFIX/lib64/lib$LIB.a -o -f $THIS_PREFIX/lib64/lib$LIB.$SHLIB_SUFFIX_NAME; then
++      PHP_TEMP_LDFLAGS(-L$THIS_PREFIX/lib64, -l$LIB,[
+         AC_TRY_LINK([
+ #include "$THIS_INCLUDE"
+         ],[
+@@ -366,7 +366,7 @@
+           fi
+           AC_DEFINE(DBA_DBM, 1, [ ]) 
+           THIS_LIBS=$LIB
+-        ], [], [-L$THIS_PREFIX/lib])
++        ], [], [-L$THIS_PREFIX/lib64])
+         if test -n "$THIS_LIBS"; then
+           break
+         fi
+@@ -408,7 +408,7 @@
+           AC_DEFINE_UNQUOTED(CDB_INCLUDE_FILE, "$THIS_INCLUDE", [ ])
+           AC_DEFINE(DBA_CDB, 1, [ ]) 
+           THIS_LIBS=$LIB
+-        ], [], [-L$THIS_PREFIX/lib])
++        ], [], [-L$THIS_PREFIX/lib64])
+         if test -n "$THIS_LIBS"; then
+           break
+         fi
+diff -burN php-5.0.4RC1.orig/ext/gd/config.m4 php-5.0.4RC1/ext/gd/config.m4
+--- php-5.0.4RC1.orig/ext/gd/config.m4	2005-03-15 18:21:04.469509144 +0100
++++ php-5.0.4RC1/ext/gd/config.m4	2005-03-15 18:22:03.104595256 +0100
+@@ -51,7 +51,7 @@
+   if test "$PHP_JPEG_DIR" != "no"; then
+ 
+     for i in $PHP_JPEG_DIR /usr/local /usr; do
+-      test -f $i/lib/libjpeg.$SHLIB_SUFFIX_NAME -o -f $i/lib/libjpeg.a && GD_JPEG_DIR=$i && break
++      test -f $i/lib64/libjpeg.$SHLIB_SUFFIX_NAME -o -f $i/lib64/libjpeg.a && GD_JPEG_DIR=$i && break
+     done
+ 
+     if test -z "$GD_JPEG_DIR"; then
+@@ -61,11 +61,11 @@
+     PHP_CHECK_LIBRARY(jpeg,jpeg_read_header,
+     [
+       PHP_ADD_INCLUDE($GD_JPEG_DIR/include)
+-      PHP_ADD_LIBRARY_WITH_PATH(jpeg, $GD_JPEG_DIR/lib, GD_SHARED_LIBADD)
++      PHP_ADD_LIBRARY_WITH_PATH(jpeg, $GD_JPEG_DIR/lib64, GD_SHARED_LIBADD)
+     ],[
+       AC_MSG_ERROR([Problem with libjpeg.(a|so). Please check config.log for more information.]) 
+     ],[
+-      -L$GD_JPEG_DIR/lib
++      -L$GD_JPEG_DIR/lib64
+     ])
+   else 
+     AC_MSG_RESULT([If configure fails try --with-jpeg-dir=<DIR>])
+@@ -76,7 +76,7 @@
+   if test "$PHP_PNG_DIR" != "no"; then
+ 
+     for i in $PHP_PNG_DIR /usr/local /usr; do
+-      test -f $i/lib/libpng.$SHLIB_SUFFIX_NAME -o -f $i/lib/libpng.a && GD_PNG_DIR=$i && break
++      test -f $i/lib64/libpng.$SHLIB_SUFFIX_NAME -o -f $i/lib64/libpng.a && GD_PNG_DIR=$i && break
+     done
+ 
+     if test -z "$GD_PNG_DIR"; then
+@@ -94,12 +94,12 @@
+     PHP_CHECK_LIBRARY(png,png_write_image,
+     [
+       PHP_ADD_INCLUDE($GD_PNG_DIR/include)
+-      PHP_ADD_LIBRARY_WITH_PATH(z, $PHP_ZLIB_DIR/lib, GD_SHARED_LIBADD)
+-      PHP_ADD_LIBRARY_WITH_PATH(png, $GD_PNG_DIR/lib, GD_SHARED_LIBADD)
++      PHP_ADD_LIBRARY_WITH_PATH(z, $PHP_ZLIB_DIR/lib64, GD_SHARED_LIBADD)
++      PHP_ADD_LIBRARY_WITH_PATH(png, $GD_PNG_DIR/lib64, GD_SHARED_LIBADD)
+     ],[
+       AC_MSG_ERROR([Problem with libpng.(a|so) or libz.(a|so). Please check config.log for more information.]) 
+     ],[
+-      -L$PHP_ZLIB_DIR/lib -lz -L$GD_PNG_DIR/lib
++      -L$PHP_ZLIB_DIR/lib64 -lz -L$GD_PNG_DIR/lib64
+     ])
+ 
+   else 
+@@ -111,7 +111,7 @@
+   if test "$PHP_XPM_DIR" != "no"; then
+ 
+     for i in $PHP_XPM_DIR /usr/local /usr/X11R6 /usr; do
+-      test -f $i/lib/libXpm.$SHLIB_SUFFIX_NAME -o -f $i/lib/libXpm.a && GD_XPM_DIR=$i && break
++      test -f $i/lib64/libXpm.$SHLIB_SUFFIX_NAME -o -f $i/lib64/libXpm.a && GD_XPM_DIR=$i && break
+     done
+ 
+     if test -z "$GD_XPM_DIR"; then
+@@ -129,12 +129,12 @@
+     PHP_CHECK_LIBRARY(Xpm,XpmFreeXpmImage, 
+     [
+       PHP_ADD_INCLUDE($GD_XPM_INC)
+-      PHP_ADD_LIBRARY_WITH_PATH(Xpm, $GD_XPM_DIR/lib, GD_SHARED_LIBADD)
+-      PHP_ADD_LIBRARY_WITH_PATH(X11, $GD_XPM_DIR/lib, GD_SHARED_LIBADD)
++      PHP_ADD_LIBRARY_WITH_PATH(Xpm, $GD_XPM_DIR/lib64, GD_SHARED_LIBADD)
++      PHP_ADD_LIBRARY_WITH_PATH(X11, $GD_XPM_DIR/lib64, GD_SHARED_LIBADD)
+     ],[
+       AC_MSG_ERROR([Problem with libXpm.(a|so) or libX11.(a|so). Please check config.log for more information.]) 
+     ],[
+-      -L$GD_XPM_DIR/lib -lX11
++      -L$GD_XPM_DIR/lib64 -lX11
+     ])
+   else 
+     AC_MSG_RESULT(If configure fails try --with-xpm-dir=<DIR>)
+@@ -163,7 +163,7 @@
+       fi
+       if test -n "$TTF_DIR" ; then
+         AC_DEFINE(HAVE_LIBTTF,1,[ ])
+-        PHP_ADD_LIBRARY_WITH_PATH(ttf, $TTF_DIR/lib, GD_SHARED_LIBADD)
++        PHP_ADD_LIBRARY_WITH_PATH(ttf, $TTF_DIR/lib64, GD_SHARED_LIBADD)
+       fi
+       if test -z "$TTF_INC_DIR"; then
+         TTF_INC_DIR=$TTF_DIR/include
+@@ -188,7 +188,7 @@
+     done
+     
+     if test -n "$FREETYPE2_DIR" ; then
+-      PHP_ADD_LIBRARY_WITH_PATH(freetype, $FREETYPE2_DIR/lib, GD_SHARED_LIBADD)
++      PHP_ADD_LIBRARY_WITH_PATH(freetype, $FREETYPE2_DIR/lib64, GD_SHARED_LIBADD)
+       PHP_ADD_INCLUDE($FREETYPE2_DIR/include)
+       PHP_ADD_INCLUDE($FREETYPE2_INC_DIR)
+       AC_DEFINE(USE_GD_IMGSTRTTF, 1, [ ])
+@@ -216,11 +216,11 @@
+     [
+       AC_DEFINE(HAVE_LIBT1,1,[ ])
+       PHP_ADD_INCLUDE($GD_T1_DIR/include)
+-      PHP_ADD_LIBRARY_WITH_PATH(t1, $GD_T1_DIR/lib, GD_SHARED_LIBADD)
++      PHP_ADD_LIBRARY_WITH_PATH(t1, $GD_T1_DIR/lib64, GD_SHARED_LIBADD)
+     ],[
+       AC_MSG_ERROR([Problem with libt1.(a|so). Please check config.log for more information.]) 
+     ],[
+-      -L$GD_T1_DIR/lib
++      -L$GD_T1_DIR/lib64
+     ])
+   fi
+ ])
+@@ -365,7 +365,7 @@
+   done
+ 
+ dnl Library path
+-  for i in lib/gd1.3 lib/gd lib gd1.3 gd ""; do
++  for i in lib64/gd1.3 lib64/gd lib64 gd1.3 gd ""; do
+     test -f "$PHP_GD/$i/libgd.$SHLIB_SUFFIX_NAME" -o -f "$PHP_GD/$i/libgd.a" && GD_LIB="$PHP_GD/$i"
+   done
+ 
+diff -burN php-5.0.4RC1.orig/ext/imap/config.m4 php-5.0.4RC1/ext/imap/config.m4
+--- php-5.0.4RC1.orig/ext/imap/config.m4	2005-03-15 18:21:04.545497592 +0100
++++ php-5.0.4RC1/ext/imap/config.m4	2005-03-15 18:22:03.105595104 +0100
+@@ -148,13 +148,13 @@
+ 
+     if test -r "$IMAP_DIR/c-client/c-client.a"; then
+       ln -s "$IMAP_DIR/c-client/c-client.a" "$IMAP_DIR/c-client/libc-client.a" >/dev/null 2>&1
+-    elif test -r "$IMAP_DIR/lib/c-client.a"; then
+-      ln -s "$IMAP_DIR/lib/c-client.a" "$IMAP_DIR/lib/libc-client.a" >/dev/null 2>&1
++    elif test -r "$IMAP_DIR/lib64/c-client.a"; then
++      ln -s "$IMAP_DIR/lib64/c-client.a" "$IMAP_DIR/lib64/libc-client.a" >/dev/null 2>&1
+     fi
+ 
+     for lib in c-client4 c-client imap; do
+       IMAP_LIB=$lib
+-      IMAP_LIB_CHK(lib)
++      IMAP_LIB_CHK(lib64)
+       IMAP_LIB_CHK(c-client)
+     done
+ 
+diff -burN php-5.0.4RC1.orig/ext/ldap/config.m4 php-5.0.4RC1/ext/ldap/config.m4
+--- php-5.0.4RC1.orig/ext/ldap/config.m4	2005-03-15 18:21:04.551496680 +0100
++++ php-5.0.4RC1/ext/ldap/config.m4	2005-03-15 18:22:03.107594800 +0100
+@@ -6,15 +6,15 @@
+   if test -f $1/include/ldap.h; then
+     LDAP_DIR=$1
+     LDAP_INCDIR=$1/include
+-    LDAP_LIBDIR=$1/lib
++    LDAP_LIBDIR=$1/lib64
+   elif test -f $1/include/umich-ldap/ldap.h; then
+     LDAP_DIR=$1
+     LDAP_INCDIR=$1/include/umich-ldap
+-    LDAP_LIBDIR=$1/lib
++    LDAP_LIBDIR=$1/lib64
+   elif test -f $1/ldap/public/ldap.h; then
+     LDAP_DIR=$1
+     LDAP_INCDIR=$1/ldap/public
+-    LDAP_LIBDIR=$1/lib
++    LDAP_LIBDIR=$1/lib64
+   fi
+ ])
+ 
+diff -burN php-5.0.4RC1.orig/ext/ming/config.m4 php-5.0.4RC1/ext/ming/config.m4
+--- php-5.0.4RC1.orig/ext/ming/config.m4	2005-03-15 18:21:04.555496072 +0100
++++ php-5.0.4RC1/ext/ming/config.m4	2005-03-15 18:22:03.108594648 +0100
+@@ -9,7 +9,7 @@
+   AC_CHECK_LIB(m, sin)
+ 
+   for i in $PHP_MING /usr/local /usr; do
+-    if test -f $i/lib/libming.$SHLIB_SUFFIX_NAME -o -f $i/lib/libming.a; then
++    if test -f $i/lib64/libming.$SHLIB_SUFFIX_NAME -o -f $i/lib64/libming.a; then
+       MING_DIR=$i
+       break
+     fi
+@@ -34,11 +34,11 @@
+   ],[
+     AC_MSG_ERROR([Ming library 0.2a or greater required.])
+   ],[
+-    -L$MING_DIR/lib
++    -L$MING_DIR/lib64
+   ])
+   
+   PHP_ADD_INCLUDE($MING_INC_DIR)
+-  PHP_ADD_LIBRARY_WITH_PATH(ming, $MING_DIR/lib, MING_SHARED_LIBADD)
++  PHP_ADD_LIBRARY_WITH_PATH(ming, $MING_DIR/lib64, MING_SHARED_LIBADD)
+ 
+   AC_MSG_CHECKING([for destroySWFBlock])
+   AC_TRY_RUN([
+diff -burN php-5.0.4RC1.orig/ext/mssql/config.m4 php-5.0.4RC1/ext/mssql/config.m4
+--- php-5.0.4RC1.orig/ext/mssql/config.m4	2005-03-15 18:21:04.646482240 +0100
++++ php-5.0.4RC1/ext/mssql/config.m4	2005-03-15 18:22:03.108594648 +0100
+@@ -32,12 +32,12 @@
+     fi
+   fi  
+ 
+-  if test ! -r "$FREETDS_INSTALLATION_DIR/lib/libtds.a" && test ! -r "$FREETDS_INSTALLATION_DIR/lib/libtds.so"; then
+-     AC_MSG_ERROR(Could not find $FREETDS_INSTALLATION_DIR/lib/libtds.[a|so])
++  if test ! -r "$FREETDS_INSTALLATION_DIR/lib64/libtds.a" && test ! -r "$FREETDS_INSTALLATION_DIR/lib64/libtds.so"; then
++     AC_MSG_ERROR(Could not find $FREETDS_INSTALLATION_DIR/lib64/libtds.[a|so])
+   fi
+ 
+   MSSQL_INCDIR=$FREETDS_INSTALLATION_DIR/include
+-  MSSQL_LIBDIR=$FREETDS_INSTALLATION_DIR/lib
++  MSSQL_LIBDIR=$FREETDS_INSTALLATION_DIR/lib64
+ 
+   PHP_ADD_INCLUDE($MSSQL_INCDIR)
+   PHP_ADD_LIBRARY_WITH_PATH(sybdb, $MSSQL_LIBDIR, MSSQL_SHARED_LIBADD)
+diff -burN php-5.0.4RC1.orig/ext/mysql/config.m4 php-5.0.4RC1/ext/mysql/config.m4
+--- php-5.0.4RC1.orig/ext/mysql/config.m4	2005-03-15 18:21:04.649481784 +0100
++++ php-5.0.4RC1/ext/mysql/config.m4	2005-03-15 18:22:03.109594496 +0100
+@@ -17,7 +17,7 @@
+     /var/run/mysqld/mysqld.sock \
+     /var/tmp/mysql.sock \
+     /var/run/mysql/mysql.sock \
+-    /var/lib/mysql/mysql.sock \
++    /var/lib64/mysql/mysql.sock \
+     /var/mysql/mysql.sock \
+     /usr/local/mysql/var/mysql.sock \
+     /Private/tmp/mysql.sock \
+@@ -84,7 +84,7 @@
+ Note that the MySQL client library is not bundled anymore.])
+   fi
+ 
+-  for i in lib lib/mysql; do
++  for i in lib64 lib64/mysql; do
+     MYSQL_LIB_CHK($i)
+   done
+ 
+@@ -100,9 +100,9 @@
+       PHP_CHECK_LIBRARY(mysqlclient, mysql_error, [], [
+         AC_MSG_ERROR([mysql configure failed. Please check config.log for more information.])
+       ], [
+-        -L$PHP_ZLIB_DIR/lib -L$MYSQL_LIB_DIR 
++        -L$PHP_ZLIB_DIR/lib64 -L$MYSQL_LIB_DIR 
+       ])  
+-      MYSQL_LIBS="-L$PHP_ZLIB_DIR/lib -lz"
++      MYSQL_LIBS="-L$PHP_ZLIB_DIR/lib64 -lz"
+     else
+       PHP_ADD_LIBRARY(z,, MYSQL_SHARED_LIBADD)
+       PHP_CHECK_LIBRARY(mysqlclient, mysql_errno, [], [
+diff -burN php-5.0.4RC1.orig/ext/pgsql/config.m4 php-5.0.4RC1/ext/pgsql/config.m4
+--- php-5.0.4RC1.orig/ext/pgsql/config.m4	2005-03-15 18:21:04.658480416 +0100
++++ php-5.0.4RC1/ext/pgsql/config.m4	2005-03-15 18:22:03.109594496 +0100
+@@ -44,7 +44,7 @@
+         fi
+       done
+ 
+-      for j in lib lib/pgsql lib/postgres lib/postgresql ""; do
++      for j in lib64 lib64/pgsql lib64/postgres lib64/postgresql ""; do
+         if test -f "$i/$j/libpq.so" || test -f "$i/$j/libpq.a"; then 
+           PGSQL_LIBDIR=$i/$j
+         fi
+diff -burN php-5.0.4RC1.orig/ext/xml/config.m4 php-5.0.4RC1/ext/xml/config.m4
+--- php-5.0.4RC1.orig/ext/xml/config.m4	2005-03-15 18:21:04.530499872 +0100
++++ php-5.0.4RC1/ext/xml/config.m4	2005-03-15 18:22:03.110594344 +0100
+@@ -30,7 +30,7 @@
+   dnl
+   if test "$PHP_LIBEXPAT_DIR" != "no"; then
+     for i in $PHP_XML $PHP_LIBEXPAT_DIR; do
+-      if test -f "$i/lib/libexpat.a" -o -f "$i/lib/libexpat.$SHLIB_SUFFIX_NAME"; then
++      if test -f "$i/lib64/libexpat.a" -o -f "$i/lib64/libexpat.$SHLIB_SUFFIX_NAME"; then
+         EXPAT_DIR=$i
+         break
+       fi
+@@ -41,7 +41,7 @@
+     fi
+ 
+     PHP_ADD_INCLUDE($EXPAT_DIR/include)
+-    PHP_ADD_LIBRARY_WITH_PATH(expat, $EXPAT_DIR/lib, XML_SHARED_LIBADD)
++    PHP_ADD_LIBRARY_WITH_PATH(expat, $EXPAT_DIR/lib64, XML_SHARED_LIBADD)
+     AC_DEFINE(HAVE_LIBEXPAT, 1, [ ])
+   fi
+ 
+diff -burN php-5.0.4RC1.orig/ext/xmlrpc/config.m4 php-5.0.4RC1/ext/xmlrpc/config.m4
+--- php-5.0.4RC1.orig/ext/xmlrpc/config.m4	2005-03-15 18:21:04.902443328 +0100
++++ php-5.0.4RC1/ext/xmlrpc/config.m4	2005-03-15 18:22:03.110594344 +0100
+@@ -23,9 +23,9 @@
+ 
+   testval=no
+   for i in $PHP_EXPAT_DIR $XMLRPC_DIR /usr/local /usr; do
+-    if test -f $i/lib/libexpat.a -o -f $i/lib/libexpat.$SHLIB_SUFFIX_NAME; then
++    if test -f $i/lib64/libexpat.a -o -f $i/lib64/libexpat.$SHLIB_SUFFIX_NAME; then
+       AC_DEFINE(HAVE_LIBEXPAT2,1,[ ])
+-      PHP_ADD_LIBRARY_WITH_PATH(expat, $i/lib, XMLRPC_SHARED_LIBADD)
++      PHP_ADD_LIBRARY_WITH_PATH(expat, $i/lib64, XMLRPC_SHARED_LIBADD)
+       PHP_ADD_INCLUDE($i/include)
+       testval=yes
+       break
+@@ -90,6 +90,6 @@
+   PHP_NEW_EXTENSION(xmlrpc,xmlrpc-epi-php.c,$ext_shared)
+   XMLRPC_MODULE_TYPE=external
+   PHP_ADD_INCLUDE($XMLRPC_DIR)
+-  PHP_ADD_LIBRARY_WITH_PATH(xmlrpc, $XMLRPC_DIR/lib, XMLRPC_SHARED_LIBADD)
++  PHP_ADD_LIBRARY_WITH_PATH(xmlrpc, $XMLRPC_DIR/lib64, XMLRPC_SHARED_LIBADD)
+ fi
+ 
+diff -burN php-5.0.4RC1.orig/php.ini php-5.0.4RC1/php.ini
+--- php-5.0.4RC1.orig/php.ini	2005-03-15 18:21:05.162403808 +0100
++++ php-5.0.4RC1/php.ini	2005-03-15 18:22:03.111594192 +0100
+@@ -514,7 +514,7 @@
+ user_dir =
+ 
+ ; Directory in which the loadable extensions (modules) reside.
+-extension_dir = "/usr/lib/php"
++extension_dir = "/usr/lib64/php"
+ 
+ ; Whether or not to enable the dl() function.  The dl() function does NOT work
+ ; properly in multithreaded servers, such as IIS or Zeus, and is automatically
+diff -burN php-5.0.4RC1.orig/scripts/Makefile.frag php-5.0.4RC1/scripts/Makefile.frag
+--- php-5.0.4RC1.orig/scripts/Makefile.frag	2005-03-15 18:21:05.145406392 +0100
++++ php-5.0.4RC1/scripts/Makefile.frag	2005-03-15 18:22:03.112594040 +0100
+@@ -4,7 +4,7 @@
+ #
+ 
+ phpincludedir = $(includedir)/php
+-phpbuilddir = $(prefix)/lib/php/build
++phpbuilddir = $(libdir)/php/build
+ 
+ BUILD_FILES = \
+ 	scripts/phpize.m4 \

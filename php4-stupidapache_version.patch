@@ -1,0 +1,17 @@
+--- ./acinclude.m4~	2005-06-16 21:20:24.000000000 +0300
++++ ./acinclude.m4	2005-06-16 21:20:34.000000000 +0300
+@@ -1949,8 +1949,14 @@
+ dnl This macro is used to get a comparable
+ dnl version for apache1/2.
+ dnl
++
+ AC_DEFUN([PHP_AP_EXTRACT_VERSION],[
++if test "$with_apache_version" != "no"; then
++  ac_output="foo bar baz $with_apache_version"
++else
+   ac_output=`$1 -v 2>&1`
++fi
++
+   ac_IFS=$IFS
+ IFS="- /.
+ "
