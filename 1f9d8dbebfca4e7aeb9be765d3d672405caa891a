@@ -1,0 +1,3 @@
+- pass1: convert %preun to %triggers:
+  :%s#^%preun \(.*\)\nif.*\n\t\(.*\)\nfi#%triggerpostun \1 -- %{name}-\1 < 3:4.4.0-2.1\r\2#g
+- truncate changelog
