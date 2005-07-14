@@ -2203,14 +2203,13 @@ fi
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mysql %{_sysconfdir}/php.ini
 
 %post ncurses
+# FIXME: not in global php.ini!
 #if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 #	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cgi.ini
 #fi
 #if [ -f %{_sysconfdir}/php-cli.ini ]; then
 #	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cli.ini
 #fi
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
 %triggerpostun ncurses -- %{name}-ncurses < 3:4.4.0-2.1
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
@@ -2256,14 +2255,13 @@ fi
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove overload %{_sysconfdir}/php.ini
 
 %post pcntl
+# FIXME: not in global php.ini!
 #if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 #	%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cgi.ini
 #fi
 #if [ -f %{_sysconfdir}/php-cli.ini ]; then
 #	%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cli.ini
 #fi
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
 %triggerpostun pcntl -- %{name}-pcntl < 3:4.4.0-2.1
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
@@ -2316,14 +2314,13 @@ fi
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove qtdom %{_sysconfdir}/php.ini
 
 %post readline
+# FIXME: not in global php.ini!
 #if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 #	%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cgi.ini
 #fi
 #if [ -f %{_sysconfdir}/php-cli.ini ]; then
 #	%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cli.ini
 #fi
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
 %triggerpostun readline -- %{name}-readline < 3:4.4.0-2.1
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
@@ -2871,7 +2868,8 @@ fi
 
 %files sybase-ct
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/sybase-ct.ini
+# NOTE: module name and inifile names differ.
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/sybase_ct.ini
 %attr(755,root,root) %{extensionsdir}/sybase_ct.so
 %endif
 
