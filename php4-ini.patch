@@ -16,10 +16,10 @@
 +; security in mind (see below, consult also
 +; http://php.net/manual/en/security.php).
 +;
-+; Please note, that in PLD installations, /etc/php/php.ini file
++; Please note, that in PLD installations, /etc/php4/php.ini file
 +; contains GLOBAL settings for all SAPIs (cgi, cli, apache...),
-+; and after reading this file, SAPI-specific file (/etc/php/php-cgi.ini,
-+; /etc/php/php-cli.ini, /etc/php/php-apache.ini...) is INCLUDED
++; and after reading this file, SAPI-specific file (/etc/php4/php-cgi.ini,
++; /etc/php4/php-cli.ini, /etc/php4/php-apache.ini...) is INCLUDED
 +; (so you don't need to duplicate whole large file to override only
 +; few options).
  
