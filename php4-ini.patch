@@ -183,7 +183,7 @@
  session.use_cookies = 1
 --- ./php.ini~	2005-07-14 17:34:35.000000000 +0300
 +++ ./php.ini	2005-07-14 20:14:13.000000000 +0300
-@@ -598,54 +598,10 @@
+@@ -598,56 +598,6 @@
  ; needs to go here.  Specify the location of the extension with the
  ; extension_dir directive above.
  
@@ -235,10 +235,8 @@
 -;extension=php_xslt.dll
 -;extension=php_yaz.dll
 -;extension=php_zip.dll
-+;;;;
-+; Note: packaged extension modules are now loaded via the .ini files
-+; found in the directory /etc/php4/php.d; these are loaded by default.
-+;;;;
- 
- 
+-
+-
+ ;;;;;;;;;;;;;;;;;;;
+ ; Module Settings ;
  ;;;;;;;;;;;;;;;;;;;
