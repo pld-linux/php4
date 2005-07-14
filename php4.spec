@@ -2203,20 +2203,22 @@ fi
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mysql %{_sysconfdir}/php.ini
 
 %post ncurses
-# FIXME: not in global php.ini!
-#if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-#	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cgi.ini
-#fi
-#if [ -f %{_sysconfdir}/php-cli.ini ]; then
-#	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cli.ini
-#fi
-
-%triggerpostun ncurses -- %{name}-ncurses < 3:4.4.0-2.1
+# NOTE: only for cli/cgi
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cgi.ini
+	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cgi.ini
 fi
 if [ -f %{_sysconfdir}/php-cli.ini ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cli.ini
+	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cli.ini
+fi
+
+%preun ncurses 
+if [ "$1" = "0" ]; then
+	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
+		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cgi.ini
+	fi
+	if [ -f %{_sysconfdir}/php-cli.ini ]; then
+		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cli.ini
+	fi
 fi
 
 %post oci8
@@ -2255,20 +2257,22 @@ fi
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove overload %{_sysconfdir}/php.ini
 
 %post pcntl
-# FIXME: not in global php.ini!
-#if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-#	%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cgi.ini
-#fi
-#if [ -f %{_sysconfdir}/php-cli.ini ]; then
-#	%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cli.ini
-#fi
-
-%triggerpostun pcntl -- %{name}-pcntl < 3:4.4.0-2.1
+# NOTE: only for cli/cgi
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
+	%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cgi.ini
 fi
 if [ -f %{_sysconfdir}/php-cli.ini ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cli.ini
+	%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cli.ini
+fi
+
+%preun pcntl 
+if [ "$1" = "0" ]; then
+	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
+		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
+	fi
+	if [ -f %{_sysconfdir}/php-cli.ini ]; then
+		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cli.ini
+	fi
 fi
 
 %post pcre
@@ -2314,20 +2318,22 @@ fi
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove qtdom %{_sysconfdir}/php.ini
 
 %post readline
-# FIXME: not in global php.ini!
-#if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-#	%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cgi.ini
-#fi
-#if [ -f %{_sysconfdir}/php-cli.ini ]; then
-#	%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cli.ini
-#fi
-
-%triggerpostun readline -- %{name}-readline < 3:4.4.0-2.1
+# NOTE: only for cli/cgi
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cgi.ini
+	%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cgi.ini
 fi
 if [ -f %{_sysconfdir}/php-cli.ini ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cli.ini
+	%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cli.ini
+fi
+
+%preun readline
+if [ "$1" = "0" ]; then
+	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
+		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cgi.ini
+	fi
+	if [ -f %{_sysconfdir}/php-cli.ini ]; then
+		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cli.ini
+	fi
 fi
 
 %post recode
@@ -2744,7 +2750,6 @@ fi
 
 %files ncurses
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/ncurses.ini
 %attr(755,root,root) %{extensionsdir}/ncurses.so
 
 %if %{with oci8}
@@ -2782,7 +2787,6 @@ fi
 
 %files pcntl
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/pcntl.ini
 %attr(755,root,root) %{extensionsdir}/pcntl.so
 
 %if %{with pcre}
@@ -2827,7 +2831,6 @@ fi
 
 %files readline
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/readline.ini
 %attr(755,root,root) %{extensionsdir}/readline.so
 
 %if %{with recode}
@@ -2868,7 +2871,6 @@ fi
 
 %files sybase-ct
 %defattr(644,root,root,755)
-# NOTE: module name and inifile names differ.
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/sybase_ct.ini
 %attr(755,root,root) %{extensionsdir}/sybase_ct.so
 %endif
