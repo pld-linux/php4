@@ -2173,14 +2173,12 @@ if [ -f %{_sysconfdir}/php-cli.ini ]; then
 	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cli.ini
 fi
 
-%preun ncurses
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cgi.ini
-	fi
-	if [ -f %{_sysconfdir}/php-cli.ini ]; then
-		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cli.ini
-	fi
+%triggerpostun ncurses -- %{name}-ncurses < 3:4.4.0-2.1
+if [ -f %{_sysconfdir}/php-cgi.ini ]; then
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cgi.ini
+fi
+if [ -f %{_sysconfdir}/php-cli.ini ]; then
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cli.ini
 fi
 
 %post oci8
@@ -2221,14 +2219,12 @@ if [ -f %{_sysconfdir}/php-cli.ini ]; then
 	%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cli.ini
 fi
 
-%preun pcntl
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
-	fi
-	if [ -f %{_sysconfdir}/php-cli.ini ]; then
-		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cli.ini
-	fi
+%triggerpostun pcntl -- %{name}-pcntl < 3:4.4.0-2.1
+if [ -f %{_sysconfdir}/php-cgi.ini ]; then
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
+fi
+if [ -f %{_sysconfdir}/php-cli.ini ]; then
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cli.ini
 fi
 
 %post pcre
@@ -2275,14 +2271,12 @@ if [ -f %{_sysconfdir}/php-cli.ini ]; then
 	%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cli.ini
 fi
 
-%preun readline
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cgi.ini
-	fi
-	if [ -f %{_sysconfdir}/php-cli.ini ]; then
-		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cli.ini
-	fi
+%triggerpostun readline -- %{name}-readline < 3:4.4.0-2.1
+if [ -f %{_sysconfdir}/php-cgi.ini ]; then
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cgi.ini
+fi
+if [ -f %{_sysconfdir}/php-cli.ini ]; then
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cli.ini
 fi
 
 %post recode
