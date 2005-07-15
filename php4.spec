@@ -2,11 +2,6 @@
 # TODO:
 # - make additional headers added by mail patch configurable
 # - /var/run/php group not owned
-# TODO both apx build:
-# - what to do with main package?
-# - Obsoletes apache-mod_php and phpfi are whose? apache2 apache1 module? both? neither?
-# - how to ensure proper sapi upgrade? (look apache1-mod_php4 preable)
-# - should the apache-mod_php4 provide php{,4} package?
 #
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
