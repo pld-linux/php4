@@ -2484,7 +2484,6 @@ fi
 %files fcgi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/php4.fcgi
-# FIXME why not php-fcgi.ini?
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cgi-fcgi.ini
 
 %files cgi
@@ -2495,10 +2494,10 @@ fi
 %files cli
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/php4.cli
-%attr(755,root,root) %{_bindir}/php4
 # TODO
 # - what about _bindir/php symlink?
 # - do it same way link /usr/src/linux is done, ie each package updates symlink
+%attr(755,root,root) %{_bindir}/php4
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cli.ini
 %{_mandir}/man1/php4.1*
 
