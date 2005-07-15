@@ -70,7 +70,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	2.18%{?with_hardening:hardened}
+Release:	2.20%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1698,7 +1698,7 @@ for sapi in $sapis; do
 	--cache-file=config.cache \
 	%{?with_zts:--enable-experimental-zts} \
 	--with-config-file-path=%{_sysconfdir} \
-    --with-config-file-scan-dir=%{_sysconfdir}/conf.d \
+	--with-config-file-scan-dir=%{_sysconfdir}/conf.d \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
 	--enable-shared \
@@ -1904,7 +1904,7 @@ cp -f Zend/LICENSE{,.Zend}
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/conf.d
 for so in modules/*.so; do
 	mod=$(basename $so .so)
-    cat > $RPM_BUILD_ROOT%{_sysconfdir}/conf.d/${mod}.ini <<EOF
+	cat > $RPM_BUILD_ROOT%{_sysconfdir}/conf.d/${mod}.ini <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
