@@ -1917,27 +1917,19 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %post -n apache1-mod_php4
-if [ -f /var/lock/subsys/apache ]; then
-	/etc/rc.d/init.d/apache restart 1>&2
-fi
+%service apache restart
 
 %postun -n apache1-mod_php4
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache restart 1>&2
-	fi
+	%service -q apache restart
 fi
 
 %post -n apache-mod_php4
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
+%service httpd restart
 
 %postun -n apache-mod_php4
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+	%service -q httpd restart
 fi
 
 %post	common -p /sbin/ldconfig
