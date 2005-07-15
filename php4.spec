@@ -70,7 +70,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	2.16%{?with_hardening:hardened}
+Release:	2.18%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1909,6 +1909,9 @@ for so in modules/*.so; do
 extension=${mod}.so
 EOF
 done
+
+# Not in all SAPI, so don't need the .ini fragments.
+rm -f $RPM_BUILD_ROOT%{_sysconfdir}/conf.d/{ncurses,pcntl,readline}.ini
 
 %clean
 rm -rf $RPM_BUILD_ROOT
