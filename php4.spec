@@ -75,7 +75,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	2.11%{?with_hardening:hardened}
+Release:	2.16%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1890,9 +1890,11 @@ ln -sf php4.cli $RPM_BUILD_ROOT%{_bindir}/php4
 %{?with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{extensionsdir}}
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
-for i in %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE8}; do
-	install $i $RPM_BUILD_ROOT%{_sysconfdir}/$(basename $i|sed -e "s@php4@php@g")
-done
+install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi-fcgi.ini
+install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi.ini
+install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache.ini
+install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache2handler.ini
+install %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/php-cli.ini
 
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/httpd/icons
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/apache/icons
@@ -1934,6 +1936,15 @@ fi
 
 %post	common -p /sbin/ldconfig
 %postun	common -p /sbin/ldconfig
+
+%if %{with apache2}
+# for fixed php-SAPI.ini, the poor php-apache.ini was never read for apache2
+%triggerpostun -n apache-mod_php4 -- apache-mod_php4 < 3:4.4.0-2.16, php4 < 3:4.3.11-4.16
+if [ -f %{_sysconfdir}/php-apache.ini.rpmsave ]; then
+	cp -f %{_sysconfdir}/php-apache2handler.ini{,.rpmnew}
+	mv -f %{_sysconfdir}/php-apache.ini.rpmsave %{_sysconfdir}/php-apache2handler.ini
+fi
+%endif
 
 %post bcmath
 [ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
@@ -2462,9 +2473,6 @@ fi
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/apache/conf.d/*_mod_php4.conf
 %attr(755,root,root) %{_libdir}/apache1/libphp4.so
-# FIXME
-# - really share config with apache1/apache2?
-# - name it by real sapi name? (apxs, apxs2?)
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 /home/services/apache/icons/*
 %endif
@@ -2474,7 +2482,7 @@ fi
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php4.conf
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache2handler.ini
 /home/services/httpd/icons/*
 %endif
 
