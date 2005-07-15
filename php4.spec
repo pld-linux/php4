@@ -75,7 +75,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	2.8%{?with_hardening:hardened}
+Release:	2.11%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1703,7 +1703,7 @@ for sapi in $sapis; do
 	--cache-file=config.cache \
 	%{?with_zts:--enable-experimental-zts} \
 	--with-config-file-path=%{_sysconfdir} \
-    --with-config-file-scan-dir=%{_sysconfdir}/php.d \
+    --with-config-file-scan-dir=%{_sysconfdir}/conf.d \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
 	--enable-shared \
@@ -1904,10 +1904,10 @@ install %{SOURCE1} .
 cp -f Zend/LICENSE{,.Zend}
 
 # Generate stub .ini files for each subpackage
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/conf.d
 for so in modules/*.so; do
 	mod=$(basename $so .so)
-    cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${mod}.ini <<EOF
+    cat > $RPM_BUILD_ROOT%{_sysconfdir}/conf.d/${mod}.ini <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
@@ -2535,148 +2535,148 @@ fi
 
 %files bcmath
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/bcmath.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/bcmath.ini
 %attr(755,root,root) %{extensionsdir}/bcmath.so
 
 %files bzip2
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/bz2.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/bz2.ini
 %attr(755,root,root) %{extensionsdir}/bz2.so
 
 %files calendar
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/calendar.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/calendar.ini
 %attr(755,root,root) %{extensionsdir}/calendar.so
 
 %if %{with cpdf}
 %files cpdf
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/cpdf.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/cpdf.ini
 %attr(755,root,root) %{extensionsdir}/cpdf.so
 %endif
 
 %files crack
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/crack.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/crack.ini
 %attr(755,root,root) %{extensionsdir}/crack.so
 
 %files ctype
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/ctype.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/ctype.ini
 %attr(755,root,root) %{extensionsdir}/ctype.so
 
 %if %{with curl}
 %files curl
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/curl.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/curl.ini
 %attr(755,root,root) %{extensionsdir}/curl.so
 %endif
 
 %files db
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/db.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/db.ini
 %attr(755,root,root) %{extensionsdir}/db.so
 
 %files dba
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/dba.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/dba.ini
 %attr(755,root,root) %{extensionsdir}/dba.so
 
 %files dbase
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/dbase.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/dbase.ini
 %attr(755,root,root) %{extensionsdir}/dbase.so
 
 %files dbx
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/dbx.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/dbx.ini
 %attr(755,root,root) %{extensionsdir}/dbx.so
 
 %files dio
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/dio.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/dio.ini
 %attr(755,root,root) %{extensionsdir}/dio.so
 
 %if %{with xml}
 %files domxml
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/domxml.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/domxml.ini
 %attr(755,root,root) %{extensionsdir}/domxml.so
 %endif
 
 %if %{with fdf}
 %files fdf
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/fdf.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/fdf.ini
 %attr(755,root,root) %{extensionsdir}/fdf.so
 %endif
 
 %files exif
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/exif.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/exif.ini
 %attr(755,root,root) %{extensionsdir}/exif.so
 
 %files filepro
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/filepro.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/filepro.ini
 %attr(755,root,root) %{extensionsdir}/filepro.so
 
 %if %{with fribidi}
 %files fribidi
 %defattr(644,root,root,755)
 %doc ext/fribidi/{CREDITS,README}
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/fribidi.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/fribidi.ini
 %attr(755,root,root) %{extensionsdir}/fribidi.so
 %endif
 
 %files ftp
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/ftp.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/ftp.ini
 %attr(755,root,root) %{extensionsdir}/ftp.so
 
 %files gd
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/gd.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/gd.ini
 %attr(755,root,root) %{extensionsdir}/gd.so
 
 %files gettext
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/gettext.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/gettext.ini
 %attr(755,root,root) %{extensionsdir}/gettext.so
 
 %files gmp
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/gmp.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/gmp.ini
 %attr(755,root,root) %{extensionsdir}/gmp.so
 
 %files hyperwave
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/hyperwave.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/hyperwave.ini
 %attr(755,root,root) %{extensionsdir}/hyperwave.so
 
 %files iconv
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/iconv.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/iconv.ini
 %attr(755,root,root) %{extensionsdir}/iconv.so
 
 %if %{with imap}
 %files imap
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/imap.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/imap.ini
 %attr(755,root,root) %{extensionsdir}/imap.so
 %endif
 
 %if %{with interbase}
 %files interbase
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/interbase.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/interbase.ini
 %attr(755,root,root) %{extensionsdir}/interbase.so
 %endif
 
 %if %{with java}
 %files java
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/java.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/java.ini
 %attr(755,root,root) %{extensionsdir}/java.so
 %{extensionsdir}/php_java.jar
 %endif
@@ -2684,68 +2684,68 @@ fi
 %if %{with ldap}
 %files ldap
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/ldap.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/ldap.ini
 %attr(755,root,root) %{extensionsdir}/ldap.so
 %endif
 
 %files mbstring
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/mbstring.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mbstring.ini
 %attr(755,root,root) %{extensionsdir}/mbstring.so
 
 %files mcal
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/mcal.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mcal.ini
 %attr(755,root,root) %{extensionsdir}/mcal.so
 
 %files mcrypt
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/mcrypt.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mcrypt.ini
 %attr(755,root,root) %{extensionsdir}/mcrypt.so
 
 %if %{with mhash}
 %files mhash
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/mhash.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mhash.ini
 %attr(755,root,root) %{extensionsdir}/mhash.so
 %endif
 
 %files mime_magic
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/mime_magic.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mime_magic.ini
 %attr(755,root,root) %{extensionsdir}/mime_magic.so
 
 %if %{with ming}
 %files ming
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/ming.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/ming.ini
 %attr(755,root,root) %{extensionsdir}/ming.so
 %endif
 
 %if %{with mnogosearch}
 %files mnogosearch
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/mnogosearch.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mnogosearch.ini
 %attr(755,root,root) %{extensionsdir}/mnogosearch.so
 %endif
 
 %if %{with msession}
 %files msession
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/msession.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/msession.ini
 %attr(755,root,root) %{extensionsdir}/msession.so
 %endif
 
 %if %{with mssql}
 %files mssql
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/mssql.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mssql.ini
 %attr(755,root,root) %{extensionsdir}/mssql.so
 %endif
 
 %files mysql
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/mysql.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mysql.ini
 %attr(755,root,root) %{extensionsdir}/mysql.so
 
 %files ncurses
@@ -2755,34 +2755,34 @@ fi
 %if %{with oci8}
 %files oci8
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/oci8.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/oci8.ini
 %attr(755,root,root) %{extensionsdir}/oci8.so
 %endif
 
 %if %{with odbc}
 %files odbc
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/odbc.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/odbc.ini
 %attr(755,root,root) %{extensionsdir}/odbc.so
 %endif
 
 %if %{with openssl}
 %files openssl
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/openssl.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/openssl.ini
 %attr(755,root,root) %{extensionsdir}/openssl.so
 %endif
 
 %if %{with oracle}
 %files oracle
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/oracle.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/oracle.ini
 %attr(755,root,root) %{extensionsdir}/oracle.so
 %endif
 
 %files overload
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/overload.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/overload.ini
 %attr(755,root,root) %{extensionsdir}/overload.so
 
 %files pcntl
@@ -2792,40 +2792,40 @@ fi
 %if %{with pcre}
 %files pcre
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/pcre.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/pcre.ini
 %attr(755,root,root) %{extensionsdir}/pcre.so
 %endif
 
 %if %{with pdf}
 %files pdf
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/pdf.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/pdf.ini
 %attr(755,root,root) %{extensionsdir}/pdf.so
 %endif
 
 %if %{with pgsql}
 %files pgsql
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/pgsql.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/pgsql.ini
 %attr(755,root,root) %{extensionsdir}/pgsql.so
 %endif
 
 %files posix
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/posix.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/posix.ini
 %attr(755,root,root) %{extensionsdir}/posix.so
 
 %if %{with pspell}
 %files pspell
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/pspell.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/pspell.ini
 %attr(755,root,root) %{extensionsdir}/pspell.so
 %endif
 
 %if %{with qtdom}
 %files qtdom
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/qtdom.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/qtdom.ini
 %attr(755,root,root) %{extensionsdir}/qtdom.so
 %endif
 
@@ -2836,106 +2836,106 @@ fi
 %if %{with recode}
 %files recode
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/recode.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/recode.ini
 %attr(755,root,root) %{extensionsdir}/recode.so
 %endif
 
 # session_mm doesn't work with shared session
 #%files session
 #%defattr(644,root,root,755)
-#%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/session.ini
+#%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/session.ini
 #%attr(755,root,root) %{extensionsdir}/session.so
 
 %files shmop
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/shmop.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/shmop.ini
 %attr(755,root,root) %{extensionsdir}/shmop.so
 
 %if %{with snmp}
 %files snmp
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/snmp.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/snmp.ini
 %attr(755,root,root) %{extensionsdir}/snmp.so
 %endif
 
 %files sockets
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/sockets.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sockets.ini
 %attr(755,root,root) %{extensionsdir}/sockets.so
 
 %if %{with sybase}
 %files sybase
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/sybase.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sybase.ini
 %attr(755,root,root) %{extensionsdir}/sybase.so
 
 %files sybase-ct
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/sybase_ct.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sybase_ct.ini
 %attr(755,root,root) %{extensionsdir}/sybase_ct.so
 %endif
 
 %files sysvmsg
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/sysvmsg.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sysvmsg.ini
 %attr(755,root,root) %{extensionsdir}/sysvmsg.so
 
 %files sysvsem
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/sysvsem.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sysvsem.ini
 %attr(755,root,root) %{extensionsdir}/sysvsem.so
 
 %files sysvshm
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/sysvshm.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sysvshm.ini
 %attr(755,root,root) %{extensionsdir}/sysvshm.so
 
 %if %{with wddx}
 %files wddx
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/wddx.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/wddx.ini
 %attr(755,root,root) %{extensionsdir}/wddx.so
 %endif
 
 %if %{with xml}
 %files xml
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/xml.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/xml.ini
 %attr(755,root,root) %{extensionsdir}/xml.so
 %endif
 
 %if %{with xmlrpc}
 %files xmlrpc
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/xmlrpc.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/xmlrpc.ini
 %attr(755,root,root) %{extensionsdir}/xmlrpc.so
 %endif
 
 %if %{with xslt}
 %files xslt
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/xslt.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/xslt.ini
 %attr(755,root,root) %{extensionsdir}/xslt.so
 %endif
 
 %if %{with yaz}
 %files yaz
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/yaz.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/yaz.ini
 %attr(755,root,root) %{extensionsdir}/yaz.so
 %endif
 
 %files yp
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/yp.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/yp.ini
 %attr(755,root,root) %{extensionsdir}/yp.so
 
 %files zip
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/zip.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/zip.ini
 %attr(755,root,root) %{extensionsdir}/zip.so
 
 %files zlib
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.d/zlib.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/zlib.ini
 %attr(755,root,root) %{extensionsdir}/zlib.so
