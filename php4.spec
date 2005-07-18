@@ -70,7 +70,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	2.20%{?with_hardening:hardened}
+Release:	2.23%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1936,8 +1936,8 @@ fi
 %postun	common -p /sbin/ldconfig
 
 %if %{with apache2}
-# for fixed php-SAPI.ini, the poor php-apache.ini was never read for apache2
 %triggerpostun -n apache-mod_php4 -- apache-mod_php4 < 3:4.4.0-2.16, php4 < 3:4.3.11-4.16
+# for fixed php-SAPI.ini, the poor php-apache.ini was never read for apache2
 if [ -f %{_sysconfdir}/php-apache.ini.rpmsave ]; then
 	cp -f %{_sysconfdir}/php-apache2handler.ini{,.rpmnew}
 	mv -f %{_sysconfdir}/php-apache.ini.rpmsave %{_sysconfdir}/php-apache2handler.ini
