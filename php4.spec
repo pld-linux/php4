@@ -2,11 +2,6 @@
 # TODO:
 # - make additional headers added by mail patch configurable
 # - /var/run/php group not owned
-# TODO both apx build:
-# - what to do with main package?
-# - Obsoletes apache-mod_php and phpfi are whose? apache2 apache1 module? both? neither?
-# - how to ensure proper sapi upgrade? (look apache1-mod_php4 preable)
-# - should the apache-mod_php4 provide php{,4} package?
 #
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
@@ -75,7 +70,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	2%{?with_hardening:hardened}
+Release:	2.23%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -189,7 +184,7 @@ BuildRequires:	%{__perl}
 BuildRequires:	readline-devel
 %{?with_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-100
-BuildRequires:	rpmbuild(macros) >= 1.213
+BuildRequires:	rpmbuild(macros) >= 1.230
 %{?with_xslt:BuildRequires:	sablotron-devel >= 0.96}
 BuildRequires:	sed >= 4.0
 BuildRequires:	t1lib-devel
@@ -1703,6 +1698,7 @@ for sapi in $sapis; do
 	--cache-file=config.cache \
 	%{?with_zts:--enable-experimental-zts} \
 	--with-config-file-path=%{_sysconfdir} \
+	--with-config-file-scan-dir=%{_sysconfdir}/conf.d \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
 	--enable-shared \
@@ -1889,9 +1885,11 @@ ln -sf php4.cli $RPM_BUILD_ROOT%{_bindir}/php4
 %{?with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{extensionsdir}}
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
-for i in %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE8}; do
-	install $i $RPM_BUILD_ROOT%{_sysconfdir}/$(basename $i|sed -e "s@php4@php@g")
-done
+install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi-fcgi.ini
+install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi.ini
+install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache.ini
+install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache2handler.ini
+install %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/php-cli.ini
 
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/httpd/icons
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/apache/icons
@@ -1902,333 +1900,311 @@ install %{SOURCE1} .
 
 cp -f Zend/LICENSE{,.Zend}
 
+# Generate stub .ini files for each subpackage
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/conf.d
+for so in modules/*.so; do
+	mod=$(basename $so .so)
+	cat > $RPM_BUILD_ROOT%{_sysconfdir}/conf.d/${mod}.ini <<EOF
+; Enable ${mod} extension module
+extension=${mod}.so
+EOF
+done
+
+# Not in all SAPI, so don't need the .ini fragments.
+rm -f $RPM_BUILD_ROOT%{_sysconfdir}/conf.d/{ncurses,pcntl,readline}.ini
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post -n apache1-mod_php4
-if [ -f /var/lock/subsys/apache ]; then
-	/etc/rc.d/init.d/apache restart 1>&2
-fi
+%service apache restart
 
 %postun -n apache1-mod_php4
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache restart 1>&2
-	fi
+	%service -q apache restart
 fi
 
 %post -n apache-mod_php4
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
+%service httpd restart
 
 %postun -n apache-mod_php4
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+	%service -q httpd restart
 fi
 
 %post	common -p /sbin/ldconfig
 %postun	common -p /sbin/ldconfig
 
-%post bcmath
-%{_sbindir}/php4-module-install install bcmath %{_sysconfdir}/php.ini
-
-%preun bcmath
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove bcmath %{_sysconfdir}/php.ini
+%if %{with apache2}
+%triggerpostun -n apache-mod_php4 -- apache-mod_php4 < 3:4.4.0-2.16, php4 < 3:4.3.11-4.16
+# for fixed php-SAPI.ini, the poor php-apache.ini was never read for apache2
+if [ -f %{_sysconfdir}/php-apache.ini.rpmsave ]; then
+	cp -f %{_sysconfdir}/php-apache2handler.ini{,.rpmnew}
+	mv -f %{_sysconfdir}/php-apache.ini.rpmsave %{_sysconfdir}/php-apache2handler.ini
 fi
+%endif
+
+%post bcmath
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+
+%triggerun bcmath -- %{name}-bcmath < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove bcmath %{_sysconfdir}/php.ini
 
 %post bzip2
-%{_sbindir}/php4-module-install install bz2 %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun bzip2
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove bz2 %{_sysconfdir}/php.ini
-fi
+%triggerun bzip2 -- %{name}-bzip2 < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove bz2 %{_sysconfdir}/php.ini
 
 %post calendar
-%{_sbindir}/php4-module-install install calendar %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun calendar
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove calendar %{_sysconfdir}/php.ini
-fi
+%triggerun calendar -- %{name}-calendar < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove calendar %{_sysconfdir}/php.ini
 
 %post cpdf
-%{_sbindir}/php4-module-install install cpdf %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun cpdf
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove cpdf %{_sysconfdir}/php.ini
-fi
+%triggerun cpdf -- %{name}-cpdf < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove cpdf %{_sysconfdir}/php.ini
 
 %post crack
-%{_sbindir}/php4-module-install install crack %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun crack
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove crack %{_sysconfdir}/php.ini
-fi
+%triggerun crack -- %{name}-crack < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove crack %{_sysconfdir}/php.ini
 
 %post ctype
-%{_sbindir}/php4-module-install install ctype %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun ctype
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ctype %{_sysconfdir}/php.ini
-fi
+%triggerun ctype -- %{name}-ctype < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ctype %{_sysconfdir}/php.ini
 
 %post curl
-%{_sbindir}/php4-module-install install curl %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun curl
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove curl %{_sysconfdir}/php.ini
-fi
+%triggerun curl -- %{name}-curl < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove curl %{_sysconfdir}/php.ini
 
 %post db
-%{_sbindir}/php4-module-install install db %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun db
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove db %{_sysconfdir}/php.ini
-fi
+%triggerun db -- %{name}-db < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove db %{_sysconfdir}/php.ini
 
 %post dba
-%{_sbindir}/php4-module-install install dba %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun dba
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dba %{_sysconfdir}/php.ini
-fi
+%triggerun dba -- %{name}-dba < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dba %{_sysconfdir}/php.ini
 
 %post dbase
-%{_sbindir}/php4-module-install install dbase %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun dbase
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dbase %{_sysconfdir}/php.ini
-fi
+%triggerun dbase -- %{name}-dbase < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dbase %{_sysconfdir}/php.ini
 
 %post dbx
-%{_sbindir}/php4-module-install install dbx %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun dbx
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dbx %{_sysconfdir}/php.ini
-fi
+%triggerun dbx -- %{name}-dbx < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dbx %{_sysconfdir}/php.ini
 
 %post dio
-%{_sbindir}/php4-module-install install dio %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun dio
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dio %{_sysconfdir}/php.ini
-fi
+%triggerun dio -- %{name}-dio < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dio %{_sysconfdir}/php.ini
 
 %post domxml
-%{_sbindir}/php4-module-install install domxml %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun domxml
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove domxml %{_sysconfdir}/php.ini
-fi
+%triggerun domxml -- %{name}-domxml < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove domxml %{_sysconfdir}/php.ini
 
 %post exif
-%{_sbindir}/php4-module-install install exif %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun exif
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove exif %{_sysconfdir}/php.ini
-fi
+%triggerun exif -- %{name}-exif < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove exif %{_sysconfdir}/php.ini
 
 %post fdf
-%{_sbindir}/php4-module-install install fdf %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun fdf
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove fdf %{_sysconfdir}/php.ini
-fi
+%triggerun fdf -- %{name}-fdf < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove fdf %{_sysconfdir}/php.ini
 
 %post filepro
-%{_sbindir}/php4-module-install install filepro %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun filepro
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove filepro %{_sysconfdir}/php.ini
-fi
+%triggerun filepro -- %{name}-filepro < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove filepro %{_sysconfdir}/php.ini
 
 %post fribidi
-%{_sbindir}/php4-module-install install fribidi %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun fribidi
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove fribidi %{_sysconfdir}/php.ini
-fi
+%triggerun fribidi -- %{name}-fribidi < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove fribidi %{_sysconfdir}/php.ini
 
 %post ftp
-%{_sbindir}/php4-module-install install ftp %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun ftp
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ftp %{_sysconfdir}/php.ini
-fi
+%triggerun ftp -- %{name}-ftp < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ftp %{_sysconfdir}/php.ini
 
 %post gd
-%{_sbindir}/php4-module-install install gd %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun gd
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gd %{_sysconfdir}/php.ini
-fi
+%triggerun gd -- %{name}-gd < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gd %{_sysconfdir}/php.ini
 
 %post gettext
-%{_sbindir}/php4-module-install install gettext %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun gettext
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gettext %{_sysconfdir}/php.ini
-fi
+%triggerun gettext -- %{name}-gettext < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gettext %{_sysconfdir}/php.ini
 
 %post gmp
-%{_sbindir}/php4-module-install install gmp %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun gmp
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gmp %{_sysconfdir}/php.ini
-fi
+%triggerun gmp -- %{name}-gmp < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gmp %{_sysconfdir}/php.ini
 
 %post hyperwave
-%{_sbindir}/php4-module-install install hyperwave %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun hyperwave
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove hyperwave %{_sysconfdir}/php.ini
-fi
+%triggerun hyperwave -- %{name}-hyperwave < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove hyperwave %{_sysconfdir}/php.ini
 
 %post iconv
-%{_sbindir}/php4-module-install install iconv %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun iconv
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove iconv %{_sysconfdir}/php.ini
-fi
+%triggerun iconv -- %{name}-iconv < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove iconv %{_sysconfdir}/php.ini
 
 %post imap
-%{_sbindir}/php4-module-install install imap %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun imap
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove imap %{_sysconfdir}/php.ini
-fi
+%triggerun imap -- %{name}-imap < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove imap %{_sysconfdir}/php.ini
 
 %post interbase
-%{_sbindir}/php4-module-install install interbase %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun interbase
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove interbase %{_sysconfdir}/php.ini
-fi
+%triggerun interbase -- %{name}-interbase < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove interbase %{_sysconfdir}/php.ini
 
 %post java
-%{_sbindir}/php4-module-install install java %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun java
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove java %{_sysconfdir}/php.ini
-fi
+%triggerun java -- %{name}-java < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove java %{_sysconfdir}/php.ini
 
 %post ldap
-%{_sbindir}/php4-module-install install ldap %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun ldap
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ldap %{_sysconfdir}/php.ini
-fi
+%triggerun ldap -- %{name}-ldap < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ldap %{_sysconfdir}/php.ini
 
 %post mbstring
-%{_sbindir}/php4-module-install install mbstring %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun mbstring
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mbstring %{_sysconfdir}/php.ini
-fi
+%triggerun mbstring -- %{name}-mbstring < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mbstring %{_sysconfdir}/php.ini
 
 %post mcal
-%{_sbindir}/php4-module-install install mcal %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun mcal
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mcal %{_sysconfdir}/php.ini
-fi
+%triggerun mcal -- %{name}-mcal < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mcal %{_sysconfdir}/php.ini
 
 %post mcrypt
-%{_sbindir}/php4-module-install install mcrypt %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun mcrypt
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mcrypt %{_sysconfdir}/php.ini
-fi
+%triggerun mcrypt -- %{name}-mcrypt < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mcrypt %{_sysconfdir}/php.ini
 
 %post mhash
-%{_sbindir}/php4-module-install install mhash %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun mhash
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mhash %{_sysconfdir}/php.ini
-fi
+%triggerun mhash -- %{name}-mhash < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mhash %{_sysconfdir}/php.ini
 
 %post mime_magic
-%{_sbindir}/php4-module-install install mime_magic %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun mime_magic
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mime_magic %{_sysconfdir}/php.ini
-fi
+%triggerun mime_magic -- %{name}-mime_magic < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mime_magic %{_sysconfdir}/php.ini
 
 %post ming
-%{_sbindir}/php4-module-install install ming %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun ming
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ming %{_sysconfdir}/php.ini
-fi
+%triggerun ming -- %{name}-ming < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ming %{_sysconfdir}/php.ini
 
 %post mnogosearch
-%{_sbindir}/php4-module-install install mnogosearch %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun mnogosearch
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mnogosearch %{_sysconfdir}/php.ini
-fi
+%triggerun mnogosearch -- %{name}-mnogosearch < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mnogosearch %{_sysconfdir}/php.ini
 
 %post msession
-%{_sbindir}/php4-module-install install msession %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun msession
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove msession %{_sysconfdir}/php.ini
-fi
+%triggerun msession -- %{name}-msession < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove msession %{_sysconfdir}/php.ini
 
 %post mssql
-%{_sbindir}/php4-module-install install mssql %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun mssql
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mssql %{_sysconfdir}/php.ini
-fi
+%triggerun mssql -- %{name}-mssql < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mssql %{_sysconfdir}/php.ini
 
 %post mysql
-%{_sbindir}/php4-module-install install mysql %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun mysql
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mysql %{_sysconfdir}/php.ini
-fi
+%triggerun mysql -- %{name}-mysql < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mysql %{_sysconfdir}/php.ini
 
 %post ncurses
+# NOTE: only for cli/cgi
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cgi.ini
 fi
@@ -2236,7 +2212,7 @@ if [ -f %{_sysconfdir}/php-cli.ini ]; then
 	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cli.ini
 fi
 
-%preun ncurses
+%preun ncurses 
 if [ "$1" = "0" ]; then
 	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cgi.ini
@@ -2247,54 +2223,50 @@ if [ "$1" = "0" ]; then
 fi
 
 %post oci8
-%{_sbindir}/php4-module-install install oci8 %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun oci8
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove oci8 %{_sysconfdir}/php.ini
-fi
+%triggerun oci8 -- %{name}-oci8 < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove oci8 %{_sysconfdir}/php.ini
 
 %post odbc
-%{_sbindir}/php4-module-install install odbc %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun odbc
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove odbc %{_sysconfdir}/php.ini
-fi
+%triggerun odbc -- %{name}-odbc < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove odbc %{_sysconfdir}/php.ini
 
 %post openssl
-%{_sbindir}/php4-module-install install openssl %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun openssl
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove openssl %{_sysconfdir}/php.ini
-fi
+%triggerun openssl -- %{name}-openssl < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove openssl %{_sysconfdir}/php.ini
 
 %post oracle
-%{_sbindir}/php4-module-install install oracle %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun oracle
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove oracle %{_sysconfdir}/php.ini
-fi
+%triggerun oracle -- %{name}-oracle < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove oracle %{_sysconfdir}/php.ini
 
 %post overload
-%{_sbindir}/php4-module-install install overload %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun overload
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove overload %{_sysconfdir}/php.ini
-fi
+%triggerun overload -- %{name}-overload < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove overload %{_sysconfdir}/php.ini
 
 %post pcntl
+# NOTE: only for cli/cgi
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cgi.ini
+	%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cgi.ini
 fi
 if [ -f %{_sysconfdir}/php-cli.ini ]; then
-%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cli.ini
+	%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cli.ini
 fi
 
-%preun pcntl
+%preun pcntl 
 if [ "$1" = "0" ]; then
 	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
@@ -2305,54 +2277,49 @@ if [ "$1" = "0" ]; then
 fi
 
 %post pcre
-%{_sbindir}/php4-module-install install pcre %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun pcre
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcre %{_sysconfdir}/php.ini
-fi
+%triggerun pcre -- %{name}-pcre < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcre %{_sysconfdir}/php.ini
 
 %post pdf
-%{_sbindir}/php4-module-install install pdf %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun pdf
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pdf %{_sysconfdir}/php.ini
-fi
+%triggerun pdf -- %{name}-pdf < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pdf %{_sysconfdir}/php.ini
 
 %post pgsql
-%{_sbindir}/php4-module-install install pgsql %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun pgsql
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pgsql %{_sysconfdir}/php.ini
-fi
+%triggerun pgsql -- %{name}-pgsql < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pgsql %{_sysconfdir}/php.ini
 
 %post posix
-%{_sbindir}/php4-module-install install posix %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun posix
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove posix %{_sysconfdir}/php.ini
-fi
+%triggerun posix -- %{name}-posix < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove posix %{_sysconfdir}/php.ini
 
 %post pspell
-%{_sbindir}/php4-module-install install pspell %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun pspell
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pspell %{_sysconfdir}/php.ini
-fi
+%triggerun pspell -- %{name}-pspell < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pspell %{_sysconfdir}/php.ini
 
 %post qtdom
-%{_sbindir}/php4-module-install install qtdom %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun qtdom
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove qtdom %{_sysconfdir}/php.ini
-fi
+%triggerun qtdom -- %{name}-qtdom < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove qtdom %{_sysconfdir}/php.ini
 
 %post readline
+# NOTE: only for cli/cgi
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 	%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cgi.ini
 fi
@@ -2371,148 +2338,130 @@ if [ "$1" = "0" ]; then
 fi
 
 %post recode
-%{_sbindir}/php4-module-install install recode %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun recode
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove recode %{_sysconfdir}/php.ini
-fi
+%triggerun recode -- %{name}-recode < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove recode %{_sysconfdir}/php.ini
 
 %post session
-%{_sbindir}/php4-module-install install session %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun session
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove session %{_sysconfdir}/php.ini
-fi
+%triggerun session -- %{name}-session < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove session %{_sysconfdir}/php.ini
 
 %post shmop
-%{_sbindir}/php4-module-install install shmop %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun shmop
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove shmop %{_sysconfdir}/php.ini
-fi
+%triggerun shmop -- %{name}-shmop < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove shmop %{_sysconfdir}/php.ini
 
 %post snmp
-%{_sbindir}/php4-module-install install snmp %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun snmp
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove snmp %{_sysconfdir}/php.ini
-fi
+%triggerun snmp -- %{name}-snmp < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove snmp %{_sysconfdir}/php.ini
 
 %post sockets
-%{_sbindir}/php4-module-install install sockets %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun sockets
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sockets %{_sysconfdir}/php.ini
-fi
+%triggerun sockets -- %{name}-sockets < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sockets %{_sysconfdir}/php.ini
 
 %post sybase
-%{_sbindir}/php4-module-install install sybase %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun sybase
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sybase %{_sysconfdir}/php.ini
-fi
+%triggerun sybase -- %{name}-sybase < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sybase %{_sysconfdir}/php.ini
 
 %post sybase-ct
-%{_sbindir}/php4-module-install install sybase_ct %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun sybase-ct
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sybase_ct %{_sysconfdir}/php.ini
-fi
+%triggerun sybase-ct -- %{name}-sybase-ct < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sybase_ct %{_sysconfdir}/php.ini
 
 %post sysvmsg
-%{_sbindir}/php4-module-install install sysvmsg %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun sysvmsg
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sysvmsg %{_sysconfdir}/php.ini
-fi
+%triggerun sysvmsg -- %{name}-sysvmsg < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sysvmsg %{_sysconfdir}/php.ini
 
 %post sysvsem
-%{_sbindir}/php4-module-install install sysvsem %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun sysvsem
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sysvsem %{_sysconfdir}/php.ini
-fi
+%triggerun sysvsem -- %{name}-sysvsem < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sysvsem %{_sysconfdir}/php.ini
 
 %post sysvshm
-%{_sbindir}/php4-module-install install sysvshm %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun sysvshm
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sysvshm %{_sysconfdir}/php.ini
-fi
+%triggerun sysvshm -- %{name}-sysvshm < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sysvshm %{_sysconfdir}/php.ini
 
 %post wddx
-%{_sbindir}/php4-module-install install wddx %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun wddx
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove wddx %{_sysconfdir}/php.ini
-fi
+%triggerun wddx -- %{name}-wddx < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove wddx %{_sysconfdir}/php.ini
 
 %post xml
-%{_sbindir}/php4-module-install install xml %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun xml
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove xml %{_sysconfdir}/php.ini
-fi
+%triggerun xml -- %{name}-xml < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove xml %{_sysconfdir}/php.ini
 
 %post xmlrpc
-%{_sbindir}/php4-module-install install xmlrpc %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun xmlrpc
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove xmlrpc %{_sysconfdir}/php.ini
-fi
+%triggerun xmlrpc -- %{name}-xmlrpc < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove xmlrpc %{_sysconfdir}/php.ini
 
 %post xslt
-%{_sbindir}/php4-module-install install xslt %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun xslt
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove xslt %{_sysconfdir}/php.ini
-fi
+%triggerun xslt -- %{name}-xslt < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove xslt %{_sysconfdir}/php.ini
 
 %post yaz
-%{_sbindir}/php4-module-install install yaz %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun yaz
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove yaz %{_sysconfdir}/php.ini
-fi
+%triggerun yaz -- %{name}-yaz < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove yaz %{_sysconfdir}/php.ini
 
 %post yp
-%{_sbindir}/php4-module-install install yp %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun yp
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove yp %{_sysconfdir}/php.ini
-fi
+%triggerun yp -- %{name}-yp < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove yp %{_sysconfdir}/php.ini
 
 %post zip
-%{_sbindir}/php4-module-install install zip %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun zip
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove zip %{_sysconfdir}/php.ini
-fi
+%triggerun zip -- %{name}-zip < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove zip %{_sysconfdir}/php.ini
 
 %post zlib
-%{_sbindir}/php4-module-install install zlib %{_sysconfdir}/php.ini
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
-%preun zlib
-if [ "$1" = "0" ]; then
-	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove zlib %{_sysconfdir}/php.ini
-fi
+%triggerun zlib -- %{name}-zlib < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove zlib %{_sysconfdir}/php.ini
 
 #%files
 #%defattr(644,root,root,755)
@@ -2522,9 +2471,6 @@ fi
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/apache/conf.d/*_mod_php4.conf
 %attr(755,root,root) %{_libdir}/apache1/libphp4.so
-# FIXME
-# - really share config with apache1/apache2?
-# - name it by real sapi name? (apxs, apxs2?)
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 /home/services/apache/icons/*
 %endif
@@ -2534,14 +2480,13 @@ fi
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php4.conf
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache2handler.ini
 /home/services/httpd/icons/*
 %endif
 
 %files fcgi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/php4.fcgi
-# FIXME why not php-fcgi.ini?
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cgi-fcgi.ini
 
 %files cgi
@@ -2552,10 +2497,10 @@ fi
 %files cli
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/php4.cli
-%attr(755,root,root) %{_bindir}/php4
 # TODO
 # - what about _bindir/php symlink?
 # - do it same way link /usr/src/linux is done, ie each package updates symlink
+%attr(755,root,root) %{_bindir}/php4
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cli.ini
 %{_mandir}/man1/php4.1*
 
@@ -2567,6 +2512,7 @@ fi
 %doc README.EXT_SKEL README.SELF-CONTAINED-EXTENSIONS
 
 %dir %{_sysconfdir}
+%dir %{_sysconfdir}/conf.d
 %attr(644,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php.ini
 %attr(770,root,http) %dir %verify(not group mode) /var/run/php
 %attr(755,root,root) %{_sbindir}/php4-module-install
@@ -2587,122 +2533,148 @@ fi
 
 %files bcmath
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/bcmath.ini
 %attr(755,root,root) %{extensionsdir}/bcmath.so
 
 %files bzip2
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/bz2.ini
 %attr(755,root,root) %{extensionsdir}/bz2.so
 
 %files calendar
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/calendar.ini
 %attr(755,root,root) %{extensionsdir}/calendar.so
 
 %if %{with cpdf}
 %files cpdf
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/cpdf.ini
 %attr(755,root,root) %{extensionsdir}/cpdf.so
 %endif
 
 %files crack
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/crack.ini
 %attr(755,root,root) %{extensionsdir}/crack.so
 
 %files ctype
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/ctype.ini
 %attr(755,root,root) %{extensionsdir}/ctype.so
 
 %if %{with curl}
 %files curl
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/curl.ini
 %attr(755,root,root) %{extensionsdir}/curl.so
 %endif
 
 %files db
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/db.ini
 %attr(755,root,root) %{extensionsdir}/db.so
 
 %files dba
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/dba.ini
 %attr(755,root,root) %{extensionsdir}/dba.so
 
 %files dbase
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/dbase.ini
 %attr(755,root,root) %{extensionsdir}/dbase.so
 
 %files dbx
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/dbx.ini
 %attr(755,root,root) %{extensionsdir}/dbx.so
 
 %files dio
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/dio.ini
 %attr(755,root,root) %{extensionsdir}/dio.so
 
 %if %{with xml}
 %files domxml
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/domxml.ini
 %attr(755,root,root) %{extensionsdir}/domxml.so
 %endif
 
 %if %{with fdf}
 %files fdf
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/fdf.ini
 %attr(755,root,root) %{extensionsdir}/fdf.so
 %endif
 
 %files exif
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/exif.ini
 %attr(755,root,root) %{extensionsdir}/exif.so
 
 %files filepro
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/filepro.ini
 %attr(755,root,root) %{extensionsdir}/filepro.so
 
 %if %{with fribidi}
 %files fribidi
 %defattr(644,root,root,755)
 %doc ext/fribidi/{CREDITS,README}
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/fribidi.ini
 %attr(755,root,root) %{extensionsdir}/fribidi.so
 %endif
 
 %files ftp
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/ftp.ini
 %attr(755,root,root) %{extensionsdir}/ftp.so
 
 %files gd
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/gd.ini
 %attr(755,root,root) %{extensionsdir}/gd.so
 
 %files gettext
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/gettext.ini
 %attr(755,root,root) %{extensionsdir}/gettext.so
 
 %files gmp
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/gmp.ini
 %attr(755,root,root) %{extensionsdir}/gmp.so
 
 %files hyperwave
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/hyperwave.ini
 %attr(755,root,root) %{extensionsdir}/hyperwave.so
 
 %files iconv
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/iconv.ini
 %attr(755,root,root) %{extensionsdir}/iconv.so
 
 %if %{with imap}
 %files imap
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/imap.ini
 %attr(755,root,root) %{extensionsdir}/imap.so
 %endif
 
 %if %{with interbase}
 %files interbase
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/interbase.ini
 %attr(755,root,root) %{extensionsdir}/interbase.so
 %endif
 
 %if %{with java}
 %files java
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/java.ini
 %attr(755,root,root) %{extensionsdir}/java.so
 %{extensionsdir}/php_java.jar
 %endif
@@ -2710,57 +2682,68 @@ fi
 %if %{with ldap}
 %files ldap
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/ldap.ini
 %attr(755,root,root) %{extensionsdir}/ldap.so
 %endif
 
 %files mbstring
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mbstring.ini
 %attr(755,root,root) %{extensionsdir}/mbstring.so
 
 %files mcal
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mcal.ini
 %attr(755,root,root) %{extensionsdir}/mcal.so
 
 %files mcrypt
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mcrypt.ini
 %attr(755,root,root) %{extensionsdir}/mcrypt.so
 
 %if %{with mhash}
 %files mhash
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mhash.ini
 %attr(755,root,root) %{extensionsdir}/mhash.so
 %endif
 
 %files mime_magic
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mime_magic.ini
 %attr(755,root,root) %{extensionsdir}/mime_magic.so
 
 %if %{with ming}
 %files ming
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/ming.ini
 %attr(755,root,root) %{extensionsdir}/ming.so
 %endif
 
 %if %{with mnogosearch}
 %files mnogosearch
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mnogosearch.ini
 %attr(755,root,root) %{extensionsdir}/mnogosearch.so
 %endif
 
 %if %{with msession}
 %files msession
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/msession.ini
 %attr(755,root,root) %{extensionsdir}/msession.so
 %endif
 
 %if %{with mssql}
 %files mssql
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mssql.ini
 %attr(755,root,root) %{extensionsdir}/mssql.so
 %endif
 
 %files mysql
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mysql.ini
 %attr(755,root,root) %{extensionsdir}/mysql.so
 
 %files ncurses
@@ -2770,29 +2753,34 @@ fi
 %if %{with oci8}
 %files oci8
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/oci8.ini
 %attr(755,root,root) %{extensionsdir}/oci8.so
 %endif
 
 %if %{with odbc}
 %files odbc
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/odbc.ini
 %attr(755,root,root) %{extensionsdir}/odbc.so
 %endif
 
 %if %{with openssl}
 %files openssl
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/openssl.ini
 %attr(755,root,root) %{extensionsdir}/openssl.so
 %endif
 
 %if %{with oracle}
 %files oracle
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/oracle.ini
 %attr(755,root,root) %{extensionsdir}/oracle.so
 %endif
 
 %files overload
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/overload.ini
 %attr(755,root,root) %{extensionsdir}/overload.so
 
 %files pcntl
@@ -2802,34 +2790,40 @@ fi
 %if %{with pcre}
 %files pcre
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/pcre.ini
 %attr(755,root,root) %{extensionsdir}/pcre.so
 %endif
 
 %if %{with pdf}
 %files pdf
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/pdf.ini
 %attr(755,root,root) %{extensionsdir}/pdf.so
 %endif
 
 %if %{with pgsql}
 %files pgsql
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/pgsql.ini
 %attr(755,root,root) %{extensionsdir}/pgsql.so
 %endif
 
 %files posix
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/posix.ini
 %attr(755,root,root) %{extensionsdir}/posix.so
 
 %if %{with pspell}
 %files pspell
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/pspell.ini
 %attr(755,root,root) %{extensionsdir}/pspell.so
 %endif
 
 %if %{with qtdom}
 %files qtdom
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/qtdom.ini
 %attr(755,root,root) %{extensionsdir}/qtdom.so
 %endif
 
@@ -2840,88 +2834,106 @@ fi
 %if %{with recode}
 %files recode
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/recode.ini
 %attr(755,root,root) %{extensionsdir}/recode.so
 %endif
 
 # session_mm doesn't work with shared session
 #%files session
 #%defattr(644,root,root,755)
+#%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/session.ini
 #%attr(755,root,root) %{extensionsdir}/session.so
 
 %files shmop
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/shmop.ini
 %attr(755,root,root) %{extensionsdir}/shmop.so
 
 %if %{with snmp}
 %files snmp
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/snmp.ini
 %attr(755,root,root) %{extensionsdir}/snmp.so
 %endif
 
 %files sockets
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sockets.ini
 %attr(755,root,root) %{extensionsdir}/sockets.so
 
 %if %{with sybase}
 %files sybase
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sybase.ini
 %attr(755,root,root) %{extensionsdir}/sybase.so
 
 %files sybase-ct
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sybase_ct.ini
 %attr(755,root,root) %{extensionsdir}/sybase_ct.so
 %endif
 
 %files sysvmsg
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sysvmsg.ini
 %attr(755,root,root) %{extensionsdir}/sysvmsg.so
 
 %files sysvsem
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sysvsem.ini
 %attr(755,root,root) %{extensionsdir}/sysvsem.so
 
 %files sysvshm
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sysvshm.ini
 %attr(755,root,root) %{extensionsdir}/sysvshm.so
 
 %if %{with wddx}
 %files wddx
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/wddx.ini
 %attr(755,root,root) %{extensionsdir}/wddx.so
 %endif
 
 %if %{with xml}
 %files xml
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/xml.ini
 %attr(755,root,root) %{extensionsdir}/xml.so
 %endif
 
 %if %{with xmlrpc}
 %files xmlrpc
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/xmlrpc.ini
 %attr(755,root,root) %{extensionsdir}/xmlrpc.so
 %endif
 
 %if %{with xslt}
 %files xslt
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/xslt.ini
 %attr(755,root,root) %{extensionsdir}/xslt.so
 %endif
 
 %if %{with yaz}
 %files yaz
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/yaz.ini
 %attr(755,root,root) %{extensionsdir}/yaz.so
 %endif
 
 %files yp
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/yp.ini
 %attr(755,root,root) %{extensionsdir}/yp.so
 
 %files zip
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/zip.ini
 %attr(755,root,root) %{extensionsdir}/zip.so
 
 %files zlib
 %defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/zlib.ini
 %attr(755,root,root) %{extensionsdir}/zlib.so
