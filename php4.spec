@@ -1854,13 +1854,14 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}/{apache,cg
 	$RPM_BUILD_ROOT%{_mandir}/man1
 
 # install apache1 DSO module
-# LIBTOOL GURUS COULD LOOK AT THIS MESS AND THROW THEIR GOOD IDEAS HERE
 %if %{with apache1}
+# TODO: use libtool here
 install sapi/apache/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache1/libphp4.so
 %endif
 
 # install apache2 DSO module
 %if %{with apache2}
+# TODO: use libtool here
 install sapi/apache2handler/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.so
 %endif
 
