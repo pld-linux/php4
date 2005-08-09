@@ -70,7 +70,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	3%{?with_hardening:hardened}
+Release:	4%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1104,25 +1104,6 @@ ModuЁ PHP ze wsparciem dla ODBC.
 %description odbc -l pt_BR
 Um mСdulo para aplicaГУes PHP que usam ODBC.
 
-%package openssl
-Summary:	OpenSSL extension module for PHP
-Summary(pl):	ModuЁ OpenSSL dla PHP
-Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Provides:	php-openssl = %{epoch}:%{version}-%{release}
-
-%description openssl
-This is a dynamic shared object (DSO) for PHP that will add OpenSSL
-support.
-
-Warning: this is an experimental module.
-
-%description openssl -l pl
-ModuЁ PHP umo©liwiaj╠cy korzystanie z biblioteki OpenSSL.
-
-Uwaga: to jest moduЁ eksperymentalny.
-
 %package oracle
 Summary:	Oracle 7 database module for PHP
 Summary(pl):	ModuЁ bazy danych Oracle 7 dla PHP
@@ -1773,7 +1754,7 @@ for sapi in $sapis; do
 	--with-mysql=shared,/usr --with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-ncurses=shared \
 	%{?with_oci8:--with-oci8=shared} \
-	%{?with_openssl:--with-openssl=shared,/usr} \
+	%{?with_openssl:--with-openssl} \
 	%{?with_oracle:--with-oracle=shared} \
 	%{!?with_pcre:--without-pcre-regex}%{?with_pcre:--with-pcre-regex=shared} \
 	%{?with_pdf:--with-pdflib=shared} \
@@ -2236,10 +2217,6 @@ fi
 
 %triggerun odbc -- %{name}-odbc < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove odbc %{_sysconfdir}/php.ini
-
-%post openssl
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
 
 %triggerun openssl -- %{name}-openssl < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove openssl %{_sysconfdir}/php.ini
@@ -2763,13 +2740,6 @@ fi
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/odbc.ini
 %attr(755,root,root) %{extensionsdir}/odbc.so
-%endif
-
-%if %{with openssl}
-%files openssl
-%defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/openssl.ini
-%attr(755,root,root) %{extensionsdir}/openssl.so
 %endif
 
 %if %{with oracle}
