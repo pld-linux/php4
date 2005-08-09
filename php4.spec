@@ -1,4 +1,7 @@
 #
+# Do NOT build openssl as shared module or
+# fsockopen('tls://host',...) will not work!
+#
 # TODO:
 # - make additional headers added by mail patch configurable
 # - /var/run/php group not owned
