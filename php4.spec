@@ -2222,8 +2222,8 @@ fi
 %triggerun odbc -- %{name}-odbc < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove odbc %{_sysconfdir}/php.ini
 
-%triggerun openssl -- %{name}-openssl < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove openssl %{_sysconfdir}/php.ini
+#%triggerun openssl -- %{name}-openssl < 3:4.4.0-2.1
+#[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove openssl %{_sysconfdir}/php.ini
 
 %post oracle
 [ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
