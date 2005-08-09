@@ -374,6 +374,7 @@ Provides:	%{name}-session = %{epoch}:%{version}-%{release}
 Provides:	php-common = %{epoch}:%{version}-%{release}
 Provides:	php-session = %{epoch}:%{version}-%{release}
 Obsoletes:	php-session < 3:4.2.1-2
+Obsoletes:	php4-openssl < 3:4.4.0-4
 
 %description common
 Common files needed by all PHP SAPIs.
