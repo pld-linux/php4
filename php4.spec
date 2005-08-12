@@ -73,7 +73,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	4.1%{?with_hardening:hardened}
+Release:	4.34%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -120,7 +120,7 @@ Patch27:	%{name}-db-shared.patch
 Patch28:	%{name}-sybase-fix.patch
 Patch29:	%{name}-lib64.patch
 Patch30:	%{name}-mnogosearch-fix.patch
-Patch31:	%{name}-stupidapache_version.patch 
+Patch31:	%{name}-stupidapache_version.patch
 Patch32:	%{name}-gd_imagerotate_enable.patch
 Patch33:	%{name}-uint32_t.patch
 Patch34:	%{name}-install_gd_headers.patch
@@ -1901,8 +1901,22 @@ rm -f $RPM_BUILD_ROOT%{_sysconfdir}/conf.d/{ncurses,pcntl,readline}.ini
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+# minimizing apache restarts logics:
+#
+# 1. we restart webserver after extension install only:
+# 1.1 if it's first install (post: $1 = 1)
+# 1.2 or uninstall of extension (postun: $1 == 0)
+# 2. the upgrades are handled by common package:
+# 2.1 webserver is restarted only if common package was upgraded (postun: $1 = 1)
+#
+# note that this creates "delay" when webserver is restarted, ie the
+# actual restart is done by *previous* version of php-common package
+# (the one being just postun'ed).
+
 %post -n apache1-mod_php4
-%service apache restart
+if [ "$1" = "1" ]; then
+	%service apache restart
+fi
 
 %postun -n apache1-mod_php4
 if [ "$1" = "0" ]; then
@@ -1910,15 +1924,35 @@ if [ "$1" = "0" ]; then
 fi
 
 %post -n apache-mod_php4
-%service httpd restart
+if [ "$1" = "1" ]; then
+	%service httpd restart
+fi
 
 %postun -n apache-mod_php4
 if [ "$1" = "0" ]; then
 	%service -q httpd restart
 fi
 
+# so tired of typing... so decided to create macros
+# macro called at extension post scriptlet
+%define	extension_post \
+if [ "$1" = "1" ]; then \
+	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart \
+	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart \
+fi
+
+# macro called at extension postun scriptlet
+%define	extension_postun \
+if [ "$1" = "0" ]; then \
+	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart \
+	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart \
+fi
+
 %post	common -p /sbin/ldconfig
-%postun	common -p /sbin/ldconfig
+%postun	common
+/sbin/ldconfig
+# extension_post here is all correct.
+%extension_post
 
 %if %{with apache2}
 %triggerpostun -- php4 < 3:4.3.11-4.16
@@ -1936,485 +1970,226 @@ fi
 %endif
 
 %post bcmath
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun bcmath
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun bcmath -- %{name}-bcmath < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove bcmath %{_sysconfdir}/php.ini
+%extension_postun
 
 %post bzip2
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun bzip2
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun bzip2 -- %{name}-bzip2 < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove bz2 %{_sysconfdir}/php.ini
+%extension_postun
 
 %post calendar
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun calendar
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun calendar -- %{name}-calendar < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove calendar %{_sysconfdir}/php.ini
+%extension_postun
 
 %post cpdf
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun cpdf
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun cpdf -- %{name}-cpdf < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove cpdf %{_sysconfdir}/php.ini
+%extension_postun
 
 %post crack
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun crack
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun crack -- %{name}-crack < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove crack %{_sysconfdir}/php.ini
+%extension_postun
 
 %post ctype
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun ctype
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun ctype -- %{name}-ctype < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ctype %{_sysconfdir}/php.ini
+%extension_postun
 
 %post curl
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun curl
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun curl -- %{name}-curl < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove curl %{_sysconfdir}/php.ini
+%extension_postun
 
 %post db
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun db
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun db -- %{name}-db < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove db %{_sysconfdir}/php.ini
+%extension_postun
 
 %post dba
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun dba
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun dba -- %{name}-dba < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dba %{_sysconfdir}/php.ini
+%extension_postun
 
 %post dbase
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun dbase
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun dbase -- %{name}-dbase < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dbase %{_sysconfdir}/php.ini
+%extension_postun
 
 %post dbx
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun dbx
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun dbx -- %{name}-dbx < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dbx %{_sysconfdir}/php.ini
+%extension_postun
 
 %post dio
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun dio
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun dio -- %{name}-dio < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dio %{_sysconfdir}/php.ini
+%extension_postun
 
 %post domxml
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun domxml
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun domxml -- %{name}-domxml < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove domxml %{_sysconfdir}/php.ini
+%extension_postun
 
 %post exif
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun exif
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun exif -- %{name}-exif < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove exif %{_sysconfdir}/php.ini
+%extension_postun
 
 %post fdf
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun fdf
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun fdf -- %{name}-fdf < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove fdf %{_sysconfdir}/php.ini
+%extension_postun
 
 %post filepro
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun filepro
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun filepro -- %{name}-filepro < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove filepro %{_sysconfdir}/php.ini
+%extension_postun
 
 %post fribidi
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun fribidi
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun fribidi -- %{name}-fribidi < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove fribidi %{_sysconfdir}/php.ini
+%extension_postun
 
 %post ftp
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun ftp
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun ftp -- %{name}-ftp < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ftp %{_sysconfdir}/php.ini
+%extension_postun
 
 %post gd
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun gd
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun gd -- %{name}-gd < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gd %{_sysconfdir}/php.ini
+%extension_postun
 
 %post gettext
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun gettext
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun gettext -- %{name}-gettext < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gettext %{_sysconfdir}/php.ini
+%extension_postun
 
 %post gmp
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun gmp
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun gmp -- %{name}-gmp < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gmp %{_sysconfdir}/php.ini
+%extension_postun
 
 %post hyperwave
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun hyperwave
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun hyperwave -- %{name}-hyperwave < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove hyperwave %{_sysconfdir}/php.ini
+%extension_postun
 
 %post iconv
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun iconv
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun iconv -- %{name}-iconv < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove iconv %{_sysconfdir}/php.ini
+%extension_postun
 
 %post imap
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun imap
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun imap -- %{name}-imap < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove imap %{_sysconfdir}/php.ini
+%extension_postun
 
 %post interbase
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun interbase
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun interbase -- %{name}-interbase < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove interbase %{_sysconfdir}/php.ini
+%extension_postun
 
 %post java
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun java
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun java -- %{name}-java < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove java %{_sysconfdir}/php.ini
+%extension_postun
 
 %post ldap
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun ldap
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun ldap -- %{name}-ldap < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ldap %{_sysconfdir}/php.ini
+%extension_postun
 
 %post mbstring
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun mbstring
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun mbstring -- %{name}-mbstring < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mbstring %{_sysconfdir}/php.ini
+%extension_postun
 
 %post mcal
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun mcal
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun mcal -- %{name}-mcal < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mcal %{_sysconfdir}/php.ini
+%extension_postun
 
 %post mcrypt
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun mcrypt
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun mcrypt -- %{name}-mcrypt < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mcrypt %{_sysconfdir}/php.ini
+%extension_postun
 
 %post mhash
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun mhash
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun mhash -- %{name}-mhash < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mhash %{_sysconfdir}/php.ini
+%extension_postun
 
 %post mime_magic
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun mime_magic
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun mime_magic -- %{name}-mime_magic < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mime_magic %{_sysconfdir}/php.ini
+%extension_postun
 
 %post ming
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun ming
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun ming -- %{name}-ming < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ming %{_sysconfdir}/php.ini
+%extension_postun
 
 %post mnogosearch
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun mnogosearch
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun mnogosearch -- %{name}-mnogosearch < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mnogosearch %{_sysconfdir}/php.ini
+%extension_postun
 
 %post msession
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun msession
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun msession -- %{name}-msession < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove msession %{_sysconfdir}/php.ini
+%extension_postun
 
 %post mssql
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun mssql
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun mssql -- %{name}-mssql < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mssql %{_sysconfdir}/php.ini
+%extension_postun
 
 %post mysql
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun mysql
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun mysql -- %{name}-mysql < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mysql %{_sysconfdir}/php.ini
+%extension_postun
 
 %post ncurses
 # NOTE: only for cli/cgi
@@ -2425,7 +2200,7 @@ if [ -f %{_sysconfdir}/php-cli.ini ]; then
 	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cli.ini
 fi
 
-%preun ncurses 
+%preun ncurses
 if [ "$1" = "0" ]; then
 	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cgi.ini
@@ -2436,60 +2211,28 @@ if [ "$1" = "0" ]; then
 fi
 
 %post oci8
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun oci8
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun oci8 -- %{name}-oci8 < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove oci8 %{_sysconfdir}/php.ini
+%extension_postun
 
 %post odbc
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun odbc
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun odbc -- %{name}-odbc < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove odbc %{_sysconfdir}/php.ini
-
-# openssl trigger on common package. it removes shared openssl module from php.ini, if it was there.
-%triggerun common -- %{name}-openssl < 3:4.4.0-4
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove openssl %{_sysconfdir}/php.ini
+%extension_postun
 
 %post oracle
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun oracle
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun oracle -- %{name}-oracle < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove oracle %{_sysconfdir}/php.ini
+%extension_postun
 
 %post overload
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun overload
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun overload -- %{name}-overload < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove overload %{_sysconfdir}/php.ini
+%extension_postun
 
 %post pcntl
 # NOTE: only for cli/cgi
@@ -2500,7 +2243,7 @@ if [ -f %{_sysconfdir}/php-cli.ini ]; then
 	%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cli.ini
 fi
 
-%preun pcntl 
+%preun pcntl
 if [ "$1" = "0" ]; then
 	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
@@ -2511,82 +2254,40 @@ if [ "$1" = "0" ]; then
 fi
 
 %post pcre
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun pcre
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun pcre -- %{name}-pcre < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcre %{_sysconfdir}/php.ini
+%extension_postun
 
 %post pdf
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun pdf
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun pdf -- %{name}-pdf < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pdf %{_sysconfdir}/php.ini
+%extension_postun
 
 %post pgsql
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun pgsql
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun pgsql -- %{name}-pgsql < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pgsql %{_sysconfdir}/php.ini
+%extension_postun
 
 %post posix
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun posix
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun posix -- %{name}-posix < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove posix %{_sysconfdir}/php.ini
+%extension_postun
 
 %post pspell
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun pspell
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun pspell -- %{name}-pspell < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pspell %{_sysconfdir}/php.ini
+%extension_postun
 
 %post qtdom
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun qtdom
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
-%triggerun qtdom -- %{name}-qtdom < 3:4.4.0-2.1
-[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove qtdom %{_sysconfdir}/php.ini
+%extension_postun
 
 %post readline
 # NOTE: only for cli/cgi
@@ -2608,241 +2309,311 @@ if [ "$1" = "0" ]; then
 fi
 
 %post recode
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+%extension_post
 
 %postun recode
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
+%extension_postun
+
+%post session
+%extension_post
+
+%postun session
+%extension_postun
+
+%post shmop
+%extension_post
+
+%postun shmop
+%extension_postun
+
+%post snmp
+%extension_post
+
+%postun snmp
+%extension_postun
+
+%post sockets
+%extension_post
+
+%postun sockets
+%extension_postun
+
+%post sybase
+%extension_post
+
+%postun sybase
+%extension_postun
+
+%post sybase-ct
+%extension_post
+
+%postun sybase-ct
+%extension_postun
+
+%post sysvmsg
+%extension_post
+
+%postun sysvmsg
+%extension_postun
+
+%post sysvsem
+%extension_post
+
+%postun sysvsem
+%extension_postun
+
+%post sysvshm
+%extension_post
+
+%postun sysvshm
+%extension_postun
+
+%post wddx
+%extension_post
+
+%postun wddx
+%extension_postun
+
+%post xml
+%extension_post
+
+%postun xml
+%extension_postun
+
+%post xmlrpc
+%extension_post
+
+%postun xmlrpc
+%extension_postun
+
+%post xslt
+%extension_post
+
+%postun xslt
+%extension_postun
+
+%post yaz
+%extension_post
+
+%postun yaz
+%extension_postun
+
+%post yp
+%extension_post
+
+%postun yp
+%extension_postun
+
+%post zip
+%extension_post
+
+%postun zip
+%extension_postun
+
+%post zlib
+%extension_post
+
+%postun zlib
+%extension_postun
+
+# openssl trigger on common package. it removes shared openssl module from php.ini, if it was there.
+%triggerun common -- %{name}-openssl < 3:4.4.0-4
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove openssl %{_sysconfdir}/php.ini
+
+%triggerun bcmath -- %{name}-bcmath < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove bcmath %{_sysconfdir}/php.ini
+
+%triggerun bzip2 -- %{name}-bzip2 < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove bz2 %{_sysconfdir}/php.ini
+
+%triggerun calendar -- %{name}-calendar < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove calendar %{_sysconfdir}/php.ini
+
+%triggerun cpdf -- %{name}-cpdf < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove cpdf %{_sysconfdir}/php.ini
+
+%triggerun crack -- %{name}-crack < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove crack %{_sysconfdir}/php.ini
+
+%triggerun ctype -- %{name}-ctype < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ctype %{_sysconfdir}/php.ini
+
+%triggerun curl -- %{name}-curl < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove curl %{_sysconfdir}/php.ini
+
+%triggerun db -- %{name}-db < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove db %{_sysconfdir}/php.ini
+
+%triggerun dba -- %{name}-dba < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dba %{_sysconfdir}/php.ini
+
+%triggerun dbase -- %{name}-dbase < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dbase %{_sysconfdir}/php.ini
+
+%triggerun dbx -- %{name}-dbx < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dbx %{_sysconfdir}/php.ini
+
+%triggerun dio -- %{name}-dio < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove dio %{_sysconfdir}/php.ini
+
+%triggerun domxml -- %{name}-domxml < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove domxml %{_sysconfdir}/php.ini
+
+%triggerun exif -- %{name}-exif < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove exif %{_sysconfdir}/php.ini
+
+%triggerun fdf -- %{name}-fdf < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove fdf %{_sysconfdir}/php.ini
+
+%triggerun filepro -- %{name}-filepro < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove filepro %{_sysconfdir}/php.ini
+
+%triggerun fribidi -- %{name}-fribidi < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove fribidi %{_sysconfdir}/php.ini
+
+%triggerun ftp -- %{name}-ftp < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ftp %{_sysconfdir}/php.ini
+
+%triggerun gd -- %{name}-gd < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gd %{_sysconfdir}/php.ini
+
+%triggerun gettext -- %{name}-gettext < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gettext %{_sysconfdir}/php.ini
+
+%triggerun gmp -- %{name}-gmp < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove gmp %{_sysconfdir}/php.ini
+
+%triggerun hyperwave -- %{name}-hyperwave < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove hyperwave %{_sysconfdir}/php.ini
+
+%triggerun iconv -- %{name}-iconv < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove iconv %{_sysconfdir}/php.ini
+
+%triggerun imap -- %{name}-imap < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove imap %{_sysconfdir}/php.ini
+
+%triggerun interbase -- %{name}-interbase < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove interbase %{_sysconfdir}/php.ini
+
+%triggerun java -- %{name}-java < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove java %{_sysconfdir}/php.ini
+
+%triggerun ldap -- %{name}-ldap < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ldap %{_sysconfdir}/php.ini
+
+%triggerun mbstring -- %{name}-mbstring < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mbstring %{_sysconfdir}/php.ini
+
+%triggerun mcal -- %{name}-mcal < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mcal %{_sysconfdir}/php.ini
+
+%triggerun mcrypt -- %{name}-mcrypt < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mcrypt %{_sysconfdir}/php.ini
+
+%triggerun mhash -- %{name}-mhash < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mhash %{_sysconfdir}/php.ini
+
+%triggerun mime_magic -- %{name}-mime_magic < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mime_magic %{_sysconfdir}/php.ini
+
+%triggerun ming -- %{name}-ming < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ming %{_sysconfdir}/php.ini
+
+%triggerun mnogosearch -- %{name}-mnogosearch < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mnogosearch %{_sysconfdir}/php.ini
+
+%triggerun msession -- %{name}-msession < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove msession %{_sysconfdir}/php.ini
+
+%triggerun mssql -- %{name}-mssql < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mssql %{_sysconfdir}/php.ini
+
+%triggerun mysql -- %{name}-mysql < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mysql %{_sysconfdir}/php.ini
+
+%triggerun oci8 -- %{name}-oci8 < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove oci8 %{_sysconfdir}/php.ini
+
+%triggerun odbc -- %{name}-odbc < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove odbc %{_sysconfdir}/php.ini
+
+%triggerun oracle -- %{name}-oracle < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove oracle %{_sysconfdir}/php.ini
+
+%triggerun overload -- %{name}-overload < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove overload %{_sysconfdir}/php.ini
+
+%triggerun pcre -- %{name}-pcre < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcre %{_sysconfdir}/php.ini
+
+%triggerun pdf -- %{name}-pdf < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pdf %{_sysconfdir}/php.ini
+
+%triggerun pgsql -- %{name}-pgsql < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pgsql %{_sysconfdir}/php.ini
+
+%triggerun posix -- %{name}-posix < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove posix %{_sysconfdir}/php.ini
+
+%triggerun pspell -- %{name}-pspell < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pspell %{_sysconfdir}/php.ini
+
+%triggerun qtdom -- %{name}-qtdom < 3:4.4.0-2.1
+[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove qtdom %{_sysconfdir}/php.ini
 
 %triggerun recode -- %{name}-recode < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove recode %{_sysconfdir}/php.ini
 
-%post session
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun session
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
 %triggerun session -- %{name}-session < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove session %{_sysconfdir}/php.ini
-
-%post shmop
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun shmop
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
 
 %triggerun shmop -- %{name}-shmop < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove shmop %{_sysconfdir}/php.ini
 
-%post snmp
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun snmp
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
 %triggerun snmp -- %{name}-snmp < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove snmp %{_sysconfdir}/php.ini
-
-%post sockets
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun sockets
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
 
 %triggerun sockets -- %{name}-sockets < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sockets %{_sysconfdir}/php.ini
 
-%post sybase
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun sybase
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
 %triggerun sybase -- %{name}-sybase < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sybase %{_sysconfdir}/php.ini
-
-%post sybase-ct
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun sybase-ct
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
 
 %triggerun sybase-ct -- %{name}-sybase-ct < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sybase_ct %{_sysconfdir}/php.ini
 
-%post sysvmsg
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun sysvmsg
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
 %triggerun sysvmsg -- %{name}-sysvmsg < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sysvmsg %{_sysconfdir}/php.ini
-
-%post sysvsem
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun sysvsem
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
 
 %triggerun sysvsem -- %{name}-sysvsem < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sysvsem %{_sysconfdir}/php.ini
 
-%post sysvshm
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun sysvshm
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
 %triggerun sysvshm -- %{name}-sysvshm < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove sysvshm %{_sysconfdir}/php.ini
-
-%post wddx
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun wddx
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
 
 %triggerun wddx -- %{name}-wddx < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove wddx %{_sysconfdir}/php.ini
 
-%post xml
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun xml
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
 %triggerun xml -- %{name}-xml < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove xml %{_sysconfdir}/php.ini
-
-%post xmlrpc
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun xmlrpc
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
 
 %triggerun xmlrpc -- %{name}-xmlrpc < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove xmlrpc %{_sysconfdir}/php.ini
 
-%post xslt
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun xslt
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
 %triggerun xslt -- %{name}-xslt < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove xslt %{_sysconfdir}/php.ini
-
-%post yaz
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun yaz
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
 
 %triggerun yaz -- %{name}-yaz < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove yaz %{_sysconfdir}/php.ini
 
-%post yp
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun yp
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
 %triggerun yp -- %{name}-yp < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove yp %{_sysconfdir}/php.ini
-
-%post zip
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun zip
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
 
 %triggerun zip -- %{name}-zip < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove zip %{_sysconfdir}/php.ini
 
-%post zlib
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-
-%postun zlib
-if [ "$1" = "0" ]; then
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
-fi
-
 %triggerun zlib -- %{name}-zlib < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove zlib %{_sysconfdir}/php.ini
-
-#%files
-#%defattr(644,root,root,755)
 
 %if %{with apache1}
 %files -n apache1-mod_php4
