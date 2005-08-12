@@ -1912,6 +1912,10 @@ rm -rf $RPM_BUILD_ROOT
 # note that this creates "delay" when webserver is restarted, ie the
 # actual restart is done by *previous* version of php-common package
 # (the one being just postun'ed).
+#
+# the strict internal deps between extensions (and apache modules) and
+# common package are very important for all this to work. also conf.d
+# without conf.d this would be more complex.
 
 %post -n apache1-mod_php4
 if [ "$1" = "1" ]; then
