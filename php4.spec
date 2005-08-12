@@ -1630,14 +1630,18 @@ sed -i -e 's#apu-config#apu-1-config#g' sapi/apache*/*.m4
 
 %build
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
+%if %{with apache2}
+# Apache2 CFLAGS. harmless for other SAPIs.
+CFLAGS="$CFLAGS $(%{_bindir}/apr-1-config --cppflags --includes) $(%{_bindir}/apu-1-config --includes)"
+%endif
 
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 if [ ! -f _built-conf ]; then # configure once (for faster debugging purposes)
-./buildconf --force
-%{__libtoolize}
-%{__aclocal}
-%{__autoconf}
-touch _built-conf
+	./buildconf --force
+	%{__libtoolize}
+	%{__aclocal}
+	%{__autoconf}
+	touch _built-conf
 fi
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
 
@@ -1650,11 +1654,6 @@ apxs1
 apxs2
 %endif
 "
-%if %{with apache2}
-# Apache2 CFLAGS. harmless for other SAPIs.
-CFLAGS="$CFLAGS $(%{_bindir}/apr-1-config --cppflags --includes) $(%{_bindir}/apu-1-config --includes)"
-%endif
-
 for sapi in $sapis; do
 	[ -f Makefile.$sapi ] && continue # skip if already configured (for faster debugging purposes)
 
@@ -1922,7 +1921,13 @@ fi
 %postun	common -p /sbin/ldconfig
 
 %if %{with apache2}
-%triggerpostun -n apache-mod_php4 -- apache-mod_php4 < 3:4.4.0-2.16, php4 < 3:4.3.11-4.16
+%triggerpostun -- php4 < 3:4.3.11-4.16
+# for fixed php-SAPI.ini, the poor php-apache.ini was never read for apache2
+if [ -f %{_sysconfdir}/php-apache.ini.rpmsave ]; then
+	cp -f %{_sysconfdir}/php-apache2handler.ini{,.rpmnew}
+	mv -f %{_sysconfdir}/php-apache.ini.rpmsave %{_sysconfdir}/php-apache2handler.ini
+fi
+%triggerpostun -n apache-mod_php4 -- apache-mod_php4 < 3:4.4.0-2.16
 # for fixed php-SAPI.ini, the poor php-apache.ini was never read for apache2
 if [ -f %{_sysconfdir}/php-apache.ini.rpmsave ]; then
 	cp -f %{_sysconfdir}/php-apache2handler.ini{,.rpmnew}
@@ -2453,8 +2458,8 @@ fi
 %files -n apache1-mod_php4
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/apache/conf.d/*_mod_php4.conf
-%attr(755,root,root) %{_libdir}/apache1/libphp4.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
+%attr(755,root,root) %{_libdir}/apache1/libphp4.so
 /home/services/apache/icons/*
 %endif
 
@@ -2462,8 +2467,8 @@ fi
 %files -n apache-mod_php4
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php4.conf
-%attr(755,root,root) %{_libdir}/apache/libphp4.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache2handler.ini
+%attr(755,root,root) %{_libdir}/apache/libphp4.so
 /home/services/httpd/icons/*
 %endif
 
