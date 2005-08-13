@@ -73,7 +73,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	4.34%{?with_hardening:hardened}
+Release:	4.35%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1956,6 +1956,10 @@ fi
 %postun	common
 /sbin/ldconfig
 # extension_post here is all correct.
+%extension_post
+
+%triggerpostun common -- php4-common < 3:4.4.0-4.34
+# compensate missing restart from earlier php4-common package
 %extension_post
 
 %if %{with apache2}
