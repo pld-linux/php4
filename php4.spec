@@ -73,7 +73,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	4.44%{?with_hardening:hardened}
+Release:	4.48%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -1919,7 +1919,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %post -n apache1-mod_php4
 if [ "$1" = "1" ]; then
-	%service apache restart
+	%service -q apache restart
 fi
 
 %postun -n apache1-mod_php4
@@ -1929,7 +1929,7 @@ fi
 
 %post -n apache-mod_php4
 if [ "$1" = "1" ]; then
-	%service httpd restart
+	%service -q httpd restart
 fi
 
 %postun -n apache-mod_php4
@@ -1941,15 +1941,15 @@ fi
 # macro called at extension post scriptlet
 %define	extension_post \
 if [ "$1" = "1" ]; then \
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart \
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart \
+	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service -q apache restart \
+	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service -q httpd restart \
 fi
 
 # macro called at extension postun scriptlet
 %define	extension_postun \
 if [ "$1" = "0" ]; then \
-	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart \
-	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart \
+	[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service -q apache restart \
+	[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service -q httpd restart \
 fi
 
 %post	common -p /sbin/ldconfig
@@ -1958,9 +1958,10 @@ fi
 # extension_post here is all correct.
 %extension_post
 
+# compensate missing restart of earlier -common package.
 %triggerpostun common -- %{name}-common < 3:4.4.0-4.42
-[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service apache restart
-[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service httpd restart
+[ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service -q apache restart
+[ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service -q httpd restart
 
 %if %{with apache2}
 %triggerpostun -- php4 < 3:4.3.11-4.16
@@ -1969,6 +1970,7 @@ if [ -f %{_sysconfdir}/php-apache.ini.rpmsave ]; then
 	cp -f %{_sysconfdir}/php-apache2handler.ini{,.rpmnew}
 	mv -f %{_sysconfdir}/php-apache.ini.rpmsave %{_sysconfdir}/php-apache2handler.ini
 fi
+# extra trigger, if they did not upgrade to 3:4.4.0-2 but still had old php-apache.ini
 %triggerpostun -n apache-mod_php4 -- apache-mod_php4 < 3:4.4.0-2.16
 # for fixed php-SAPI.ini, the poor php-apache.ini was never read for apache2
 if [ -f %{_sysconfdir}/php-apache.ini.rpmsave ]; then
