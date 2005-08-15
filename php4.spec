@@ -73,7 +73,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	5%{?with_hardening:hardened}
+Release:	5.7%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -378,6 +378,8 @@ Provides:	php-common = %{epoch}:%{version}-%{release}
 Provides:	php-session = %{epoch}:%{version}-%{release}
 Obsoletes:	php-session < 3:4.2.1-2
 Obsoletes:	php4-openssl < 3:4.4.0-4
+# for the posttrans scriptlet, conflicts because in vserver enviroinment rpm package is not installed.
+Conflicts:	rpm < 4.4.2-0.2
 
 %description common
 Common files needed by all PHP SAPIs.
@@ -1901,22 +1903,6 @@ rm -f $RPM_BUILD_ROOT%{_sysconfdir}/conf.d/{ncurses,pcntl,readline}.ini
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-# minimizing apache restarts logics:
-#
-# 1. we restart webserver after extension install only:
-# 1.1 if it's first install (post: $1 = 1)
-# 1.2 or uninstall of extension (postun: $1 == 0)
-# 2. the upgrades are handled by common package:
-# 2.1 webserver is restarted only if common package was upgraded (postun: $1 = 1)
-#
-# note that this creates "delay" when webserver is restarted, ie the
-# actual restart is done by *previous* version of php-common package
-# (the one being just postun'ed).
-#
-# the strict internal deps between extensions (and apache modules) and
-# common package are very important for all this to work. also conf.d
-# without conf.d this would be more complex.
-
 %post -n apache1-mod_php4
 if [ "$1" = "1" ]; then
 	%service -q apache restart
@@ -1953,13 +1939,19 @@ if [ "$1" = "0" ]; then \
 fi
 
 %post	common -p /sbin/ldconfig
-%postun	common
-/sbin/ldconfig
-# extension_post here is all correct.
-%extension_post
+%postun	common -p /sbin/ldconfig
 
-# compensate missing restart of earlier -common package.
-%triggerpostun common -- %{name}-common < 3:4.4.0-4.42
+%posttrans common
+# minimizing apache restarts logics. we restart webserver:
+#
+# 1. at the end of transaction. (posttrans, feature from rpm 4.4.2)
+# 2. first install of extension (post: $1 = 1)
+# 2. uninstall of extension (postun: $1 == 0)
+#
+# the strict internal deps between extensions (and apache modules) and
+# common package are very important for all this to work.
+
+# restart webserver at the end of transaction
 [ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service -q apache restart
 [ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service -q httpd restart
 
