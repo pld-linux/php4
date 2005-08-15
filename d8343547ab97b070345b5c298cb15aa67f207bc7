@@ -1,0 +1,3 @@
+- use %posttrans to minimize apache restarts (as rpm never promised
+  ordering between install and erase, what in fact may change that
+  ordering in order to run erasures in parallel with installs.)
