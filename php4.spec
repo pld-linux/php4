@@ -73,7 +73,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	5.7%{?with_hardening:hardened}
+Release:	5.8%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -186,6 +186,7 @@ BuildRequires:	%{__perl}
 %{?with_qtdom:BuildRequires:	qt-devel >= 2.2.0}
 BuildRequires:	readline-devel
 %{?with_recode:BuildRequires:	recode-devel >= 3.5d-3}
+BuildRequires:	rpm-build >= 4.4.0
 BuildRequires:	rpm-php-pearprov >= 4.0.2-100
 BuildRequires:	rpmbuild(macros) >= 1.230
 %{?with_xslt:BuildRequires:	sablotron-devel >= 0.96}
@@ -378,7 +379,7 @@ Provides:	php-common = %{epoch}:%{version}-%{release}
 Provides:	php-session = %{epoch}:%{version}-%{release}
 Obsoletes:	php-session < 3:4.2.1-2
 Obsoletes:	php4-openssl < 3:4.4.0-4
-# for the posttrans scriptlet, conflicts because in vserver enviroinment rpm package is not installed.
+# for the posttrans scriptlet, conflicts because in vserver environment rpm package is not installed.
 Conflicts:	rpm < 4.4.2-0.2
 
 %description common
