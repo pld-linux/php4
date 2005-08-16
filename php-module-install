@@ -1,38 +1,24 @@
 #!/bin/sh
 
-VERSION="$0 V 0.1 (C) 2001 Artur Frysiak"
+VERSION="$0 V 0.3 (C) 2001 Artur Frysiak, Elan Ruusamäe"
 COMMAND=usage
 VERBOSE=""
 MODNAME=""
 INIFILE=""
 
-install ()
+install()
 {
-if [ -f ${INIFILE} ] && ! grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" ${INIFILE} ; then
-	echo "activating module '${MODNAME}.so' in ${INIFILE}" 1>&2
-	echo "extension=${MODNAME}.so" >> ${INIFILE}
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
+	if [ -f ${INIFILE} ] && ! grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" ${INIFILE}; then
+		echo "activating module '${MODNAME}.so' in ${INIFILE}" 1>&2
+		echo "extension=${MODNAME}.so" >> ${INIFILE}
+	fi
 }
 
 deinstall()
 {
-if [ -f ${INIFILE} ] && grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" ${INIFILE} ; then
-	TMPFILE=`mktemp -q /tmp/php-module-install.XXXXXX`
-	if [ $? -ne 0 ]; then
-		echo "$0: Can't create temp file, exiting..."
-		exit 1
+	if [ -f ${INIFILE} ] && grep -q "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" ${INIFILE}; then
+		sed -i -e "/^extension[[:space:]]*=[[:space:]]*${MODNAME}.so/d" ${INIFILE}
 	fi
-	echo "deactivating module '${MODNAME}.so' in ${INIFILE}" 1>&2
-	grep -v "^extension[[:space:]]*=[[:space:]]*${MODNAME}.so" > ${TMPFILE} < ${INIFILE}
-	mv ${TMPFILE} ${INIFILE}
-	chmod 644 ${INIFILE}
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
 }
 
 usage()
