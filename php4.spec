@@ -1875,16 +1875,21 @@ ln -sf php4.cli $RPM_BUILD_ROOT%{_bindir}/php4
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi-fcgi.ini
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi.ini
-install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache.ini
-install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache2handler.ini
 install %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/php-cli.ini
-
-install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/httpd/icons
-install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/apache/icons
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sbindir}
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/apache/conf.d/70_mod_php4.conf
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php4.conf
 install %{SOURCE1} .
+
+%if %{with apache1}
+install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/apache/icons
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/apache/conf.d/70_mod_php4.conf
+install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache.ini
+%endif
+
+%if %{with apache2}
+install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/httpd/icons
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php4.conf
+install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache2handler.ini
+%endif
 
 cp -f Zend/LICENSE{,.Zend}
 
