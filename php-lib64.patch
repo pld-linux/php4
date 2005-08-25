@@ -1,6 +1,6 @@
 diff -urN php-5.1.0RC1.org/ext/ming/config.m4 php-5.1.0RC1/ext/ming/config.m4
 --- php-5.1.0RC1.org/ext/ming/config.m4	2005-07-18 01:58:39.000000000 +0200
-+++ php-5.1.0RC1/ext/ming/config.m4	2005-08-25 19:23:28.356268128 +0200
++++ php-5.1.0RC1/ext/ming/config.m4	2005-08-25 23:03:43.002336568 +0200
 @@ -9,7 +9,7 @@
    AC_CHECK_LIB(m, sin)
  
@@ -10,6 +10,22 @@ diff -urN php-5.1.0RC1.org/ext/ming/config.m4 php-5.1.0RC1/ext/ming/config.m4
        MING_DIR=$i
        break
      fi
+@@ -34,11 +34,11 @@
+   ],[
+     AC_MSG_ERROR([Ming library 0.2a or greater required.])
+   ],[
+-    -L$MING_DIR/lib
++    -L$MING_DIR/$PHP_LIBDIR
+   ])
+   
+   PHP_ADD_INCLUDE($MING_INC_DIR)
+-  PHP_ADD_LIBRARY_WITH_PATH(ming, $MING_DIR/lib, MING_SHARED_LIBADD)
++  PHP_ADD_LIBRARY_WITH_PATH(ming, $MING_DIR/$PHP_LIBDIR, MING_SHARED_LIBADD)
+ 
+   AC_MSG_CHECKING([for destroySWFBlock])
+   AC_TRY_RUN([
+
+
 diff -urN php-5.1.0RC1.org/scripts/Makefile.frag php-5.1.0RC1/scripts/Makefile.frag
 --- php-5.1.0RC1.org/scripts/Makefile.frag	2005-08-08 18:06:48.000000000 +0200
 +++ php-5.1.0RC1/scripts/Makefile.frag	2005-08-25 20:21:39.533528512 +0200
