@@ -10,3 +10,16 @@ diff -urN php-5.1.0RC1.org/ext/ming/config.m4 php-5.1.0RC1/ext/ming/config.m4
        MING_DIR=$i
        break
      fi
+diff -urN php-5.1.0RC1.org/scripts/Makefile.frag php-5.1.0RC1/scripts/Makefile.frag
+--- php-5.1.0RC1.org/scripts/Makefile.frag	2005-08-08 18:06:48.000000000 +0200
++++ php-5.1.0RC1/scripts/Makefile.frag	2005-08-25 20:21:39.533528512 +0200
+@@ -4,7 +4,7 @@
+ #
+ 
+ phpincludedir = $(includedir)/php
+-phpbuilddir = $(libdir)/build
++phpbuilddir = $(libdir)/php/build
+ 
+ BUILD_FILES = \
+ 	scripts/phpize.m4 \
+
