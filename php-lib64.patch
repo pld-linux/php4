@@ -352,15 +352,6 @@ diff -burN php-5.0.4RC1.orig/ext/mysql/config.m4 php-5.0.4RC1/ext/mysql/config.m
      /var/mysql/mysql.sock \
      /usr/local/mysql/var/mysql.sock \
      /Private/tmp/mysql.sock \
-@@ -84,7 +84,7 @@
- Note that the MySQL client library is not bundled anymore.])
-   fi
- 
--  for i in lib lib/mysql; do
-+  for i in lib64 lib64/mysql; do
-     MYSQL_LIB_CHK($i)
-   done
- 
 @@ -100,9 +100,9 @@
        PHP_CHECK_LIBRARY(mysqlclient, mysql_error, [], [
          AC_MSG_ERROR([mysql configure failed. Please check config.log for more information.])
@@ -392,8 +383,8 @@ diff -burN php-5.0.4RC1.orig/ext/xml/config.m4 php-5.0.4RC1/ext/xml/config.m4
    dnl
    if test "$PHP_LIBEXPAT_DIR" != "no"; then
      for i in $PHP_XML $PHP_LIBEXPAT_DIR; do
--      if test -f "$i/lib/libexpat.a" -o -f "$i/lib/libexpat.$SHLIB_SUFFIX_NAME"; then
-+      if test -f "$i/lib64/libexpat.a" -o -f "$i/lib64/libexpat.$SHLIB_SUFFIX_NAME"; then
+-      if test -f "$i/lib/libexpat.a" || test -f "$i/lib/libexpat.$SHLIB_SUFFIX_NAME"; then
++      if test -f "$i/lib64/libexpat.a" || test -f "$i/lib64/libexpat.$SHLIB_SUFFIX_NAME"; then
          EXPAT_DIR=$i
          break
        fi
@@ -441,15 +432,3 @@ diff -burN php-5.0.4RC1.orig/php.ini php-5.0.4RC1/php.ini
  
  ; Whether or not to enable the dl() function.  The dl() function does NOT work
  ; properly in multithreaded servers, such as IIS or Zeus, and is automatically
-diff -burN php-5.0.4RC1.orig/scripts/Makefile.frag php-5.0.4RC1/scripts/Makefile.frag
---- php-5.0.4RC1.orig/scripts/Makefile.frag	2005-03-15 18:21:05.145406392 +0100
-+++ php-5.0.4RC1/scripts/Makefile.frag	2005-03-15 18:22:03.112594040 +0100
-@@ -4,7 +4,7 @@
- #
- 
- phpincludedir = $(includedir)/php
--phpbuilddir = $(prefix)/lib/php/build
-+phpbuilddir = $(libdir)/php/build
- 
- BUILD_FILES = \
- 	scripts/phpize.m4 \
