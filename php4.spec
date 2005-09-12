@@ -73,7 +73,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	6%{?with_hardening:hardened}
+Release:	7%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -210,6 +210,7 @@ BuildRequires:	apr-util-devel >= 1:1.0.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/php4
+%define		_phpsharedir	%{_datadir}/php
 %define		extensionsdir	%{_libdir}/php4
 
 %description
@@ -1833,7 +1834,7 @@ rm -rf sapi/cgi/.libs sapi/cgi/*.lo
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}/{apache,cgi}} \
+install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}/{apache,cgi},%{_phpsharedir}} \
 	$RPM_BUILD_ROOT/home/services/{httpd,apache}/icons \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/run/php \
@@ -2675,6 +2676,7 @@ fi
 %attr(755,root,root) %{_sbindir}/php4-module-install
 %attr(755,root,root) %{_libdir}/libphp_common-*.so
 %dir %{extensionsdir}
+%dir %{_phpsharedir}
 
 %files devel
 %defattr(644,root,root,755)
