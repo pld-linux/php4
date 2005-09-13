@@ -188,7 +188,7 @@ BuildRequires:	readline-devel
 %{?with_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	rpm-build >= 4.4.0
 BuildRequires:	rpm-php-pearprov >= 4.0.2-100
-BuildRequires:	rpmbuild(macros) >= 1.230
+BuildRequires:	rpmbuild(macros) >= 1.238
 %{?with_xslt:BuildRequires:	sablotron-devel >= 0.96}
 BuildRequires:	sed >= 4.0
 BuildRequires:	t1lib-devel
@@ -212,6 +212,9 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_sysconfdir	/etc/php4
 %define		_phpsharedir	%{_datadir}/php
 %define		extensionsdir	%{_libdir}/php4
+
+# redefine to use versions from current source
+%define		__php_includedir %{_builddir}/php-%{version}
 
 %description
 PHP is an HTML-embedded scripting language. PHP attempts to make it
@@ -378,6 +381,9 @@ Requires:	sed >= 4.0
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
 Provides:	php-common = %{epoch}:%{version}-%{release}
 Provides:	php-session = %{epoch}:%{version}-%{release}
+Provides:	php(modules_api) = %{php_api_version}
+Provides:	php(zend_module_api) = %{zend_module_api}
+Provides:	php(zend_extension_api) = %{zend_extension_api}
 Obsoletes:	php-session < 3:4.2.1-2
 Obsoletes:	php4-openssl < 3:4.4.0-4
 # for the posttrans scriptlet, conflicts because in vserver environment rpm package is not installed.
@@ -1580,6 +1586,7 @@ compression support to PHP.
 Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji zlib.
 
 %prep
+# IMPORTANT: if you change '%setup', you should change %php_sourcedir macro earlier in this file
 %setup -q -n php-%{version}
 %patch0 -p1
 %patch1 -p1
