@@ -73,7 +73,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	7%{?with_hardening:hardened}
+Release:	8%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -188,7 +188,7 @@ BuildRequires:	readline-devel
 %{?with_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	rpm-build >= 4.4.0
 BuildRequires:	rpm-php-pearprov >= 4.0.2-100
-BuildRequires:	rpmbuild(macros) >= 1.238
+BuildRequires:	rpmbuild(macros) >= 1.236
 %{?with_xslt:BuildRequires:	sablotron-devel >= 0.96}
 BuildRequires:	sed >= 4.0
 BuildRequires:	t1lib-devel
@@ -213,8 +213,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_phpsharedir	%{_datadir}/php
 %define		extensionsdir	%{_libdir}/php4
 
-# redefine to use versions from current source
-%define		__php_includedir %{_builddir}/php-%{version}
+# must be in sync with source. extra check ensuring that it is so is done in %%build
+%define		php_api_version		20020918
+%define		zend_module_api		20020429
+%define		zend_extension_api	20050606
 
 %description
 PHP is an HTML-embedded scripting language. PHP attempts to make it
@@ -1586,7 +1588,6 @@ compression support to PHP.
 ModuЁ PHP umo©liwiaj╠cy u©ywanie kompresji zlib.
 
 %prep
-# IMPORTANT: if you change '%setup', you should change %php_sourcedir macro earlier in this file
 %setup -q -n php-%{version}
 %patch0 -p1
 %patch1 -p1
@@ -1640,6 +1641,21 @@ sed -i -e 's#apr-config#apr-1-config#g' sapi/apache*/*.m4
 sed -i -e 's#apu-config#apu-1-config#g' sapi/apache*/*.m4
 
 %build
+if API=$(awk '/#define PHP_API_VERSION/{print $3}' main/php.h) && [ $API != %{php_api_version} ]; then
+	echo "Set %%define php_api_version to $API and rerun."
+	exit 1
+fi
+
+if API=$(awk '/#define ZEND_MODULE_API_NO/{print $3}' Zend/zend_modules.h) && [ $API != %{zend_module_api} ]; then
+	echo "Set %%define zend_module_api to $API and rerun."
+	exit 1
+fi
+
+if API=$(awk '/#define ZEND_EXTENSION_API_NO/{print $3}' Zend/zend_extensions.h) && [ $API != %{zend_extension_api} ]; then
+	echo "Set %%define zend_module_api to $API and rerun."
+	exit 1
+fi
+
 CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
 %if %{with apache2}
 # Apache2 CFLAGS. harmless for other SAPIs.
