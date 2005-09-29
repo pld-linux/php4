@@ -178,6 +178,7 @@ BuildRequires:	ncurses-ext-devel
 BuildRequires:	openssl-devel >= 0.9.7d
 %endif
 BuildRequires:	pam-devel
+BuildRequires:	pcre-devel
 %{?with_pdf:BuildRequires:	pdflib-devel >= 4.0.0}
 BuildRequires:	%{__perl}
 %{?with_msession:BuildRequires:	phoenix-devel}
