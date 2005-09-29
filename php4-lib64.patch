@@ -597,3 +597,14 @@ diff -urbB php-4.4.0.org/php.ini php-4.4.0/php.ini
  ; Whether or not to enable the dl() function.  The dl() function does NOT work
  ; properly in multithreaded servers, such as IIS or Zeus, and is automatically
 
+--- ./ext/pcre/config.m4~	2005-05-31 15:22:27.000000000 +0300
++++ ./ext/pcre/config.m4	2005-09-29 17:42:21.000000000 +0300
+@@ -25,7 +25,7 @@
+       AC_MSG_ERROR([Could not find pcre.h in $PHP_PCRE_REGEX])
+     fi
+ 
+-    for j in $PHP_PCRE_REGEX $PHP_PCRE_REGEX/lib; do
++    for j in $PHP_PCRE_REGEX $PHP_PCRE_REGEX/lib64; do
+       test -f $j/libpcre.a -o -f $j/libpcre.$SHLIB_SUFFIX_NAME && PCRE_LIBDIR=$j
+     done
+     
