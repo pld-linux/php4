@@ -5,7 +5,6 @@
 # TODO:
 # - make additional headers added by mail patch configurable
 # - /var/run/php group not owned
-# - tokenizer extension as shared. (is it possible? perhaps core engine needs it?)
 #
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
@@ -74,7 +73,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	11.1%{?with_hardening:hardened}
+Release:	11.2%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -383,10 +382,8 @@ Group:		Libraries
 Requires:	glibc >= 6:2.3.5
 Requires:	sed >= 4.0
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
-Provides:	%{name}-tokenizer = %{epoch}:%{version}-%{release}
 Provides:	php-common = %{epoch}:%{version}-%{release}
 Provides:	php-session = %{epoch}:%{version}-%{release}
-Provides:	php-tokenizer = %{epoch}:%{version}-%{release}
 Provides:	php(modules_api) = %{php_api_version}
 Provides:	php(zend_module_api) = %{zend_module_api}
 Provides:	php(zend_extension_api) = %{zend_extension_api}
@@ -1459,6 +1456,17 @@ Shared Memory support.
 %description sysvshm -l pl
 ModuЁ PHP umo©liwiaj╠cy korzystanie z pamiЙci dzielonej SysV.
 
+%package tokenizer
+Summary:	tokenizer extension module for PHP
+Group:		Libraries
+Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
+Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php-tokenizer = %{epoch}:%{version}-%{release}
+
+%description tokenizer
+This is a dynamic shared object (DSO) for PHP that will add tokenizer
+support.
+
 %package wddx
 Summary:	wddx extension module for PHP
 Summary(pl):	ModuЁ wddx dla PHP
@@ -1744,6 +1752,7 @@ for sapi in $sapis; do
 	--enable-sockets=shared \
 	%{?with_recode:--with-recode=shared} \
 	%{?with_mm:--with-mm} \
+	--enable-tokenizer=shared \
 	%{?with_wddx:--enable-wddx=shared} \
 	%{!?with_xml:--disable-xml}%{?with_xml:--enable-xml=shared} \
 	%{?with_xslt:--enable-xslt=shared} \
@@ -1804,7 +1813,6 @@ for sapi in $sapis; do
 	%{?with_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
 	--with-t1lib=shared \
 	--with-tiff-dir=/usr \
-	--with-tokenizer=shared,/usr \
 	%{?with_odbc:--with-unixODBC=shared} \
 	%{!?with_xmlrpc:--without-xmlrpc}%{?with_xmlrpc:--with-xmlrpc=shared,/usr} \
 	%{?with_xslt:--with-xslt-sablot=shared} \
@@ -2403,6 +2411,12 @@ fi
 %extension_post
 
 %postun sysvshm
+%extension_postun
+
+%post tokenizer
+%extension_post
+
+%postun tokenizer
 %extension_postun
 
 %post wddx
@@ -3067,6 +3081,11 @@ fi
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sysvshm.ini
 %attr(755,root,root) %{extensionsdir}/sysvshm.so
+
+%files tokenizer
+%defattr(644,root,root,755)
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/tokenizer.ini
+%attr(755,root,root) %{extensionsdir}/tokenizer.so
 
 %if %{with wddx}
 %files wddx
