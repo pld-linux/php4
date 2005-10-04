@@ -5,6 +5,7 @@
 # TODO:
 # - make additional headers added by mail patch configurable
 # - /var/run/php group not owned
+# - tokenizer extension as shared. (is it possible? perhaps core engine needs it?)
 #
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
@@ -73,7 +74,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	11%{?with_hardening:hardened}
+Release:	11.1%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -382,8 +383,10 @@ Group:		Libraries
 Requires:	glibc >= 6:2.3.5
 Requires:	sed >= 4.0
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
+Provides:	%{name}-tokenizer = %{epoch}:%{version}-%{release}
 Provides:	php-common = %{epoch}:%{version}-%{release}
 Provides:	php-session = %{epoch}:%{version}-%{release}
+Provides:	php-tokenizer = %{epoch}:%{version}-%{release}
 Provides:	php(modules_api) = %{php_api_version}
 Provides:	php(zend_module_api) = %{zend_module_api}
 Provides:	php(zend_extension_api) = %{zend_extension_api}
@@ -1801,6 +1804,7 @@ for sapi in $sapis; do
 	%{?with_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
 	--with-t1lib=shared \
 	--with-tiff-dir=/usr \
+	--with-tokenizer=shared,/usr \
 	%{?with_odbc:--with-unixODBC=shared} \
 	%{!?with_xmlrpc:--without-xmlrpc}%{?with_xmlrpc:--with-xmlrpc=shared,/usr} \
 	%{?with_xslt:--with-xslt-sablot=shared} \
