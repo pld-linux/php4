@@ -73,7 +73,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	12%{?with_hardening:hardened}
+Release:	13%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -188,7 +188,6 @@ BuildRequires:	%{__perl}
 BuildRequires:	readline-devel
 %{?with_recode:BuildRequires:	recode-devel >= 3.5d-3}
 BuildRequires:	rpm-build >= 4.4.0
-BuildRequires:	rpm-php-pearprov >= 4.0.2-100
 BuildRequires:	rpmbuild(macros) >= 1.236
 %{?with_xslt:BuildRequires:	sablotron-devel >= 0.96}
 BuildRequires:	sed >= 4.0
@@ -381,9 +380,13 @@ Group:		Libraries
 # because of dlclose() bugs in glibc <= 2.3.4 causing SEGVs on exit
 Requires:	glibc >= 6:2.3.5
 Requires:	sed >= 4.0
+Provides:	%{name}-openssl = %{epoch}:%{version}-%{release}
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
+Provides:	%{name}-standard = %{epoch}:%{version}-%{release}
 Provides:	php-common = %{epoch}:%{version}-%{release}
+Provides:	php-openssl = %{epoch}:%{version}-%{release}
 Provides:	php-session = %{epoch}:%{version}-%{release}
+Provides:	php-standard = %{epoch}:%{version}-%{release}
 Provides:	php(modules_api) = %{php_api_version}
 Provides:	php(zend_module_api) = %{zend_module_api}
 Provides:	php(zend_extension_api) = %{zend_extension_api}
@@ -1805,7 +1808,7 @@ for sapi in $sapis; do
 	%{?with_oracle:--with-oracle=shared} \
 	%{!?with_pcre:--without-pcre-regex}%{?with_pcre:--with-pcre-regex=shared,/usr} \
 	%{?with_pdf:--with-pdflib=shared} \
-	--with-pear=%{php_pear_dir} \
+	--disable-pear \
 	%{!?with_pgsql:--without-pgsql}%{?with_pgsql:--with-pgsql=shared,/usr} \
 	--with-png-dir=/usr \
 	%{?with_pspell:--with-pspell=shared} \
