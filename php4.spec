@@ -1808,7 +1808,7 @@ for sapi in $sapis; do
 	%{?with_oracle:--with-oracle=shared} \
 	%{!?with_pcre:--without-pcre-regex}%{?with_pcre:--with-pcre-regex=shared,/usr} \
 	%{?with_pdf:--with-pdflib=shared} \
-	--disable-pear \
+	--with-pear=%{php_pear_dir} \
 	%{!?with_pgsql:--without-pgsql}%{?with_pgsql:--with-pgsql=shared,/usr} \
 	--with-png-dir=/usr \
 	%{?with_pspell:--with-pspell=shared} \
