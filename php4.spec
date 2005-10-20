@@ -44,14 +44,14 @@
 %bcond_without	yaz		# without YAZ extension module
 %bcond_without	apache1		# disable building apache 1.3.x module
 %bcond_without	apache2		# disable building apache 2.x module
-%bcond_with	zts		# enable-experimental-zts
+%bcond_without	zts		# disable enable-experimental-zts (it's disabled for apache 1.3 anyway)
 
 %define apxs1		/usr/sbin/apxs1
 %define	apxs2		/usr/sbin/apxs
 
 # mm is not thread safe
 # ext/session/mod_mm.c:37:3: #error mm is not thread-safe
-%if %{with zts}
+%if %{with zts} && %{without apache1}
 %undefine	with_mm
 %endif
 
@@ -1707,26 +1707,25 @@ for sapi in $sapis; do
 	`
 	case $sapi in
 	cgi)
-		echo --enable-discard-path
+		echo --enable-discard-path --enable-force-cgi-redirect %{?with_mm:--with-mm}
 	;;
 	cli)
-		echo --disable-cgi
+		echo --disable-cgi %{?with_mm:--with-mm}
 	;;
 	fcgi)
-		echo --enable-fastcgi --with-fastcgi=/usr
+		echo --enable-fastcgi --with-fastcgi=/usr --enable-force-cgi-redirect %{?with_mm:--with-mm}
 	;;
 	apxs1)
 		ver=%(rpm -q --qf '%%{version}' apache1-apxs)
-		echo --with-apxs=%{apxs1} --with-apache-version=$ver
+		echo --with-apxs=%{apxs1} --with-apache-version=$ver %{?with_mm:--with-mm}
 	;;
 	apxs2)
 		ver=%(rpm -q --qf '%%{version}' apache-apxs)
-		echo --with-apxs2=%{apxs2} --with-apache-version=$ver
+		echo --with-apxs2=%{apxs2} --with-apache-version=$ver %{?with_zts:--enable-experimental-zts}
 	;;
 	esac
 	` \
 	--cache-file=config.cache \
-	%{?with_zts:--enable-experimental-zts} \
 	--with-config-file-path=%{_sysconfdir} \
 	--with-config-file-scan-dir=%{_sysconfdir}/conf.d \
 	--with-exec-dir=%{_bindir} \
@@ -1737,7 +1736,6 @@ for sapi in $sapis; do
 	--enable-memory-limit \
 	--enable-track-vars \
 	--enable-safe-mode \
-	\
 	--enable-bcmath=shared \
 	--enable-calendar=shared \
 	--enable-ctype=shared \
@@ -1758,7 +1756,6 @@ for sapi in $sapis; do
 	--enable-sysvshm=shared \
 	--enable-sockets=shared \
 	%{?with_recode:--with-recode=shared} \
-	%{?with_mm:--with-mm} \
 	--enable-tokenizer=shared \
 	%{?with_wddx:--enable-wddx=shared} \
 	%{!?with_xml:--disable-xml}%{?with_xml:--enable-xml=shared} \
