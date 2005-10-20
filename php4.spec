@@ -44,14 +44,14 @@
 %bcond_without	yaz		# without YAZ extension module
 %bcond_without	apache1		# disable building apache 1.3.x module
 %bcond_without	apache2		# disable building apache 2.x module
-%bcond_without	zts		# disable enable-experimental-zts (it's disabled for apache 1.3 anyway)
+%bcond_without	zts		# disable enable-experimental-zts
 
 %define apxs1		/usr/sbin/apxs1
 %define	apxs2		/usr/sbin/apxs
 
 # mm is not thread safe
 # ext/session/mod_mm.c:37:3: #error mm is not thread-safe
-%if %{with zts} && %{without apache1}
+%if %{with zts}
 %undefine	with_mm
 %endif
 
@@ -1707,21 +1707,21 @@ for sapi in $sapis; do
 	`
 	case $sapi in
 	cgi)
-		echo --enable-discard-path --enable-force-cgi-redirect %{?with_mm:--with-mm}
+		echo --enable-discard-path --enable-force-cgi-redirect
 	;;
 	cli)
-		echo --disable-cgi %{?with_mm:--with-mm}
+		echo --disable-cgi
 	;;
 	fcgi)
-		echo --enable-fastcgi --with-fastcgi=/usr --enable-force-cgi-redirect %{?with_mm:--with-mm}
+		echo --enable-fastcgi --with-fastcgi=/usr --enable-force-cgi-redirect
 	;;
 	apxs1)
 		ver=%(rpm -q --qf '%%{version}' apache1-apxs)
-		echo --with-apxs=%{apxs1} --with-apache-version=$ver %{?with_mm:--with-mm}
+		echo --with-apxs=%{apxs1} --with-apache-version=$ver
 	;;
 	apxs2)
 		ver=%(rpm -q --qf '%%{version}' apache-apxs)
-		echo --with-apxs2=%{apxs2} --with-apache-version=$ver %{?with_zts:--enable-experimental-zts}
+		echo --with-apxs2=%{apxs2} --with-apache-version=$ver
 	;;
 	esac
 	` \
@@ -1730,6 +1730,7 @@ for sapi in $sapis; do
 	--with-config-file-scan-dir=%{_sysconfdir}/conf.d \
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
+	%{?with_zts:--enable-experimental-zts} \
 	--enable-shared \
 	--disable-static \
 	--enable-magic-quotes \
