@@ -2678,6 +2678,7 @@ fi
 %if %{with apache1}
 %files -n apache1-mod_php4
 %defattr(644,root,root,755)
+%doc sapi/apache/CREDITS
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/apache/conf.d/*_mod_php4.conf
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache.ini
 %attr(755,root,root) %{_libdir}/apache1/libphp4.so
@@ -2687,6 +2688,7 @@ fi
 %if %{with apache2}
 %files -n apache-mod_php4
 %defattr(644,root,root,755)
+%doc sapi/apache2handler/{CREDITS,README}
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_php4.conf
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-apache2handler.ini
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
@@ -2695,17 +2697,19 @@ fi
 
 %files fcgi
 %defattr(644,root,root,755)
-%doc sapi/cgi/README.FastCGI
+%doc sapi/cgi/{CREDITS,README.FastCGI}
 %attr(755,root,root) %{_bindir}/php4.fcgi
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cgi-fcgi.ini
 
 %files cgi
 %defattr(644,root,root,755)
+%doc sapi/cgi/CREDITS
 %attr(755,root,root) %{_bindir}/php4.cgi
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cgi.ini
 
 %files cli
 %defattr(644,root,root,755)
+%doc sapi/cli/{CREDITS,README}
 %attr(755,root,root) %{_bindir}/php4.cli
 # TODO
 # - what about _bindir/php symlink?
@@ -2744,60 +2748,71 @@ fi
 
 %files bcmath
 %defattr(644,root,root,755)
+%doc ext/bcmath/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/bcmath.ini
 %attr(755,root,root) %{extensionsdir}/bcmath.so
 
 %files bzip2
 %defattr(644,root,root,755)
+%doc ext/bz2/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/bz2.ini
 %attr(755,root,root) %{extensionsdir}/bz2.so
 
 %files calendar
 %defattr(644,root,root,755)
+%doc ext/calendar/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/calendar.ini
 %attr(755,root,root) %{extensionsdir}/calendar.so
 
 %if %{with cpdf}
 %files cpdf
 %defattr(644,root,root,755)
+%doc ext/cpdf/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/cpdf.ini
 %attr(755,root,root) %{extensionsdir}/cpdf.so
 %endif
 
 %files crack
 %defattr(644,root,root,755)
+%doc ext/crack/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/crack.ini
 %attr(755,root,root) %{extensionsdir}/crack.so
 
 %files ctype
 %defattr(644,root,root,755)
+%doc ext/ctype/{CREDITS,README}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/ctype.ini
 %attr(755,root,root) %{extensionsdir}/ctype.so
 
 %if %{with curl}
 %files curl
 %defattr(644,root,root,755)
+%doc ext/curl/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/curl.ini
 %attr(755,root,root) %{extensionsdir}/curl.so
 %endif
 
 %files db
 %defattr(644,root,root,755)
+%doc ext/db/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/db.ini
 %attr(755,root,root) %{extensionsdir}/db.so
 
 %files dba
 %defattr(644,root,root,755)
+%doc ext/dba/{CREDITS,README}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/dba.ini
 %attr(755,root,root) %{extensionsdir}/dba.so
 
 %files dbase
 %defattr(644,root,root,755)
+%doc ext/dbase/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/dbase.ini
 %attr(755,root,root) %{extensionsdir}/dbase.so
 
 %files dbx
 %defattr(644,root,root,755)
+%doc ext/dbx/{CREDITS,howto_extend_dbx.html}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/dbx.ini
 %attr(755,root,root) %{extensionsdir}/dbx.so
 
@@ -2809,6 +2824,7 @@ fi
 %if %{with xml}
 %files domxml
 %defattr(644,root,root,755)
+%doc ext/domxml/{CREDITS,TODO}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/domxml.ini
 %attr(755,root,root) %{extensionsdir}/domxml.so
 %endif
@@ -2816,17 +2832,20 @@ fi
 %if %{with fdf}
 %files fdf
 %defattr(644,root,root,755)
+%doc ext/fdf/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/fdf.ini
 %attr(755,root,root) %{extensionsdir}/fdf.so
 %endif
 
 %files exif
 %defattr(644,root,root,755)
+%doc ext/exif/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/exif.ini
 %attr(755,root,root) %{extensionsdir}/exif.so
 
 %files filepro
 %defattr(644,root,root,755)
+%doc ext/filepro/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/filepro.ini
 %attr(755,root,root) %{extensionsdir}/filepro.so
 
@@ -2840,26 +2859,31 @@ fi
 
 %files ftp
 %defattr(644,root,root,755)
+%doc ext/ftp/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/ftp.ini
 %attr(755,root,root) %{extensionsdir}/ftp.so
 
 %files gd
 %defattr(644,root,root,755)
+%doc ext/gd/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/gd.ini
 %attr(755,root,root) %{extensionsdir}/gd.so
 
 %files gettext
 %defattr(644,root,root,755)
+%doc ext/gettext/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/gettext.ini
 %attr(755,root,root) %{extensionsdir}/gettext.so
 
 %files gmp
 %defattr(644,root,root,755)
+%doc ext/gmp/{CREDITS,README,TODO}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/gmp.ini
 %attr(755,root,root) %{extensionsdir}/gmp.so
 
 %files hyperwave
 %defattr(644,root,root,755)
+%doc ext/hyperwave/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/hyperwave.ini
 %attr(755,root,root) %{extensionsdir}/hyperwave.so
 
@@ -2871,6 +2895,7 @@ fi
 %if %{with imap}
 %files imap
 %defattr(644,root,root,755)
+%doc ext/imap/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/imap.ini
 %attr(755,root,root) %{extensionsdir}/imap.so
 %endif
@@ -2878,6 +2903,7 @@ fi
 %if %{with interbase}
 %files interbase
 %defattr(644,root,root,755)
+%doc ext/interbase/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/interbase.ini
 %attr(755,root,root) %{extensionsdir}/interbase.so
 %endif
@@ -2885,6 +2911,7 @@ fi
 %if %{with java}
 %files java
 %defattr(644,root,root,755)
+%doc ext/java/{CREDITS,README}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/java.ini
 %attr(755,root,root) %{extensionsdir}/java.so
 %{extensionsdir}/php_java.jar
@@ -2893,40 +2920,47 @@ fi
 %if %{with ldap}
 %files ldap
 %defattr(644,root,root,755)
+%doc ext/ldap/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/ldap.ini
 %attr(755,root,root) %{extensionsdir}/ldap.so
 %endif
 
 %files mbstring
 %defattr(644,root,root,755)
+%doc ext/mbstring/{CREDITS,README,README.libmbfl}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mbstring.ini
 %attr(755,root,root) %{extensionsdir}/mbstring.so
 
 %files mcal
 %defattr(644,root,root,755)
+%doc ext/mcal/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mcal.ini
 %attr(755,root,root) %{extensionsdir}/mcal.so
 
 %files mcrypt
 %defattr(644,root,root,755)
+%doc ext/mcrypt/{CREDITS,TODO}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mcrypt.ini
 %attr(755,root,root) %{extensionsdir}/mcrypt.so
 
 %if %{with mhash}
 %files mhash
 %defattr(644,root,root,755)
+%doc ext/mhash/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mhash.ini
 %attr(755,root,root) %{extensionsdir}/mhash.so
 %endif
 
 %files mime_magic
 %defattr(644,root,root,755)
+%doc ext/mime_magic/{CREDITS,TODO}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mime_magic.ini
 %attr(755,root,root) %{extensionsdir}/mime_magic.so
 
 %if %{with ming}
 %files ming
 %defattr(644,root,root,755)
+%doc ext/ming/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/ming.ini
 %attr(755,root,root) %{extensionsdir}/ming.so
 %endif
@@ -2934,6 +2968,7 @@ fi
 %if %{with mnogosearch}
 %files mnogosearch
 %defattr(644,root,root,755)
+%doc ext/mnogosearch/{CREDITS,README}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mnogosearch.ini
 %attr(755,root,root) %{extensionsdir}/mnogosearch.so
 %endif
@@ -2941,6 +2976,7 @@ fi
 %if %{with msession}
 %files msession
 %defattr(644,root,root,755)
+%doc ext/msession/{CREDITS,README,msession-test.php}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/msession.ini
 %attr(755,root,root) %{extensionsdir}/msession.so
 %endif
@@ -2948,22 +2984,26 @@ fi
 %if %{with mssql}
 %files mssql
 %defattr(644,root,root,755)
+%doc ext/mssql/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mssql.ini
 %attr(755,root,root) %{extensionsdir}/mssql.so
 %endif
 
 %files mysql
 %defattr(644,root,root,755)
+%doc ext/mysql/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/mysql.ini
 %attr(755,root,root) %{extensionsdir}/mysql.so
 
 %files ncurses
 %defattr(644,root,root,755)
+%doc ext/ncurses/CREDITS
 %attr(755,root,root) %{extensionsdir}/ncurses.so
 
 %if %{with oci8}
 %files oci8
 %defattr(644,root,root,755)
+%doc ext/oci8/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/oci8.ini
 %attr(755,root,root) %{extensionsdir}/oci8.so
 %endif
@@ -2971,6 +3011,7 @@ fi
 %if %{with odbc}
 %files odbc
 %defattr(644,root,root,755)
+%doc ext/odbc/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/odbc.ini
 %attr(755,root,root) %{extensionsdir}/odbc.so
 %endif
@@ -2978,22 +3019,26 @@ fi
 %if %{with oracle}
 %files oracle
 %defattr(644,root,root,755)
+%doc ext/oracle/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/oracle.ini
 %attr(755,root,root) %{extensionsdir}/oracle.so
 %endif
 
 %files overload
 %defattr(644,root,root,755)
+%doc ext/overload/{CREDITS,README}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/overload.ini
 %attr(755,root,root) %{extensionsdir}/overload.so
 
 %files pcntl
 %defattr(644,root,root,755)
+%doc ext/pcntl/{CREDITS,README}
 %attr(755,root,root) %{extensionsdir}/pcntl.so
 
 %if %{with pcre}
 %files pcre
 %defattr(644,root,root,755)
+%doc ext/pcre/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/pcre.ini
 %attr(755,root,root) %{extensionsdir}/pcre.so
 %endif
@@ -3001,6 +3046,7 @@ fi
 %if %{with pdf}
 %files pdf
 %defattr(644,root,root,755)
+%doc ext/pdf/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/pdf.ini
 %attr(755,root,root) %{extensionsdir}/pdf.so
 %endif
@@ -3008,18 +3054,21 @@ fi
 %if %{with pgsql}
 %files pgsql
 %defattr(644,root,root,755)
+%doc ext/pgsql/{CREDITS,README}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/pgsql.ini
 %attr(755,root,root) %{extensionsdir}/pgsql.so
 %endif
 
 %files posix
 %defattr(644,root,root,755)
+%doc ext/posix/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/posix.ini
 %attr(755,root,root) %{extensionsdir}/posix.so
 
 %if %{with pspell}
 %files pspell
 %defattr(644,root,root,755)
+%doc ext/overload/{CREDITS,README}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/pspell.ini
 %attr(755,root,root) %{extensionsdir}/pspell.so
 %endif
@@ -3027,17 +3076,20 @@ fi
 %if %{with qtdom}
 %files qtdom
 %defattr(644,root,root,755)
+%doc ext/qtdom/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/qtdom.ini
 %attr(755,root,root) %{extensionsdir}/qtdom.so
 %endif
 
 %files readline
 %defattr(644,root,root,755)
+%doc ext/readline/{CREDITS,README.libedit}
 %attr(755,root,root) %{extensionsdir}/readline.so
 
 %if %{with recode}
 %files recode
 %defattr(644,root,root,755)
+%doc ext/recode/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/recode.ini
 %attr(755,root,root) %{extensionsdir}/recode.so
 %endif
@@ -3050,56 +3102,66 @@ fi
 
 %files shmop
 %defattr(644,root,root,755)
+%doc ext/shmop/{CREDITS,README}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/shmop.ini
 %attr(755,root,root) %{extensionsdir}/shmop.so
 
 %if %{with snmp}
 %files snmp
 %defattr(644,root,root,755)
+%doc ext/snmp/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/snmp.ini
 %attr(755,root,root) %{extensionsdir}/snmp.so
 %endif
 
 %files sockets
 %defattr(644,root,root,755)
+%doc ext/sockets/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sockets.ini
 %attr(755,root,root) %{extensionsdir}/sockets.so
 
 %if %{with sybase}
 %files sybase
 %defattr(644,root,root,755)
+%doc ext/sybase/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sybase.ini
 %attr(755,root,root) %{extensionsdir}/sybase.so
 
 %files sybase-ct
 %defattr(644,root,root,755)
+%doc ext/sybase_ct/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sybase_ct.ini
 %attr(755,root,root) %{extensionsdir}/sybase_ct.so
 %endif
 
 %files sysvmsg
 %defattr(644,root,root,755)
+%doc ext/sysvmsg/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sysvmsg.ini
 %attr(755,root,root) %{extensionsdir}/sysvmsg.so
 
 %files sysvsem
 %defattr(644,root,root,755)
+%doc ext/sysvsem/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sysvsem.ini
 %attr(755,root,root) %{extensionsdir}/sysvsem.so
 
 %files sysvshm
 %defattr(644,root,root,755)
+%doc ext/sysvshm/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/sysvshm.ini
 %attr(755,root,root) %{extensionsdir}/sysvshm.so
 
 %files tokenizer
 %defattr(644,root,root,755)
+%doc ext/tokenizer/{CREDITS,tokenizer.php}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/tokenizer.ini
 %attr(755,root,root) %{extensionsdir}/tokenizer.so
 
 %if %{with wddx}
 %files wddx
 %defattr(644,root,root,755)
+%doc ext/wddx/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/wddx.ini
 %attr(755,root,root) %{extensionsdir}/wddx.so
 %endif
@@ -3107,6 +3169,7 @@ fi
 %if %{with xml}
 %files xml
 %defattr(644,root,root,755)
+%doc ext/xml/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/xml.ini
 %attr(755,root,root) %{extensionsdir}/xml.so
 %endif
@@ -3114,6 +3177,7 @@ fi
 %if %{with xmlrpc}
 %files xmlrpc
 %defattr(644,root,root,755)
+%doc ext/xmlrpc/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/xmlrpc.ini
 %attr(755,root,root) %{extensionsdir}/xmlrpc.so
 %endif
@@ -3121,6 +3185,7 @@ fi
 %if %{with xslt}
 %files xslt
 %defattr(644,root,root,755)
+%doc ext/xslt/{README.XSLT-BACKENDS,TODO}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/xslt.ini
 %attr(755,root,root) %{extensionsdir}/xslt.so
 %endif
@@ -3128,21 +3193,25 @@ fi
 %if %{with yaz}
 %files yaz
 %defattr(644,root,root,755)
+%doc ext/yaz/{CREDITS,README}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/yaz.ini
 %attr(755,root,root) %{extensionsdir}/yaz.so
 %endif
 
 %files yp
 %defattr(644,root,root,755)
+%doc ext/yp/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/yp.ini
 %attr(755,root,root) %{extensionsdir}/yp.so
 
 %files zip
 %defattr(644,root,root,755)
+%doc ext/zip/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/zip.ini
 %attr(755,root,root) %{extensionsdir}/zip.so
 
 %files zlib
 %defattr(644,root,root,755)
+%doc ext/zlib/CREDITS
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/zlib.ini
 %attr(755,root,root) %{extensionsdir}/zlib.so
