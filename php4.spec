@@ -5,6 +5,10 @@
 # TODO:
 # - make additional headers added by mail patch configurable
 # - /var/run/php group not owned
+#11:26:36 <@glen> php4-common-4.4.0-14 marks heimdal-libs-0.7.1-1 (cap heimdal-libs)
+#11:26:36 <@glen>   heimdal-libs-0.7.1-1 marks openldap-libs-2.2.29-1 (cap liblber-2.2.so.7()(64bit))
+#11:26:36 <@glen>     openldap-libs-2.2.29-1 marks cyrus-sasl-2.1.21-3 (cap cyrus-sasl)
+#11:27:00 <@glen> php5-common doesn't have such deps
 #
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
@@ -2691,6 +2695,7 @@ fi
 
 %files fcgi
 %defattr(644,root,root,755)
+%doc sapi/cgi/README.FastCGI
 %attr(755,root,root) %{_bindir}/php4.fcgi
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cgi-fcgi.ini
 
