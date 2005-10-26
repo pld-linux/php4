@@ -68,7 +68,6 @@
 %undefine	with_msession
 %endif
 
-%include	/usr/lib/rpm/macros.php
 Summary:	The PHP HTML-embedded scripting language for use with Apache
 Summary(fr):	Le langage de script embarque-HTML PHP pour Apache
 Summary(pl):	Jêzyk skryptowy PHP - u¿ywany wraz z serwerem Apache
