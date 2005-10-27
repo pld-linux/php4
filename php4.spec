@@ -1938,6 +1938,8 @@ install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache2handler.ini
 
 cp -f Zend/LICENSE{,.Zend}
 
+install ext/ext_skel $RPM_BUILD_ROOT%{_bindir}/php-ext_skel
+
 # Generate stub .ini files for each subpackage
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/conf.d
 for so in modules/*.so; do
@@ -2720,9 +2722,8 @@ fi
 %files common
 %defattr(644,root,root,755)
 %doc php.ini-*
-%doc CODING_STANDARDS CREDITS Zend/ZEND_CHANGES
+%doc CREDITS Zend/ZEND_CHANGES
 %doc LICENSE Zend/LICENSE.Zend EXTENSIONS NEWS TODO*
-%doc README.EXT_SKEL README.SELF-CONTAINED-EXTENSIONS
 
 %dir %{_sysconfdir}
 %dir %{_sysconfdir}/conf.d
@@ -2735,8 +2736,12 @@ fi
 
 %files devel
 %defattr(644,root,root,755)
+%doc README.UNIX-BUILD-SYSTEM
+%doc README.EXT_SKEL README.SELF-CONTAINED-EXTENSIONS
+%doc CODING_STANDARDS
 %attr(755,root,root) %{_bindir}/phpize
 %attr(755,root,root) %{_bindir}/php-config
+%attr(755,root,root) %{_bindir}/php-ext_skel
 %attr(755,root,root) %{_libdir}/libphp_common.so
 # FIXME: how exactly this is needed? as it contains libdir for apache1 or apache2
 %{_libdir}/libphp_common.la
