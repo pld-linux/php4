@@ -372,6 +372,7 @@ php4 jako interpreter dzia³aj±cy z linii poleceñ.
 
 %package program
 Summary:	/usr/bin/php symlink
+Summary(pl):	Dowi±zanie symboliczne /usr/bin/php
 Group:		Development/Languages/PHP
 Requires:	%{name}-cli = %{epoch}:%{version}-%{release}
 Provides:	php(program)
@@ -379,6 +380,9 @@ Obsoletes:	php(program)
 
 %description program
 Package providing /usr/bin/php symlink to PHP CLI.
+
+%description program -l pl
+Pakiet dostarczaj±cy dowi±zanie symboliczne /usr/bin/php do PHP CLI.
 
 %package common
 Summary:	Common files needed by all PHP SAPIs
