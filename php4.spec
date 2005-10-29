@@ -48,7 +48,7 @@
 %bcond_without	yaz		# without YAZ extension module
 %bcond_without	apache1		# disable building apache 1.3.x module
 %bcond_without	apache2		# disable building apache 2.x module
-%bcond_without	zts		# disable enable-experimental-zts
+%bcond_without	zts		# disable experimental-zts
 
 %define apxs1		/usr/sbin/apxs1
 %define	apxs2		/usr/sbin/apxs
@@ -76,7 +76,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	15%{?with_hardening:hardened}
+Release:	16%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -395,8 +395,8 @@ Provides:	php-standard = %{epoch}:%{version}-%{release}
 Provides:	php(modules_api) = %{php_api_version}
 Provides:	php(zend_module_api) = %{zend_module_api}
 Provides:	php(zend_extension_api) = %{zend_extension_api}
-Provides:	php(debug) = %{php_debug}
-Provides:	php(thread-safety) = %{zend_zts}
+Provides:	php4(debug) = %{php_debug}
+Provides:	php4(thread-safety) = %{zend_zts}
 Obsoletes:	php-session < 3:4.2.1-2
 Obsoletes:	php4-openssl < 3:4.4.0-4
 # for the posttrans scriptlet, conflicts because in vserver environment rpm package is not installed.
