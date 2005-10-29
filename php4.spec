@@ -76,7 +76,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.0
-Release:	16%{?with_hardening:hardened}
+Release:	17%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -337,8 +337,6 @@ Summary(pl):	php4 jako program FastCGI
 Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-fcgi = %{epoch}:%{version}-%{release}
-Provides:	php-program = %{epoch}:%{version}-%{release}
-Provides:	%{name}-program = %{epoch}:%{version}-%{release}
 
 %description fcgi
 php4 as FastCGI program.
@@ -352,8 +350,6 @@ Summary(pl):	php4 jako program CGI
 Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-cgi = %{epoch}:%{version}-%{release}
-Provides:	php-program = %{epoch}:%{version}-%{release}
-Provides:	%{name}-program = %{epoch}:%{version}-%{release}
 
 %description cgi
 php4 as CGI program.
@@ -367,14 +363,22 @@ Summary(pl):	php4 jako interpreter dziaЁaj╠cy z linii poleceЯ
 Group:		Development/Languages/PHP
 PreReq:		%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-cli = %{epoch}:%{version}-%{release}
-Provides:	php-program = %{epoch}:%{version}-%{release}
-Provides:	%{name}-program = %{epoch}:%{version}-%{release}
 
 %description cli
 php4 as CLI interpreter.
 
 %description cli -l pl
 php4 jako interpreter dziaЁaj╠cy z linii poleceЯ.
+
+%package program
+Summary:	/usr/bin/php symlink
+Group:		Development/Languages/PHP
+Requires:	%{name}-cli = %{epoch}:%{version}-%{release}
+Provides:	php(program)
+Obsoletes:	php(program)
+
+%description program
+Package providing /usr/bin/php symlink to PHP CLI.
 
 %package common
 Summary:	Common files needed by all PHP SAPIs
@@ -1918,6 +1922,7 @@ libtool --silent --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/p
 
 install sapi/cli/php.1 $RPM_BUILD_ROOT%{_mandir}/man1/php4.1
 ln -sf php4.cli $RPM_BUILD_ROOT%{_bindir}/php4
+ln -sf php4.cli $RPM_BUILD_ROOT%{_bindir}/php
 
 %{?with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{extensionsdir}}
 
@@ -2716,12 +2721,13 @@ fi
 %defattr(644,root,root,755)
 %doc sapi/cli/{CREDITS,README}
 %attr(755,root,root) %{_bindir}/php4.cli
-# TODO
-# - what about _bindir/php symlink?
-# - do it same way link /usr/src/linux is done, ie each package updates symlink
 %attr(755,root,root) %{_bindir}/php4
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/php-cli.ini
 %{_mandir}/man1/php4.1*
+
+%files program
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/php
 
 %files common
 %defattr(644,root,root,755)
