@@ -1678,7 +1678,7 @@ if API=$(awk '/#define ZEND_MODULE_API_NO/{print $3}' Zend/zend_modules.h) && [ 
 fi
 
 if API=$(awk '/#define ZEND_EXTENSION_API_NO/{print $3}' Zend/zend_extensions.h) && [ $API != %{zend_extension_api} ]; then
-	echo "Set %%define zend_module_api to $API and rerun."
+	echo "Set %%define zend_extension_api to $API and rerun."
 	exit 1
 fi
 
