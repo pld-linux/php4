@@ -75,13 +75,13 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
-Version:	4.4.0
-Release:	17%{?with_hardening:hardened}
+Version:	4.4.1
+Release:	1%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
-# Source0-md5:	e85b606fe48198bfcd785e5a5b1c9613
+# Source0-md5:	f0970723ffe7c8f2a4a9d32337286586
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source3:	%{name}-module-install
@@ -90,8 +90,8 @@ Source5:	%{name}-cgi-fcgi.ini
 Source6:	%{name}-cgi.ini
 Source7:	%{name}-apache.ini
 Source8:	%{name}-cli.ini
-Source9:	http://www.hardened-php.net/hardening-patch-4.3.11-0.3.1.patch.gz
-# Source9-md5:	b231e363b60c8749fcafe1e24e8bacbb
+Source9:	http://www.hardened-php.net/hardening-patch-4.4.0-0.4.3.patch.gz
+# Source9-md5:	6eac3c5c5a7473c68a043c7657298f48
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-xml-expat-fix.patch
