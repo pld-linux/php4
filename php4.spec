@@ -9,6 +9,7 @@
 #11:26:36 <@glen>   heimdal-libs-0.7.1-1 marks openldap-libs-2.2.29-1 (cap liblber-2.2.so.7()(64bit))
 #11:26:36 <@glen>     openldap-libs-2.2.29-1 marks cyrus-sasl-2.1.21-3 (cap cyrus-sasl)
 #11:27:00 <@glen> php5-common doesn't have such deps
+# - above is caused by openssl linked in statically as openssl links with kerberos
 #
 # Conditional build:
 %bcond_with	db3		# use db3 packages instead of db (4.x) for Berkeley DB support
@@ -76,7 +77,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.1
-Release:	2%{?with_hardening:hardened}
+Release:	3%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
 License:	PHP
@@ -128,6 +129,7 @@ Patch32:	%{name}-gd_imagerotate_enable.patch
 Patch33:	%{name}-uint32_t.patch
 Patch34:	%{name}-install_gd_headers.patch
 Patch35:	%{name}-both-apxs.patch
+Patch36:	%{name}-bug-35009.patch
 #Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1665,6 +1667,7 @@ cp php.ini-dist php.ini
 %patch33 -p1
 %patch34 -p1
 %patch35 -p1
+%patch36 -p1
 
 %if %{with hardening}
 zcat %{SOURCE9} | patch -p1
