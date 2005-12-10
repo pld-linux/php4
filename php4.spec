@@ -77,7 +77,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.1
-%define	_rel 6
+%define	_rel 7
 Release:	%{_rel}%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
@@ -133,6 +133,7 @@ Patch35:	%{name}-both-apxs.patch
 Patch36:	%{name}-bug-35009.patch
 Patch37:	%{name}-bug-35056.patch
 Patch38:	%{name}-bug-35067.patch
+Patch39:	php-dextension.patch
 #Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -1674,6 +1675,7 @@ cp php.ini-dist php.ini
 %patch36 -p1
 %patch37 -p1
 %patch38 -p1
+%patch39 -p1
 
 %if %{with hardening}
 zcat %{SOURCE9} | patch -p1
