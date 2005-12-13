@@ -145,26 +145,26 @@ BuildRequires:	bzip2-devel
 BuildRequires:	cracklib-devel >= 2.7-15
 %{?with_curl:BuildRequires:	curl-devel >= 7.12.0}
 BuildRequires:	cyrus-sasl-devel
-%{?with_db3:BuildRequires:	db3-devel >= 3.1}
 %{!?with_db3:BuildRequires:	db-devel >= 4.0}
+%{?with_db3:BuildRequires:	db3-devel >= 3.1}
 BuildRequires:	elfutils-devel
 %if %{with wddx} || %{with xml} || %{with xmlrpc}
 BuildRequires:	expat-devel
 %endif
-%{?with_fdf:BuildRequires:	fdftk-devel}
 BuildRequires:	fcgi-devel
+%{?with_fdf:BuildRequires:	fdftk-devel}
 BuildRequires:	flex
 %if %{with mssql} || %{with sybase}
 BuildRequires:	freetds-devel
 %endif
 BuildRequires:	freetype-devel >= 2.0
 %{?with_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
-BuildRequires:	gd-devel >= 2.0.28-2
 BuildRequires:	gd-devel(gif)
+BuildRequires:	gd-devel >= 2.0.28-2
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
-%{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2}
 %{?with_imap:BuildRequires:	heimdal-devel >= 0.7}
+%{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2}
 %{?with_java:BuildRequires:	jdk >= 1.1}
 %{?with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
 BuildRequires:	libjpeg-devel
@@ -186,13 +186,14 @@ BuildRequires:	ncurses-ext-devel
 %if %{with openssl} || %{with ldap}
 BuildRequires:	openssl-devel >= 0.9.7d
 %endif
+BuildRequires:	%{__perl}
+%{?with_snmp:BuildRequires:	net-snmp-devel >= 5.0.7}
 BuildRequires:	pam-devel
 BuildRequires:	pcre-devel
 %{?with_pdf:BuildRequires:	pdflib-devel >= 4.0.0}
-BuildRequires:	%{__perl}
 %{?with_msession:BuildRequires:	phoenix-devel}
-%{?with_pgsql:BuildRequires:	postgresql-devel}
 %{?with_pgsql:BuildRequires:	postgresql-backend-devel >= 7.2}
+%{?with_pgsql:BuildRequires:	postgresql-devel}
 %{?with_qtdom:BuildRequires:	qt-devel >= 2.2.0}
 BuildRequires:	readline-devel
 %{?with_recode:BuildRequires:	recode-devel >= 3.5d-3}
@@ -201,7 +202,6 @@ BuildRequires:	rpmbuild(macros) >= 1.236
 %{?with_xslt:BuildRequires:	sablotron-devel >= 0.96}
 BuildRequires:	sed >= 4.0
 BuildRequires:	t1lib-devel
-%{?with_snmp:BuildRequires:	net-snmp-devel >= 5.0.7}
 %{?with_odbc:BuildRequires:	unixODBC-devel}
 %{?with_xmlrpc:BuildRequires:	xmlrpc-epi-devel}
 %{?with_yaz:BuildRequires:	yaz-devel >= 1.9}
@@ -320,8 +320,8 @@ Summary:	php4 DSO module for apache 2.x
 Summary(pl):	Modu³ DSO (Dynamic Shared Object) php4 dla apache 2.x
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	apache >= 2.0.52-2
 Requires:	apache(modules-api) = %{apache_modules_api}
+Requires:	apache >= 2.0.52-2
 Provides:	php = %{epoch}:%{version}-%{release}
 Provides:	php4 = %{epoch}:%{version}-%{release}
 Obsoletes:	phpfi
@@ -775,8 +775,8 @@ Summary(pl):	Modu³ GD dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	gd >= 2.0.28-2
 Requires:	gd(gif)
+Requires:	gd >= 2.0.28-2
 Provides:	%{name}-gd(gif) = %{epoch}:%{version}-%{release}
 Provides:	php-gd = %{epoch}:%{version}-%{release}
 
@@ -1500,9 +1500,9 @@ Modu³ PHP dodaj±cy obs³ugê tokenizera do PHP.
 Summary:	wddx extension module for PHP
 Summary(pl):	Modu³ wddx dla PHP
 Group:		Libraries
-Requires:	%{name}-session = %{epoch}:%{version}-%{release}
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Requires:	%{name}-session = %{epoch}:%{version}-%{release}
 Provides:	php-wddx = %{epoch}:%{version}-%{release}
 
 %description wddx
