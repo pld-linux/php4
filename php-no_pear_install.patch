@@ -4,35 +4,8 @@
  CXXFLAGS="$CXXFLAGS $standard_libtool_flag"
  
  all_targets='$(OVERALL_TARGET) $(PHP_MODULES) $(PHP_CLI_TARGET)'
--install_targets="$install_modules $install_pear install-build install-headers install-programs"
+-install_targets="$install_modules install-build install-headers install-programs $install_pear"
 +install_targets="$install_modules install-build install-headers install-programs"
  
  case $PHP_SAPI in
    cgi)
---- ./configure.in~	2005-10-17 19:09:07.000000000 +0300
-+++ ./configure.in	2005-10-17 19:19:18.000000000 +0300
-@@ -937,15 +937,6 @@
-   dnl
-   dnl PEAR dependancies
-   dnl
--  if test "$PHP_PCRE_REGEX" = "no"; then
--    pear_error_msg="$pear_error_msg 
--                    PEAR requires PCRE to be enabled.    Add --with-pcre-regex to the configure line. (or --without-pear)"
--  fi
--  if test "$PHP_XML" = "no"; then
--    pear_error_msg="$pear_error_msg 
--                    PEAR requires XML to be enabled.     Add --enable-xml to the configure line. (or --without-pear)"
--  fi
--
- dnl
- dnl ext/xmlrpc is not really there yet to be a requirement..
- dnl
-@@ -968,8 +959,6 @@
-       *)   PEAR_INSTALLDIR=$libdir/php;;
-     esac
-   fi
--
--  PHP_ADD_MAKEFILE_FRAGMENT($abs_srcdir/pear/Makefile.frag,$abs_srcdir/pear,pear)
- fi
- 
- 
