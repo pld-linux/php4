@@ -212,3 +212,23 @@ diff -urbB php-5.1.0.org/php.ini php-5.1.0/php.ini
  
  ; When enabled, the SERVER and ENV variables are created when they're first
  ; used (Just In Time) instead of when the script starts. If these variables
+--- php-5.1.1/php.ini~	2005-12-19 20:04:03.000000000 +0200
++++ php-5.1.1/php.ini	2005-12-19 20:08:54.000000000 +0200
+@@ -460,7 +460,7 @@
+ ; Whether or not to register the old-style input arrays, HTTP_GET_VARS
+ ; and friends.  If you're not using them, it's recommended to turn them off,
+ ; for performance reasons.
+-register_long_arrays = On
++register_long_arrays = Off
+ 
+ ; This directive tells PHP whether to declare the argv&argc variables (that
+ ; would contain the GET information).  If you don't use these variables, you
+@@ -588,7 +588,7 @@
+ ;;;;;;;;;;;;;;;;;;
+ 
+ ; Whether to allow the treatment of URLs (like http:// or ftp://) as files.
+-allow_url_fopen = On
++allow_url_fopen = Off
+ 
+ ; Define the anonymous ftp password (your email address)
+ ;from="john@doe.com"
