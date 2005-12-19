@@ -201,3 +201,14 @@ diff -urbB php-5.1.0.org/php.ini php-5.1.0/php.ini
  ;;;;;;;;;;;;;;;;;;;
  ; Module Settings ;
  ;;;;;;;;;;;;;;;;;;;
+--- php-5.1.1/php.ini~	2005-12-19 20:01:09.000000000 +0200
++++ php-5.1.1/php.ini	2005-12-19 20:04:03.000000000 +0200
+@@ -465,7 +465,7 @@
+ ; This directive tells PHP whether to declare the argv&argc variables (that
+ ; would contain the GET information).  If you don't use these variables, you
+ ; should turn it off for increased performance.
+-register_argc_argv = On
++register_argc_argv = Off
+ 
+ ; When enabled, the SERVER and ENV variables are created when they're first
+ ; used (Just In Time) instead of when the script starts. If these variables
