@@ -77,7 +77,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.1
-%define	_rel 8
+%define	_rel 9
 Release:	%{_rel}%{?with_hardening:hardened}
 Epoch:		3
 Group:		Libraries
@@ -321,7 +321,7 @@ Summary(pl):	ModuЁ DSO (Dynamic Shared Object) php4 dla apache 2.x
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	apache(modules-api) = %{apache_modules_api}
-Requires:	apache >= 2.0.52-2
+Requires:	apache >= 2.2.0
 Provides:	php = %{epoch}:%{version}-%{release}
 Provides:	php4 = %{epoch}:%{version}-%{release}
 Obsoletes:	phpfi
