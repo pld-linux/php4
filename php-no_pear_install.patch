@@ -3,7 +3,7 @@
 @@ -1149,7 +1149,7 @@
  CXXFLAGS="$CXXFLAGS $standard_libtool_flag"
  
- all_targets='$(OVERALL_TARGET) $(PHP_MODULES) $(PHP_CLI_TARGET)'
+ all_targets="$lcov_target \$(OVERALL_TARGET) \$(PHP_MODULES) \$(PHP_CLI_TARGET)"
 -install_targets="$install_modules install-build install-headers install-programs $install_pear"
 +install_targets="$install_modules install-build install-headers install-programs"
  
