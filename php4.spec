@@ -1968,7 +1968,10 @@ install ext/ext_skel $RPM_BUILD_ROOT%{_bindir}/php-ext_skel
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/conf.d
 for so in modules/*.so; do
 	mod=$(basename $so .so)
-	cat > $RPM_BUILD_ROOT%{_sysconfdir}/conf.d/${mod}.ini <<EOF
+	conf="%{_sysconfdir}/conf.d/${mod}.ini"
+	# xml needs to be loaded before wddx
+	[ "$mod" = "wddx" ] && conf="%{_sysconfdir}/conf.d/xml_${mod}.ini"
+	cat > $RPM_BUILD_ROOT${conf} <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
@@ -3191,7 +3194,7 @@ fi
 %files wddx
 %defattr(644,root,root,755)
 %doc ext/wddx/CREDITS
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/conf.d/wddx.ini
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/conf.d/*wddx.ini
 %attr(755,root,root) %{extensionsdir}/wddx.so
 %endif
 
