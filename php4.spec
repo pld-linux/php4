@@ -50,7 +50,7 @@
 %bcond_without	apache1		# disable building apache 1.3.x module
 %bcond_without	apache2		# disable building apache 2.x module
 %bcond_without	zts		# disable experimental-zts
-
+%bcond_with	zlib_static	# build zlib static. needed for getimagesize() to understand flash6 files
 %define apxs1		/usr/sbin/apxs1
 %define	apxs2		/usr/sbin/apxs
 
@@ -1849,8 +1849,7 @@ for sapi in $sapis; do
 	%{?with_xslt:--with-xslt-sablot=shared} \
 	%{?with_yaz:--with-yaz=shared} \
 	--with-zip=shared \
-	--with-zlib=shared \
-	--with-zlib-dir=shared,/usr
+	--with-zlib%{!?with_zlib_static:=shared} --with-zlib-dir=shared,/usr
 
 	cp -f Makefile Makefile.$sapi
 
@@ -2498,11 +2497,13 @@ fi
 %postun zip
 %extension_postun
 
+%if %{without zlib_static}
 %post zlib
 %extension_post
 
 %postun zlib
 %extension_postun
+%endif
 
 # openssl trigger on common package. it removes shared openssl module from php.ini, if it was there.
 %triggerun common -- %{name}-openssl < 3:4.4.0-4
@@ -3245,5 +3246,7 @@ fi
 %files zlib
 %defattr(644,root,root,755)
 %doc ext/zlib/CREDITS
+%if %{without zlib_static}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/conf.d/zlib.ini
 %attr(755,root,root) %{extensionsdir}/zlib.so
+%endif
