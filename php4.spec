@@ -50,7 +50,6 @@
 %bcond_without	apache1		# disable building apache 1.3.x module
 %bcond_without	apache2		# disable building apache 2.x module
 %bcond_without	zts		# disable experimental-zts
-%bcond_with	zlib_static	# build zlib static. needed for getimagesize() to understand flash6 files
 %define apxs1		/usr/sbin/apxs1
 %define	apxs2		/usr/sbin/apxs
 
@@ -80,8 +79,8 @@ Version:	4.4.1
 %define	_rel 10
 Release:	%{_rel}%{?with_hardening:hardened}
 Epoch:		3
-Group:		Libraries
 License:	PHP
+Group:		Libraries
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
 # Source0-md5:	6b5726471189f8a1f26dd7cc5e19b442
 Source1:	FAQ.%{name}
@@ -134,6 +133,7 @@ Patch36:	%{name}-bug-35009.patch
 Patch37:	%{name}-bug-35056.patch
 Patch38:	%{name}-bug-35067.patch
 Patch39:	php-dextension.patch
+Patch40:	%{name}-zlib-for-getimagesize.patch
 #Icon:		php4.gif
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
@@ -159,8 +159,8 @@ BuildRequires:	freetds-devel
 %endif
 BuildRequires:	freetype-devel >= 2.0
 %{?with_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
-BuildRequires:	gd-devel(gif)
 BuildRequires:	gd-devel >= 2.0.28-2
+BuildRequires:	gd-devel(gif)
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
 %{?with_imap:BuildRequires:	heimdal-devel >= 0.7}
@@ -304,8 +304,8 @@ Requires:	apache1(EAPI) >= 1.3.33-2
 Requires:	apache1-mod_mime
 Provides:	php = %{epoch}:%{version}-%{release}
 Provides:	php4 = %{epoch}:%{version}-%{release}
-Obsoletes:	phpfi
 Obsoletes:	apache-mod_php < 1:4.1.1
+Obsoletes:	phpfi
 # Obsolete last version when apache module was in main package
 Obsoletes:	php4 < 3:4.3.11-4.16
 
@@ -320,12 +320,12 @@ Summary:	php4 DSO module for apache 2.x
 Summary(pl):	Modu³ DSO (Dynamic Shared Object) php4 dla apache 2.x
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	apache(modules-api) = %{apache_modules_api}
 Requires:	apache >= 2.2.0
+Requires:	apache(modules-api) = %{apache_modules_api}
 Provides:	php = %{epoch}:%{version}-%{release}
 Provides:	php4 = %{epoch}:%{version}-%{release}
-Obsoletes:	phpfi
 Obsoletes:	apache-mod_php < 1:4.1.1
+Obsoletes:	phpfi
 # Obsolete last version when apache module was in main package
 Obsoletes:	php4 < 3:4.3.11-4.16
 
@@ -340,8 +340,8 @@ Summary:	php4 as FastCGI program
 Summary(pl):	php4 jako program FastCGI
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Provides:	php-fcgi = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
+Provides:	php-fcgi = %{epoch}:%{version}-%{release}
 Provides:	php4 = %{epoch}:%{version}-%{release}
 
 %description fcgi
@@ -402,13 +402,13 @@ Requires:	sed >= 4.0
 Provides:	%{name}-openssl = %{epoch}:%{version}-%{release}
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
 Provides:	%{name}-standard = %{epoch}:%{version}-%{release}
+Provides:	php(modules_api) = %{php_api_version}
+Provides:	php(zend_extension_api) = %{zend_extension_api}
+Provides:	php(zend_module_api) = %{zend_module_api}
 Provides:	php-common = %{epoch}:%{version}-%{release}
 Provides:	php-openssl = %{epoch}:%{version}-%{release}
 Provides:	php-session = %{epoch}:%{version}-%{release}
 Provides:	php-standard = %{epoch}:%{version}-%{release}
-Provides:	php(modules_api) = %{php_api_version}
-Provides:	php(zend_module_api) = %{zend_module_api}
-Provides:	php(zend_extension_api) = %{zend_extension_api}
 Provides:	php4(debug) = %{php_debug}
 Provides:	php4(thread-safety) = %{zend_zts}
 Obsoletes:	php-session < 3:4.2.1-2
@@ -775,8 +775,8 @@ Summary(pl):	Modu³ GD dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	gd(gif)
 Requires:	gd >= 2.0.28-2
+Requires:	gd(gif)
 Provides:	%{name}-gd(gif) = %{epoch}:%{version}-%{release}
 Provides:	php-gd = %{epoch}:%{version}-%{release}
 
@@ -1406,7 +1406,7 @@ Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-sybase = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-sybase-ct
+Obsoletes:	php4-sybase-ct
 
 %description sybase
 This is a dynamic shared object (DSO) for PHP that will add Sybase and
@@ -1426,7 +1426,7 @@ Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-sybase-ct = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-sybase
+Obsoletes:	php4-sybase
 
 %description sybase-ct
 This is a dynamic shared object (DSO) for PHP that will add Sybase and
@@ -1676,6 +1676,7 @@ cp php.ini-dist php.ini
 %patch37 -p1
 %patch38 -p1
 %patch39 -p1
+%patch40 -p1
 
 %if %{with hardening}
 zcat %{SOURCE9} | patch -p1
@@ -2497,13 +2498,11 @@ fi
 %postun zip
 %extension_postun
 
-%if %{without zlib_static}
 %post zlib
 %extension_post
 
 %postun zlib
 %extension_postun
-%endif
 
 # openssl trigger on common package. it removes shared openssl module from php.ini, if it was there.
 %triggerun common -- %{name}-openssl < 3:4.4.0-4
@@ -3246,7 +3245,5 @@ fi
 %files zlib
 %defattr(644,root,root,755)
 %doc ext/zlib/CREDITS
-%if %{without zlib_static}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/conf.d/zlib.ini
 %attr(755,root,root) %{extensionsdir}/zlib.so
-%endif
