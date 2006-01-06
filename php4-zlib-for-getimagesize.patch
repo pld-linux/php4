@@ -1,0 +1,51 @@
+make compressed .swf parsing possible,
+link core php with -lz for getimagesize()
+see also http://bugs.php.net/bug.php?id=29611
+
+--- php-4.4.1/ext/zlib/config0.m4~	2006-01-06 19:09:51.000000000 +0200
++++ php-4.4.1/ext/zlib/config0.m4	2006-01-06 19:09:52.000000000 +0200
+@@ -49,5 +49,6 @@
+   PHP_ZLIB_DIR=$ZLIB_DIR
+   PHP_ADD_LIBRARY(z,, ZLIB_SHARED_LIBADD)
+   PHP_ADD_INCLUDE($ZLIB_INCDIR)
++  EXTRA_LIBS="$EXTRA_LIBS $ZLIB_SHARED_LIBADD"
+ 
+ fi
+--- php-4.4.1/ext/standard/image.c	2005-07-27 14:22:36.000000000 +0300
++++ /tmp/image.c	2006-01-06 19:14:00.000000000 +0200
+@@ -31,7 +31,7 @@
+ #endif
+ #include "php_image.h"
+ 
+-#if HAVE_ZLIB && !defined(COMPILE_DL_ZLIB)
++#if HAVE_ZLIB
+ #include "zlib.h"
+ #endif
+ 
+@@ -80,7 +80,7 @@
+ 	REGISTER_LONG_CONSTANT("IMAGETYPE_JP2",     IMAGE_FILETYPE_JP2,     CONST_CS | CONST_PERSISTENT);
+ 	REGISTER_LONG_CONSTANT("IMAGETYPE_JPX",     IMAGE_FILETYPE_JPX,     CONST_CS | CONST_PERSISTENT);
+ 	REGISTER_LONG_CONSTANT("IMAGETYPE_JB2",     IMAGE_FILETYPE_JB2,     CONST_CS | CONST_PERSISTENT);
+-#if HAVE_ZLIB && !defined(COMPILE_DL_ZLIB)
++#if HAVE_ZLIB
+ 	REGISTER_LONG_CONSTANT("IMAGETYPE_SWC",     IMAGE_FILETYPE_SWC,     CONST_CS | CONST_PERSISTENT);
+ #endif	
+ 	REGISTER_LONG_CONSTANT("IMAGETYPE_IFF",     IMAGE_FILETYPE_IFF,     CONST_CS | CONST_PERSISTENT);
+@@ -184,7 +184,7 @@
+ }
+ /* }}} */
+ 
+-#if HAVE_ZLIB && !defined(COMPILE_DL_ZLIB)
++#if HAVE_ZLIB
+ /* {{{ php_handle_swc
+  */
+ static struct gfxinfo *php_handle_swc(php_stream * stream TSRMLS_DC)
+@@ -1267,7 +1290,7 @@
+ 			result = php_handle_swf(stream TSRMLS_CC);
+ 			break;
+ 		case IMAGE_FILETYPE_SWC:
+-#if HAVE_ZLIB && !defined(COMPILE_DL_ZLIB)
++#if HAVE_ZLIB
+ 			result = php_handle_swc(stream TSRMLS_CC);
+ #else
+ 			php_error_docref(NULL TSRMLS_CC, E_NOTICE, "The image is a compressed SWF file, but you do not have a static version of the zlib extension enabled.");
