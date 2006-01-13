@@ -1757,6 +1757,7 @@ for sapi in $sapis; do
 	--with-exec-dir=%{_bindir} \
 	--%{!?debug:dis}%{?debug:en}able-debug \
 	%{?with_zts:--enable-experimental-zts} \
+	--enable-inline-optimization \
 	--enable-shared \
 	--disable-static \
 	--enable-magic-quotes \
@@ -2035,14 +2036,7 @@ fi
 [ ! -f /etc/httpd/httpd.conf/??_mod_php4.conf ] || %service -q httpd restart
 
 %if %{with apache2}
-%triggerpostun -- php4 < 3:4.3.11-4.16
-# for fixed php-SAPI.ini, the poor php-apache.ini was never read for apache2
-if [ -f %{_sysconfdir}/php-apache.ini.rpmsave ]; then
-	cp -f %{_sysconfdir}/php-apache2handler.ini{,.rpmnew}
-	mv -f %{_sysconfdir}/php-apache.ini.rpmsave %{_sysconfdir}/php-apache2handler.ini
-fi
-# extra trigger, if they did not upgrade to 3:4.4.0-2 but still had old php-apache.ini
-%triggerpostun -n apache-mod_php4 -- apache-mod_php4 < 3:4.4.0-2.16
+%triggerpostun -n apache-mod_php4 -- apache-mod_php4 < 3:4.4.0-2.16, php4 < 3:4.3.11-4.16
 # for fixed php-SAPI.ini, the poor php-apache.ini was never read for apache2
 if [ -f %{_sysconfdir}/php-apache.ini.rpmsave ]; then
 	cp -f %{_sysconfdir}/php-apache2handler.ini{,.rpmnew}
