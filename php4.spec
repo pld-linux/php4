@@ -1753,10 +1753,6 @@ for sapi in $sapis; do
 	--enable-inline-optimization \
 	--enable-shared \
 	--disable-static \
-	--enable-magic-quotes \
-	--enable-memory-limit \
-	--enable-track-vars \
-	--enable-safe-mode \
 	--enable-bcmath=shared \
 	--enable-calendar=shared \
 	--enable-ctype=shared \
@@ -1764,20 +1760,24 @@ for sapi in $sapis; do
 	--enable-dbx=shared \
 	--enable-dio=shared \
 	--enable-exif=shared \
-	--enable-ftp=shared \
 	--enable-filepro=shared \
+	--enable-ftp=shared \
+	--enable-magic-quotes \
 	--enable-mbstring=shared,all --enable-mbregex \
+	--enable-memory-limit \
 	--enable-overload=shared \
 	--enable-pcntl=shared \
 	--enable-posix=shared \
+	%{?with_recode:--with-recode=shared} \
+	--enable-safe-mode \
 	--enable-session --enable-trans-sid \
 	--enable-shmop=shared \
+	--enable-sockets=shared \
 	--enable-sysvmsg=shared \
 	--enable-sysvsem=shared \
 	--enable-sysvshm=shared \
-	--enable-sockets=shared \
-	%{?with_recode:--with-recode=shared} \
 	--enable-tokenizer=shared \
+	--enable-track-vars \
 	%{?with_wddx:--enable-wddx=shared} \
 	%{!?with_xml:--disable-xml}%{?with_xml:--enable-xml=shared} \
 	%{?with_xslt:--enable-xslt=shared} \
@@ -1786,10 +1786,8 @@ for sapi in $sapis; do
 	%{?with_cpdf:--with-cpdflib=shared} \
 	--with-crack=shared \
 	%{!?with_curl:--without-curl}%{?with_curl:--with-curl=shared} \
-	--with-db=shared \
-	%{?with_db3:--with-db3}%{!?with_db3:--with-db4} \
+	--with-db=shared --with-db%{?with_db3:3}%{!?with_db3:4} \
 	--with-dbase=shared \
-	%{?with_xml:--with-dom=shared} \
 	%{?with_domxslt:--with-dom-xslt=shared --with-dom-exslt=shared} \
 %if %{with xml} || %{with xmlrpc}
 	--with-expat-dir=shared,/usr \
@@ -1797,15 +1795,15 @@ for sapi in $sapis; do
 	--without-expat-dir \
 %endif
 	%{?with_fdf:--with-fdftk=shared} \
-	%{?with_fribidi:--with-fribidi=shared} \
-	--with-iconv=shared \
 	--with-filepro=shared \
 	--with-freetype-dir=shared \
-	--with-gettext=shared \
+	%{?with_fribidi:--with-fribidi=shared} \
 	--with-gd=shared,/usr --enable-gd-native-ttf \
 	--with-gdbm \
+	--with-gettext=shared \
 	--with-gmp=shared \
 	--with-hyperwave=shared \
+	--with-iconv=shared \
 	%{?with_imap:--with-imap=shared --with-imap-ssl --with-kerberos} \
 	%{?with_interbase:--with-interbase=shared%{!?with_interbase_inst:,/usr}} \
 	%{?with_java:--with-java=%{_libdir}/java} \
@@ -1822,6 +1820,7 @@ for sapi in $sapis; do
 	--with-mysql=shared,/usr --with-mysql-sock=/var/lib/mysql/mysql.sock \
 	--with-ncurses=shared \
 	%{?with_oci8:--with-oci8=shared} \
+	%{?with_odbc:--with-unixODBC=shared} \
 	%{?with_openssl:--with-openssl} \
 	%{?with_oracle:--with-oracle=shared} \
 	%{!?with_pcre:--without-pcre-regex}%{?with_pcre:--with-pcre-regex=shared,/usr} \
@@ -1829,21 +1828,20 @@ for sapi in $sapis; do
 	--with-pear=%{php_pear_dir} \
 	%{!?with_pgsql:--without-pgsql}%{?with_pgsql:--with-pgsql=shared,/usr} \
 	--with-png-dir=/usr \
-	%{?with_pspell:--with-pspell=shared} \
+	%{?with_qtdom:--with-qtdom=shared} \
 	--with-readline=shared \
 	--with-regex=php \
-	%{?with_qtdom:--with-qtdom=shared} \
-	--without-sablot-js \
 	%{?with_snmp:--with-snmp=shared --enable-ucd-snmp-hack} \
+	%{?with_pspell:--with-pspell=shared} \
 	%{?with_sybase:--with-sybase-ct=shared,/usr --with-sybase=shared,/usr} \
 	--with-t1lib=shared \
 	--with-tiff-dir=/usr \
-	%{?with_odbc:--with-unixODBC=shared} \
+	%{?with_xml:--with-dom=shared} \
 	%{!?with_xmlrpc:--without-xmlrpc}%{?with_xmlrpc:--with-xmlrpc=shared,/usr} \
-	%{?with_xslt:--with-xslt-sablot=shared} \
+	%{?with_xslt:--with-xslt-sablot=shared} --without-sablot-js \
 	%{?with_yaz:--with-yaz=shared} \
 	--with-zip=shared \
-	--with-zlib%{!?with_zlib_static:=shared} --with-zlib-dir=shared,/usr
+	--with-zlib=shared --with-zlib-dir=shared,/usr \
 
 	cp -f Makefile Makefile.$sapi
 
