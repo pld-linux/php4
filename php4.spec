@@ -49,6 +49,7 @@
 %bcond_without	yaz		# without YAZ extension module
 %bcond_without	apache1		# disable building apache 1.3.x module
 %bcond_without	apache2		# disable building apache 2.x module
+%bcond_without	fcgi		# disable building FCGI SAPI
 %bcond_without	zts		# disable experimental-zts
 %define apxs1		/usr/sbin/apxs1
 %define	apxs2		/usr/sbin/apxs
@@ -76,7 +77,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.2
-%define	_rel 1
+%define	_rel 2
 Release:	%{_rel}%{?with_hardening:hardened}
 Epoch:		3
 License:	PHP
@@ -147,7 +148,7 @@ BuildRequires:	elfutils-devel
 %if %{with wddx} || %{with xml} || %{with xmlrpc}
 BuildRequires:	expat-devel
 %endif
-BuildRequires:	fcgi-devel
+%{?with_fcgi:BuildRequires:	fcgi-devel}
 %{?with_fdf:BuildRequires:	fdftk-devel}
 BuildRequires:	flex
 %if %{with mssql} || %{with sybase}
@@ -1711,7 +1712,10 @@ fi
 PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
 
 sapis="
-fcgi cgi cli
+%if %{with fcgi}
+fcgi
+%endif
+cgi cli
 %if %{with apache1}
 apxs1
 %endif
@@ -1844,8 +1848,6 @@ for sapi in $sapis; do
 	--with-zlib=shared --with-zlib-dir=shared,/usr \
 
 	cp -f Makefile Makefile.$sapi
-
-	# left for debugging purposes
 	cp -f main/php_config.h php_config.h.$sapi
 done
 
@@ -1873,21 +1875,20 @@ s|^libdir=.*|libdir='%{_libdir}/apache'|;
 s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |" sapi/apache2handler/libphp4.la
 %endif
 
-# for fcgi: -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0
-# -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1(die) -DHAVE_SYS_PARAM_H=1
-# -DPHP_FASTCGI=1 -DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1
-%{__make} sapi/cgi/php -f Makefile.fcgi \
-	CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=0 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0 -DHAVE_FILENO_PROTO=1 -DHAVE_FPOS=1 -DHAVE_LIBNSL=1 -DHAVE_SYS_PARAM_H=1 -DPHP_FASTCGI=1 -DPHP_FCGI_STATIC=1 -DPHP_WRITE_STDOUT=1"
+# FCGI
+%if %{with fcgi}
+cp -af php_config.h.fcgi main/php_config.h
+%{__make} sapi/cgi/php -f Makefile.fcgi
 cp -r sapi/cgi sapi/fcgi
 rm -rf sapi/cgi/.libs sapi/cgi/*.lo
+%endif
 
-# notes:
-# -DENABLE_CHROOT_FUNC=1 (cgi,fcgi) is used in ext/standard/dir.c (libphp_common)
-# -DPHP_WRITE_STDOUT is used also for cli, but not set by its config.m4
-%{__make} sapi/cgi/php -f Makefile.cgi \
-	CFLAGS_CLEAN="%{rpmcflags} -DDISCARD_PATH=1 -DENABLE_PATHINFO_CHECK=1 -DFORCE_CGI_REDIRECT=0 -DPHP_WRITE_STDOUT=1"
+# CGI
+cp -af php_config.h.cgi main/php_config.h
+%{__make} sapi/cgi/php -f Makefile.cgi
 
 # CLI
+cp -af php_config.h.cli main/php_config.h
 %{__make} sapi/cli/php -f Makefile.cli
 
 %install
@@ -1921,7 +1922,9 @@ libtool --silent --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdi
 libtool --silent --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php4.cgi
 
 # install FCGI
+%if %{with fcgi}
 libtool --silent --mode=install install sapi/fcgi/php $RPM_BUILD_ROOT%{_bindir}/php4.fcgi
+%endif
 
 # install CLI
 libtool --silent --mode=install install sapi/cli/php $RPM_BUILD_ROOT%{_bindir}/php4.cli
@@ -1933,7 +1936,9 @@ ln -sf php4.cli $RPM_BUILD_ROOT%{_bindir}/php
 %{?with_java:install ext/java/php_java.jar $RPM_BUILD_ROOT%{extensionsdir}}
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
+%if %{with fcgi}
 install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi-fcgi.ini
+%endif
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi.ini
 install %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/php-cli.ini
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sbindir}
@@ -2704,11 +2709,13 @@ fi
 /home/services/httpd/icons/*
 %endif
 
+%if %{with fcgi}
 %files fcgi
 %defattr(644,root,root,755)
 %doc sapi/cgi/{CREDITS,README.FastCGI}
 %attr(755,root,root) %{_bindir}/php4.fcgi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-cgi-fcgi.ini
+%endif
 
 %files cgi
 %defattr(644,root,root,755)
