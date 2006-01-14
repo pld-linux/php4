@@ -75,14 +75,14 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
-Version:	4.4.1
-%define	_rel 11
+Version:	4.4.2
+%define	_rel 1
 Release:	%{_rel}%{?with_hardening:hardened}
 Epoch:		3
 License:	PHP
 Group:		Libraries
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
-# Source0-md5:	6b5726471189f8a1f26dd7cc5e19b442
+# Source0-md5:	28051cd9ef43490dd9727a4d442011b5
 Source1:	FAQ.%{name}
 Source2:	zend.gif
 Source3:	%{name}-module-install
@@ -129,12 +129,8 @@ Patch32:	%{name}-gd_imagerotate_enable.patch
 Patch33:	%{name}-uint32_t.patch
 Patch34:	%{name}-install_gd_headers.patch
 Patch35:	%{name}-both-apxs.patch
-Patch36:	%{name}-bug-35009.patch
-Patch37:	%{name}-bug-35056.patch
-Patch38:	%{name}-bug-35067.patch
-Patch39:	php-dextension.patch
-Patch40:	%{name}-zlib-for-getimagesize.patch
-#Icon:		php4.gif
+Patch36:	php-dextension.patch
+Patch37:	%{name}-zlib-for-getimagesize.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -1673,9 +1669,6 @@ cp php.ini-dist php.ini
 %patch35 -p1
 %patch36 -p1
 %patch37 -p1
-%patch38 -p1
-%patch39 -p1
-%patch40 -p1
 
 %if %{with hardening}
 zcat %{SOURCE9} | patch -p1
