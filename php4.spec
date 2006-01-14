@@ -2259,8 +2259,7 @@ fi
 %postun mysql
 %extension_postun
 
-%post ncurses
-# NOTE: only for cli/cgi
+%triggerin ncurses -- %{name}-cgi, %{name}-cli
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cgi.ini
 fi
@@ -2268,7 +2267,7 @@ if [ -f %{_sysconfdir}/php-cli.ini ]; then
 	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cli.ini
 fi
 
-%preun ncurses
+%triggerun ncurses -- %{name}-cgi, %{name}-cli
 if [ "$1" = "0" ]; then
 	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cgi.ini
@@ -2302,8 +2301,7 @@ fi
 %postun overload
 %extension_postun
 
-%post pcntl
-# NOTE: only for cli/cgi
+%triggerin pcntl -- %{name}-cgi, %{name}-cli
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 	%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cgi.ini
 fi
@@ -2311,7 +2309,7 @@ if [ -f %{_sysconfdir}/php-cli.ini ]; then
 	%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cli.ini
 fi
 
-%preun pcntl
+%triggerun pcntl -- %{name}-cgi, %{name}-cli
 if [ "$1" = "0" ]; then
 	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
@@ -2357,8 +2355,7 @@ fi
 %postun qtdom
 %extension_postun
 
-%post readline
-# NOTE: only for cli/cgi
+%triggerin readline -- %{name}-cgi, %{name}-cli
 if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 	%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cgi.ini
 fi
@@ -2366,7 +2363,7 @@ if [ -f %{_sysconfdir}/php-cli.ini ]; then
 	%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cli.ini
 fi
 
-%preun readline
+%triggerun readline -- %{name}-cgi, %{name}-cli
 if [ "$1" = "0" ]; then
 	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
 		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cgi.ini
