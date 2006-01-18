@@ -142,22 +142,4 @@ diff -urN php-4.4.2/Zend/zend_language_scanner.c php4-STABLE-200601181735/Zend/z
   		zend_copy_value(zendlval, yytext, yyleng);
  		zendlval->type = IS_STRING;
  		return T_STRING;
-diff -urN php-4.4.2/Zend/zend_language_scanner.l php4-STABLE-200601181735/Zend/zend_language_scanner.l
---- php-4.4.2/Zend/zend_language_scanner.l	2006-01-01 14:46:49.000000000 +0100
-+++ php4-STABLE-200601181735/Zend/zend_language_scanner.l	2006-01-17 12:36:07.000000000 +0100
-@@ -1632,7 +1632,6 @@
- <ST_HEREDOC>^{LABEL}(";")?{NEWLINE} {
- 	int label_len;
- 
--	CG(zend_lineno)++;
- 	if (yytext[yyleng-2]=='\r') {
- 		label_len = yyleng-2;
- 	} else {
-@@ -1653,6 +1652,7 @@
- 		BEGIN(ST_IN_SCRIPTING);
- 		return T_END_HEREDOC;
- 	} else {
-+		CG(zend_lineno)++;
-  		zend_copy_value(zendlval, yytext, yyleng);
- 		zendlval->type = IS_STRING;
- 		return T_STRING;
+
