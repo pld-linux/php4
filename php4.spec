@@ -4,7 +4,6 @@
 #
 # TODO:
 # - make additional headers added by mail patch configurable
-# - /var/run/php group not owned
 #11:26:36 <@glen> php4-common-4.4.0-14 marks heimdal-libs-0.7.1-1 (cap heimdal-libs)
 #11:26:36 <@glen>   heimdal-libs-0.7.1-1 marks openldap-libs-2.2.29-1 (cap liblber-2.2.so.7()(64bit))
 #11:26:36 <@glen>     openldap-libs-2.2.29-1 marks cyrus-sasl-2.1.21-3 (cap cyrus-sasl)
@@ -20,7 +19,6 @@
 %bcond_with	oci8		# with Oracle oci8 extension module	(BR: proprietary libs)
 %bcond_with	oracle		# with oracle extension module		(BR: proprietary libs)
 %bcond_without	cpdf		# without cpdf extension module
-%bcond_without	curl		# without CURL extension module
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
 %bcond_without	fribidi		# without FriBiDi extension module
 %bcond_without	imap		# without IMAP extension module
@@ -53,6 +51,7 @@
 %bcond_without	zts		# disable experimental-zts
 %define apxs1		/usr/sbin/apxs1
 %define	apxs2		/usr/sbin/apxs
+%bcond_without	curl		# without CURL extension module
 
 # mm is not thread safe
 # ext/session/mod_mm.c:37:3: #error mm is not thread-safe
@@ -77,7 +76,7 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.2
-%define	_rel 8
+%define	_rel 9
 Release:	%{_rel}%{?with_hardening:hardened}
 Epoch:		3
 License:	PHP
@@ -219,7 +218,6 @@ BuildRequires:	apr-util-devel >= 1:1.0.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/php4
-%define		_phpsharedir	%{_datadir}/php
 %define		extensionsdir	%{_libdir}/php4
 
 # must be in sync with source. extra check ensuring that it is so is done in %%build
@@ -398,6 +396,7 @@ Summary(uk):	Б╕бл╕отеки сп╕льного використання для php
 Group:		Libraries
 # because of dlclose() bugs in glibc <= 2.3.4 causing SEGVs on exit
 Requires:	glibc >= 6:2.3.5
+Requires:	php-dirs
 Requires:	sed >= 4.0
 Provides:	%{name}-openssl = %{epoch}:%{version}-%{release}
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
@@ -1900,10 +1899,9 @@ cp -af php_config.h.cli main/php_config.h
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}/{apache,cgi},%{_phpsharedir}} \
+install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}/{apache,cgi}} \
 	$RPM_BUILD_ROOT/home/services/{httpd,apache}/icons \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
-	$RPM_BUILD_ROOT/var/run/php \
 	$RPM_BUILD_ROOT{/etc/apache/conf.d,/etc/httpd/httpd.conf} \
 	$RPM_BUILD_ROOT%{_mandir}/man1
 
@@ -2751,11 +2749,9 @@ fi
 %dir %{_sysconfdir}
 %dir %{_sysconfdir}/conf.d
 %attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php.ini
-%attr(770,root,http) %dir %verify(not group mode) /var/run/php
 %attr(755,root,root) %{_sbindir}/php4-module-install
 %attr(755,root,root) %{_libdir}/libphp_common-*.so
 %dir %{extensionsdir}
-%dir %{_phpsharedir}
 
 %files devel
 %defattr(644,root,root,755)
