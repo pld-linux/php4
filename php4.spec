@@ -19,6 +19,7 @@
 %bcond_with	oci8		# with Oracle oci8 extension module	(BR: proprietary libs)
 %bcond_with	oracle		# with oracle extension module		(BR: proprietary libs)
 %bcond_without	cpdf		# without cpdf extension module
+%bcond_without	curl		# without CURL extension module
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
 %bcond_without	fribidi		# without FriBiDi extension module
 %bcond_without	imap		# without IMAP extension module
@@ -36,22 +37,22 @@
 %bcond_without	pdf		# without PDF extension module
 %bcond_without	pgsql		# without PostgreSQL extension module
 %bcond_without	pspell		# without pspell extension module
-%bcond_without	recode		# without recode extension module
 %bcond_without	qtdom		# without Qt DOM extension module
+%bcond_without	recode		# without recode extension module
 %bcond_without	snmp		# without SNMP extension module
 %bcond_without	sybase		# without Sybase and Sybase-CT extension modules
 %bcond_without	wddx		# without WDDX extension module
-%bcond_without	xmlrpc		# without XML-RPC extension module
 %bcond_without	xml		# without XML and DOMXML extension modules
+%bcond_without	xmlrpc		# without XML-RPC extension module
 %bcond_without	xslt		# without XSLT extension module
 %bcond_without	yaz		# without YAZ extension module
 %bcond_without	apache1		# disable building apache 1.3.x module
 %bcond_without	apache2		# disable building apache 2.x module
 %bcond_without	fcgi		# disable building FCGI SAPI
 %bcond_without	zts		# disable experimental-zts
+
 %define apxs1		/usr/sbin/apxs1
 %define	apxs2		/usr/sbin/apxs
-%bcond_without	curl		# without CURL extension module
 
 # mm is not thread safe
 # ext/session/mod_mm.c:37:3: #error mm is not thread-safe
@@ -68,6 +69,7 @@
 %undefine	with_msession
 %endif
 
+%define	_rel 9
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	JЙzyk skryptowy PHP
@@ -76,7 +78,6 @@ Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на 
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
 Version:	4.4.2
-%define	_rel 9
 Release:	%{_rel}%{?with_hardening:hardened}
 Epoch:		3
 License:	PHP
