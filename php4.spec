@@ -186,7 +186,6 @@ BuildRequires:	ncurses-ext-devel
 %if %{with openssl} || %{with ldap}
 BuildRequires:	openssl-devel >= 0.9.7d
 %endif
-BuildRequires:	%{__perl}
 %{?with_snmp:BuildRequires:	net-snmp-devel >= 5.0.7}
 BuildRequires:	pam-devel
 BuildRequires:	pcre-devel
