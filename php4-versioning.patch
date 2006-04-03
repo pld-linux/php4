@@ -42,3 +42,15 @@
  
  libtool-sapi: $(LIBTOOL_SAPI)
  
+--- php-4.4.2/sapi/apache/mod_php4.c~	2006-01-01 15:47:01.000000000 +0200
++++ php-4.4.2/sapi/apache/mod_php4.c	2006-04-04 02:02:52.348791307 +0300
+@@ -910,7 +910,9 @@
+ handler_rec php_handlers[] =
+ {
+ 	{"application/x-httpd-php", send_parsed_php},
++	{"application/x-httpd-php4", send_parsed_php},
+ 	{"application/x-httpd-php-source", send_parsed_php_source},
++	{"application/x-httpd-php4-source", send_parsed_php_source},
+ 	{"text/html", php_xbithack_handler},
+ 	{NULL}
+ };
