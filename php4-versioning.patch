@@ -1,0 +1,44 @@
+--- php-4.4.2/Makefile.global~	2006-04-04 00:35:27.582384109 +0300
++++ php-4.4.2/Makefile.global	2006-04-04 00:40:19.318848123 +0300
+@@ -1,6 +1,7 @@
+ mkinstalldirs = $(top_srcdir)/build/shtool mkdir -p
+ INSTALL = $(top_srcdir)/build/shtool install -c
+ INSTALL_DATA = $(INSTALL) -m 644
++LD_VERSION_SCRIPT="-Wl,--version-script=$(abs_srcdir)/php.ver"
+ 
+ DEFS = -DPHP_ATOM_INC -I$(top_builddir)/include -I$(top_builddir)/main -I$(top_srcdir)
+ COMMON_FLAGS = $(DEFS) $(INCLUDES) $(EXTRA_INCLUDES) $(CPPFLAGS) $(PHP_FRAMEWORKPATH)
+--- /dev/null	2006-03-28 14:00:37.387408000 +0300
++++ php-4.4.2/php.ver	2006-04-04 00:40:55.609652026 +0300
+@@ -0,0 +1 @@
++php4 { global: *; };
+--- php-4.4.2/acinclude.m4~	2006-04-03 21:43:42.852081966 +0300
++++ php-4.4.2/acinclude.m4	2006-04-04 00:47:58.259016152 +0300
+@@ -1205,7 +1205,7 @@
+       ;;
+     *[)]
+       suffix=la
+-      link_cmd='$(LIBTOOL) --mode=link ifelse($4,,[$(CC)],[$(CXX)]) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o [$]@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $($2) $(translit($1,a-z_-,A-Z__)_SHARED_LIBADD)'
++      link_cmd='$(LIBTOOL) --mode=link ifelse($4,,[$(CC)],[$(CXX)]) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o [$]@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(LD_VERSION_SCRIPT) $($2) $(translit($1,a-z_-,A-Z__)_SHARED_LIBADD)'
+       ;;
+   esac
+ 
+--- php-4.4.2/Makefile.global~	2006-04-04 00:49:19.340813340 +0300
++++ php-4.4.2/Makefile.global	2006-04-04 00:59:15.364031114 +0300
+@@ -16,13 +16,13 @@
+ build-modules: $(PHP_MODULES)
+ 
+ libphp_common.la: $(PHP_GLOBAL_OBJS)
+-	$(LIBTOOL) --mode=link $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -rpath $(phptempdir) -avoid-version $(LDFLAGS) $(PHP_RPATHS) $(PHP_GLOBAL_OBJS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@ -release $(PHP_VERSION)
++	$(LIBTOOL) --mode=link $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -rpath $(phptempdir) -avoid-version $(LD_VERSION_SCRIPT) $(LDFLAGS) $(PHP_RPATHS) $(PHP_GLOBAL_OBJS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@ -release $(PHP_VERSION)
+ 
+ libphp4.la: libphp_common.la $(PHP_SAPI_OBJS)
+-	$(LIBTOOL) --mode=link $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -rpath $(phptempdir) $(EXTRA_LDFLAGS) $(LDFLAGS) $(PHP_RPATHS) libphp_common.la $(PHP_SAPI_OBJS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@
++	$(LIBTOOL) --mode=link $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -rpath $(phptempdir) $(EXTRA_LDFLAGS) $(LDFLAGS) $(LD_VERSION_SCRIPT) $(PHP_RPATHS) libphp_common.la $(PHP_SAPI_OBJS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@
+ 
+ $(LIBTOOL_SAPI): libphp_common.la $(PHP_SAPI_OBJS)
+-	$(LIBTOOL) --mode=link $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -rpath $(phptempdir) $(EXTRA_LDFLAGS) $(LDFLAGS) $(PHP_RPATHS) libphp_common.la $(PHP_SAPI_OBJS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@
++	$(LIBTOOL) --mode=link $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -rpath $(phptempdir) $(EXTRA_LDFLAGS) $(LDFLAGS) $(LD_VERSION_SCRIPT) $(PHP_RPATHS) libphp_common.la $(PHP_SAPI_OBJS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@
+ 
+ libtool-sapi: $(LIBTOOL_SAPI)
+ 
