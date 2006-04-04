@@ -50,6 +50,7 @@
 %bcond_without	apache2		# disable building apache 2.x module
 %bcond_without	fcgi		# disable building FCGI SAPI
 %bcond_without	zts		# disable experimental-zts
+%bcond_with		versioning	# build with experimental versioning (to load php4/php5 into same apache)
 
 %define apxs1		/usr/sbin/apxs1
 %define	apxs2		/usr/sbin/apxs
@@ -69,7 +70,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 9
+%define	_rel 9.3
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -135,6 +136,7 @@ Patch37:	%{name}-zlib-for-getimagesize.patch
 Patch38:	%{name}-ini-search-path.patch
 Patch39:	%{name}-bug-36017-and-session-chars.patch
 Patch40:	%{name}-openssl-huge-hack.patch
+Patch41:	%{name}-versioning.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -1676,6 +1678,7 @@ cp php.ini-dist php.ini
 %patch38 -p1
 %patch39 -p1
 %patch40 -p1
+%{?with_versioning:%patch41 -p1}
 
 %if %{with hardening}
 zcat %{SOURCE9} | patch -p1
