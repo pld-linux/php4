@@ -70,7 +70,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 9.3
+%define	_rel 9.5
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -381,8 +381,7 @@ Summary:	/usr/bin/php symlink
 Summary(pl):	Dowi±zanie symboliczne /usr/bin/php
 Group:		Development/Languages/PHP
 Requires:	%{name}-cli = %{epoch}:%{version}-%{release}
-Provides:	php(program)
-Obsoletes:	php(program)
+Obsoletes:	/usr/bin/php
 
 %description program
 Package providing /usr/bin/php symlink to PHP CLI.
@@ -1902,7 +1901,7 @@ cp -af php_config.h.cli main/php_config.h
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}/{apache,cgi}} \
+install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}} \
 	$RPM_BUILD_ROOT/home/services/{httpd,apache}/icons \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT{/etc/apache/conf.d,/etc/httpd/httpd.conf} \
@@ -1981,8 +1980,11 @@ extension=${mod}.so
 EOF
 done
 
-# Not in all SAPI, so don't need the .ini fragments.
-rm -f $RPM_BUILD_ROOT%{_sysconfdir}/conf.d/{ncurses,pcntl,readline}.ini
+# per SAPI ini directories
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/{cgi,cli,cgi-fcgi,apache,apache2handler}.d
+
+# for CLI SAPI only
+mv $RPM_BUILD_ROOT%{_sysconfdir}/{conf.d/{ncurses,pcntl,readline}.ini,cli.d}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -2270,24 +2272,6 @@ fi
 %postun mysql
 %extension_postun
 
-%triggerin ncurses -- %{name}-cgi, %{name}-cli
-if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cgi.ini
-fi
-if [ -f %{_sysconfdir}/php-cli.ini ]; then
-	%{_sbindir}/php4-module-install install ncurses %{_sysconfdir}/php-cli.ini
-fi
-
-%triggerun ncurses -- %{name}-cgi, %{name}-cli
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cgi.ini
-	fi
-	if [ -f %{_sysconfdir}/php-cli.ini ]; then
-		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cli.ini
-	fi
-fi
-
 %post oci8
 %extension_post
 
@@ -2311,24 +2295,6 @@ fi
 
 %postun overload
 %extension_postun
-
-%triggerin pcntl -- %{name}-cgi, %{name}-cli
-if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-	%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cgi.ini
-fi
-if [ -f %{_sysconfdir}/php-cli.ini ]; then
-	%{_sbindir}/php4-module-install install pcntl %{_sysconfdir}/php-cli.ini
-fi
-
-%triggerun pcntl -- %{name}-cgi, %{name}-cli
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
-	fi
-	if [ -f %{_sysconfdir}/php-cli.ini ]; then
-		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cli.ini
-	fi
-fi
 
 %post pcre
 %extension_post
@@ -2365,24 +2331,6 @@ fi
 
 %postun qtdom
 %extension_postun
-
-%triggerin readline -- %{name}-cgi, %{name}-cli
-if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-	%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cgi.ini
-fi
-if [ -f %{_sysconfdir}/php-cli.ini ]; then
-	%{_sbindir}/php4-module-install install readline %{_sysconfdir}/php-cli.ini
-fi
-
-%triggerun readline -- %{name}-cgi, %{name}-cli
-if [ "$1" = "0" ]; then
-	if [ -f %{_sysconfdir}/php-cgi.ini ]; then
-		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cgi.ini
-	fi
-	if [ -f %{_sysconfdir}/php-cli.ini ]; then
-		[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cli.ini
-	fi
-fi
 
 %post recode
 %extension_post
@@ -2613,6 +2561,14 @@ fi
 %triggerun mysql -- %{name}-mysql < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove mysql %{_sysconfdir}/php.ini
 
+%triggerun ncurses -- %{name}-ncurses < 3:4.4.2-9.4
+if [ -f %{_sysconfdir}/php-cgi.ini ]; then
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cgi.ini
+fi
+if [ -f %{_sysconfdir}/php-cli.ini ]; then
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove ncurses %{_sysconfdir}/php-cli.ini
+fi
+
 %triggerun oci8 -- %{name}-oci8 < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove oci8 %{_sysconfdir}/php.ini
 
@@ -2624,6 +2580,14 @@ fi
 
 %triggerun overload -- %{name}-overload < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove overload %{_sysconfdir}/php.ini
+
+%triggerun pcntl -- %{name}-pcntl < 3:4.4.2-9.4
+if [ -f %{_sysconfdir}/php-cgi.ini ]; then
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cgi.ini
+fi
+if [ -f %{_sysconfdir}/php-cli.ini ]; then
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcntl %{_sysconfdir}/php-cli.ini
+fi
 
 %triggerun pcre -- %{name}-pcre < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove pcre %{_sysconfdir}/php.ini
@@ -2642,6 +2606,14 @@ fi
 
 %triggerun qtdom -- %{name}-qtdom < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove qtdom %{_sysconfdir}/php.ini
+
+%triggerun readline -- %{name}-readline < 3:4.4.2-9.4
+if [ -f %{_sysconfdir}/php-cgi.ini ]; then
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cgi.ini
+fi
+if [ -f %{_sysconfdir}/php-cli.ini ]; then
+	[ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove readline %{_sysconfdir}/php-cli.ini
+fi
 
 %triggerun recode -- %{name}-recode < 3:4.4.0-2.1
 [ ! -x %{_sbindir}/php4-module-install ] || %{_sbindir}/php4-module-install remove recode %{_sysconfdir}/php.ini
@@ -2702,6 +2674,7 @@ fi
 %defattr(644,root,root,755)
 %doc sapi/apache/CREDITS
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/apache/conf.d/*_mod_php4.conf
+%dir %{_sysconfdir}/apache.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-apache.ini
 %attr(755,root,root) %{_libdir}/apache1/libphp4.so
 /home/services/apache/icons/*
@@ -2712,6 +2685,7 @@ fi
 %defattr(644,root,root,755)
 %doc sapi/apache2handler/{CREDITS,README}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/httpd/httpd.conf/*_mod_php4.conf
+%dir %{_sysconfdir}/apache2handler.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-apache2handler.ini
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
 /home/services/httpd/icons/*
@@ -2722,6 +2696,7 @@ fi
 %defattr(644,root,root,755)
 %doc sapi/cgi/{CREDITS,README.FastCGI}
 %attr(755,root,root) %{_bindir}/php4.fcgi
+%dir %{_sysconfdir}/cgi-fcgi.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-cgi-fcgi.ini
 %endif
 
@@ -2729,6 +2704,7 @@ fi
 %defattr(644,root,root,755)
 %doc sapi/cgi/CREDITS
 %attr(755,root,root) %{_bindir}/php4.cgi
+%dir %{_sysconfdir}/cgi.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-cgi.ini
 
 %files cli
@@ -2736,6 +2712,7 @@ fi
 %doc sapi/cli/{CREDITS,README}
 %attr(755,root,root) %{_bindir}/php4.cli
 %attr(755,root,root) %{_bindir}/php4
+%dir %{_sysconfdir}/cli.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-cli.ini
 %{_mandir}/man1/php4.1*
 
@@ -3024,6 +3001,7 @@ fi
 %files ncurses
 %defattr(644,root,root,755)
 %doc ext/ncurses/CREDITS
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cli.d/ncurses.ini
 %attr(755,root,root) %{extensionsdir}/ncurses.so
 
 %if %{with oci8}
@@ -3059,6 +3037,7 @@ fi
 %files pcntl
 %defattr(644,root,root,755)
 %doc ext/pcntl/{CREDITS,README}
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cli.d/pcntl.ini
 %attr(755,root,root) %{extensionsdir}/pcntl.so
 
 %if %{with pcre}
@@ -3110,6 +3089,7 @@ fi
 %files readline
 %defattr(644,root,root,755)
 %doc ext/readline/{CREDITS,README.libedit}
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cli.d/readline.ini
 %attr(755,root,root) %{extensionsdir}/readline.so
 
 %if %{with recode}
