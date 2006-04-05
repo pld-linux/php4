@@ -1702,12 +1702,6 @@ if API=$(awk '/#define ZEND_EXTENSION_API_NO/{print $3}' Zend/zend_extensions.h)
 	exit 1
 fi
 
-CFLAGS="%{rpmcflags} -DEAPI=1 -I/usr/X11R6/include"
-%if %{with apache2}
-# Apache2 CFLAGS. harmless for other SAPIs.
-CFLAGS="$CFLAGS $(%{_bindir}/apr-1-config --cppflags --includes) $(%{_bindir}/apu-1-config --includes)"
-%endif
-
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 if [ ! -f _built-conf ]; then # configure once (for faster debugging purposes)
 	./buildconf --force
