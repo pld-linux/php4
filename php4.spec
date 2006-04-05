@@ -70,7 +70,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 9.6
+%define	_rel 9.19
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -136,6 +136,7 @@ Patch38:	%{name}-ini-search-path.patch
 Patch39:	%{name}-bug-36017-and-session-chars.patch
 Patch40:	%{name}-openssl-huge-hack.patch
 Patch41:	%{name}-versioning.patch
+Patch42:	%{name}-linkflags-clean.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -1629,6 +1630,7 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji zlib.
 
 %prep
 %setup -q -n php-%{version}
+%patch42 -p1
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -1682,10 +1684,6 @@ cp php.ini-dist php.ini
 zcat %{SOURCE8} | patch -p1
 %endif
 
-# new apr
-sed -i -e 's#apr-config#apr-1-config#g' sapi/apache*/*.m4
-sed -i -e 's#apu-config#apu-1-config#g' sapi/apache*/*.m4
-
 %build
 if API=$(awk '/#define PHP_API_VERSION/{print $3}' main/php.h) && [ $API != %{php_api_version} ]; then
 	echo "Set %%define php_api_version to $API and rerun."
@@ -1701,6 +1699,12 @@ if API=$(awk '/#define ZEND_EXTENSION_API_NO/{print $3}' Zend/zend_extensions.h)
 	echo "Set %%define zend_extension_api to $API and rerun."
 	exit 1
 fi
+
+%if 0%{?configure_cache:1}
+	if [ -f %{configure_cache_file:-$RPM_BUILD_ROOT.configure.cache} ]; then
+		cp -f %{configure_cache_file:-$RPM_BUILD_ROOT.configure.cache} config.cache
+	fi
+%endif
 
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 if [ ! -f _built-conf ]; then # configure once (for faster debugging purposes)
@@ -1852,28 +1856,23 @@ for sapi in $sapis; do
 	cp -f main/php_config.h php_config.h.$sapi
 done
 
-# for now session_mm doesn't work with shared session module...
-# --enable-session=shared
-# %{!?with_mm:--with-mm=shared,no}%{?with_mm:--with-mm=shared}
+%if 0%{?configure_cache:1}
+	cp config.cache %{configure_cache_file:-$RPM_BUILD_ROOT.configure.cache}
+%endif
+
+# must make this first, so modules can link against it.
+%{__make} libphp_common.la
+# FIXME: needed for linking modules with libphp_common.la
+#libtool --mode=install cp libphp_common.la `pwd`/libs
 
 %{__make} build-modules
 
-%{__make} libphp_common.la
-# fix install paths, avoid evil rpaths
-sed -i -e "s|^libdir=.*|libdir='%{_libdir}'|" libphp_common.la
-
 %if %{with apache1}
 %{__make} libtool-sapi LIBTOOL_SAPI=sapi/apache/libphp4.la -f Makefile.apxs1
-sed -i -e "
-s|^libdir=.*|libdir='%{_libdir}/apache1'|;
-s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache1 |" sapi/apache/libphp4.la
 %endif
 
 %if %{with apache2}
 %{__make} libtool-sapi LIBTOOL_SAPI=sapi/apache2handler/libphp4.la -f Makefile.apxs2
-sed -i -e "
-s|^libdir=.*|libdir='%{_libdir}/apache'|;
-s|^(relink_command=.* -rpath )[^ ]*/libs |$1%{_libdir}/apache |" sapi/apache2handler/libphp4.la
 %endif
 
 # FCGI
@@ -1902,17 +1901,23 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}} \
 
 # install apache1 DSO module
 %if %{with apache1}
-# TODO: use libtool here
-install sapi/apache/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache1/libphp4.so
+sed -i -e "s|^libdir=.*|libdir='%{_libdir}/apache1'|" sapi/apache/libphp4.la
+sed -i -e 's|^\(relink_command=.* -rpath \)[^ ]*/libs |\1%{_libdir}/apache1 |' sapi/apache/libphp4.la
+libtool --silent --mode=install install sapi/apache/libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache1
+rm $RPM_BUILD_ROOT%{_libdir}/apache1/libphp4.la
 %endif
 
 # install apache2 DSO module
 %if %{with apache2}
-# TODO: use libtool here
-install sapi/apache2handler/.libs/libphp4.so $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.so
+sed -i -e "s|^libdir=.*|libdir='%{_libdir}/apache'|" sapi/apache2handler/libphp4.la
+sed -i -e 's|^\(relink_command=.* -rpath \)[^ ]*/libs |\1%{_libdir}/apache |' sapi/apache2handler/libphp4.la
+libtool --silent --mode=install install sapi/apache2handler/libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache
+rm $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.la
 %endif
 
 libtool --silent --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir}
+# fix install paths, avoid evil rpaths
+sed -i -e "s|^libdir=.*|libdir='%{_libdir}'|" $RPM_BUILD_ROOT%{_libdir}/libphp_common.la
 
 # install the apache modules' files
 %{__make} install-headers install-build install-modules install-programs \
