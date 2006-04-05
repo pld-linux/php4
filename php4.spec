@@ -70,7 +70,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 9.19
+%define	_rel 9.22
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -1899,6 +1899,10 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}} \
 	$RPM_BUILD_ROOT{/etc/apache/conf.d,/etc/httpd/httpd.conf} \
 	$RPM_BUILD_ROOT%{_mandir}/man1
 
+# install the apache modules' files
+%{__make} install-headers install-build install-modules install-programs \
+	INSTALL_ROOT=$RPM_BUILD_ROOT
+
 # install apache1 DSO module
 %if %{with apache1}
 sed -i -e "s|^libdir=.*|libdir='%{_libdir}/apache1'|" sapi/apache/libphp4.la
@@ -1918,10 +1922,8 @@ rm $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.la
 libtool --silent --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir}
 # fix install paths, avoid evil rpaths
 sed -i -e "s|^libdir=.*|libdir='%{_libdir}'|" $RPM_BUILD_ROOT%{_libdir}/libphp_common.la
-
-# install the apache modules' files
-%{__make} install-headers install-build install-modules install-programs \
-	INSTALL_ROOT=$RPM_BUILD_ROOT
+# better solution?
+sed -i -e 's|libphp_common.la|$(libdir)/libphp_common.la|' $RPM_BUILD_ROOT%{_libdir}/php/build/acinclude.m4
 
 # install CGI
 libtool --silent --mode=install install sapi/cgi/php $RPM_BUILD_ROOT%{_bindir}/php4.cgi
