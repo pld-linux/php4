@@ -1,0 +1,29 @@
+remove cflags from link commands.
+
+--- php-4.4.2/Makefile.global~	2005-05-23 12:43:59.000000000 +0300
++++ php-4.4.2/Makefile.global	2006-04-05 14:02:20.409483697 +0300
+@@ -15,7 +15,7 @@
+ build-modules: $(PHP_MODULES)
+ 
+ libphp4.la: $(PHP_GLOBAL_OBJS) $(PHP_SAPI_OBJS)
+-	$(LIBTOOL) --mode=link $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -rpath $(phptempdir) $(EXTRA_LDFLAGS) $(LDFLAGS) $(PHP_RPATHS) $(PHP_GLOBAL_OBJS) $(PHP_SAPI_OBJS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@
++	$(LIBTOOL) --mode=link $(CC) -rpath $(phptempdir) $(EXTRA_LDFLAGS) $(LDFLAGS) $(PHP_RPATHS) $(PHP_GLOBAL_OBJS) $(PHP_SAPI_OBJS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@
+ 	-@$(LIBTOOL) --silent --mode=install cp libphp4.la $(phptempdir)/libphp4.la >/dev/null 2>&1
+ 
+ libs/libphp4.bundle: $(PHP_GLOBAL_OBJS) $(PHP_SAPI_OBJS)
+--- php-4.4.2/acinclude.m4~	2005-12-20 00:29:11.000000000 +0200
++++ php-4.4.2/acinclude.m4	2006-04-05 14:03:29.741024080 +0300
+@@ -1201,11 +1201,11 @@
+       ;;
+     *netware*[)]
+       suffix=nlm
+-      link_cmd='$(LIBTOOL) --mode=link ifelse($4,,[$(CC)],[$(CXX)]) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o [$]@ -shared -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $($2) ifelse($1, php4lib, , -L$(top_builddir)/netware -lphp4lib) $(translit(ifelse($1, php4lib, $1, m4_substr($1, 3)),a-z_-,A-Z__)_SHARED_LIBADD)'
++      link_cmd='$(LIBTOOL) --mode=link ifelse($4,,[$(CC)],[$(CXX)]) $(LDFLAGS) -o [$]@ -shared -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $($2) ifelse($1, php4lib, , -L$(top_builddir)/netware -lphp4lib) $(translit(ifelse($1, php4lib, $1, m4_substr($1, 3)),a-z_-,A-Z__)_SHARED_LIBADD)'
+       ;;
+     *[)]
+       suffix=la
+-      link_cmd='$(LIBTOOL) --mode=link ifelse($4,,[$(CC)],[$(CXX)]) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o [$]@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $($2) $(translit($1,a-z_-,A-Z__)_SHARED_LIBADD)'
++      link_cmd='$(LIBTOOL) --mode=link ifelse($4,,[$(CC)],[$(CXX)]) $(LDFLAGS) -o [$]@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $($2) $(translit($1,a-z_-,A-Z__)_SHARED_LIBADD)'
+       ;;
+   esac
+ 
