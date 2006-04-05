@@ -87,14 +87,13 @@ Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
 # Source0-md5:	28051cd9ef43490dd9727a4d442011b5
 Source1:	FAQ.%{name}
 Source2:	zend.gif
-
-Source4:	%{name}-mod_php.conf
-Source5:	%{name}-cgi-fcgi.ini
-Source6:	%{name}-cgi.ini
-Source7:	%{name}-apache.ini
-Source8:	%{name}-cli.ini
-Source9:	http://www.hardened-php.net/hardening-patch-4.4.0-0.4.3.patch.gz
-# Source9-md5:	6eac3c5c5a7473c68a043c7657298f48
+Source3:	%{name}-mod_php.conf
+Source4:	%{name}-cgi-fcgi.ini
+Source5:	%{name}-cgi.ini
+Source6:	%{name}-apache.ini
+Source7:	%{name}-cli.ini
+Source8:	http://www.hardened-php.net/hardening-patch-4.4.0-0.4.3.patch.gz
+# Source8-md5:	6eac3c5c5a7473c68a043c7657298f48
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-pldlogo.patch
 Patch2:		%{name}-xml-expat-fix.patch
@@ -396,9 +395,9 @@ Summary(ru):	Разделяемые библиотеки для php
 Summary(uk):	Б╕бл╕отеки сп╕льного використання для php
 Group:		Libraries
 # because of dlclose() bugs in glibc <= 2.3.4 causing SEGVs on exit
+Requires(triggerun):	sed >= 4.0
 Requires:	glibc >= 6:2.3.5
 Requires:	php-dirs
-Requires:	sed >= 4.0
 Provides:	%{name}-openssl = %{epoch}:%{version}-%{release}
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
 Provides:	%{name}-standard = %{epoch}:%{version}-%{release}
@@ -1680,7 +1679,7 @@ cp php.ini-dist php.ini
 %{?with_versioning:%patch41 -p1}
 
 %if %{with hardening}
-zcat %{SOURCE9} | patch -p1
+zcat %{SOURCE8} | patch -p1
 %endif
 
 # new apr
@@ -1944,23 +1943,22 @@ ln -sf php4.cli $RPM_BUILD_ROOT%{_bindir}/php
 
 install php.ini	$RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 %if %{with fcgi}
-install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi-fcgi.ini
+install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi-fcgi.ini
 %endif
-install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi.ini
-install %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/php-cli.ini
-install %{SOURCE3} $RPM_BUILD_ROOT%{_sbindir}
+install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi.ini
+install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-cli.ini
 install %{SOURCE1} .
 
 %if %{with apache1}
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/apache/icons
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/apache/conf.d/70_mod_php4.conf
-install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache.ini
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/apache/conf.d/70_mod_php4.conf
+install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache.ini
 %endif
 
 %if %{with apache2}
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/httpd/icons
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php4.conf
-install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache2handler.ini
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php4.conf
+install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache2handler.ini
 %endif
 
 cp -f Zend/LICENSE{,.Zend}
