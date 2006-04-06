@@ -70,7 +70,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 9.22
+%define	_rel 9.23
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -1700,12 +1700,6 @@ if API=$(awk '/#define ZEND_EXTENSION_API_NO/{print $3}' Zend/zend_extensions.h)
 	exit 1
 fi
 
-%if 0%{?configure_cache:1}
-	if [ -f %{configure_cache_file:-$RPM_BUILD_ROOT.configure.cache} ]; then
-		cp -f %{configure_cache_file:-$RPM_BUILD_ROOT.configure.cache} config.cache
-	fi
-%endif
-
 EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
 if [ ! -f _built-conf ]; then # configure once (for faster debugging purposes)
 	./buildconf --force
@@ -1753,7 +1747,9 @@ for sapi in $sapis; do
 	;;
 	esac
 	` \
+%if "%{!?configure_cache:0}%{?configure_cache}" == "0"
 	--cache-file=config.cache \
+%endif
 	--with-config-file-path=%{_sysconfdir} \
 	--with-config-file-scan-dir=%{_sysconfdir}/conf.d \
 	--with-exec-dir=%{_bindir} \
@@ -1855,10 +1851,6 @@ for sapi in $sapis; do
 	cp -f Makefile Makefile.$sapi
 	cp -f main/php_config.h php_config.h.$sapi
 done
-
-%if 0%{?configure_cache:1}
-	cp config.cache %{configure_cache_file:-$RPM_BUILD_ROOT.configure.cache}
-%endif
 
 # must make this first, so modules can link against it.
 %{__make} libphp_common.la
