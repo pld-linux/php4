@@ -70,7 +70,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 9.27
+%define	_rel 9.28
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -1065,6 +1065,8 @@ Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-mssql = %{epoch}:%{version}-%{release}
+Conflicts:	%{name}-sybase
+Conflicts:	%{name}-sybase-ct
 
 %description mssql
 This is a dynamic shared object (DSO) for PHP that will add MS SQL
@@ -1407,6 +1409,7 @@ Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-sybase = %{epoch}:%{version}-%{release}
 Obsoletes:	php4-sybase-ct
+Conflicts:	%{name}-mssql
 
 %description sybase
 This is a dynamic shared object (DSO) for PHP that will add Sybase and
@@ -1427,6 +1430,7 @@ Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-sybase-ct = %{epoch}:%{version}-%{release}
 Obsoletes:	php4-sybase
+Conflicts:	%{name}-mssql
 
 %description sybase-ct
 This is a dynamic shared object (DSO) for PHP that will add Sybase and
