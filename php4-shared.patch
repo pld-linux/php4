@@ -1,5 +1,6 @@
---- php-4.4.2/Makefile.global~	2006-04-05 14:05:49.664133122 +0300
-+++ php-4.4.2/Makefile.global	2006-04-05 14:06:38.945228217 +0300
+diff -u php-4.4.2/Makefile.global php-4.4.2/Makefile.global
+--- php-4.4.2/Makefile.global	2006-04-05 14:06:38.945228217 +0300
++++ php-4.4.2/Makefile.global	2006-04-15 17:52:03.936932629 +0300
 @@ -14,9 +14,11 @@
  	
  build-modules: $(PHP_MODULES)
@@ -32,14 +33,21 @@
  				break; \
  			fi; \
  		done; \
-diff -burN php-4.3.3RC2.orig/sapi/cgi/Makefile.frag php-4.3.3RC2-shared/sapi/cgi/Makefile.frag
+@@ -284,7 +288,7 @@
+ 	find . -name \*.a | xargs rm -f
+ 	find . -name \*.so | xargs rm -f
+ 	find . -name .libs -a -type d|xargs rm -rf
+-	rm -f libphp4.la $(SAPI_CLI_PATH) $(OVERALL_TARGET) modules/* libs/*
++	rm -f libphp4.la libphp_common.la $(SAPI_CLI_PATH) $(OVERALL_TARGET) modules/* libs/*
+ 
+ distclean: clean
+ 	rm -f config.cache config.log config.status Makefile.objects Makefile.fragments libtool main/php_config.h stamp-h php4.spec sapi/apache/libphp4.module buildmk.stamp
 --- php-4.3.3RC2.orig/sapi/cgi/Makefile.frag	Wed Jul  2 03:06:29 2003
 +++ php-4.3.3RC2-shared/sapi/cgi/Makefile.frag	Sat Aug  2 22:53:38 2003
 @@ -1,2 +1,2 @@
 -$(SAPI_CGI_PATH): $(PHP_GLOBAL_OBJS) $(PHP_SAPI_OBJS)
 +$(SAPI_CGI_PATH): libphp_common.la $(PHP_SAPI_OBJS)
  	$(BUILD_CGI)
-diff -burN php-4.3.3RC2.orig/sapi/cgi/config9.m4 php-4.3.3RC2-shared/sapi/cgi/config9.m4
 --- php-4.3.3RC2.orig/sapi/cgi/config9.m4	Wed Jul  2 04:48:16 2003
 +++ php-4.3.3RC2-shared/sapi/cgi/config9.m4	Sat Aug  2 22:54:51 2003
 @@ -156,7 +156,7 @@
@@ -51,7 +59,6 @@ diff -burN php-4.3.3RC2.orig/sapi/cgi/config9.m4 php-4.3.3RC2-shared/sapi/cgi/co
        ;;
      esac
  
-diff -burN php-4.3.3RC2.orig/sapi/cli/Makefile.frag php-4.3.3RC2-shared/sapi/cli/Makefile.frag
 --- php-4.3.3RC2.orig/sapi/cli/Makefile.frag	Wed Feb 12 05:39:30 2003
 +++ php-4.3.3RC2-shared/sapi/cli/Makefile.frag	Sat Aug  2 22:53:53 2003
 @@ -1,4 +1,4 @@
@@ -60,7 +67,6 @@ diff -burN php-4.3.3RC2.orig/sapi/cli/Makefile.frag php-4.3.3RC2-shared/sapi/cli
  	$(BUILD_CLI)
  
  install-cli: $(SAPI_CLI_PATH)
-diff -burN php-4.3.3RC2.orig/sapi/cli/config.m4 php-4.3.3RC2-shared/sapi/cli/config.m4
 --- php-4.3.3RC2.orig/sapi/cli/config.m4	Wed Feb 12 05:39:30 2003
 +++ php-4.3.3RC2-shared/sapi/cli/config.m4	Sat Aug  2 22:55:15 2003
 @@ -27,7 +27,7 @@
