@@ -35,12 +35,13 @@
 # EOF
 --- php-4.4.2/Makefile.global~	2006-04-05 02:56:01.208583507 +0300
 +++ php-4.4.2/Makefile.global	2006-04-05 02:57:01.759935067 +0300
-@@ -16,13 +16,13 @@
+@@ -16,14 +16,14 @@
  build-modules: $(PHP_MODULES)
  
  libphp_common.la: $(PHP_GLOBAL_OBJS)
 -	$(LIBTOOL) --mode=link $(CC) -rpath $(phptempdir) -avoid-version $(LDFLAGS) $(PHP_RPATHS) $(PHP_GLOBAL_OBJS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@ -release $(PHP_VERSION)
-+	$(LIBTOOL) --mode=link $(CC) -rpath $(phptempdir) -avoid-version $(LD_VERSION_SCRIPT) $(LDFLAGS) $(PHP_RPATHS) $(PHP_GLOBAL_OBJS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@ -release $(PHP_VERSION)
++	$(LIBTOOL) --mode=link $(CC) -rpath $(phptempdir) -avoid-version $(LD_VERSION_SCRIPT) $(LDFLAGS) $(PHP_RPATHS) $(PHP_GLOBAL_OBJS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@ -release $(MAJOR_VERSION)
+ 	$(LIBTOOL) --silent --mode=install cp libphp_common.la $(phptempdir)/libphp_common.la
  
  libphp4.la: libphp_common.la $(PHP_SAPI_OBJS)
 -	$(LIBTOOL) --mode=link $(CC) -rpath $(phptempdir) $(EXTRA_LDFLAGS) $(LDFLAGS) $(PHP_RPATHS) libphp_common.la $(PHP_SAPI_OBJS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@
@@ -75,6 +76,18 @@
  CLEAN_FILES="$FILES *.o *.lo *.la .deps .libs/ build/ include/ modules/ install-sh \
      mkinstalldirs missing config.nice config.sub config.guess configure configure.in \
  	aclocal.m4 config.h config.h.in conftest* ltmain.sh libtool config.cache autom4te.cache/ \
+--- php-4.4.2/configure.in~	2006-04-13 14:14:51.449570523 +0300
++++ php-4.4.2/configure.in	2006-04-15 15:37:40.676749564 +0300
+@@ -1165,6 +1165,9 @@
+ PHP_SUBST(PHP_RPATHS)
+ PHP_SUBST(PHP_SAPI)
+ PHP_SUBST_OLD(PHP_VERSION)
++PHP_SUBST_OLD(MAJOR_VERSION)
++PHP_SUBST_OLD(MINOR_VERSION)
++PHP_SUBST_OLD(RELEASE_VERSION)
+ PHP_SUBST(PROG_SENDMAIL)
+ PHP_SUBST(RE2C)
+ PHP_SUBST(SHELL)
 --- php-4.4.2/sapi/apache/mod_php4.c~	2006-01-01 15:47:01.000000000 +0200
 +++ php-4.4.2/sapi/apache/mod_php4.c	2006-04-04 02:02:52.348791307 +0300
 @@ -910,7 +910,9 @@
