@@ -1,7 +1,7 @@
 diff -u php-4.4.2/Makefile.global php-4.4.2/Makefile.global
 --- php-4.4.2/Makefile.global	2006-04-05 14:06:38.945228217 +0300
 +++ php-4.4.2/Makefile.global	2006-04-15 17:52:03.936932629 +0300
-@@ -14,9 +14,11 @@
+@@ -14,9 +14,12 @@
  	
  build-modules: $(PHP_MODULES)
  
@@ -10,13 +10,14 @@ diff -u php-4.4.2/Makefile.global php-4.4.2/Makefile.global
 -	-@$(LIBTOOL) --silent --mode=install cp libphp4.la $(phptempdir)/libphp4.la >/dev/null 2>&1
 +libphp_common.la: $(PHP_GLOBAL_OBJS)
 +	$(LIBTOOL) --mode=link $(CC) -rpath $(phptempdir) -avoid-version $(LDFLAGS) $(PHP_RPATHS) $(PHP_GLOBAL_OBJS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@ -release $(PHP_VERSION)
++	$(LIBTOOL) --silent --mode=install cp libphp_common.la $(phptempdir)/libphp_common.la
 +
 +libphp4.la: libphp_common.la $(PHP_SAPI_OBJS)
 +	$(LIBTOOL) --mode=link $(CC) -rpath $(phptempdir) $(EXTRA_LDFLAGS) $(LDFLAGS) $(PHP_RPATHS) libphp_common.la $(PHP_SAPI_OBJS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@
  
  libs/libphp4.bundle: $(PHP_GLOBAL_OBJS) $(PHP_SAPI_OBJS)
  	$(CC) $(MH_BUNDLE_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) $(EXTRA_LDFLAGS) $(PHP_GLOBAL_OBJS:.lo=.o) $(PHP_SAPI_OBJS:.lo=.o) $(PHP_FRAMEWORKS) $(EXTRA_LIBS) $(ZEND_EXTRA_LIBS) -o $@ && cp $@ libs/libphp4.so
-@@ -25,11 +27,13 @@
+@@ -25,11 +28,13 @@
  
  install-sapi: $(OVERALL_TARGET)
  	@echo "Installing PHP SAPI module:       $(PHP_SAPI)"
@@ -33,7 +34,7 @@ diff -u php-4.4.2/Makefile.global php-4.4.2/Makefile.global
  				break; \
  			fi; \
  		done; \
-@@ -284,7 +288,7 @@
+@@ -284,7 +289,7 @@
  	find . -name \*.a | xargs rm -f
  	find . -name \*.so | xargs rm -f
  	find . -name .libs -a -type d|xargs rm -rf
