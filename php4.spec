@@ -1186,7 +1186,6 @@ Summary(pl):	Modu³ Process Control dla PHP
 Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	%{name}-cli = %{epoch}:%{version}-%{release}
 Provides:	php-pcntl = %{epoch}:%{version}-%{release}
 
 %description pcntl
