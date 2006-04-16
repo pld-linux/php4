@@ -1,5 +1,5 @@
---- php-5.0.4/main/php_ini.c.orig	2004-09-17 04:48:47.000000000 +0200
-+++ php-5.0.4/main/php_ini.c	2005-04-04 23:07:48.461211584 +0200
+--- php-4.3.0/main/php_ini.c	Sat Jan  4 12:22:39 2003
++++ php-4.4.2/main/php_ini.c	2006-04-04 18:50:17.756460517 +0300
 @@ -430,6 +430,24 @@
  				}
  			}
@@ -25,8 +25,7 @@
  		/* Search php-%sapi-module-name%.ini file in search path */
  		if (!fh.handle.fp) {
  			const char *fmt = "php-%s.ini";
-@@ -441,13 +459,6 @@
- 				fh.filename = php_ini_opened_path;
+@@ -363,11 +379,4 @@
  			}
  		}
 -		/* Search php.ini file in search path */
@@ -37,5 +36,59 @@
 -			}
 -		}
  	}
- 
  	if (free_ini_search_path) {
+@@ -431,9 +440,13 @@
+ 	 * parse any .ini files found in this directory. */
+ 	if (!sapi_module.php_ini_ignore && strlen(PHP_CONFIG_FILE_SCAN_DIR)) {
+ 		struct dirent **namelist;
+-		int ndir, i;
++		int ndir, i, found = 0;
++		const char *fmt = PHP_CONFIG_FILE_PATH "/%s.d";
++		char *sapi_scan_dir = emalloc(strlen(fmt) + strlen(sapi_module.name));
++		sprintf(sapi_scan_dir, fmt, sapi_module.name);
+ 
+ 		if ((ndir = php_scandir(PHP_CONFIG_FILE_SCAN_DIR, &namelist, 0, php_alphasort)) > 0) {
++			found += ndir;
+ 			for (i = 0; i < ndir; i++) {
+ 				/* check for a .ini extension */
+ 				if (!(p = strrchr(namelist[i]->d_name, '.')) || (p && strcmp(p, ".ini"))) {
+@@ -458,7 +471,39 @@
+ 				free(namelist[i]);
+ 			}
+ 			free(namelist);
++		}
++
++		if ((ndir = php_scandir(sapi_scan_dir, &namelist, 0, php_alphasort)) > 0) {
++			found += ndir;
++
++			for (i = 0; i < ndir; i++) {
++				/* check for a .ini extension */
++				if (!(p = strrchr(namelist[i]->d_name, '.')) || (p && strcmp(p, ".ini"))) {
++					free(namelist[i]);
++					continue;
++				}
++				snprintf(ini_file, MAXPATHLEN, "%s%c%s", sapi_scan_dir, DEFAULT_SLASH, namelist[i]->d_name);
++				if (VCWD_STAT(ini_file, &sb) == 0) {
++					if (S_ISREG(sb.st_mode)) {
++						if ((fh.handle.fp = VCWD_FOPEN(ini_file, "r"))) {
++							fh.filename = ini_file;
++							fh.type = ZEND_HANDLE_FP;
++							zend_parse_ini_file(&fh, 1, php_config_ini_parser_cb, &extension_lists);
++							/* Here, add it to the list of ini files read */
++							l = strlen(ini_file);
++							total_l += l + 2;
++							p = estrndup(ini_file, l);
++							zend_llist_add_element(&scanned_ini_list, &p);
++						}
++					}
++				}
++				free(namelist[i]);
++			}
++			free(namelist);
++		}
++		efree(sapi_scan_dir);
+ 
++		if (found) {
+ 			/* 
+ 			 * Don't need an extra byte for the \0 in this malloc as the last
+ 			 * element will not get a trailing , which gives us the byte for the \0
