@@ -1,0 +1,9 @@
+--- php-4.3.0/ext/wddx/config.m4.orig	Tue Mar 12 17:37:42 2002
++++ php-4.3.0/ext/wddx/config.m4	Thu Jan  2 21:00:50 2003
+@@ -12,4 +12,6 @@
+   fi
+   AC_DEFINE(HAVE_WDDX, 1, [ ])
+   PHP_NEW_EXTENSION(wddx, wddx.c, $ext_shared)
++  WDDX_SHARED_LIBADD="-lexpat"
++  PHP_SUBST(WDDX_SHARED_LIBADD)
+ fi
