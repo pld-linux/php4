@@ -20,13 +20,13 @@ diff -urN php-5.0.0.org/Makefile.global php-5.0.0/Makefile.global
  install-sapi: $(OVERALL_TARGET)
  	@echo "Installing PHP SAPI module:       $(PHP_SAPI)"
  	-@$(mkinstalldirs) $(INSTALL_ROOT)$(bindir)
--	-@if test ! -r $(phptempdir)/libphp5.$(SHLIB_SUFFIX_NAME); then \
-+	-@if test ! -r $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME); then \
+-	-@if test ! -r $(phptempdir)/libphp5.$(SHLIB_DL_SUFFIX_NAME); then \
++	-@if test ! -r $(phptempdir)/libphp_common.$(SHLIB_DL_SUFFIX_NAME); then \
  		for i in 0.0.0 0.0 0; do \
--			if test -r $(phptempdir)/libphp5.$(SHLIB_SUFFIX_NAME).$$i; then \
--				$(LN_S) $(phptempdir)/libphp5.$(SHLIB_SUFFIX_NAME).$$i $(phptempdir)/libphp5.$(SHLIB_SUFFIX_NAME); \
-+			if test -r $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME).$$i; then \
-+				$(LN_S) $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME).$$i $(phptempdir)/libphp_common.$(SHLIB_SUFFIX_NAME); \
+-			if test -r $(phptempdir)/libphp5.$(SHLIB_DL_SUFFIX_NAME).$$i; then \
+-				$(LN_S) $(phptempdir)/libphp5.$(SHLIB_DL_SUFFIX_NAME).$$i $(phptempdir)/libphp5.$(SHLIB_DL_SUFFIX_NAME); \
++			if test -r $(phptempdir)/libphp_common.$(SHLIB_DL_SUFFIX_NAME).$$i; then \
++				$(LN_S) $(phptempdir)/libphp_common.$(SHLIB_DL_SUFFIX_NAME).$$i $(phptempdir)/libphp_common.$(SHLIB_DL_SUFFIX_NAME); \
  				break; \
  			fi; \
  		done; \
