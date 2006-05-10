@@ -70,7 +70,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 11
+%define	_rel 12
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -1903,25 +1903,22 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}} \
 %{__make} install-headers install-build install-modules install-programs \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
 
+libtool --silent --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir}
+# fix install paths, avoid evil rpaths
+sed -i -e "s|^libdir=.*|libdir='%{_libdir}'|" $RPM_BUILD_ROOT%{_libdir}/libphp_common.la
+
 # install apache1 DSO module
 %if %{with apache1}
-sed -i -e "s|^libdir=.*|libdir='%{_libdir}/apache1'|" sapi/apache/libphp4.la
-sed -i -e 's|^\(relink_command=.* -rpath \)[^ ]*/libs |\1%{_libdir}/apache1 |' sapi/apache/libphp4.la
 libtool --silent --mode=install install sapi/apache/libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache1
 rm $RPM_BUILD_ROOT%{_libdir}/apache1/libphp4.la
 %endif
 
 # install apache2 DSO module
 %if %{with apache2}
-sed -i -e "s|^libdir=.*|libdir='%{_libdir}/apache'|" sapi/apache2handler/libphp4.la
-sed -i -e 's|^\(relink_command=.* -rpath \)[^ ]*/libs |\1%{_libdir}/apache |' sapi/apache2handler/libphp4.la
 libtool --silent --mode=install install sapi/apache2handler/libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache
 rm $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.la
 %endif
 
-libtool --silent --mode=install install libphp_common.la $RPM_BUILD_ROOT%{_libdir}
-# fix install paths, avoid evil rpaths
-sed -i -e "s|^libdir=.*|libdir='%{_libdir}'|" $RPM_BUILD_ROOT%{_libdir}/libphp_common.la
 # better solution?
 sed -i -e 's|libphp_common.la|$(libdir)/libphp_common.la|' $RPM_BUILD_ROOT%{_libdir}/php/build/acinclude.m4
 
