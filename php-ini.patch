@@ -1,4 +1,3 @@
-diff -urbB php-5.1.0.org/php.ini php-5.1.0/php.ini
 --- php-5.1.0.org/php.ini	2005-11-25 02:24:23.408519000 +0100
 +++ php-5.1.0/php.ini	2005-11-25 02:26:06.570966750 +0100
 @@ -3,13 +3,18 @@
@@ -232,3 +231,14 @@ diff -urbB php-5.1.0.org/php.ini php-5.1.0/php.ini
  
  ; Define the anonymous ftp password (your email address)
  ;from="john@doe.com"
+--- php-5.1.4/php.ini~	2006-05-30 16:45:33.193170093 +0300
++++ php-5.1.4/php.ini	2006-05-30 17:42:38.109721064 +0300
+@@ -1219,7 +1219,7 @@
+ ; Enables or disables WSDL caching feature.
+ soap.wsdl_cache_enabled=1
+ ; Sets the directory name where SOAP extension will put cache files.
+-soap.wsdl_cache_dir="/tmp"
++soap.wsdl_cache_dir="/var/run/php"
+ ; (time to live) Sets the number of second while cached file will be used 
+ ; instead of original one.
+ soap.wsdl_cache_ttl=86400
