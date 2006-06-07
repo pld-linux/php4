@@ -1,5 +1,5 @@
---- php-4.3.0/ext/standard/mail.c.orig	Fri Nov 29 12:15:43 2002
-+++ php-4.3.0/ext/standard/mail.c	Thu Jan  2 12:37:54 2003
+--- php-4.3.0/ext/standard/mail.c	Thu Jan  2 12:37:54 2003
++++ php-5.1.4-mail/ext/standard/mail.c	2006-06-07 17:48:45.197705968 +0300
 @@ -21,6 +21,8 @@
  #include <stdlib.h>
  #include <ctype.h>
@@ -19,7 +19,43 @@
  #if HAVE_SENDMAIL
  #ifdef PHP_WIN32
  #include "win32/sendmail.h"
-@@ -196,8 +201,42 @@
+@@ -104,6 +109,35 @@
+ 		return;
+ 	}
+ 
++    /* check for spam attempts with buggy webforms */
++    if (strchr(to, '\n') != NULL || strchr(to, '\r') != NULL) {
++        zend_error(E_WARNING, "Newlines aren't allowed in the To header.");
++        RETURN_FALSE;
++    }
++
++    if (strchr(subject, '\n') != NULL || strchr(subject, '\r') != NULL) {
++        zend_error(E_WARNING, "Newlines aren't allowed in the Subject header.");
++        RETURN_FALSE;
++    }
++
++    /* search for to, cc or bcc headers */
++    if (headers != NULL) {
++        if (strncasecmp(headers, "to:", sizeof("to:") - 1) == 0 || strcasestr(headers, "\nto:")) {
++            zend_error(E_WARNING, "To: headers aren't allowed in the headers parameter.");
++            RETURN_FALSE;
++        }
++
++        if (strncasecmp(headers, "cc:", sizeof("cc:") - 1) == 0 || strcasestr(headers, "\ncc:")) {
++            zend_error(E_WARNING, "CC: headers aren't allowed in the headers parameter.");
++            RETURN_FALSE;
++        }
++
++        if (strncasecmp(headers, "bcc:", sizeof("bcc:") - 1) == 0 || strcasestr(headers, "\nbcc:")) {
++            zend_error(E_WARNING, "BCC: headers aren't allowed in the headers parameter.");
++            RETURN_FALSE;
++        }
++    }
++
+ 	if (to_len > 0) {
+ 		to_r = estrndup(to, to_len);
+ 		for (; to_len; to_len--) {
+@@ -196,8 +230,42 @@
  			return 0;
  		}
  #endif
