@@ -25,29 +25,29 @@
  
 +    /* check for spam attempts with buggy webforms */
 +    if (strchr(to, '\n') != NULL || strchr(to, '\r') != NULL) {
-+        zend_error(E_WARNING, "Newlines aren't allowed in the To header.");
++        zend_error(E_WARNING, "Newlines aren't allowed in the To header. Mail not sent.");
 +        RETURN_FALSE;
 +    }
 +
 +    if (strchr(subject, '\n') != NULL || strchr(subject, '\r') != NULL) {
-+        zend_error(E_WARNING, "Newlines aren't allowed in the Subject header.");
++        zend_error(E_WARNING, "Newlines aren't allowed in the Subject header. Mail not sent.");
 +        RETURN_FALSE;
 +    }
 +
 +    /* search for to, cc or bcc headers */
 +    if (headers != NULL) {
 +        if (strncasecmp(headers, "to:", sizeof("to:") - 1) == 0 || strcasestr(headers, "\nto:")) {
-+            zend_error(E_WARNING, "To: headers aren't allowed in the headers parameter.");
++            zend_error(E_WARNING, "To: headers aren't allowed in the additional_headers parameter. Mail not sent.");
 +            RETURN_FALSE;
 +        }
 +
 +        if (strncasecmp(headers, "cc:", sizeof("cc:") - 1) == 0 || strcasestr(headers, "\ncc:")) {
-+            zend_error(E_WARNING, "CC: headers aren't allowed in the headers parameter.");
++            zend_error(E_WARNING, "CC: headers aren't allowed in the additional_headers parameter. Mail not sent.");
 +            RETURN_FALSE;
 +        }
 +
 +        if (strncasecmp(headers, "bcc:", sizeof("bcc:") - 1) == 0 || strcasestr(headers, "\nbcc:")) {
-+            zend_error(E_WARNING, "BCC: headers aren't allowed in the headers parameter.");
++            zend_error(E_WARNING, "BCC: headers aren't allowed in the additional_headers parameter. Mail not sent.");
 +            RETURN_FALSE;
 +        }
 +    }
