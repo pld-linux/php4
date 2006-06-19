@@ -19,7 +19,7 @@
  #if HAVE_SENDMAIL
  #ifdef PHP_WIN32
  #include "win32/sendmail.h"
-@@ -104,6 +109,35 @@
+@@ -104,6 +109,25 @@
  		return;
  	}
  
@@ -40,22 +40,12 @@
 +            zend_error(E_WARNING, "To: headers aren't allowed in the additional_headers parameter. Mail not sent.");
 +            RETURN_FALSE;
 +        }
-+
-+        if (strncasecmp(headers, "cc:", sizeof("cc:") - 1) == 0 || strcasestr(headers, "\ncc:")) {
-+            zend_error(E_WARNING, "CC: headers aren't allowed in the additional_headers parameter. Mail not sent.");
-+            RETURN_FALSE;
-+        }
-+
-+        if (strncasecmp(headers, "bcc:", sizeof("bcc:") - 1) == 0 || strcasestr(headers, "\nbcc:")) {
-+            zend_error(E_WARNING, "BCC: headers aren't allowed in the additional_headers parameter. Mail not sent.");
-+            RETURN_FALSE;
-+        }
 +    }
 +
  	if (to_len > 0) {
  		to_r = estrndup(to, to_len);
  		for (; to_len; to_len--) {
-@@ -196,8 +230,42 @@
+@@ -196,8 +220,42 @@
  			return 0;
  		}
  #endif
