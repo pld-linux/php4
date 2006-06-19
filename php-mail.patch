@@ -37,7 +37,7 @@
 +    /* search for to, cc or bcc headers */
 +    if (headers != NULL) {
 +        if (strncasecmp(headers, "to:", sizeof("to:") - 1) == 0 || strcasestr(headers, "\nto:")) {
-+            zend_error(E_WARNING, "To: headers aren't allowed in the additional_headers parameter. Mail not sent.");
++            zend_error(E_WARNING, "To: headers aren't allowed in the additional_headers parameter. Use $to parameter for that. Mail not sent.");
 +            RETURN_FALSE;
 +        }
 +    }
