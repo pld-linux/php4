@@ -2724,7 +2724,7 @@ fi
 
 %dir %{_sysconfdir}
 %dir %{_sysconfdir}/conf.d
-%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php.ini
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php.ini
 %attr(755,root,root) %{_libdir}/libphp_common-*.so
 %dir %{extensionsdir}
 
