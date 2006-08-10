@@ -8,3 +8,22 @@
  
  PHP_CHECK_FUNC(dlopen, dl)
  if test "$ac_cv_func_dlopen" = "yes"; then
+--- php.org/ext/ldap/config.m4.org	2006-08-10 14:23:59.583381250 +0000
++++ php/ext/ldap/config.m4	2006-08-10 14:24:40.013908000 +0000
+@@ -113,8 +113,9 @@
+   dnl Save original values
+   _SAVE_CPPFLAGS=$CPPFLAGS
+   _SAVE_LDFLAGS=$LDFLAGS
+-  LDFLAGS="$LDFLAGS $LDAP_SHARED_LIBADD"
++  LDFLAGS="$LDFLAGS"
+   CPPFLAGS="$CPPFLAGS -I$LDAP_INCDIR"
++  LIBS="$LIBS $LDAP_SHARED_LIBADD"
+ 
+   dnl Check for 3 arg ldap_set_rebind_proc
+   AC_CACHE_CHECK([for 3 arg ldap_set_rebind_proc], ac_cv_3arg_setrebindproc,
+@@ -138,4 +139,5 @@
+   dnl Restore original values
+   CPPFLAGS=$_SAVE_CPPFLAGS
+   LDFLAGS=$_SAVE_LDFLAGS
++  LIBS=$_SAVE_LIBS
+ fi 
