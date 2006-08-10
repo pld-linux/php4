@@ -8,3 +8,34 @@
  
  PHP_CHECK_FUNC(dlopen, dl)
  if test "$ac_cv_func_dlopen" = "yes"; then
+--- php.org/ext/ldap/config.m4.org	2006-08-10 06:31:57.985269750 +0000
++++ php/ext/ldap/config.m4	2006-08-10 06:37:42.330790000 +0000
+@@ -160,8 +160,10 @@
+   dnl Save original values
+   _SAVE_CPPFLAGS=$CPPFLAGS
+   _SAVE_LDFLAGS=$LDFLAGS
++  _SAVE_LIBS=$LIBS
+   CPPFLAGS="$CPPFLAGS -I$LDAP_INCDIR"
+-  LDFLAGS="$LDFLAGS $LDAP_SHARED_LIBADD"
++  LDFLAGS="$LDFLAGS"
++  LIBS="$LIBS $LDAP_SHARED_LIBADD"
+ 
+   dnl Check for 3 arg ldap_set_rebind_proc
+   AC_CACHE_CHECK([for 3 arg ldap_set_rebind_proc], ac_cv_3arg_setrebindproc,
+@@ -192,4 +194,5 @@
+   dnl Restore original values
+   CPPFLAGS=$_SAVE_CPPFLAGS
+   LDFLAGS=$_SAVE_LDFLAGS
++  LIBS=$_SAVE_LIBS
+ fi 
+--- php.org/acinclude.m4~	2006-08-10 06:39:21.000000000 +0000
++++ php/acinclude.m4	2006-08-10 06:58:46.933822750 +0000
+@@ -1745,7 +1745,7 @@
+   
+   save_ext_shared=$ext_shared
+   ext_shared=yes
+-  PHP_EVAL_LIBLINE([$]ac_stuff, LDFLAGS)
++  PHP_EVAL_LIBLINE([$]ac_stuff, LIBS)
+   AC_CHECK_LIB([$1],[$2],[
+     LDFLAGS=$save_old_LDFLAGS
+     ext_shared=$save_ext_shared
