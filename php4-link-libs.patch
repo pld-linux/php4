@@ -27,3 +27,14 @@
    LDFLAGS=$_SAVE_LDFLAGS
 +  LIBS=$_SAVE_LIBS
  fi 
+--- php.org/acinclude.m4~	2006-08-20 13:12:40.191078397 +0200
++++ php/acinclude.m4	2006-08-20 13:14:34.859406479 +0200
+@@ -1607,7 +1607,7 @@
+   
+   save_ext_shared=$ext_shared
+   ext_shared=yes
+-  PHP_EVAL_LIBLINE([$]ac_stuff, LDFLAGS)
++  PHP_EVAL_LIBLINE([$]ac_stuff, LIBS)
+   AC_CHECK_LIB([$1],[$2],[
+     LDFLAGS=$save_old_LDFLAGS
+     ext_shared=$save_ext_shared
