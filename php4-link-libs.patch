@@ -69,8 +69,8 @@
 -PHP_CHECK_FUNC(__dn_expand, resolv, bind)
 -PHP_CHECK_FUNC(__dn_skipname, resolv, bind)
 -PHP_CHECK_FUNC(__res_search, resolv, bind)
-+dnl force resolv
-+EXTRA_LIBS="$EXTRA_LIBS -lresolv"
++dnl force resolv and pthread
++EXTRA_LIBS="$EXTRA_LIBS -lresolv -pthread"
  
  dnl Then headers.
  dnl -------------------------------------------------------------------------
