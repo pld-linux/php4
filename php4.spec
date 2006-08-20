@@ -70,7 +70,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 2
+%define	_rel 2.1
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -1663,7 +1663,7 @@ cp php.ini-dist php.ini
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
-%patch23 -p1
+# %patch23 -p1
 %patch24 -p1
 %patch25 -p1
 %patch26 -p1
