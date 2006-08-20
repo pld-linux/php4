@@ -38,3 +38,40 @@
    AC_CHECK_LIB([$1],[$2],[
      LDFLAGS=$save_old_LDFLAGS
      ext_shared=$save_ext_shared
+--- php.org/ext/openssl/config0.m4~	2004-12-30 15:54:35.000000000 +0100
++++ php/ext/openssl/config0.m4	2006-08-20 13:32:55.412011298 +0200
+@@ -22,6 +22,7 @@
+       AC_DEFINE(HAVE_OPENSSL_SHARED_EXT,1,[ ])
+     else
+       AC_DEFINE(HAVE_OPENSSL_EXT,1,[ ])
++      EXTRA_LIBS="$EXTRA_LIBS $OPENSSL_LIBS"
+     fi
+   ], [
+     AC_MSG_ERROR([OpenSSL check failed. Please check config.log for more information.])
+--- php4.org/configure.in~	2006-08-20 13:46:26.604918962 +0200
++++ php4/configure.in	2006-08-20 13:57:32.736841691 +0200
+@@ -353,6 +353,9 @@
+ PHP_CHECK_FUNC(inet_aton, resolv, bind)
+ PHP_CHECK_FUNC(dn_skipname, resolv, bind)
+ 
++PHP_CHECK_FUNC(__dn_expand, resolv, bind)
++PHP_CHECK_FUNC(__dn_skipname, resolv, bind)
++PHP_CHECK_FUNC(__res_search, resolv, bind)
+ 
+ dnl Then headers.
+ dnl -------------------------------------------------------------------------
+--- php4/configure.in.orig	2006-08-20 13:58:18.272000811 +0200
++++ php4/configure.in	2006-08-20 14:11:43.477794868 +0200
+@@ -353,9 +353,8 @@
+ PHP_CHECK_FUNC(inet_aton, resolv, bind)
+ PHP_CHECK_FUNC(dn_skipname, resolv, bind)
+ 
+-PHP_CHECK_FUNC(__dn_expand, resolv, bind)
+-PHP_CHECK_FUNC(__dn_skipname, resolv, bind)
+-PHP_CHECK_FUNC(__res_search, resolv, bind)
++dnl force resolv
++EXTRA_LIBS="$EXTRA_LIBS -lresolv"
+ 
+ dnl Then headers.
+ dnl -------------------------------------------------------------------------
+
