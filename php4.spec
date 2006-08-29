@@ -70,7 +70,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 12
+%define	_rel 3
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	JЙzyk skryptowy PHP
@@ -78,14 +78,14 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
-Version:	4.4.2
+Version:	4.4.4
 Release:	%{_rel}%{?with_hardening:hardened}
 Epoch:		3
 License:	PHP
 Group:		Libraries
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
-# Source0-md5:	28051cd9ef43490dd9727a4d442011b5
-Source1:	FAQ.%{name}
+# Source0-md5:	bc6fa8908e2ac36e93bab9f7d42cda3a
+
 Source2:	zend.gif
 Source3:	%{name}-mod_php.conf
 Source4:	%{name}-cgi-fcgi.ini
@@ -133,12 +133,10 @@ Patch35:	%{name}-both-apxs.patch
 Patch36:	php-dextension.patch
 Patch37:	%{name}-zlib-for-getimagesize.patch
 Patch38:	%{name}-ini-search-path.patch
-Patch39:	%{name}-bug-36017-and-session-chars.patch
-Patch40:	%{name}-openssl-huge-hack.patch
-Patch41:	%{name}-versioning.patch
-Patch42:	%{name}-linkflags-clean.patch
-Patch43:	%{name}-CVE-2006-0996.patch
-Patch44:	%{name}-CVE-2006-1490.patch
+Patch39:	%{name}-versioning.patch
+Patch40:	%{name}-linkflags-clean.patch
+# XXX: obsolete?
+Patch41:	%{name}-openssl-huge-hack.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -1509,6 +1507,7 @@ Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-session = %{epoch}:%{version}-%{release}
+Requires:	%{name}-xml = %{epoch}:%{version}-%{release}
 Provides:	php-wddx = %{epoch}:%{version}-%{release}
 
 %description wddx
@@ -1636,7 +1635,7 @@ ModuЁ PHP umo©liwiaj╠cy u©ywanie kompresji zlib.
 
 %prep
 %setup -q -n php-%{version}
-%patch42 -p1
+%patch40 -p1
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -1682,11 +1681,9 @@ cp php.ini-dist php.ini
 %patch36 -p1
 %patch37 -p1
 %patch38 -p1
-%patch39 -p1
-%patch40 -p1
-%{?with_versioning:%patch41 -p1}
-%patch43 -p1
-%patch44 -p1
+%{?with_versioning:%patch39 -p1}
+# XXX: I believe this one is obsolete as of 4.4.3
+#%patch41 -p1
 
 %if %{with hardening}
 zcat %{SOURCE8} | patch -p1
@@ -1945,7 +1942,6 @@ install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi-fcgi.ini
 %endif
 install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi.ini
 install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-cli.ini
-install %{SOURCE1} .
 
 %if %{with apache1}
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/apache/icons
@@ -2724,7 +2720,7 @@ fi
 
 %dir %{_sysconfdir}
 %dir %{_sysconfdir}/conf.d
-%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php.ini
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php.ini
 %attr(755,root,root) %{_libdir}/libphp_common-*.so
 %dir %{extensionsdir}
 
