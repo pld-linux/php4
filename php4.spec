@@ -70,7 +70,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 1
+%define	_rel 3
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -85,7 +85,7 @@ License:	PHP
 Group:		Libraries
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
 # Source0-md5:	bc6fa8908e2ac36e93bab9f7d42cda3a
-Source1:	FAQ.%{name}
+
 Source2:	zend.gif
 Source3:	%{name}-mod_php.conf
 Source4:	%{name}-cgi-fcgi.ini
@@ -1507,6 +1507,7 @@ Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-session = %{epoch}:%{version}-%{release}
+Requires:	%{name}-xml = %{epoch}:%{version}-%{release}
 Provides:	php-wddx = %{epoch}:%{version}-%{release}
 
 %description wddx
@@ -1941,7 +1942,6 @@ install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi-fcgi.ini
 %endif
 install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi.ini
 install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-cli.ini
-install %{SOURCE1} .
 
 %if %{with apache1}
 install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/apache/icons
