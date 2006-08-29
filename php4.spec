@@ -70,7 +70,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 2.1
+%define	_rel 3
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -1508,6 +1508,7 @@ Group:		Libraries
 Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-session = %{epoch}:%{version}-%{release}
+Requires:	%{name}-xml = %{epoch}:%{version}-%{release}
 Provides:	php-wddx = %{epoch}:%{version}-%{release}
 
 %description wddx
