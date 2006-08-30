@@ -70,7 +70,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 3
+%define	_rel 4
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -137,6 +137,7 @@ Patch39:	%{name}-versioning.patch
 Patch40:	%{name}-linkflags-clean.patch
 # XXX: obsolete?
 Patch41:	%{name}-openssl-huge-hack.patch
+Patch42:	%{name}-branch.diff
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -1635,6 +1636,7 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji zlib.
 
 %prep
 %setup -q -n php-%{version}
+%patch42 -p1
 %patch40 -p1
 %patch0 -p1
 %patch1 -p1
