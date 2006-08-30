@@ -1,4 +1,3 @@
-diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compile -x 'config.*' -x configure -x missing -x mkinstalldirs -x configure.in php-4.4.4/NEWS php4-STABLE-200608300830/NEWS
 --- php-4.4.4/NEWS	2006-08-15 15:22:14.000000000 +0300
 +++ php4-STABLE-200608300830/NEWS	2006-08-28 23:32:27.000000000 +0300
 @@ -1,5 +1,15 @@
@@ -17,7 +16,6 @@ diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compi
  17 Aug 2006, Version 4.4.4
  - Fixed memory_limit on 64bit systems. (Stefan E.)
  - Fixed overflow on 64bit systems in str_repeat() and wordwrap(). (Stefan E.)
-diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compile -x 'config.*' -x configure -x missing -x mkinstalldirs -x configure.in php-4.4.4/ext/standard/aggregation.c php4-STABLE-200608300830/ext/standard/aggregation.c
 --- php-4.4.4/ext/standard/aggregation.c	2006-01-01 15:46:57.000000000 +0200
 +++ php4-STABLE-200608300830/ext/standard/aggregation.c	2006-08-26 17:33:01.000000000 +0300
 @@ -16,7 +16,7 @@
@@ -38,7 +36,6 @@ diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compi
  				func_name[0] == '_' ||
  				zend_hash_find(&from_ce->function_table, func_name, func_name_len, (void**)&function) == FAILURE) {
  				zend_hash_move_forward(Z_ARRVAL_P(list_hash));
-diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compile -x 'config.*' -x configure -x missing -x mkinstalldirs -x configure.in php-4.4.4/ext/standard/basic_functions.c php4-STABLE-200608300830/ext/standard/basic_functions.c
 --- php-4.4.4/ext/standard/basic_functions.c	2006-06-29 01:09:09.000000000 +0300
 +++ php4-STABLE-200608300830/ext/standard/basic_functions.c	2006-08-28 23:32:42.000000000 +0300
 @@ -17,7 +17,7 @@
@@ -58,9 +55,6 @@ diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compi
  
  	/*
  	 FG(stream_wrappers) are destroyed
-Only in php4-STABLE-200608300830/ext/standard/tests/aggregation: bug37812.phpt
-Only in php4-STABLE-200608300830/ext/standard/tests/file: bug38450.phpt
-diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compile -x 'config.*' -x configure -x missing -x mkinstalldirs -x configure.in php-4.4.4/ext/standard/tests/strings/htmlentities15.phpt php4-STABLE-200608300830/ext/standard/tests/strings/htmlentities15.phpt
 --- php-4.4.4/ext/standard/tests/strings/htmlentities15.phpt	2003-03-24 21:22:18.000000000 +0200
 +++ php4-STABLE-200608300830/ext/standard/tests/strings/htmlentities15.phpt	2006-08-27 19:33:35.000000000 +0300
 @@ -6,14 +6,14 @@
@@ -80,8 +74,6 @@ diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compi
  $str = "роскошный";
  var_dump($str, htmlentities($str, ENT_QUOTES, ''));
  ?>
-Only in php4-STABLE-200608300830/ext/wddx/tests: bug38738.phpt
-diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compile -x 'config.*' -x configure -x missing -x mkinstalldirs -x configure.in php-4.4.4/ext/wddx/wddx.c php4-STABLE-200608300830/ext/wddx/wddx.c
 --- php-4.4.4/ext/wddx/wddx.c	2006-05-26 04:55:26.000000000 +0300
 +++ php4-STABLE-200608300830/ext/wddx/wddx.c	2006-08-24 11:32:37.000000000 +0300
 @@ -16,7 +16,7 @@
@@ -113,8 +105,6 @@ diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compi
  		php_wddx_add_chunk(packet, tmp_buf);
  		efree(tmp_buf);
  		efree(name_esc);
-Only in php4-STABLE-200608300830/ext/xmlrpc: tests
-diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compile -x 'config.*' -x configure -x missing -x mkinstalldirs -x configure.in php-4.4.4/main/php_compat.h php4-STABLE-200608300830/main/php_compat.h
 --- php-4.4.4/main/php_compat.h	2006-05-31 20:17:46.000000000 +0300
 +++ php4-STABLE-200608300830/main/php_compat.h	2006-08-23 23:32:51.000000000 +0300
 @@ -19,6 +19,22 @@
@@ -140,29 +130,6 @@ diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compi
  #endif
  
  #define lookup				php_lookup
-diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compile -x 'config.*' -x configure -x missing -x mkinstalldirs -x configure.in php-4.4.4/main/php_config.h.in php4-STABLE-200608300830/main/php_config.h.in
---- php-4.4.4/main/php_config.h.in	2006-08-15 15:01:21.000000000 +0300
-+++ php4-STABLE-200608300830/main/php_config.h.in	2006-08-30 11:32:42.000000000 +0300
-@@ -1,4 +1,4 @@
--/* main/php_config.h.in.  Generated automatically from configure.in by autoheader.  */
-+/* main/php_config.h.in.  Generated automatically from configure.in by autoheader 2.13.  */
- /* Leave this file alone */
- #define ZEND_API
- #define ZEND_DLEXPORT
-diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compile -x 'config.*' -x configure -x missing -x mkinstalldirs -x configure.in php-4.4.4/main/php_version.h php4-STABLE-200608300830/main/php_version.h
---- php-4.4.4/main/php_version.h	2006-08-15 15:22:14.000000000 +0300
-+++ php4-STABLE-200608300830/main/php_version.h	2006-08-15 15:32:49.000000000 +0300
-@@ -2,6 +2,6 @@
- /* edit configure.in to change version number */
- #define PHP_MAJOR_VERSION 4
- #define PHP_MINOR_VERSION 4
--#define PHP_RELEASE_VERSION 4
--#define PHP_EXTRA_VERSION ""
--#define PHP_VERSION "4.4.4"
-+#define PHP_RELEASE_VERSION 5
-+#define PHP_EXTRA_VERSION "-dev"
-+#define PHP_VERSION "4.4.5-dev"
-diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compile -x 'config.*' -x configure -x missing -x mkinstalldirs -x configure.in php-4.4.4/main/user_streams.c php4-STABLE-200608300830/main/user_streams.c
 --- php-4.4.4/main/user_streams.c	2006-01-01 15:47:00.000000000 +0200
 +++ php4-STABLE-200608300830/main/user_streams.c	2006-08-24 11:32:38.000000000 +0300
 @@ -17,7 +17,7 @@
@@ -209,7 +176,6 @@ diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compi
  	/* call it's stream_open method - set up params first */
  	MAKE_STD_ZVAL(zfilename);
  	ZVAL_STRING(zfilename, filename, 1);
-diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compile -x 'config.*' -x configure -x missing -x mkinstalldirs -x configure.in php-4.4.4/pear/go-pear-list.php php4-STABLE-200608300830/pear/go-pear-list.php
 --- php-4.4.4/pear/go-pear-list.php	2005-08-23 01:13:57.000000000 +0300
 +++ php4-STABLE-200608300830/pear/go-pear-list.php	2006-08-25 17:32:37.000000000 +0300
 @@ -3,19 +3,17 @@
@@ -237,8 +203,6 @@ diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compi
  );
 -
 -?>
-Only in php4-STABLE-200608300830/pear: make-pear-bundle.php
-diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compile -x 'config.*' -x configure -x missing -x mkinstalldirs -x configure.in php-4.4.4/run-tests.php php4-STABLE-200608300830/run-tests.php
 --- php-4.4.4/run-tests.php	2006-01-18 19:59:41.000000000 +0200
 +++ php4-STABLE-200608300830/run-tests.php	2006-08-18 15:32:55.000000000 +0300
 @@ -378,7 +378,7 @@
@@ -250,7 +214,6 @@ diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compi
  			flush();
  			$fp = fopen("php://stdin", "r+");
  			$user_email = trim(fgets($fp, 1024));
-diff -ur -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x Makefile.in -x compile -x 'config.*' -x configure -x missing -x mkinstalldirs -x configure.in php-4.4.4/tests/lang/034.phpt php4-STABLE-200608300830/tests/lang/034.phpt
 --- php-4.4.4/tests/lang/034.phpt	2004-11-04 01:36:02.000000000 +0200
 +++ php4-STABLE-200608300830/tests/lang/034.phpt	2006-08-27 19:33:36.000000000 +0300
 @@ -2,7 +2,7 @@
