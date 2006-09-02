@@ -1,0 +1,236 @@
+--- php-4.4.4/NEWS	2006-08-15 15:22:14.000000000 +0300
++++ php4-STABLE-200608300830/NEWS	2006-08-28 23:32:27.000000000 +0300
+@@ -1,5 +1,15 @@
+ PHP 4                                                                      NEWS
+ |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
++?? ??? 2006, Version 4.4.5
++- Fixed bug #38534 (segfault when calling setlocale() in userspace session
++  handler). (Tony)
++- Fixed bug #38450 (constructor is not called for classes used in userspace
++  stream wrappers). (Tony)
++- Fixed bug #38378 (wddx_serialize_value() generates no wellformed xml). 
++  (sj at sjaensch dot org, grzegorz dot nosek at netart dot pl, Tony).
++- Fixed bug #37812 (aggregate_methods_by_list fails to take certain methods).
++  (Hannes)
++	
+ 17 Aug 2006, Version 4.4.4
+ - Fixed memory_limit on 64bit systems. (Stefan E.)
+ - Fixed overflow on 64bit systems in str_repeat() and wordwrap(). (Stefan E.)
+--- php-4.4.4/ext/standard/aggregation.c	2006-01-01 15:46:57.000000000 +0200
++++ php4-STABLE-200608300830/ext/standard/aggregation.c	2006-08-26 17:33:01.000000000 +0300
+@@ -16,7 +16,7 @@
+    +----------------------------------------------------------------------+
+ */
+ 
+-/* $Id$ */
++/* $Id$ */
+ 
+ #include "php.h"
+ #include "basic_functions.h"
+@@ -146,7 +146,7 @@
+ 		 */
+ 		zend_hash_internal_pointer_reset(Z_ARRVAL_P(list_hash));
+ 		while (zend_hash_get_current_key_ex(Z_ARRVAL_P(list_hash), &func_name, &func_name_len, &num_key, 0, NULL) == HASH_KEY_IS_STRING) {
+-			if (!strncmp(func_name, from_ce->name, MIN(func_name_len-1, from_ce->name_length)) ||
++			if (!strncmp(func_name, from_ce->name, MAX(func_name_len-1, from_ce->name_length)) ||
+ 				func_name[0] == '_' ||
+ 				zend_hash_find(&from_ce->function_table, func_name, func_name_len, (void**)&function) == FAILURE) {
+ 				zend_hash_move_forward(Z_ARRVAL_P(list_hash));
+--- php-4.4.4/ext/standard/basic_functions.c	2006-06-29 01:09:09.000000000 +0300
++++ php4-STABLE-200608300830/ext/standard/basic_functions.c	2006-08-28 23:32:42.000000000 +0300
+@@ -17,7 +17,7 @@
+    +----------------------------------------------------------------------+
+  */
+ 
+-/* $Id$ */
++/* $Id$ */
+ 
+ #include "php.h"
+ #include "php_streams.h"
+@@ -1227,6 +1227,7 @@
+ 		setlocale(LC_CTYPE, "");
+ 	}
+ 	STR_FREE(BG(locale_string));
++	BG(locale_string) = NULL;
+ 
+ 	/*
+ 	 FG(stream_wrappers) are destroyed
+--- php-4.4.4/ext/standard/tests/strings/htmlentities15.phpt	2003-03-24 21:22:18.000000000 +0200
++++ php4-STABLE-200608300830/ext/standard/tests/strings/htmlentities15.phpt	2006-08-27 19:33:35.000000000 +0300
+@@ -6,14 +6,14 @@
+ mbstring.internal_encoding=none
+ --SKIPIF--
+ <?php
+-$result = (bool)setlocale(LC_CTYPE, "ru_RU.koi8r");
++$result = (bool)setlocale(LC_CTYPE, "ru_RU.koi8r", "ru_RU.KOI8-R");
+ if (!$result || preg_match('/koi8/i', setlocale(LC_CTYPE, 0)) == 0) {
+ 	die("skip setlocale() failed\n");
+ }
+ ?>
+ --FILE--
+ <?php
+-setlocale(LC_CTYPE, "ru_RU.koi8r");
++setlocale(LC_CTYPE, "ru_RU.koi8r", "ru_RU.KOI8-R");
+ $str = "роскошный";
+ var_dump($str, htmlentities($str, ENT_QUOTES, ''));
+ ?>
+--- php-4.4.4/ext/wddx/wddx.c	2006-05-26 04:55:26.000000000 +0300
++++ php4-STABLE-200608300830/ext/wddx/wddx.c	2006-08-24 11:32:37.000000000 +0300
+@@ -16,7 +16,7 @@
+    +----------------------------------------------------------------------+
+  */
+ 
+-/* $Id$ */
++/* $Id$ */
+ 
+ #ifdef HAVE_CONFIG_H
+ #include "config.h"
+@@ -432,7 +432,7 @@
+ 	tmp = *var;
+ 	zval_copy_ctor(&tmp);
+ 	convert_to_string(&tmp);
+-	snprintf(tmp_buf, Z_STRLEN(tmp), WDDX_NUMBER, Z_STRVAL(tmp));
++	snprintf(tmp_buf, sizeof(tmp_buf), WDDX_NUMBER, Z_STRVAL(tmp));
+ 	zval_dtor(&tmp);
+ 
+ 	php_wddx_add_chunk(packet, tmp_buf);	
+@@ -630,8 +630,8 @@
+ 
+ 	if (name) {
+ 		name_esc = php_escape_html_entities(name, name_len, &name_esc_len, 0, ENT_QUOTES, NULL TSRMLS_CC);
+-		tmp_buf = emalloc(name_esc_len + 1);
+-		snprintf(tmp_buf, name_esc_len, WDDX_VAR_S, name_esc);
++		tmp_buf = emalloc(name_esc_len + sizeof(WDDX_VAR_S));
++		snprintf(tmp_buf, name_esc_len + sizeof(WDDX_VAR_S), WDDX_VAR_S, name_esc);
+ 		php_wddx_add_chunk(packet, tmp_buf);
+ 		efree(tmp_buf);
+ 		efree(name_esc);
+--- php-4.4.4/main/php_compat.h	2006-05-31 20:17:46.000000000 +0300
++++ php4-STABLE-200608300830/main/php_compat.h	2006-08-23 23:32:51.000000000 +0300
+@@ -19,6 +19,22 @@
+ #define pcre_study				php_pcre_study
+ #define pcre_version			php_pcre_version
+ #define pcre_fullinfo			php_pcre_fullinfo
++#define pcre_free				php_pcre_free
++#define pcre_malloc				php_pcre_malloc
++#define pcre_config				php_pcre_config
++#define pcre_copy_named_substring php_pcre_copy_named_substring
++#define pcre_dfa_exec			php_pcre_dfa_exec
++#define pcre_free_substring 	php_pcre_free_substring
++#define pcre_free_substring_list php_pcre_free_substring_list
++#define pcre_get_named_substring php_pcre_get_named_substring
++#define pcre_get_stringnumber 	php_pcre_get_stringnumber
++#define pcre_refcount 			php_pcre_refcount
++#define _pcre_ord2utf8 			php__pcre_ord2utf8
++#define _pcre_try_flipped 		php__pcre_try_flipped
++#define _pcre_ucp_findprop 		php__pcre_ucp_findprop
++#define _pcre_ucp_othercase 	php__pcre_ucp_othercase
++#define _pcre_valid_utf8 		php__pcre_valid_utf8
++#define _pcre_xclass	 		php__pcre_xclass
+ #endif
+ 
+ #define lookup				php_lookup
+--- php-4.4.4/main/user_streams.c	2006-01-01 15:47:00.000000000 +0200
++++ php4-STABLE-200608300830/main/user_streams.c	2006-08-24 11:32:38.000000000 +0300
+@@ -17,7 +17,7 @@
+    +----------------------------------------------------------------------+
+ */
+ 
+-/* $Id$ */
++/* $Id$ */
+ 
+ #include "php.h"
+ #include "php_globals.h"
+@@ -193,7 +193,33 @@
+ 	object_init_ex(us->object, uwrap->ce);
+ 	ZVAL_REFCOUNT(us->object) = 1;
+ 	PZVAL_IS_REF(us->object) = 1;
+-	
++
++	if (zend_hash_exists(&uwrap->ce->function_table, uwrap->ce->name, uwrap->ce->name_length+1)) {
++		zval *retval_ptr;
++		zval *function_name;
++
++		MAKE_STD_ZVAL(function_name);
++		ZVAL_STRINGL(function_name, uwrap->ce->name, uwrap->ce->name_length, 1);
++
++		if (call_user_function_ex(EG(function_table), &us->object, function_name, &retval_ptr, 0, 0, 1, NULL TSRMLS_CC) == FAILURE) {
++			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Could not execute %s::%s()", uwrap->ce->name, uwrap->ce->name);
++			zval_dtor(function_name);
++			FREE_ZVAL(function_name);
++			zval_dtor(us->object);
++			FREE_ZVAL(us->object);
++			efree(us);
++			FG(user_stream_current_filename) = NULL;
++			return NULL;
++		} else {
++			if (retval_ptr) {
++				zval_ptr_dtor(&retval_ptr);
++			}
++		}
++		zval_dtor(function_name);
++		FREE_ZVAL(function_name);
++	}
++
++
+ 	/* call it's stream_open method - set up params first */
+ 	MAKE_STD_ZVAL(zfilename);
+ 	ZVAL_STRING(zfilename, filename, 1);
+--- php-4.4.4/pear/go-pear-list.php	2005-08-23 01:13:57.000000000 +0300
++++ php4-STABLE-200608300830/pear/go-pear-list.php	2006-08-25 17:32:37.000000000 +0300
+@@ -3,19 +3,17 @@
+  * that will be used to create the PEAR folder
+  * in the windows snapshot.
+  * See win32/build/mkdist.php for more details
+- * $Id$
++ * $Id$
+  */
+ $packages  = array(
+ // required packages for the installer
+-"PEAR"                  =>    "1.3.6",
+-"XML_RPC"               =>    "1.4.0",
++"PEAR"                  =>    "1.4.11",
++"XML_RPC"               =>    "1.4.8",
+ "Console_Getopt"        =>    "1.2",
+ "Archive_Tar"           =>    "1.3.1",
+ 
+ // required packages for the web frontend
+-"PEAR_Frontend_Web"     =>    "0.4",
+-"HTML_Template_IT"      =>    "1.1",
++"PEAR_Frontend_Web"     =>    "0.5.1",
++"HTML_Template_IT"      =>    "1.1.4",
+ "Net_UserAgent_Detect"  =>    "2.0.1",
+ );
+-
+-?>
+--- php-4.4.4/run-tests.php	2006-01-18 19:59:41.000000000 +0200
++++ php4-STABLE-200608300830/run-tests.php	2006-08-18 15:32:55.000000000 +0300
+@@ -378,7 +378,7 @@
+ 		
+ 		/* Ask the user to provide an email address, so that QA team can contact the user */
+ 		if (!strncasecmp($user_input, 'y', 1) || strlen(trim($user_input)) == 0) {
+-			echo "\nPlease enter your email address.\n(You address will be mangled so that it will not go out on any\nmailinglist in plain text): ";
++			echo "\nPlease enter your email address.\n(Your address will be mangled so that it will not go out on any\nmailinglist in plain text): ";
+ 			flush();
+ 			$fp = fopen("php://stdin", "r+");
+ 			$user_email = trim(fgets($fp, 1024));
+--- php-4.4.4/tests/lang/034.phpt	2004-11-04 01:36:02.000000000 +0200
++++ php4-STABLE-200608300830/tests/lang/034.phpt	2006-08-27 19:33:36.000000000 +0300
+@@ -2,7 +2,7 @@
+ Bug #12647 (Locale settings affecting float parsing)
+ --SKIPIF--
+ <?php  # try to activate a german locale
+-if (setlocale(LC_NUMERIC, "de_DE", "de", "german", "ge") === FALSE) {
++if (setlocale(LC_NUMERIC, "de_DE", "de", "german", "ge", "de_DE.ISO8859-1") === FALSE) {
+ 	print "skip";
+ }
+ ?>
+@@ -11,7 +11,7 @@
+ --FILE--
+ <?php 
+ # activate the german locale
+-setlocale(LC_NUMERIC, "de_DE", "de", "german", "ge");
++setlocale(LC_NUMERIC, "de_DE", "de", "german", "ge", "de_DE.ISO8859-1");
+ 
+ echo (float)"3.14", "\n";
+ ?>
