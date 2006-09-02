@@ -70,7 +70,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 4
+%define	_rel 5
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -1979,6 +1979,11 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/{cgi,cli,cgi-fcgi,apache,apache2handler
 
 # for CLI SAPI only
 mv $RPM_BUILD_ROOT%{_sysconfdir}/{conf.d/{ncurses,pcntl,readline}.ini,cli.d}
+
+# as a result of ext/pcre/pcrelib removal in %%prep, ext/pcre/php_pcre.h
+# isn't installed by install-headers make target, we do it manually here.
+# this header file is required by e.g. filter PECL extension
+install -D ext/pcre/php_pcre.h $RPM_BUILD_ROOT%{_includedir}/php/ext/pcre/php_pcre.h
 
 %clean
 rm -rf $RPM_BUILD_ROOT
