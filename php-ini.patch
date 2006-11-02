@@ -1,5 +1,5 @@
---- php-5.1.6/php.ini	2006-09-26 12:50:19.858375000 +0300
-+++ php-5.1.6/php.ini	2006-10-10 17:00:44.427176439 +0300
+--- php-5.2.0/php.ini-dist	2006-10-14 18:06:11.000000000 +0300
++++ php-5.2.0/php.ini	2006-11-03 00:23:42.665401441 +0200
 @@ -3,13 +3,18 @@
  ;;;;;;;;;;;
  ; WARNING ;
@@ -26,7 +26,8 @@
  
  ;;;;;;;;;;;;;;;;;;;
  ; About php.ini   ;
-@@ -60,9 +65,71 @@
+@@ -59,10 +64,72 @@
+ ;;;;;;;;;;;;;;;;;;;
  ; About this file ;
  ;;;;;;;;;;;;;;;;;;;
 -; All the values in the php.ini-dist file correspond to the builtin
@@ -35,7 +36,7 @@
 +; If you use constants in your value, and these constants belong to a
 +; dynamically loaded extension (either a PHP extension or a Zend extension),
 +; you may only use these constants *after* the line that loads the extension.
- 
++
  
 +; Below is the list of settings changed from default as specified in
 +; php.ini-recommended. These settings make PHP more secure and encourage
@@ -98,7 +99,7 @@
 +;     It's not possible to decide to force a variable to be passed by reference
 +;     when calling a function.  The PHP 4 style to do this is by making the
 +;     function require the relevant argument by reference.
-+
+ 
  ;;;;;;;;;;;;;;;;;;;;
  ; Language Options ;
 @@ -86,7 +153,7 @@
@@ -110,7 +111,7 @@
  
  ; Enforce year 2000 compliance (will cause problems with non-compliant browsers)
  y2k_compliance = On
-@@ -299,14 +366,16 @@
+@@ -301,14 +368,16 @@
  ;
  ;   - Show all errors except for notices and coding standards warnings
  ;
@@ -129,7 +130,7 @@
  
  ; Even when display_errors is on, errors that occur during PHP's startup
  ; sequence are not displayed.  It's strongly recommended to keep
-@@ -316,7 +385,7 @@
+@@ -318,7 +387,7 @@
  ; Log errors into a log file (server-specific log, stderr, or error_log (below))
  ; As stated above, you're strongly advised to use error logging in place of
  ; error displaying on production web sites.
@@ -138,7 +139,7 @@
  
  ; Set maximum length of log_errors. In error_log information about the source is
  ; added. The default is 1024 and 0 allows to not apply any maximum length at all.
-@@ -341,7 +410,7 @@
+@@ -345,7 +414,7 @@
  
  ; Disable the inclusion of HTML tags in error messages.
  ; Note: Never use this feature for production boxes.
@@ -147,7 +148,7 @@
  
  ; If html_errors is set On PHP produces clickable error messages that direct
  ; to a page describing the error or function causing the error in detail.
-@@ -385,7 +454,7 @@
+@@ -389,7 +458,7 @@
  ; Environment and Built-in variables (G, P, C, E & S respectively, often
  ; referred to as EGPCS or GPC).  Registration is done from left to right, newer
  ; values override older values.
@@ -156,7 +157,7 @@
  
  ; Whether or not to register the EGPCS variables as global variables.  You may
  ; want to turn this off if you don't want to clutter your scripts' global scope
-@@ -401,12 +470,12 @@
+@@ -405,12 +474,12 @@
  ; Whether or not to register the old-style input arrays, HTTP_GET_VARS
  ; and friends.  If you're not using them, it's recommended to turn them off,
  ; for performance reasons.
@@ -171,7 +172,7 @@
  
  ; When enabled, the SERVER and ENV variables are created when they're first
  ; used (Just In Time) instead of when the script starts. If these variables
-@@ -422,7 +491,7 @@
+@@ -426,7 +495,7 @@
  ;
  
  ; Magic quotes for incoming GET/POST/Cookie data.
@@ -180,7 +181,7 @@
  
  ; Magic quotes for runtime-generated data, e.g. data from SQL, from exec(), etc.
  magic_quotes_runtime = Off
-@@ -468,7 +537,7 @@
+@@ -472,7 +541,7 @@
  user_dir =
  
  ; Directory in which the loadable extensions (modules) reside.
@@ -189,16 +190,16 @@
  
  ; Whether or not to enable the dl() function.  The dl() function does NOT work
  ; properly in multithreaded servers, such as IIS or Zeus, and is automatically
-@@ -529,7 +598,7 @@
+@@ -533,7 +602,7 @@
  ;;;;;;;;;;;;;;;;;;
  
  ; Whether to allow the treatment of URLs (like http:// or ftp://) as files.
 -allow_url_fopen = On
 +allow_url_fopen = Off
  
- ; Define the anonymous ftp password (your email address)
- ;from="john@doe.com"
-@@ -569,48 +638,6 @@
+ ; Whether to allow include/require to open URLs (like http:// or ftp://) as files.
+ allow_url_include = Off
+@@ -576,48 +645,6 @@
  ; needs to go here.  Specify the location of the extension with the
  ; extension_dir directive above.
  
@@ -247,7 +248,7 @@
  ;;;;;;;;;;;;;;;;;;;
  ; Module Settings ;
  ;;;;;;;;;;;;;;;;;;;
-@@ -1193,7 +1220,7 @@
+@@ -1205,7 +1232,7 @@
  ; Enables or disables WSDL caching feature.
  soap.wsdl_cache_enabled=1
  ; Sets the directory name where SOAP extension will put cache files.
