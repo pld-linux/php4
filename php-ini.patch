@@ -1,5 +1,5 @@
---- php-5.2.0/php.ini	2006-11-03 00:23:42.665401441 +0200
-+++ php-5.2.0/php.ini	2006-11-03 01:27:56.372110952 +0200
+--- php-5.2.0/php.ini	2006-11-03 01:27:56.372110952 +0200
++++ php-5.2.0/php.ini	2006-11-03 01:30:12.215164639 +0200
 @@ -3,13 +3,18 @@
  ;;;;;;;;;;;
  ; WARNING ;
@@ -198,15 +198,6 @@
  
  ; Whether or not to enable the dl() function.  The dl() function does NOT work
  ; properly in multithreaded servers, such as IIS or Zeus, and is automatically
-@@ -533,7 +602,7 @@
- ;;;;;;;;;;;;;;;;;;
- 
- ; Whether to allow the treatment of URLs (like http:// or ftp://) as files.
--allow_url_fopen = On
-+allow_url_fopen = Off
- 
- ; Whether to allow include/require to open URLs (like http:// or ftp://) as files.
- allow_url_include = Off
 @@ -576,48 +645,6 @@
  ; needs to go here.  Specify the location of the extension with the
  ; extension_dir directive above.
