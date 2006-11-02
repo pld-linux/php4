@@ -36,25 +36,3 @@ diff -burN php-5.0.4RC1.orig/TSRM/threads.m4 php-5.0.4RC1/TSRM/threads.m4
 +pthreads_assign_done="yes"
 +fi
  ])dnl
-diff -burN php-5.0.4RC1.orig/TSRM/tsrm.m4 php-5.0.4RC1/TSRM/tsrm.m4
---- php-5.0.4RC1.orig/TSRM/tsrm.m4	2005-03-15 18:02:27.627294968 +0100
-+++ php-5.0.4RC1/TSRM/tsrm.m4	2005-03-15 18:05:32.858135600 +0100
-@@ -68,7 +68,6 @@
- ])
- 
- sinclude(threads.m4)
--sinclude(TSRM/threads.m4)
- 
- AC_DEFUN([TSRM_CHECK_PTHREADS],[
- 		
-diff -burN php-5.0.4RC1.orig/configure.in php-5.0.4RC1/configure.in
---- php-5.0.4RC1.orig/configure.in	2005-03-15 18:02:27.857260008 +0100
-+++ php-5.0.4RC1/configure.in	2005-03-15 18:05:32.858135600 +0100
-@@ -226,6 +226,7 @@
- 
- sinclude(Zend/acinclude.m4)
- sinclude(Zend/Zend.m4)
-+sinclude(TSRM/threads.m4)
- sinclude(TSRM/tsrm.m4)
- 
- 
