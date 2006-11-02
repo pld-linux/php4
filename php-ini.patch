@@ -1,5 +1,5 @@
---- php-5.2.0/php.ini-dist	2006-10-14 18:06:11.000000000 +0300
-+++ php-5.2.0/php.ini	2006-11-03 00:23:42.665401441 +0200
+--- php-5.2.0/php.ini	2006-11-03 00:23:42.665401441 +0200
++++ php-5.2.0/php.ini	2006-11-03 01:27:56.372110952 +0200
 @@ -3,13 +3,18 @@
  ;;;;;;;;;;;
  ; WARNING ;
@@ -26,8 +26,7 @@
  
  ;;;;;;;;;;;;;;;;;;;
  ; About php.ini   ;
-@@ -59,10 +64,72 @@
- ;;;;;;;;;;;;;;;;;;;
+@@ -60,9 +65,71 @@
  ; About this file ;
  ;;;;;;;;;;;;;;;;;;;
 -; All the values in the php.ini-dist file correspond to the builtin
@@ -36,7 +35,7 @@
 +; If you use constants in your value, and these constants belong to a
 +; dynamically loaded extension (either a PHP extension or a Zend extension),
 +; you may only use these constants *after* the line that loads the extension.
-+
+ 
  
 +; Below is the list of settings changed from default as specified in
 +; php.ini-recommended. These settings make PHP more secure and encourage
@@ -99,7 +98,7 @@
 +;     It's not possible to decide to force a variable to be passed by reference
 +;     when calling a function.  The PHP 4 style to do this is by making the
 +;     function require the relevant argument by reference.
- 
++
  ;;;;;;;;;;;;;;;;;;;;
  ; Language Options ;
 @@ -86,7 +153,7 @@
@@ -111,6 +110,15 @@
  
  ; Enforce year 2000 compliance (will cause problems with non-compliant browsers)
  y2k_compliance = On
+@@ -245,7 +312,7 @@
+ ; (e.g. by adding its signature to the Web server header).  It is no security
+ ; threat in any way, but it makes it possible to determine whether you use PHP
+ ; on your server or not.
+-expose_php = On
++expose_php = Off
+ 
+ 
+ ;;;;;;;;;;;;;;;;;;;
 @@ -301,14 +368,16 @@
  ;
  ;   - Show all errors except for notices and coding standards warnings
