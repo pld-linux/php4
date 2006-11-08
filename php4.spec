@@ -2323,12 +2323,6 @@ fi
 %postun recode
 %extension_postun
 
-%post session
-%extension_post
-
-%postun session
-%extension_postun
-
 %post shmop
 %extension_post
 
