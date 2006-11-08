@@ -783,7 +783,6 @@ Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	gd >= 2.0.28-2
 Requires:	gd(gif)
-Provides:	%{name}-gd(gif) = %{epoch}:%{version}-%{release}
 Provides:	php(gd)
 Provides:	php-gd = %{epoch}:%{version}-%{release}
 
