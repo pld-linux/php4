@@ -61,7 +61,7 @@
 %undefine	with_mm
 %endif
 
-%ifnarch %{ix86} %{x8664} sparc sparcv9 alpha
+%ifnarch %{ix86} %{x8664} sparc sparcv9 alpha ppc
 %undefine	with_interbase
 %endif
 
@@ -70,7 +70,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 3
+%define	_rel 6
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -85,7 +85,6 @@ License:	PHP
 Group:		Libraries
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
 # Source0-md5:	bc6fa8908e2ac36e93bab9f7d42cda3a
-
 Source2:	zend.gif
 Source3:	%{name}-mod_php.conf
 Source4:	%{name}-cgi-fcgi.ini
@@ -138,6 +137,7 @@ Patch40:	%{name}-linkflags-clean.patch
 # XXX: obsolete?
 Patch41:	%{name}-openssl-huge-hack.patch
 Patch42:	%{name}-apr-apu.patch
+Patch43:	%{name}-branch.diff
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -305,6 +305,7 @@ Requires:	apache1(EAPI) >= 1.3.33-2
 Requires:	apache1-mod_mime
 Provides:	php = %{epoch}:%{version}-%{release}
 Provides:	php4 = %{epoch}:%{version}-%{release}
+Provides:	webserver(php) = %{version}
 Obsoletes:	apache-mod_php < 1:4.1.1
 Obsoletes:	phpfi
 # Obsolete last version when apache module was in main package
@@ -325,6 +326,7 @@ Requires:	apache(modules-api) = %{apache_modules_api}
 Requires:	apache-mod_mime
 Provides:	php = %{epoch}:%{version}-%{release}
 Provides:	php4 = %{epoch}:%{version}-%{release}
+Provides:	webserver(php) = %{version}
 Obsoletes:	apache-mod_php < 1:4.1.1
 Obsoletes:	phpfi
 # Obsolete last version when apache module was in main package
@@ -344,6 +346,7 @@ Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php = %{epoch}:%{version}-%{release}
 Provides:	php-fcgi = %{epoch}:%{version}-%{release}
 Provides:	php4 = %{epoch}:%{version}-%{release}
+Provides:	webserver(php) = %{version}
 
 %description fcgi
 php4 as FastCGI program.
@@ -404,6 +407,9 @@ Provides:	%{name}-openssl = %{epoch}:%{version}-%{release}
 Provides:	%{name}-session = %{epoch}:%{version}-%{release}
 Provides:	%{name}-standard = %{epoch}:%{version}-%{release}
 Provides:	php(modules_api) = %{php_api_version}
+Provides:	php(openssl)
+Provides:	php(session)
+Provides:	php(standard)
 Provides:	php(zend_extension_api) = %{zend_extension_api}
 Provides:	php(zend_module_api) = %{zend_module_api}
 Provides:	php-common = %{epoch}:%{version}-%{release}
@@ -477,8 +483,8 @@ oracle, ÕÓÔÁÎÏ×ÉÔÅ ÜÔÏÔ ÐÁËÅÔ ÄÌÑ ËÏÍÐÉÌÉÒÏ×ÁÎÉÑ ÏÔÄÅÌØÎÙÈ ÒÁÓÛÉÒÅÎÉÊ.
 Summary:	bcmath extension module for PHP
 Summary(pl):	Modu³ bcmath dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(bcmath)
 Provides:	php-bcmath = %{epoch}:%{version}-%{release}
 
 %description bcmath
@@ -493,8 +499,8 @@ matematycznych takich jak w programie bc.
 Summary:	Bzip2 extension module for PHP
 Summary(pl):	Modu³ bzip2 dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(bzip2)
 Provides:	php-bzip2 = %{epoch}:%{version}-%{release}
 
 %description bzip2
@@ -508,8 +514,8 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji bzip2.
 Summary:	Calendar extension module for PHP
 Summary(pl):	Modu³ funkcji kalendarza dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(calendar)
 Provides:	php-calendar = %{epoch}:%{version}-%{release}
 
 %description calendar
@@ -523,8 +529,8 @@ Modu³ PHP dodaj±cy wsparcie dla kalendarza.
 Summary:	cpdf extension module for PHP
 Summary(pl):	Modu³ cpdf dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(cpdf)
 Provides:	php-cpdf = %{epoch}:%{version}-%{release}
 
 %description cpdf
@@ -538,8 +544,8 @@ Modu³ PHP dodaj±cy obs³ugê plików PDF poprzez bibliotekê libcpdf.
 Summary:	crack extension module for PHP
 Summary(pl):	Modu³ crack dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(crack)
 Provides:	php-crack = %{epoch}:%{version}-%{release}
 
 %description crack
@@ -557,8 +563,8 @@ Uwaga: to jest modu³ eksperymentalny.
 Summary:	ctype extension module for PHP
 Summary(pl):	Modu³ ctype dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(ctype)
 Provides:	php-ctype = %{epoch}:%{version}-%{release}
 
 %description ctype
@@ -572,8 +578,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z funkcji ctype.
 Summary:	curl extension module for PHP
 Summary(pl):	Modu³ curl dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(curl)
 Provides:	php-curl = %{epoch}:%{version}-%{release}
 
 %description curl
@@ -587,8 +593,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z biblioteki curl.
 Summary:	Old xDBM extension module for PHP
 Summary(pl):	Modu³ xDBM dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(db)
 Provides:	php-db = %{epoch}:%{version}-%{release}
 
 %description db
@@ -610,8 +616,8 @@ które obs³uguje nadzbiór funkcjonalno¶ci tego modu³u.
 Summary:	DBA extension module for PHP
 Summary(pl):	Modu³ DBA dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(dba)
 Provides:	php-dba = %{epoch}:%{version}-%{release}
 
 %description dba
@@ -626,8 +632,8 @@ Modu³ dla PHP dodaj±cy obs³ugê dla baz danych opartych na plikach
 Summary:	DBase extension module for PHP
 Summary(pl):	Modu³ DBase dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(dbase)
 Provides:	php-dbase = %{epoch}:%{version}-%{release}
 
 %description dbase
@@ -641,8 +647,8 @@ Modu³ PHP ze wsparciem dla DBase.
 Summary:	DBX extension module for PHP
 Summary(pl):	Modu³ DBX dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(dbx)
 Provides:	php-dbx = %{epoch}:%{version}-%{release}
 
 %description dbx
@@ -658,8 +664,8 @@ obs³uguje bazy odbc, mysql, pgsql, mssql, fbsql i inne.
 Summary:	Direct I/O extension module for PHP
 Summary(pl):	Modu³ Direct I/O dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(dio)
 Provides:	php-dio = %{epoch}:%{version}-%{release}
 
 %description dio
@@ -673,8 +679,8 @@ Modu³ PHP dodaj±cy obs³ugê bezpo¶rednich operacji I/O na plikach.
 Summary:	DOM XML extension module for PHP
 Summary(pl):	Modu³ DOM XML dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(domxml)
 Provides:	php-domxml = %{epoch}:%{version}-%{release}
 
 %description domxml
@@ -692,8 +698,8 @@ Uwaga: to jest modu³ eksperymentalny.
 Summary:	exif extension module for PHP
 Summary(pl):	Modu³ exif dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(exif)
 Provides:	php-exif = %{epoch}:%{version}-%{release}
 
 %description exif
@@ -707,8 +713,8 @@ Modu³ PHP dodaj±cy obs³ugê znaczników EXIF w plikach obrazków.
 Summary:	FDF extension module for PHP
 Summary(pl):	Modu³ FDF dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(fdf)
 Provides:	php-fdf = %{epoch}:%{version}-%{release}
 
 %description fdf
@@ -723,8 +729,8 @@ FDFTK.
 Summary:	filePro extension module for PHP
 Summary(pl):	Modu³ filePro dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(filepro)
 Provides:	php-filepro = %{epoch}:%{version}-%{release}
 
 %description filepro
@@ -739,8 +745,8 @@ filePro.
 Summary:	FriBiDi extension module for PHP
 Summary(pl):	Modu³e FriBiDi dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(fribidi)
 Provides:	php-fribidi = %{epoch}:%{version}-%{release}
 
 %description fribidi
@@ -759,8 +765,8 @@ tek¶cie arabskim lub hebrajskim osadzonym wewn±trz angielskiego.
 Summary:	FTP extension module for PHP
 Summary(pl):	Modu³ FTP dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(ftp)
 Provides:	php-ftp = %{epoch}:%{version}-%{release}
 
 %description ftp
@@ -774,11 +780,10 @@ Modu³ PHP dodaj±cy obs³ugê protoko³u FTP.
 Summary:	GD extension module for PHP
 Summary(pl):	Modu³ GD dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	gd >= 2.0.28-2
 Requires:	gd(gif)
-Provides:	%{name}-gd(gif) = %{epoch}:%{version}-%{release}
+Provides:	php(gd)
 Provides:	php-gd = %{epoch}:%{version}-%{release}
 
 %description gd
@@ -793,8 +798,8 @@ tworzenie i obróbkê obrazków.
 Summary:	gettext extension module for PHP
 Summary(pl):	Modu³ gettext dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(gettext)
 Provides:	php-gettext = %{epoch}:%{version}-%{release}
 
 %description gettext
@@ -808,8 +813,8 @@ Modu³ PHP dodaj±cy obs³ugê lokalizacji przez gettext.
 Summary:	gmp extension module for PHP
 Summary(pl):	Modu³ gmp dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(gmp)
 Provides:	php-gmp = %{epoch}:%{version}-%{release}
 
 %description gmp
@@ -824,8 +829,8 @@ liczbach o dowolnej d³ugo¶ci.
 Summary:	Hyperwave extension module for PHP
 Summary(pl):	Modu³ Hyperwave dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(hyperwave)
 Provides:	php-hyperwave = %{epoch}:%{version}-%{release}
 
 %description hyperwave
@@ -839,8 +844,8 @@ Modu³ PHP dodaj±cy obs³ugê Hyperwave.
 Summary:	iconv extension module for PHP
 Summary(pl):	Modu³ iconv dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(iconv)
 Provides:	php-iconv = %{epoch}:%{version}-%{release}
 
 %description iconv
@@ -855,8 +860,8 @@ Summary:	IMAP extension module for PHP
 Summary(pl):	Modu³ IMAP dla PHP
 Summary(pt_BR):	Um módulo para aplicações PHP que usam IMAP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(imap)
 Provides:	php-imap = %{epoch}:%{version}-%{release}
 
 %description imap
@@ -873,8 +878,8 @@ Um módulo para aplicações PHP que usam IMAP.
 Summary:	InterBase/Firebird database module for PHP
 Summary(pl):	Modu³ bazy danych InterBase/Firebird dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(interbase)
 Provides:	php-interbase = %{epoch}:%{version}-%{release}
 %{?with_interbase_inst:Autoreq:	false}
 
@@ -889,8 +894,8 @@ Modu³ PHP umo¿liwiaj±cy dostêp do baz danych InterBase i Firebird.
 Summary:	Java extension module for PHP
 Summary(pl):	Modu³ Javy dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(java)
 Provides:	php-java = %{epoch}:%{version}-%{release}
 
 %description java
@@ -915,8 +920,8 @@ Summary:	LDAP extension module for PHP
 Summary(pl):	Modu³ LDAP dla PHP
 Summary(pt_BR):	Um módulo para aplicações PHP que usam LDAP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(ldap)
 Provides:	php-ldap = %{epoch}:%{version}-%{release}
 
 %description ldap
@@ -933,8 +938,8 @@ Um módulo para aplicações PHP que usam LDAP.
 Summary:	mbstring extension module for PHP
 Summary(pl):	Modu³ mbstring dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(mbstring)
 Provides:	php-mbstring = %{epoch}:%{version}-%{release}
 
 %description mbstring
@@ -948,8 +953,8 @@ Modu³ PHP dodaj±cy obs³ugê ci±gów znaków wielobajtowych.
 Summary:	mcal extension module for PHP
 Summary(pl):	Modu³ mcal dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(mcal)
 Provides:	php-mcal = %{epoch}:%{version}-%{release}
 
 %description mcal
@@ -964,8 +969,8 @@ do kalendarzy).
 Summary:	mcrypt extension module for PHP
 Summary(pl):	Modu³ mcrypt dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(mcrypt)
 Provides:	php-mcrypt = %{epoch}:%{version}-%{release}
 
 %description mcrypt
@@ -979,8 +984,8 @@ Modu³ PHP dodaj±cy mo¿liwo¶æ szyfrowania poprzez bibliotekê mcrypt.
 Summary:	mhash extension module for PHP
 Summary(pl):	Modu³ mhash dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(mhash)
 Provides:	php-mhash = %{epoch}:%{version}-%{release}
 
 %description mhash
@@ -994,9 +999,9 @@ Modu³ PHP udostêpniaj±cy funkcje mieszaj±ce z biblioteki mhash.
 Summary:	mime_magic extension module for PHP
 Summary(pl):	Modu³ mime_magic dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	/usr/share/file/magic.mime
+Provides:	php(mime_magic)
 Provides:	php-mime_magic = %{epoch}:%{version}-%{release}
 
 %description mime_magic
@@ -1011,8 +1016,8 @@ znaczników plików z u¿yciem bazy danych magic.mime.
 Summary:	ming extension module for PHP
 Summary(pl):	Modu³ ming dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(ming)
 Provides:	php-ming = %{epoch}:%{version}-%{release}
 
 %description ming
@@ -1027,8 +1032,8 @@ ming.
 Summary:	mnoGoSearch extension module for PHP
 Summary(pl):	Modu³ mnoGoSearch dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(mnogosearch)
 Provides:	php-mnogosearch = %{epoch}:%{version}-%{release}
 
 %description mnogosearch
@@ -1043,8 +1048,8 @@ wyszukiwarki mnoGoSearch.
 Summary:	msession extension module for PHP
 Summary(pl):	Modu³ msession dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(msession)
 Provides:	php-msession = %{epoch}:%{version}-%{release}
 
 %description msession
@@ -1063,8 +1068,8 @@ serwerów.
 Summary:	MS SQL extension module for PHP
 Summary(pl):	Modu³ MS SQL dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(mssql)
 Provides:	php-mssql = %{epoch}:%{version}-%{release}
 Conflicts:	%{name}-sybase
 Conflicts:	%{name}-sybase-ct
@@ -1082,8 +1087,8 @@ Summary:	MySQL database module for PHP
 Summary(pl):	Modu³ bazy danych MySQL dla PHP
 Summary(pt_BR):	Um módulo para aplicações PHP que usam bancos de dados MySQL
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(mysql)
 Provides:	php-mysql = %{epoch}:%{version}-%{release}
 
 %description mysql
@@ -1100,8 +1105,8 @@ Um módulo para aplicações PHP que usam bancos de dados MySQL.
 Summary:	ncurses module for PHP
 Summary(pl):	Modu³ ncurses dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-cli = %{epoch}:%{version}-%{release}
 Requires:	%{name}-cli = %{epoch}:%{version}-%{release}
+Provides:	php(ncurses)
 Provides:	php-ncurses = %{epoch}:%{version}-%{release}
 
 %description ncurses
@@ -1115,8 +1120,8 @@ Modu³ PHP dodaj±cy obs³ugê funkcji ncurses (tylko do SAPI cli i cgi).
 Summary:	Oracle 8 database module for PHP
 Summary(pl):	Modu³ bazy danych Oracle 8 dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(oci8)
 Provides:	php-oci8 = %{epoch}:%{version}-%{release}
 Autoreq:	false
 
@@ -1133,9 +1138,9 @@ Summary:	ODBC extension module for PHP
 Summary(pl):	Modu³ ODBC dla PHP
 Summary(pt_BR):	Um módulo para aplicações PHP que usam bases de dados ODBC
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	unixODBC >= 2.1.1-3
+Provides:	php(odbc)
 Provides:	php-odbc = %{epoch}:%{version}-%{release}
 
 %description odbc
@@ -1152,8 +1157,8 @@ Um módulo para aplicações PHP que usam ODBC.
 Summary:	Oracle 7 database module for PHP
 Summary(pl):	Modu³ bazy danych Oracle 7 dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(oracle)
 Provides:	php-oracle = %{epoch}:%{version}-%{release}
 Autoreq:	false
 
@@ -1168,8 +1173,8 @@ Modu³ PHP umo¿liwiaj±cy dostêp do bazy danych Oracle 7.
 Summary:	Overload extension module for PHP
 Summary(pl):	Modu³ Overload dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(overload)
 Provides:	php-overload = %{epoch}:%{version}-%{release}
 
 %description overload
@@ -1187,8 +1192,8 @@ Uwaga: to jest modu³ eksperymentalny.
 Summary:	Process Control extension module for PHP
 Summary(pl):	Modu³ Process Control dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(pcntl)
 Provides:	php-pcntl = %{epoch}:%{version}-%{release}
 
 %description pcntl
@@ -1210,8 +1215,8 @@ u¿ywania z serwerem WWW - nie próbuj tego!
 Summary:	PCRE extension module for PHP
 Summary(pl):	Modu³ PCRE dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(pcre)
 Provides:	php-pcre = %{epoch}:%{version}-%{release}
 
 %description pcre
@@ -1226,8 +1231,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z perlowych wyra¿eñ regularnych
 Summary:	PDF creation module module for PHP
 Summary(pl):	Modu³ do tworzenia plików PDF dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(pdf)
 Provides:	php-pdf = %{epoch}:%{version}-%{release}
 
 %description pdf
@@ -1242,8 +1247,8 @@ pdflib.
 Summary:	PostgreSQL database module for PHP
 Summary(pl):	Modu³ bazy danych PostgreSQL dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(pgsql)
 Provides:	php-pgsql = %{epoch}:%{version}-%{release}
 
 %description pgsql
@@ -1260,8 +1265,8 @@ Um módulo para aplicações PHP que usam bancos de dados postgresql.
 Summary:	POSIX extension module for PHP
 Summary(pl):	Modu³ POSIX dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(posix)
 Provides:	php-posix = %{epoch}:%{version}-%{release}
 
 %description posix
@@ -1275,8 +1280,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z funkcji POSIX.
 Summary:	pspell extension module for PHP
 Summary(pl):	Modu³ pspell dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(pspell)
 Provides:	php-pspell = %{epoch}:%{version}-%{release}
 
 %description pspell
@@ -1292,8 +1297,8 @@ sprawdzanie pisowni s³owa i sugerowanie poprawek.
 Summary:	Qt DOM extension module for PHP
 Summary(pl):	Modu³ Qt DOM dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(qtdom)
 Provides:	php-qtdom = %{epoch}:%{version}-%{release}
 
 %description qtdom
@@ -1306,8 +1311,8 @@ Modu³ PHP dodaj±cy obs³ugê funkcji Qt DOM.
 Summary:	readline extension module for PHP
 Summary(pl):	Modu³ readline dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-cli = %{epoch}:%{version}-%{release}
 Requires:	%{name}-cli = %{epoch}:%{version}-%{release}
+Provides:	php(readline)
 Provides:	php-readline = %{epoch}:%{version}-%{release}
 
 %description readline
@@ -1321,9 +1326,9 @@ Modu³ PHP dodaj±cy obs³ugê funkcji readline (tylko do SAPI cli i cgi).
 Summary:	recode extension module for PHP
 Summary(pl):	Modu³ recode dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	recode >= 3.5d-3
+Provides:	php(recode)
 Provides:	php-recode = %{epoch}:%{version}-%{release}
 
 %description recode
@@ -1334,27 +1339,12 @@ support.
 Modu³ PHP dodaj±cy mo¿liwo¶æ konwersji kodowania plików (poprzez
 bibliotekê recode).
 
-%package session
-Summary:	session extension module for PHP
-Summary(pl):	Modu³ session dla PHP
-Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Provides:	php-session = %{epoch}:%{version}-%{release}
-
-%description session
-This is a dynamic shared object (DSO) for PHP that will add session
-support.
-
-%description session -l pl
-Modu³ PHP dodaj±cy obs³ugê sesji.
-
 %package shmop
 Summary:	Shared Memory Operations extension module for PHP
 Summary(pl):	Modu³ shmop dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(shmop)
 Provides:	php-shmop = %{epoch}:%{version}-%{release}
 
 %description shmop
@@ -1372,8 +1362,8 @@ Uwaga: to jest modu³ eksperymentalny.
 Summary:	SNMP extension module for PHP
 Summary(pl):	Modu³ SNMP dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(snmp)
 Provides:	php-snmp = %{epoch}:%{version}-%{release}
 
 %description snmp
@@ -1387,8 +1377,8 @@ Modu³ PHP dodaj±cy obs³ugê SNMP.
 Summary:	sockets extension module for PHP
 Summary(pl):	Modu³ socket dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(sockets)
 Provides:	php-sockets = %{epoch}:%{version}-%{release}
 
 %description sockets
@@ -1406,8 +1396,8 @@ Uwaga: to jest modu³ eksperymentalny.
 Summary:	Sybase DB extension module for PHP
 Summary(pl):	Modu³ Sybase DB dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(sybase)
 Provides:	php-sybase = %{epoch}:%{version}-%{release}
 Obsoletes:	php4-sybase-ct
 Conflicts:	%{name}-mssql
@@ -1427,8 +1417,8 @@ Zaleca siê u¿ywanie modu³u Sybase-CT.
 Summary:	Sybase-CT extension module for PHP
 Summary(pl):	Modu³ Sybase-CT dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(sybase-ct)
 Provides:	php-sybase-ct = %{epoch}:%{version}-%{release}
 Obsoletes:	php4-sybase
 Conflicts:	%{name}-mssql
@@ -1445,8 +1435,8 @@ CT-lib.
 Summary:	SysV msg extension module for PHP
 Summary(pl):	Modu³ SysV msg dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(sysvmsg)
 Provides:	php-sysvmsg = %{epoch}:%{version}-%{release}
 
 %description sysvmsg
@@ -1460,8 +1450,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z kolejek komunikatów SysV.
 Summary:	SysV sem extension module for PHP
 Summary(pl):	Modu³ SysV sem dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(sysvsem)
 Provides:	php-sysvsem = %{epoch}:%{version}-%{release}
 
 %description sysvsem
@@ -1475,8 +1465,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z semaforów SysV.
 Summary:	SysV shm extension module for PHP
 Summary(pl):	Modu³ SysV shm dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(sysvshm)
 Provides:	php-sysvshm = %{epoch}:%{version}-%{release}
 
 %description sysvshm
@@ -1490,8 +1480,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z pamiêci dzielonej SysV.
 Summary:	tokenizer extension module for PHP
 Summary(pl):	Modu³ rozszerzenia tokenizer dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(tokenizer)
 Provides:	php-tokenizer = %{epoch}:%{version}-%{release}
 
 %description tokenizer
@@ -1505,10 +1495,10 @@ Modu³ PHP dodaj±cy obs³ugê tokenizera do PHP.
 Summary:	wddx extension module for PHP
 Summary(pl):	Modu³ wddx dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	%{name}-session = %{epoch}:%{version}-%{release}
+#Requires:	%{name}-session = %{epoch}:%{version}-%{release}
 Requires:	%{name}-xml = %{epoch}:%{version}-%{release}
+Provides:	php(wddx)
 Provides:	php-wddx = %{epoch}:%{version}-%{release}
 
 %description wddx
@@ -1522,8 +1512,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z wddx.
 Summary:	XML extension module for PHP
 Summary(pl):	Modu³ XML dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(xml)
 Provides:	php-xml = %{epoch}:%{version}-%{release}
 
 %description xml
@@ -1540,8 +1530,8 @@ nastêpnie definiowaæ procedury obs³ugi dla ró¿nych zdarzeñ XML.
 Summary:	xmlrpc extension module for PHP
 Summary(pl):	Modu³ xmlrpc dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(xmlrpc)
 Provides:	php-xmlrpc = %{epoch}:%{version}-%{release}
 
 %description xmlrpc
@@ -1559,8 +1549,8 @@ Uwaga: to jest modu³ eksperymentalny.
 Summary:	xslt extension module for PHP
 Summary(pl):	Modu³ xslt dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(xslt)
 Provides:	php-xslt = %{epoch}:%{version}-%{release}
 
 %description xslt
@@ -1574,9 +1564,9 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z technologii xslt.
 Summary:	yaz extension module for PHP
 Summary(pl):	Modu³ yaz dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	yaz >= 1.9
+Provides:	php(yaz)
 Provides:	php-yaz = %{epoch}:%{version}-%{release}
 
 %description yaz
@@ -1592,8 +1582,8 @@ Z39.50 s³u¿±cego do pozyskiwania informacji.
 Summary:	NIS (yp) extension module for PHP
 Summary(pl):	Modu³ NIS (yp) dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(yp)
 Provides:	php-yp = %{epoch}:%{version}-%{release}
 
 %description yp
@@ -1607,8 +1597,8 @@ Modu³ PHP dodaj±cy wsparcie dla NIS (Yellow Pages).
 Summary:	zip extension module for PHP
 Summary(pl):	Modu³ zip dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(zip)
 Provides:	php-zip = %{epoch}:%{version}-%{release}
 
 %description zip
@@ -1623,8 +1613,8 @@ Modu³ PHP umo¿liwiaj±cy korzystanie z bibliotekli ZZipLib
 Summary:	Zlib extension module for PHP
 Summary(pl):	Modu³ zlib dla PHP
 Group:		Libraries
-Requires(post,preun):	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Provides:	php(zlib)
 Provides:	php-zlib = %{epoch}:%{version}-%{release}
 
 %description zlib
@@ -1636,6 +1626,7 @@ Modu³ PHP umo¿liwiaj±cy u¿ywanie kompresji zlib.
 
 %prep
 %setup -q -n php-%{version}
+%patch43 -p1
 %patch40 -p1
 %patch0 -p1
 %patch1 -p1
@@ -1979,6 +1970,11 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/{cgi,cli,cgi-fcgi,apache,apache2handler
 
 # for CLI SAPI only
 mv $RPM_BUILD_ROOT%{_sysconfdir}/{conf.d/{ncurses,pcntl,readline}.ini,cli.d}
+
+# as a result of ext/pcre/pcrelib removal in %%prep, ext/pcre/php_pcre.h
+# isn't installed by install-headers make target, we do it manually here.
+# this header file is required by e.g. filter PECL extension
+install -D ext/pcre/php_pcre.h $RPM_BUILD_ROOT%{_includedir}/php/ext/pcre/php_pcre.h
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -2332,12 +2328,6 @@ fi
 %postun recode
 %extension_postun
 
-%post session
-%extension_post
-
-%postun session
-%extension_postun
-
 %post shmop
 %extension_post
 
@@ -2611,9 +2601,6 @@ fi
 
 %triggerun recode -- %{name}-recode < 3:4.4.0-2.1
 %{__sed} -i -e '/^extension[[:space:]]*=[[:space:]]*recode\.so/d' %{_sysconfdir}/php.ini
-
-%triggerun session -- %{name}-session < 3:4.4.0-2.1
-%{__sed} -i -e '/^extension[[:space:]]*=[[:space:]]*session\.so/d' %{_sysconfdir}/php.ini
 
 %triggerun shmop -- %{name}-shmop < 3:4.4.0-2.1
 %{__sed} -i -e '/^extension[[:space:]]*=[[:space:]]*shmop\.so/d' %{_sysconfdir}/php.ini
