@@ -247,6 +247,15 @@
  ;;;;;;;;;;;;;;;;;;;
  ; Module Settings ;
  ;;;;;;;;;;;;;;;;;;;
+@@ -879,7 +879,7 @@
+ bcmath.scale = 0
+
+ [browscap]
+-;browscap = extra/browscap.ini
++browscap = /etc/php/php_browscap.ini
+
+ [Informix]
+ ; Default host for ifx_connect() (doesn't apply in safe mode).
 @@ -1205,7 +1232,7 @@
  ; Enables or disables WSDL caching feature.
  soap.wsdl_cache_enabled=1
