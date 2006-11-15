@@ -252,7 +252,7 @@
 
  [browscap]
 -;browscap = extra/browscap.ini
-+browscap = /etc/php/php_browscap.ini
++browscap = /etc/php/browscap.ini
 
  [Informix]
  ; Default host for ifx_connect() (doesn't apply in safe mode).
