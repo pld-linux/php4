@@ -395,6 +395,7 @@ Provides:	php(session)
 Provides:	php(standard)
 Provides:	php(zend_extension_api) = %{zend_extension_api}
 Provides:	php(zend_module_api) = %{zend_module_api}
+Provides:	php-common = %{epoch}:%{version}-%{release}
 Provides:	php4(debug) = %{php_debug}
 Provides:	php4(thread-safety) = %{zend_zts}
 Obsoletes:	php-session < 3:4.2.1-2
