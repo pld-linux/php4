@@ -427,7 +427,6 @@ Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	autoconf
 Requires:	automake
-Provides:	php-devel = %{epoch}:%{version}-%{release}
 Obsoletes:	php-devel
 
 %description devel
