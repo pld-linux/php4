@@ -4,10 +4,12 @@
 #
 # TODO:
 # - make additional headers added by mail patch configurable
-#11:26:36 <@glen> php4-common-4.4.0-14 marks heimdal-libs-0.7.1-1 (cap heimdal-libs)
-#11:26:36 <@glen>   heimdal-libs-0.7.1-1 marks openldap-libs-2.2.29-1 (cap liblber-2.2.so.7()(64bit))
-#11:26:36 <@glen>     openldap-libs-2.2.29-1 marks cyrus-sasl-2.1.21-3 (cap cyrus-sasl)
-#11:27:00 <@glen> php5-common doesn't have such deps
+# - too many unneccessary libs:
+#  - php4-common-4.4.0-14 marks heimdal-libs-0.7.1-1 (cap heimdal-libs)
+#     heimdal-libs-0.7.1-1 marks openldap-libs-2.2.29-1 (cap liblber-2.2.so.7()(64bit))
+#       openldap-libs-2.2.29-1 marks cyrus-sasl-2.1.21-3 (cap cyrus-sasl)
+#    php5-common doesn't have such deps
+#  - php4-cli pulls: libltdl
 # - above is caused by openssl linked in statically as openssl links with kerberos
 #
 # Conditional build:
