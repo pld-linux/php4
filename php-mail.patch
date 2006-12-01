@@ -1,5 +1,6 @@
---- php-4.3.0/ext/standard/mail.c.orig	Fri Nov 29 12:15:43 2002
-+++ php-4.3.0/ext/standard/mail.c	Thu Jan  2 12:37:54 2003
+diff -ur php-5.2.0.org/ext/standard/mail.c php-5.2.0/ext/standard/mail.c
+--- php-5.2.0.org/ext/standard/mail.c	2006-01-01 13:50:15.000000000 +0100
++++ php-5.2.0/ext/standard/mail.c	2006-12-01 14:20:27.881416250 +0100
 @@ -21,6 +21,8 @@
  #include <stdlib.h>
  #include <ctype.h>
@@ -19,7 +20,26 @@
  #if HAVE_SENDMAIL
  #ifdef PHP_WIN32
  #include "win32/sendmail.h"
-@@ -196,8 +201,42 @@
+@@ -104,6 +109,18 @@
+ 		return;
+ 	}
+ 
++    /* search for To: and Subject: headers which should be specified in proper mail() parameters, not in additional headers */
++    if (headers != NULL) {
++        if (strncasecmp(headers, "to:", sizeof("to:") - 1) == 0 || strcasestr(headers, "\nto:")) {
++            php_error_docref(NULL TSRMLS_CC, E_WARNING, "To: headers aren't allowed in the additional_headers parameter. Use $to parameter for that. Mail not sent.");
++            RETURN_FALSE;
++        }
++        if (strncasecmp(headers, "subject:", sizeof("subject:") - 1) == 0 || strcasestr(headers, "\nsubject:")) {
++            php_error_docref(NULL TSRMLS_CC, E_WARNING, "Subject: headers aren't allowed in the additional_headers parameter. Use $subject parameter for that. Mail not sent.");
++            RETURN_FALSE;
++        }
++    }
++
+ 	if (to_len > 0) {
+ 		to_r = estrndup(to, to_len);
+ 		for (; to_len; to_len--) {
+@@ -228,8 +245,42 @@
  			return 0;
  		}
  #endif
