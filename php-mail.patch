@@ -54,7 +54,7 @@ diff -urN php-5.2.0.org/ext/standard/mail.c php-5.2.0/ext/standard/mail.c
  #endif
 -		fprintf(sendmail, "To: %s\n", to);
 -		fprintf(sendmail, "Subject: %s\n", subject);
-+		{TSRMLS_FETCH();}
++		TSRMLS_FETCH();
 +		
 +		if ((to != NULL) && (strlen(to)!=0)) { 
 +			fprintf(sendmail, "To: %s\n", to);
