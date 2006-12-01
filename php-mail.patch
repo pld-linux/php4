@@ -1,6 +1,6 @@
-diff -urN php-5.2.0.org/ext/standard/mail.c php-5.2.0/ext/standard/mail.c
+diff -ur php-5.2.0.org/ext/standard/mail.c php-5.2.0/ext/standard/mail.c
 --- php-5.2.0.org/ext/standard/mail.c	2006-01-01 13:50:15.000000000 +0100
-+++ php-5.2.0/ext/standard/mail.c	2006-12-01 12:46:40.000000000 +0100
++++ php-5.2.0/ext/standard/mail.c	2006-12-01 14:20:27.881416250 +0100
 @@ -21,6 +21,8 @@
  #include <stdlib.h>
  #include <ctype.h>
@@ -20,27 +20,18 @@ diff -urN php-5.2.0.org/ext/standard/mail.c php-5.2.0/ext/standard/mail.c
  #if HAVE_SENDMAIL
  #ifdef PHP_WIN32
  #include "win32/sendmail.h"
-@@ -104,6 +109,27 @@
+@@ -104,6 +109,18 @@
  		return;
  	}
  
-+    /* check for spam attempts with buggy webforms */
-+	if ((strchr(to, '\n') != NULL && (strchr(to, '\n') != strrchr(to, '\n') || (to_len && to[to_len-1] != '\n')))
-+			|| (strchr(to, '\r') != NULL && (strchr(to, '\r') != strrchr(to, '\r') || (to_len && to[to_len-1] != '\r')))) {
-+        zend_error(E_WARNING, "Newlines aren't allowed in the To header. Mail not sent.");
-+        RETURN_FALSE;
-+    }
-+
-+    if ((strchr(subject, '\n') != NULL && (strchr(subject, '\n') != strrchr(subject, '\n') || (subject_len && subject[subject_len-1] != '\n')))
-+			|| (strchr(subject, '\r') != NULL && (strchr(subject, '\r') != strrchr(subject, '\r') || (subject_len && subject[subject_len-1] != '\r')))) {
-+        zend_error(E_WARNING, "Newlines aren't allowed in the Subject header. Mail not sent.");
-+        RETURN_FALSE;
-+    }
-+
-+    /* search for to, cc or bcc headers */
++    /* search for To: and Subject: headers which should be specified in proper mail() parameters, not in additional headers */
 +    if (headers != NULL) {
 +        if (strncasecmp(headers, "to:", sizeof("to:") - 1) == 0 || strcasestr(headers, "\nto:")) {
-+            zend_error(E_WARNING, "To: headers aren't allowed in the additional_headers parameter. Use $to parameter for that. Mail not sent.");
++            php_error_docref(NULL TSRMLS_CC, E_WARNING, "To: headers aren't allowed in the additional_headers parameter. Use $to parameter for that. Mail not sent.");
++            RETURN_FALSE;
++        }
++        if (strncasecmp(headers, "subject:", sizeof("subject:") - 1) == 0 || strcasestr(headers, "\nsubject:")) {
++            php_error_docref(NULL TSRMLS_CC, E_WARNING, "Subject: headers aren't allowed in the additional_headers parameter. Use $subject parameter for that. Mail not sent.");
 +            RETURN_FALSE;
 +        }
 +    }
@@ -48,7 +39,7 @@ diff -urN php-5.2.0.org/ext/standard/mail.c php-5.2.0/ext/standard/mail.c
  	if (to_len > 0) {
  		to_r = estrndup(to, to_len);
  		for (; to_len; to_len--) {
-@@ -228,8 +254,42 @@
+@@ -228,8 +245,42 @@
  			return 0;
  		}
  #endif
