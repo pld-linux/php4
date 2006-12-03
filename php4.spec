@@ -140,6 +140,7 @@ Patch40:	%{name}-linkflags-clean.patch
 Patch41:	%{name}-openssl-huge-hack.patch
 Patch42:	%{name}-apr-apu.patch
 Patch43:	%{name}-branch.diff
+Patch44:	%{name}-curl.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -1590,6 +1591,7 @@ cp php.ini-dist php.ini
 # XXX: I believe this one is obsolete as of 4.4.3
 #%patch41 -p1
 %patch42 -p1
+%patch44 -p1
 
 %if %{with hardening}
 zcat %{SOURCE8} | patch -p1
