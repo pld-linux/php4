@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 8
+%define	_rel 9
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
