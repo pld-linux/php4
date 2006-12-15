@@ -1,5 +1,6 @@
---- php-4.3.0/ext/standard/mail.c	Thu Jan  2 12:37:54 2003
-+++ php-5.1.4-mail/ext/standard/mail.c	2006-06-07 17:48:45.197705968 +0300
+diff -ur php-5.2.0.org/ext/standard/mail.c php-5.2.0/ext/standard/mail.c
+--- php-5.2.0.org/ext/standard/mail.c	2006-01-01 13:50:15.000000000 +0100
++++ php-5.2.0/ext/standard/mail.c	2006-12-01 14:20:27.881416250 +0100
 @@ -21,6 +21,8 @@
  #include <stdlib.h>
  #include <ctype.h>
@@ -19,25 +20,18 @@
  #if HAVE_SENDMAIL
  #ifdef PHP_WIN32
  #include "win32/sendmail.h"
-@@ -104,6 +109,25 @@
+@@ -104,6 +109,18 @@
  		return;
  	}
  
-+    /* check for spam attempts with buggy webforms */
-+    if (strchr(to, '\n') != NULL || strchr(to, '\r') != NULL) {
-+        zend_error(E_WARNING, "Newlines aren't allowed in the To header. Mail not sent.");
-+        RETURN_FALSE;
-+    }
-+
-+    if (strchr(subject, '\n') != NULL || strchr(subject, '\r') != NULL) {
-+        zend_error(E_WARNING, "Newlines aren't allowed in the Subject header. Mail not sent.");
-+        RETURN_FALSE;
-+    }
-+
-+    /* search for to, cc or bcc headers */
++    /* search for To: and Subject: headers which should be specified in proper mail() parameters, not in additional headers */
 +    if (headers != NULL) {
 +        if (strncasecmp(headers, "to:", sizeof("to:") - 1) == 0 || strcasestr(headers, "\nto:")) {
-+            zend_error(E_WARNING, "To: headers aren't allowed in the additional_headers parameter. Use $to parameter for that. Mail not sent.");
++            php_error_docref(NULL TSRMLS_CC, E_WARNING, "To: headers aren't allowed in the additional_headers parameter. Use $to parameter for that. Mail not sent.");
++            RETURN_FALSE;
++        }
++        if (strncasecmp(headers, "subject:", sizeof("subject:") - 1) == 0 || strcasestr(headers, "\nsubject:")) {
++            php_error_docref(NULL TSRMLS_CC, E_WARNING, "Subject: headers aren't allowed in the additional_headers parameter. Use $subject parameter for that. Mail not sent.");
 +            RETURN_FALSE;
 +        }
 +    }
@@ -45,7 +39,7 @@
  	if (to_len > 0) {
  		to_r = estrndup(to, to_len);
  		for (; to_len; to_len--) {
-@@ -196,8 +220,42 @@
+@@ -228,8 +245,42 @@
  			return 0;
  		}
  #endif
