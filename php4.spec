@@ -74,11 +74,11 @@
 
 %define	_rel 13
 Summary:	PHP: Hypertext Preprocessor
-Summary(fr.UTF-8):   Le langage de script embarque-HTML PHP
-Summary(pl.UTF-8):   Język skryptowy PHP
-Summary(pt_BR.UTF-8):   A linguagem de script PHP
-Summary(ru.UTF-8):   PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на сервере
-Summary(uk.UTF-8):   PHP Версії 4 - мова препроцесування HTML-файлів, виконувана на сервері
+Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
+Summary(pl.UTF-8):	Język skryptowy PHP
+Summary(pt_BR.UTF-8):	A linguagem de script PHP
+Summary(ru.UTF-8):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на сервере
+Summary(uk.UTF-8):	PHP Версії 4 - мова препроцесування HTML-файлів, виконувана на сервері
 Name:		php4
 Version:	4.4.4
 Release:	%{_rel}%{?with_hardening:hardened}
@@ -296,7 +296,7 @@ PHP4 - це мова написання скриптів, що вбудовую�
 
 %package -n apache1-mod_php4
 Summary:	php4 DSO module for apache 1.3.x
-Summary(pl.UTF-8):   Moduł DSO (Dynamic Shared Object) php4 dla apache 1.3.x
+Summary(pl.UTF-8):	Moduł DSO (Dynamic Shared Object) php4 dla apache 1.3.x
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	apache1(EAPI) >= 1.3.33-2
@@ -315,7 +315,7 @@ php4 jako moduł DSO (Dynamic Shared Object) dla apache 1.3.x.
 
 %package -n apache-mod_php4
 Summary:	php4 DSO module for apache 2.x
-Summary(pl.UTF-8):   Moduł DSO (Dynamic Shared Object) php4 dla apache 2.x
+Summary(pl.UTF-8):	Moduł DSO (Dynamic Shared Object) php4 dla apache 2.x
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	apache(modules-api) = %{apache_modules_api}
@@ -334,7 +334,7 @@ php4 jako moduł DSO (Dynamic Shared Object) dla apache 2.x.
 
 %package fcgi
 Summary:	php4 as FastCGI program
-Summary(pl.UTF-8):   php4 jako program FastCGI
+Summary(pl.UTF-8):	php4 jako program FastCGI
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-fcgi = %{epoch}:%{version}-%{release}
@@ -348,7 +348,7 @@ php4 jako program FastCGI.
 
 %package cgi
 Summary:	php4 as CGI program
-Summary(pl.UTF-8):   php4 jako program CGI
+Summary(pl.UTF-8):	php4 jako program CGI
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-cgi = %{epoch}:%{version}-%{release}
@@ -361,7 +361,7 @@ php4 jako program CGI.
 
 %package cli
 Summary:	php4 as CLI interpreter
-Summary(pl.UTF-8):   php4 jako interpreter działający z linii poleceń
+Summary(pl.UTF-8):	php4 jako interpreter działający z linii poleceń
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-cli = %{epoch}:%{version}-%{release}
@@ -374,7 +374,7 @@ php4 jako interpreter działający z linii poleceń.
 
 %package program
 Summary:	/usr/bin/php symlink
-Summary(pl.UTF-8):   Dowiązanie symboliczne /usr/bin/php
+Summary(pl.UTF-8):	Dowiązanie symboliczne /usr/bin/php
 Group:		Development/Languages/PHP
 Requires:	%{name}-cli = %{epoch}:%{version}-%{release}
 Obsoletes:	/usr/bin/php
@@ -387,9 +387,9 @@ Pakiet dostarczający dowiązanie symboliczne /usr/bin/php do PHP CLI.
 
 %package common
 Summary:	Common files needed by all PHP SAPIs
-Summary(pl.UTF-8):   Wspólne pliki dla modułu apache'a i programu CGI
-Summary(ru.UTF-8):   Разделяемые библиотеки для php
-Summary(uk.UTF-8):   Бібліотеки спільного використання для php
+Summary(pl.UTF-8):	Wspólne pliki dla modułu apache'a i programu CGI
+Summary(ru.UTF-8):	Разделяемые библиотеки для php
+Summary(uk.UTF-8):	Бібліотеки спільного використання для php
 Group:		Libraries
 # because of dlclose() bugs in glibc <= 2.3.4 causing SEGVs on exit
 Requires(triggerun):	sed >= 4.0
@@ -425,10 +425,10 @@ Wspólne pliki dla modułu apacha i programu CGI.
 
 %package devel
 Summary:	Files for PHP modules development
-Summary(pl.UTF-8):   Pliki do kompilacji modułów PHP
-Summary(pt_BR.UTF-8):   Arquivos de desenvolvimento para PHP
-Summary(ru.UTF-8):   Пакет разработки для построения расширений PHP
-Summary(uk.UTF-8):   Пакет розробки для побудови розширень PHP
+Summary(pl.UTF-8):	Pliki do kompilacji modułów PHP
+Summary(pt_BR.UTF-8):	Arquivos de desenvolvimento para PHP
+Summary(ru.UTF-8):	Пакет разработки для построения расширений PHP
+Summary(uk.UTF-8):	Пакет розробки для побудови розширень PHP
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	autoconf
@@ -466,7 +466,7 @@ oracle, установите этот пакет для компилирован
 
 %package bcmath
 Summary:	bcmath extension module for PHP
-Summary(pl.UTF-8):   Moduł bcmath dla PHP
+Summary(pl.UTF-8):	Moduł bcmath dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(bcmath)
@@ -481,7 +481,7 @@ matematycznych takich jak w programie bc.
 
 %package bzip2
 Summary:	Bzip2 extension module for PHP
-Summary(pl.UTF-8):   Moduł bzip2 dla PHP
+Summary(pl.UTF-8):	Moduł bzip2 dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(bzip2)
@@ -495,7 +495,7 @@ Moduł PHP umożliwiający używanie kompresji bzip2.
 
 %package calendar
 Summary:	Calendar extension module for PHP
-Summary(pl.UTF-8):   Moduł funkcji kalendarza dla PHP
+Summary(pl.UTF-8):	Moduł funkcji kalendarza dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(calendar)
@@ -509,7 +509,7 @@ Moduł PHP dodający wsparcie dla kalendarza.
 
 %package cpdf
 Summary:	cpdf extension module for PHP
-Summary(pl.UTF-8):   Moduł cpdf dla PHP
+Summary(pl.UTF-8):	Moduł cpdf dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(cpdf)
@@ -523,7 +523,7 @@ Moduł PHP dodający obsługę plików PDF poprzez bibliotekę libcpdf.
 
 %package crack
 Summary:	crack extension module for PHP
-Summary(pl.UTF-8):   Moduł crack dla PHP
+Summary(pl.UTF-8):	Moduł crack dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(crack)
@@ -541,7 +541,7 @@ Uwaga: to jest moduł eksperymentalny.
 
 %package ctype
 Summary:	ctype extension module for PHP
-Summary(pl.UTF-8):   Moduł ctype dla PHP
+Summary(pl.UTF-8):	Moduł ctype dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(ctype)
@@ -555,7 +555,7 @@ Moduł PHP umożliwiający korzystanie z funkcji ctype.
 
 %package curl
 Summary:	curl extension module for PHP
-Summary(pl.UTF-8):   Moduł curl dla PHP
+Summary(pl.UTF-8):	Moduł curl dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(curl)
@@ -569,7 +569,7 @@ Moduł PHP umożliwiający korzystanie z biblioteki curl.
 
 %package db
 Summary:	Old xDBM extension module for PHP
-Summary(pl.UTF-8):   Moduł xDBM dla PHP
+Summary(pl.UTF-8):	Moduł xDBM dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(db)
@@ -591,7 +591,7 @@ które obsługuje nadzbiór funkcjonalności tego modułu.
 
 %package dba
 Summary:	DBA extension module for PHP
-Summary(pl.UTF-8):   Moduł DBA dla PHP
+Summary(pl.UTF-8):	Moduł DBA dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(dba)
@@ -606,7 +606,7 @@ Moduł dla PHP dodający obsługę dla baz danych opartych na plikach
 
 %package dbase
 Summary:	DBase extension module for PHP
-Summary(pl.UTF-8):   Moduł DBase dla PHP
+Summary(pl.UTF-8):	Moduł DBase dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(dbase)
@@ -620,7 +620,7 @@ Moduł PHP ze wsparciem dla DBase.
 
 %package dbx
 Summary:	DBX extension module for PHP
-Summary(pl.UTF-8):   Moduł DBX dla PHP
+Summary(pl.UTF-8):	Moduł DBX dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(dbx)
@@ -636,7 +636,7 @@ obsługuje bazy odbc, mysql, pgsql, mssql, fbsql i inne.
 
 %package dio
 Summary:	Direct I/O extension module for PHP
-Summary(pl.UTF-8):   Moduł Direct I/O dla PHP
+Summary(pl.UTF-8):	Moduł Direct I/O dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(dio)
@@ -650,7 +650,7 @@ Moduł PHP dodający obsługę bezpośrednich operacji I/O na plikach.
 
 %package domxml
 Summary:	DOM XML extension module for PHP
-Summary(pl.UTF-8):   Moduł DOM XML dla PHP
+Summary(pl.UTF-8):	Moduł DOM XML dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(domxml)
@@ -668,7 +668,7 @@ Uwaga: to jest moduł eksperymentalny.
 
 %package exif
 Summary:	exif extension module for PHP
-Summary(pl.UTF-8):   Moduł exif dla PHP
+Summary(pl.UTF-8):	Moduł exif dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(exif)
@@ -682,7 +682,7 @@ Moduł PHP dodający obsługę znaczników EXIF w plikach obrazków.
 
 %package fdf
 Summary:	FDF extension module for PHP
-Summary(pl.UTF-8):   Moduł FDF dla PHP
+Summary(pl.UTF-8):	Moduł FDF dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(fdf)
@@ -697,7 +697,7 @@ FDFTK.
 
 %package filepro
 Summary:	filePro extension module for PHP
-Summary(pl.UTF-8):   Moduł filePro dla PHP
+Summary(pl.UTF-8):	Moduł filePro dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(filepro)
@@ -712,7 +712,7 @@ filePro.
 
 %package fribidi
 Summary:	FriBiDi extension module for PHP
-Summary(pl.UTF-8):   Modułe FriBiDi dla PHP
+Summary(pl.UTF-8):	Modułe FriBiDi dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(fribidi)
@@ -731,7 +731,7 @@ tekście arabskim lub hebrajskim osadzonym wewnątrz angielskiego.
 
 %package ftp
 Summary:	FTP extension module for PHP
-Summary(pl.UTF-8):   Moduł FTP dla PHP
+Summary(pl.UTF-8):	Moduł FTP dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(ftp)
@@ -745,7 +745,7 @@ Moduł PHP dodający obsługę protokołu FTP.
 
 %package gd
 Summary:	GD extension module for PHP
-Summary(pl.UTF-8):   Moduł GD dla PHP
+Summary(pl.UTF-8):	Moduł GD dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	gd >= 2.0.28-2
@@ -762,7 +762,7 @@ tworzenie i obróbkę obrazków.
 
 %package gettext
 Summary:	gettext extension module for PHP
-Summary(pl.UTF-8):   Moduł gettext dla PHP
+Summary(pl.UTF-8):	Moduł gettext dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(gettext)
@@ -776,7 +776,7 @@ Moduł PHP dodający obsługę lokalizacji przez gettext.
 
 %package gmp
 Summary:	gmp extension module for PHP
-Summary(pl.UTF-8):   Moduł gmp dla PHP
+Summary(pl.UTF-8):	Moduł gmp dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(gmp)
@@ -791,7 +791,7 @@ liczbach o dowolnej długości.
 
 %package hyperwave
 Summary:	Hyperwave extension module for PHP
-Summary(pl.UTF-8):   Moduł Hyperwave dla PHP
+Summary(pl.UTF-8):	Moduł Hyperwave dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(hyperwave)
@@ -805,7 +805,7 @@ Moduł PHP dodający obsługę Hyperwave.
 
 %package iconv
 Summary:	iconv extension module for PHP
-Summary(pl.UTF-8):   Moduł iconv dla PHP
+Summary(pl.UTF-8):	Moduł iconv dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(iconv)
@@ -819,8 +819,8 @@ Moduł PHP dodający obsługę iconv.
 
 %package imap
 Summary:	IMAP extension module for PHP
-Summary(pl.UTF-8):   Moduł IMAP dla PHP
-Summary(pt_BR.UTF-8):   Um módulo para aplicações PHP que usam IMAP
+Summary(pl.UTF-8):	Moduł IMAP dla PHP
+Summary(pt_BR.UTF-8):	Um módulo para aplicações PHP que usam IMAP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(imap)
@@ -837,7 +837,7 @@ Um módulo para aplicações PHP que usam IMAP.
 
 %package interbase
 Summary:	InterBase/Firebird database module for PHP
-Summary(pl.UTF-8):   Moduł bazy danych InterBase/Firebird dla PHP
+Summary(pl.UTF-8):	Moduł bazy danych InterBase/Firebird dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(interbase)
@@ -852,7 +852,7 @@ Moduł PHP umożliwiający dostęp do baz danych InterBase i Firebird.
 
 %package java
 Summary:	Java extension module for PHP
-Summary(pl.UTF-8):   Moduł Javy dla PHP
+Summary(pl.UTF-8):	Moduł Javy dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(java)
@@ -876,8 +876,8 @@ dla JRE Suna) przed uruchomieniem Apache'a lub interpretera PHP.
 
 %package ldap
 Summary:	LDAP extension module for PHP
-Summary(pl.UTF-8):   Moduł LDAP dla PHP
-Summary(pt_BR.UTF-8):   Um módulo para aplicações PHP que usam LDAP
+Summary(pl.UTF-8):	Moduł LDAP dla PHP
+Summary(pt_BR.UTF-8):	Um módulo para aplicações PHP que usam LDAP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(ldap)
@@ -894,7 +894,7 @@ Um módulo para aplicações PHP que usam LDAP.
 
 %package mbstring
 Summary:	mbstring extension module for PHP
-Summary(pl.UTF-8):   Moduł mbstring dla PHP
+Summary(pl.UTF-8):	Moduł mbstring dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(mbstring)
@@ -908,7 +908,7 @@ Moduł PHP dodający obsługę ciągów znaków wielobajtowych.
 
 %package mcal
 Summary:	mcal extension module for PHP
-Summary(pl.UTF-8):   Moduł mcal dla PHP
+Summary(pl.UTF-8):	Moduł mcal dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(mcal)
@@ -923,7 +923,7 @@ do kalendarzy).
 
 %package mcrypt
 Summary:	mcrypt extension module for PHP
-Summary(pl.UTF-8):   Moduł mcrypt dla PHP
+Summary(pl.UTF-8):	Moduł mcrypt dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(mcrypt)
@@ -937,7 +937,7 @@ Moduł PHP dodający możliwość szyfrowania poprzez bibliotekę mcrypt.
 
 %package mhash
 Summary:	mhash extension module for PHP
-Summary(pl.UTF-8):   Moduł mhash dla PHP
+Summary(pl.UTF-8):	Moduł mhash dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(mhash)
@@ -951,7 +951,7 @@ Moduł PHP udostępniający funkcje mieszające z biblioteki mhash.
 
 %package mime_magic
 Summary:	mime_magic extension module for PHP
-Summary(pl.UTF-8):   Moduł mime_magic dla PHP
+Summary(pl.UTF-8):	Moduł mime_magic dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	/usr/share/file/magic.mime
@@ -967,7 +967,7 @@ znaczników plików z użyciem bazy danych magic.mime.
 
 %package ming
 Summary:	ming extension module for PHP
-Summary(pl.UTF-8):   Moduł ming dla PHP
+Summary(pl.UTF-8):	Moduł ming dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(ming)
@@ -982,7 +982,7 @@ ming.
 
 %package mnogosearch
 Summary:	mnoGoSearch extension module for PHP
-Summary(pl.UTF-8):   Moduł mnoGoSearch dla PHP
+Summary(pl.UTF-8):	Moduł mnoGoSearch dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(mnogosearch)
@@ -997,7 +997,7 @@ wyszukiwarki mnoGoSearch.
 
 %package msession
 Summary:	msession extension module for PHP
-Summary(pl.UTF-8):   Moduł msession dla PHP
+Summary(pl.UTF-8):	Moduł msession dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(msession)
@@ -1016,7 +1016,7 @@ serwerów.
 
 %package mssql
 Summary:	MS SQL extension module for PHP
-Summary(pl.UTF-8):   Moduł MS SQL dla PHP
+Summary(pl.UTF-8):	Moduł MS SQL dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(mssql)
@@ -1033,8 +1033,8 @@ FreeTDS.
 
 %package mysql
 Summary:	MySQL database module for PHP
-Summary(pl.UTF-8):   Moduł bazy danych MySQL dla PHP
-Summary(pt_BR.UTF-8):   Um módulo para aplicações PHP que usam bancos de dados MySQL
+Summary(pl.UTF-8):	Moduł bazy danych MySQL dla PHP
+Summary(pt_BR.UTF-8):	Um módulo para aplicações PHP que usam bancos de dados MySQL
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(mysql)
@@ -1051,7 +1051,7 @@ Um módulo para aplicações PHP que usam bancos de dados MySQL.
 
 %package ncurses
 Summary:	ncurses module for PHP
-Summary(pl.UTF-8):   Moduł ncurses dla PHP
+Summary(pl.UTF-8):	Moduł ncurses dla PHP
 Group:		Libraries
 Requires:	%{name}-cli = %{epoch}:%{version}-%{release}
 Provides:	php(ncurses)
@@ -1065,7 +1065,7 @@ Moduł PHP dodający obsługę funkcji ncurses (tylko do SAPI cli i cgi).
 
 %package oci8
 Summary:	Oracle 8 database module for PHP
-Summary(pl.UTF-8):   Moduł bazy danych Oracle 8 dla PHP
+Summary(pl.UTF-8):	Moduł bazy danych Oracle 8 dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(oci8)
@@ -1081,8 +1081,8 @@ poprzez interfejs Oracle8 Call-Interface (OCI8).
 
 %package odbc
 Summary:	ODBC extension module for PHP
-Summary(pl.UTF-8):   Moduł ODBC dla PHP
-Summary(pt_BR.UTF-8):   Um módulo para aplicações PHP que usam bases de dados ODBC
+Summary(pl.UTF-8):	Moduł ODBC dla PHP
+Summary(pt_BR.UTF-8):	Um módulo para aplicações PHP que usam bases de dados ODBC
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	unixODBC >= 2.1.1-3
@@ -1100,7 +1100,7 @@ Um módulo para aplicações PHP que usam ODBC.
 
 %package oracle
 Summary:	Oracle 7 database module for PHP
-Summary(pl.UTF-8):   Moduł bazy danych Oracle 7 dla PHP
+Summary(pl.UTF-8):	Moduł bazy danych Oracle 7 dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(oracle)
@@ -1115,7 +1115,7 @@ Moduł PHP umożliwiający dostęp do bazy danych Oracle 7.
 
 %package overload
 Summary:	Overload extension module for PHP
-Summary(pl.UTF-8):   Moduł Overload dla PHP
+Summary(pl.UTF-8):	Moduł Overload dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(overload)
@@ -1133,7 +1133,7 @@ Uwaga: to jest moduł eksperymentalny.
 
 %package pcntl
 Summary:	Process Control extension module for PHP
-Summary(pl.UTF-8):   Moduł Process Control dla PHP
+Summary(pl.UTF-8):	Moduł Process Control dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(pcntl)
@@ -1155,7 +1155,7 @@ używania z serwerem WWW - nie próbuj tego!
 
 %package pcre
 Summary:	PCRE extension module for PHP
-Summary(pl.UTF-8):   Moduł PCRE dla PHP
+Summary(pl.UTF-8):	Moduł PCRE dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(pcre)
@@ -1170,7 +1170,7 @@ Moduł PHP umożliwiający korzystanie z perlowych wyrażeń regularnych
 
 %package pdf
 Summary:	PDF creation module module for PHP
-Summary(pl.UTF-8):   Moduł do tworzenia plików PDF dla PHP
+Summary(pl.UTF-8):	Moduł do tworzenia plików PDF dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(pdf)
@@ -1185,7 +1185,7 @@ pdflib.
 
 %package pgsql
 Summary:	PostgreSQL database module for PHP
-Summary(pl.UTF-8):   Moduł bazy danych PostgreSQL dla PHP
+Summary(pl.UTF-8):	Moduł bazy danych PostgreSQL dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(pgsql)
@@ -1202,7 +1202,7 @@ Um módulo para aplicações PHP que usam bancos de dados postgresql.
 
 %package posix
 Summary:	POSIX extension module for PHP
-Summary(pl.UTF-8):   Moduł POSIX dla PHP
+Summary(pl.UTF-8):	Moduł POSIX dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(posix)
@@ -1216,7 +1216,7 @@ Moduł PHP umożliwiający korzystanie z funkcji POSIX.
 
 %package pspell
 Summary:	pspell extension module for PHP
-Summary(pl.UTF-8):   Moduł pspell dla PHP
+Summary(pl.UTF-8):	Moduł pspell dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(pspell)
@@ -1232,7 +1232,7 @@ sprawdzanie pisowni słowa i sugerowanie poprawek.
 
 %package qtdom
 Summary:	Qt DOM extension module for PHP
-Summary(pl.UTF-8):   Moduł Qt DOM dla PHP
+Summary(pl.UTF-8):	Moduł Qt DOM dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(qtdom)
@@ -1245,7 +1245,7 @@ Moduł PHP dodający obsługę funkcji Qt DOM.
 
 %package readline
 Summary:	readline extension module for PHP
-Summary(pl.UTF-8):   Moduł readline dla PHP
+Summary(pl.UTF-8):	Moduł readline dla PHP
 Group:		Libraries
 Requires:	%{name}-cli = %{epoch}:%{version}-%{release}
 Provides:	php(readline)
@@ -1259,7 +1259,7 @@ Moduł PHP dodający obsługę funkcji readline (tylko do SAPI cli i cgi).
 
 %package recode
 Summary:	recode extension module for PHP
-Summary(pl.UTF-8):   Moduł recode dla PHP
+Summary(pl.UTF-8):	Moduł recode dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	recode >= 3.5d-3
@@ -1275,7 +1275,7 @@ bibliotekę recode).
 
 %package shmop
 Summary:	Shared Memory Operations extension module for PHP
-Summary(pl.UTF-8):   Moduł shmop dla PHP
+Summary(pl.UTF-8):	Moduł shmop dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(shmop)
@@ -1293,7 +1293,7 @@ Uwaga: to jest moduł eksperymentalny.
 
 %package snmp
 Summary:	SNMP extension module for PHP
-Summary(pl.UTF-8):   Moduł SNMP dla PHP
+Summary(pl.UTF-8):	Moduł SNMP dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(snmp)
@@ -1307,7 +1307,7 @@ Moduł PHP dodający obsługę SNMP.
 
 %package sockets
 Summary:	sockets extension module for PHP
-Summary(pl.UTF-8):   Moduł socket dla PHP
+Summary(pl.UTF-8):	Moduł socket dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(sockets)
@@ -1325,7 +1325,7 @@ Uwaga: to jest moduł eksperymentalny.
 
 %package sybase
 Summary:	Sybase DB extension module for PHP
-Summary(pl.UTF-8):   Moduł Sybase DB dla PHP
+Summary(pl.UTF-8):	Moduł Sybase DB dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(sybase)
@@ -1345,7 +1345,7 @@ Zaleca się używanie modułu Sybase-CT.
 
 %package sybase-ct
 Summary:	Sybase-CT extension module for PHP
-Summary(pl.UTF-8):   Moduł Sybase-CT dla PHP
+Summary(pl.UTF-8):	Moduł Sybase-CT dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(sybase-ct)
@@ -1362,7 +1362,7 @@ CT-lib.
 
 %package sysvmsg
 Summary:	SysV msg extension module for PHP
-Summary(pl.UTF-8):   Moduł SysV msg dla PHP
+Summary(pl.UTF-8):	Moduł SysV msg dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(sysvmsg)
@@ -1376,7 +1376,7 @@ Moduł PHP umożliwiający korzystanie z kolejek komunikatów SysV.
 
 %package sysvsem
 Summary:	SysV sem extension module for PHP
-Summary(pl.UTF-8):   Moduł SysV sem dla PHP
+Summary(pl.UTF-8):	Moduł SysV sem dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(sysvsem)
@@ -1390,7 +1390,7 @@ Moduł PHP umożliwiający korzystanie z semaforów SysV.
 
 %package sysvshm
 Summary:	SysV shm extension module for PHP
-Summary(pl.UTF-8):   Moduł SysV shm dla PHP
+Summary(pl.UTF-8):	Moduł SysV shm dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(sysvshm)
@@ -1404,7 +1404,7 @@ Moduł PHP umożliwiający korzystanie z pamięci dzielonej SysV.
 
 %package tokenizer
 Summary:	tokenizer extension module for PHP
-Summary(pl.UTF-8):   Moduł rozszerzenia tokenizer dla PHP
+Summary(pl.UTF-8):	Moduł rozszerzenia tokenizer dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(tokenizer)
@@ -1418,7 +1418,7 @@ Moduł PHP dodający obsługę tokenizera do PHP.
 
 %package wddx
 Summary:	wddx extension module for PHP
-Summary(pl.UTF-8):   Moduł wddx dla PHP
+Summary(pl.UTF-8):	Moduł wddx dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 #Requires:	%{name}-session = %{epoch}:%{version}-%{release}
@@ -1434,7 +1434,7 @@ Moduł PHP umożliwiający korzystanie z wddx.
 
 %package xml
 Summary:	XML extension module for PHP
-Summary(pl.UTF-8):   Moduł XML dla PHP
+Summary(pl.UTF-8):	Moduł XML dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(xml)
@@ -1451,7 +1451,7 @@ następnie definiować procedury obsługi dla różnych zdarzeń XML.
 
 %package xmlrpc
 Summary:	xmlrpc extension module for PHP
-Summary(pl.UTF-8):   Moduł xmlrpc dla PHP
+Summary(pl.UTF-8):	Moduł xmlrpc dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(xmlrpc)
@@ -1469,7 +1469,7 @@ Uwaga: to jest moduł eksperymentalny.
 
 %package xslt
 Summary:	xslt extension module for PHP
-Summary(pl.UTF-8):   Moduł xslt dla PHP
+Summary(pl.UTF-8):	Moduł xslt dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(xslt)
@@ -1483,7 +1483,7 @@ Moduł PHP umożliwiający korzystanie z technologii xslt.
 
 %package yaz
 Summary:	yaz extension module for PHP
-Summary(pl.UTF-8):   Moduł yaz dla PHP
+Summary(pl.UTF-8):	Moduł yaz dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	yaz >= 1.9
@@ -1500,7 +1500,7 @@ Z39.50 służącego do pozyskiwania informacji.
 
 %package yp
 Summary:	NIS (yp) extension module for PHP
-Summary(pl.UTF-8):   Moduł NIS (yp) dla PHP
+Summary(pl.UTF-8):	Moduł NIS (yp) dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(yp)
@@ -1514,7 +1514,7 @@ Moduł PHP dodający wsparcie dla NIS (Yellow Pages).
 
 %package zip
 Summary:	zip extension module for PHP
-Summary(pl.UTF-8):   Moduł zip dla PHP
+Summary(pl.UTF-8):	Moduł zip dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(zip)
@@ -1529,7 +1529,7 @@ Moduł PHP umożliwiający korzystanie z bibliotekli ZZipLib
 
 %package zlib
 Summary:	Zlib extension module for PHP
-Summary(pl.UTF-8):   Moduł zlib dla PHP
+Summary(pl.UTF-8):	Moduł zlib dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(zlib)
