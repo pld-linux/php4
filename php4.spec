@@ -25,10 +25,10 @@
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
 %bcond_without	fribidi		# without FriBiDi extension module
 %bcond_without	imap		# without IMAP extension module
-%bcond_without	interbase	# without InterBase extension module
+%bcond_with	interbase	# without InterBase extension module
 %bcond_without	ldap		# without LDAP extension module
 %bcond_without	mhash		# without mhash extension module
-%bcond_without	ming		# without ming extension module
+%bcond_with	ming		# without ming extension module
 %bcond_without	mm		# without mm support for session storage
 %bcond_without	mnogosearch	# without mnogosearch extension module
 %bcond_without	msession	# without msession extension module
@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 13
+%define	_rel 0.1
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -80,13 +80,13 @@ Summary(pt_BR.UTF-8):	A linguagem de script PHP
 Summary(ru.UTF-8):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk.UTF-8):	PHP Версії 4 - мова препроцесування HTML-файлів, виконувана на сервері
 Name:		php4
-Version:	4.4.4
+Version:	4.4.5
 Release:	%{_rel}%{?with_hardening:hardened}
 Epoch:		3
 License:	PHP
 Group:		Libraries
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
-# Source0-md5:	bc6fa8908e2ac36e93bab9f7d42cda3a
+# Source0-md5:	bf61d557c82962dc9533f6ef35283d4c
 Source2:	zend.gif
 Source3:	%{name}-mod_php.conf
 Source4:	%{name}-cgi-fcgi.ini
@@ -127,7 +127,7 @@ Patch28:	%{name}-sybase-fix.patch
 Patch29:	%{name}-lib64.patch
 Patch30:	%{name}-mnogosearch-fix.patch
 Patch31:	%{name}-stupidapache_version.patch
-Patch32:	%{name}-gd_imagerotate_enable.patch
+
 Patch33:	%{name}-uint32_t.patch
 Patch34:	%{name}-install_gd_headers.patch
 Patch35:	%{name}-both-apxs.patch
@@ -139,11 +139,9 @@ Patch40:	%{name}-linkflags-clean.patch
 # XXX: obsolete?
 Patch41:	%{name}-openssl-huge-hack.patch
 Patch42:	%{name}-apr-apu.patch
-Patch43:	%{name}-branch.diff
-Patch44:	%{name}-curl.patch
+#Patch43:	%{name}-branch.diff
 Patch45:	%{name}-config-dir.patch
 Patch46:	%{name}-phpinfo_no_configure.patch
-Patch47:	%{name}-imap-2006-fix.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -168,8 +166,6 @@ BuildRequires:	freetds-devel
 %endif
 BuildRequires:	freetype-devel >= 2.0
 %{?with_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
-BuildRequires:	gd-devel >= 2.0.28-2
-BuildRequires:	gd-devel(gif)
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
 %{?with_imap:BuildRequires:	heimdal-devel >= 0.7}
@@ -1543,7 +1539,7 @@ Moduł PHP umożliwiający używanie kompresji zlib.
 
 %prep
 %setup -q -n php-%{version}
-%patch43 -p1
+#%patch43 -p1
 %patch40 -p1
 %patch0 -p1
 %patch1 -p1
@@ -1583,7 +1579,6 @@ cp php.ini-dist php.ini
 %endif
 %patch30 -p1
 %patch31 -p1
-%patch32 -p1
 %patch33 -p1
 %patch34 -p1
 %patch35 -p1
@@ -1594,10 +1589,8 @@ cp php.ini-dist php.ini
 # XXX: I believe this one is obsolete as of 4.4.3
 #%patch41 -p1
 %patch42 -p1
-%patch44 -p1
 %patch45 -p1
 %patch46 -p1
-%patch47 -p1
 
 %if %{with hardening}
 zcat %{SOURCE8} | patch -p1
@@ -1722,7 +1715,7 @@ for sapi in $sapis; do
 	--with-filepro=shared \
 	--with-freetype-dir=shared \
 	%{?with_fribidi:--with-fribidi=shared} \
-	--with-gd=shared,/usr --enable-gd-native-ttf \
+	--with-gd=shared --enable-gd-native-ttf \
 	--with-gdbm \
 	--with-gettext=shared \
 	--with-gmp=shared \
