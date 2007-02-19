@@ -25,10 +25,10 @@
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
 %bcond_without	fribidi		# without FriBiDi extension module
 %bcond_without	imap		# without IMAP extension module
-%bcond_with	interbase	# without InterBase extension module
+%bcond_without	interbase	# without InterBase extension module
 %bcond_without	ldap		# without LDAP extension module
 %bcond_without	mhash		# without mhash extension module
-%bcond_with	ming		# without ming extension module
+%bcond_without	ming		# without ming extension module
 %bcond_without	mm		# without mm support for session storage
 %bcond_without	mnogosearch	# without mnogosearch extension module
 %bcond_without	msession	# without msession extension module
@@ -127,7 +127,7 @@ Patch28:	%{name}-sybase-fix.patch
 Patch29:	%{name}-lib64.patch
 Patch30:	%{name}-mnogosearch-fix.patch
 Patch31:	%{name}-stupidapache_version.patch
-
+Patch32:	%{name}-interbase.patch
 Patch33:	%{name}-uint32_t.patch
 Patch34:	%{name}-install_gd_headers.patch
 Patch35:	%{name}-both-apxs.patch
@@ -142,6 +142,7 @@ Patch42:	%{name}-apr-apu.patch
 #Patch43:	%{name}-branch.diff
 Patch45:	%{name}-config-dir.patch
 Patch46:	%{name}-phpinfo_no_configure.patch
+Patch47:	%{name}-ming.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -1579,6 +1580,7 @@ cp php.ini-dist php.ini
 %endif
 %patch30 -p1
 %patch31 -p1
+%patch32 -p1
 %patch33 -p1
 %patch34 -p1
 %patch35 -p1
@@ -1591,6 +1593,7 @@ cp php.ini-dist php.ini
 %patch42 -p1
 %patch45 -p1
 %patch46 -p1
+%patch47 -p1
 
 %if %{with hardening}
 zcat %{SOURCE8} | patch -p1
