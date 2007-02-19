@@ -1,0 +1,191 @@
+diff -ur php/ext/ming.org/ming.c php/ext/ming/ming.c
+--- php/ext/ming.org/ming.c	2007-01-01 10:46:44.000000000 +0100
++++ php/ext/ming/ming.c	2007-02-19 10:04:43.770623000 +0100
+@@ -289,6 +289,7 @@
+ {
+ 	zval **zfile, **zmask = NULL;
+ 	SWFBitmap bitmap;
++	SWFJpegWithAlpha bitmap_alpha;
+ 	SWFInput input, maskinput;
+ 	int ret;
+ 
+@@ -320,15 +321,21 @@
+ 		} else {
+ 			maskinput = getInput(zmask TSRMLS_CC);
+ 		}
+-		bitmap = newSWFJpegWithAlpha_fromInput(input, maskinput);
++		bitmap_alpha = newSWFJpegWithAlpha_fromInput(input, maskinput);
++		if(bitmap_alpha) {
++			ret = zend_list_insert(bitmap_alpha, le_swfbitmapp);
++			object_init_ex(getThis(), &bitmap_class_entry);
++			add_property_resource(getThis(), "bitmap", ret);
++			zend_list_addref(ret);
++		}
+ 	} else {
+ 		bitmap = newSWFBitmap_fromInput(input);
+-	}
+ 
+-	ret = zend_list_insert(bitmap, le_swfbitmapp);
+-	object_init_ex(getThis(), &bitmap_class_entry);
+-	add_property_resource(getThis(), "bitmap", ret);
+-	zend_list_addref(ret);
++		ret = zend_list_insert(bitmap, le_swfbitmapp);
++		object_init_ex(getThis(), &bitmap_class_entry);
++		add_property_resource(getThis(), "bitmap", ret);
++		zend_list_addref(ret);
++	}
+ }
+ 
+ static void destroy_SWFBitmap_resource(zend_rsrc_list_entry *resource TSRMLS_DC)
+@@ -1441,7 +1448,7 @@
+ PHP_FUNCTION(swfmovie_output)
+ {
+ 	SWFMovie movie = getMovie(getThis() TSRMLS_CC);
+-#ifdef HAVE_MING_ZLIB
++#if defined(HAVE_MING_ZLIB) && !defined(HAVE_NEW_MING)
+ 	zval **zlimit = NULL;
+ 	int limit = -1;
+ 	int argc = ZEND_NUM_ARGS();
+@@ -1461,10 +1468,25 @@
+ 			RETURN_FALSE;
+ 		}
+ 	}
+-#endif
+-
+-#ifdef HAVE_NEW_MING
+-	RETURN_LONG(SWFMovie_output(movie, &phpByteOutputMethod, NULL, limit));
++#elif defined(HAVE_NEW_MING) && defined(HAVE_MING_MOVIE_LEVEL)
++    zval **zlimit = NULL;
++    int limit = -1;
++    int argc = ZEND_NUM_ARGS();
++
++    if(argc) {
++        if (zend_get_parameters_ex(1, &zlimit) == FAILURE) {
++            WRONG_PARAM_COUNT;
++        }
++
++        convert_to_long_ex(zlimit);
++        limit = Z_LVAL_PP(zlimit);
++
++        if ((limit < 0) || (limit > 9)) {
++            php_error(E_WARNING,"compression level must be within 0..9");
++            RETURN_FALSE;
++        }
++    }
++    RETURN_LONG(SWFMovie_output(movie, &phpByteOutputMethod, NULL, limit));
+ #else
+ 	RETURN_LONG(SWFMovie_output(movie, &phpByteOutputMethod, NULL));
+ #endif
+@@ -1483,9 +1505,13 @@
+ PHP_FUNCTION(swfmovie_saveToFile)
+ {
+ 	zval **x;
+-#ifdef HAVE_MING_ZLIB
+-	zval **zlimit = NULL;
+-	int limit = -1;
++#if defined(HAVE_MING_ZLIB) || defined(HAVE_NEW_MING)
++    zval **zlimit = NULL;
++    int limit = -1;
++#endif
++#if defined(HAVE_MING_ZLIB) && !defined(HAVE_NEW_MING)
++    int oldval = INT_MIN;
++    long out;
+ #endif
+ 	SWFMovie movie = getMovie(getThis() TSRMLS_CC);
+ 	php_stream *what;
+@@ -1496,7 +1522,7 @@
+ 			WRONG_PARAM_COUNT;
+ 		break;
+ 	case 2:
+-#ifdef HAVE_MING_ZLIB
++#if defined(HAVE_MING_ZLIB) || defined(HAVE_NEW_MING)
+ 		if (zend_get_parameters_ex(2, &x, &zlimit) == FAILURE)
+ 			WRONG_PARAM_COUNT;
+ 		convert_to_long_ex(zlimit);
+@@ -1506,13 +1532,21 @@
+ 			RETURN_FALSE;
+ 		}
+ #endif
++#if defined(HAVE_MING_ZLIB) && !defined(HAVE_NEW_MING)
++        oldval = Ming_setSWFCompression(limit);
++#endif
+ 		break;
+ 	default:
+ 		WRONG_PARAM_COUNT;
+ 	}
+ 
+ 	ZEND_FETCH_RESOURCE(what, php_stream *, x, -1,"File-Handle",php_file_le_stream());
+-#ifdef HAVE_NEW_MING
++#if defined(HAVE_MING_ZLIB) && !defined(HAVE_NEW_MING)
++    out = SWFMovie_output(getMovie(getThis() TSRMLS_CC), &phpStreamOutputMethod, what);
++    if (oldval >= -1 && oldval <=9)
++        Ming_setSWFCompression(oldval);
++    RETURN_LONG(out);
++#elif defined(HAVE_NEW_MING) && defined(HAVE_MING_MOVIE_LEVEL)
+ 	RETURN_LONG(SWFMovie_output(movie, &phpStreamOutputMethod, what, limit));
+ #else
+ 	RETURN_LONG(SWFMovie_output(movie, &phpStreamOutputMethod, what));
+@@ -1525,10 +1559,14 @@
+ PHP_FUNCTION(swfmovie_save)
+ {
+ 	zval **x;
+-#ifdef HAVE_MING_ZLIB
++#if defined(HAVE_MING_ZLIB) || defined(HAVE_NEW_MING)
+ 	zval **zlimit = NULL;
+ 	int limit = -1;
+ #endif
++#if defined(HAVE_MING_ZLIB) && !defined(HAVE_NEW_MING)
++	int oldval = INT_MIN;
++	long out;
++#endif
+ 	long retval;
+ 	php_stream *stream;
+ 
+@@ -1539,7 +1577,7 @@
+ 		}
+ 		break;
+ 	case 2:
+-#ifdef HAVE_MING_ZLIB
++#if defined(HAVE_MING_ZLIB) || defined(HAVE_NEW_MING)
+ 		if (zend_get_parameters_ex(2, &x, &zlimit) == FAILURE) {
+ 			WRONG_PARAM_COUNT;
+ 		}
+@@ -1550,6 +1588,9 @@
+ 			RETURN_FALSE;
+ 		}
+ #endif
++#if defined(HAVE_MING_ZLIB) && !defined(HAVE_NEW_MING)
++		oldval = Ming_setSWFCompression(limit);
++#endif
+ 		break;
+ 	default:
+ 		WRONG_PARAM_COUNT;
+@@ -1557,7 +1598,12 @@
+ 		  
+ 	if (Z_TYPE_PP(x) == IS_RESOURCE) {
+ 		ZEND_FETCH_RESOURCE(stream, php_stream *, x, -1,"File-Handle",php_file_le_stream());
+-#ifdef HAVE_NEW_MING
++#if defined(HAVE_MING_ZLIB) && !defined(HAVE_NEW_MING)
++		out = SWFMovie_output(getMovie(getThis() TSRMLS_CC), &phpStreamOutputMethod, what);
++		if (oldval >= -1 && oldval <=9)
++			Ming_setSWFCompression(oldval);
++		RETURN_LONG(out);
++#elif defined(HAVE_NEW_MING) && defined(HAVE_MING_MOVIE_LEVEL)
+ 		RETURN_LONG(SWFMovie_output(getMovie(getThis() TSRMLS_CC), &phpStreamOutputMethod, stream, limit));
+ #else
+ 		RETURN_LONG(SWFMovie_output(getMovie(getThis() TSRMLS_CC), &phpStreamOutputMethod, stream));
+@@ -1570,8 +1616,12 @@
+ 	if (stream == NULL) {
+ 		RETURN_FALSE;
+ 	}
+-	
+-#ifdef HAVE_NEW_MING
++#if defined(HAVE_MING_ZLIB) && !defined(HAVE_NEW_MING)
++	out = SWFMovie_output(getMovie(getThis() TSRMLS_CC), &phpStreamOutputMethod, (void *)stream);
++	if (oldval >= -1 && oldval <=9)
++		Ming_setSWFCompression(oldval);
++	RETURN_LONG(out);
++#elif defined(HAVE_NEW_MING) && defined(HAVE_MING_MOVIE_LEVEL)
+ 	retval = SWFMovie_output(getMovie(getThis() TSRMLS_CC), &phpStreamOutputMethod, (void *)stream, limit);
+ #else
+ 	retval = SWFMovie_output(getMovie(getThis() TSRMLS_CC), &phpStreamOutputMethod, (void *)stream);
