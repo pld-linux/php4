@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 3
+%define	_rel 1
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -80,13 +80,13 @@ Summary(pt_BR.UTF-8):	A linguagem de script PHP
 Summary(ru.UTF-8):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk.UTF-8):	PHP Версії 4 - мова препроцесування HTML-файлів, виконувана на сервері
 Name:		php4
-Version:	4.4.5
+Version:	4.4.6
 Release:	%{_rel}%{?with_hardening:hardened}
 Epoch:		3
 License:	PHP
 Group:		Libraries
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
-# Source0-md5:	bf61d557c82962dc9533f6ef35283d4c
+# Source0-md5:	5db283824310c87efb18c76b4735c4bd
 Source2:	zend.gif
 Source3:	%{name}-mod_php.conf
 Source4:	%{name}-cgi-fcgi.ini
@@ -127,7 +127,6 @@ Patch28:	%{name}-sybase-fix.patch
 Patch29:	%{name}-lib64.patch
 Patch30:	%{name}-mnogosearch-fix.patch
 Patch31:	%{name}-stupidapache_version.patch
-Patch32:	%{name}-interbase.patch
 Patch33:	%{name}-uint32_t.patch
 Patch34:	%{name}-install_gd_headers.patch
 Patch35:	%{name}-both-apxs.patch
@@ -1580,7 +1579,6 @@ cp php.ini-dist php.ini
 %endif
 %patch30 -p1
 %patch31 -p1
-%patch32 -p1
 %patch33 -p1
 %patch34 -p1
 %patch35 -p1
