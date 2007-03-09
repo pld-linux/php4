@@ -1131,6 +1131,7 @@ Uwaga: to jest modu³ eksperymentalny.
 Summary:	Process Control extension module for PHP
 Summary(pl):	Modu³ Process Control dla PHP
 Group:		Libraries
+Requires:	%{name}-cli = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php(pcntl)
 
