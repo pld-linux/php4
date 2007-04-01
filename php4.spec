@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 2
+%define	_rel 3
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -142,6 +142,7 @@ Patch42:	%{name}-apr-apu.patch
 Patch45:	%{name}-config-dir.patch
 Patch46:	%{name}-phpinfo_no_configure.patch
 Patch47:	%{name}-ming.patch
+Patch48:	%{name}-krb5.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -1592,6 +1593,7 @@ cp php.ini-dist php.ini
 %patch45 -p1
 %patch46 -p1
 %patch47 -p1
+%patch48 -p1
 
 %if %{with hardening}
 zcat %{SOURCE8} | patch -p1
