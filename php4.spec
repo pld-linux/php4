@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 4
+%define	_rel 1
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	JЙzyk skryptowy PHP
@@ -80,13 +80,13 @@ Summary(pt_BR):	A linguagem de script PHP
 Summary(ru):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk):	PHP Верс╕╖ 4 - мова препроцесування HTML-файл╕в, виконувана на сервер╕
 Name:		php4
-Version:	4.4.6
+Version:	4.4.7
 Release:	%{_rel}%{?with_hardening:hardened}
 Epoch:		3
 License:	PHP
 Group:		Libraries
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
-# Source0-md5:	5db283824310c87efb18c76b4735c4bd
+# Source0-md5:	3f21b44d37a57ca3876d3aea713c700d
 Source2:	zend.gif
 Source3:	%{name}-mod_php.conf
 Source4:	%{name}-cgi-fcgi.ini
