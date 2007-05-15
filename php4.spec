@@ -8,6 +8,7 @@
 #  - php4-common-4.4.0-14 marks heimdal-libs-0.7.1-1 (cap heimdal-libs)
 #     heimdal-libs-0.7.1-1 marks openldap-libs-2.2.29-1 (cap liblber-2.2.so.7()(64bit))
 #       openldap-libs-2.2.29-1 marks cyrus-sasl-2.1.21-3 (cap cyrus-sasl)
+#  - php4-common-4.4.6-4 marks rpm-lib-4.4.2-43 (cap librpm-4.4.so()(64bit))
 #    php5-common doesn't have such deps
 #  - php4-cli pulls: libltdl
 # - above is caused by openssl linked in statically as openssl links with kerberos
