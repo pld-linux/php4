@@ -1590,7 +1590,7 @@ cp php.ini-dist php.ini
 # XXX: I believe this one is obsolete as of 4.4.3
 #%patch41 -p1
 %patch42 -p1
-%patch42 -p1
+%patch43 -p1
 %patch45 -p1
 %patch46 -p1
 %patch47 -p1
