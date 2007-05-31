@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 1
+%define	_rel 2
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -138,7 +138,7 @@ Patch40:	%{name}-linkflags-clean.patch
 # XXX: obsolete?
 Patch41:	%{name}-openssl-huge-hack.patch
 Patch42:	%{name}-apr-apu.patch
-#Patch43:	%{name}-branch.diff
+Patch43:	%{name}-gd.patch
 Patch45:	%{name}-config-dir.patch
 Patch46:	%{name}-phpinfo_no_configure.patch
 Patch47:	%{name}-ming.patch
@@ -1589,6 +1589,7 @@ cp php.ini-dist php.ini
 %{?with_versioning:%patch39 -p1}
 # XXX: I believe this one is obsolete as of 4.4.3
 #%patch41 -p1
+%patch42 -p1
 %patch42 -p1
 %patch45 -p1
 %patch46 -p1
