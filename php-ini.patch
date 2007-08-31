@@ -119,25 +119,6 @@
  
  
  ;;;;;;;;;;;;;;;;;;;
-@@ -301,14 +368,16 @@
- ;
- ;   - Show all errors except for notices and coding standards warnings
- ;
--error_reporting  =  E_ALL & ~E_NOTICE
-+;error_reporting  =  E_ALL & ~E_NOTICE
-+
-+error_reporting = E_ALL
- 
- ; Print out errors (as a part of the output).  For production web sites,
- ; you're strongly encouraged to turn this feature off, and use error logging
- ; instead (see below).  Keeping display_errors enabled on a production web site
- ; may reveal security information to end users, such as file paths on your Web
- ; server, your database schema or other information.
--display_errors = On
-+display_errors = Off
- 
- ; Even when display_errors is on, errors that occur during PHP's startup
- ; sequence are not displayed.  It's strongly recommended to keep
 @@ -318,7 +387,7 @@
  ; Log errors into a log file (server-specific log, stderr, or error_log (below))
  ; As stated above, you're strongly advised to use error logging in place of
@@ -276,3 +257,25 @@
  ; (time to live) Sets the number of second while cached file will be used 
  ; instead of original one.
  soap.wsdl_cache_ttl=86400
+--- php-5.2.4/php.ini~	2007-08-31 19:31:20.000000000 +0300
++++ php-5.2.4/php.ini	2007-08-31 19:34:05.889031779 +0300
+@@ -369,7 +369,9 @@
+ ;
+ ;   - Show all errors except for notices and coding standards warnings
+ ;
+-error_reporting  =  E_ALL & ~E_NOTICE
++;error_reporting  =  E_ALL & ~E_NOTICE
++
++error_reporting  =  E_ALL
+ 
+ ; Print out errors (as a part of the output).  For production web sites,
+ ; you're strongly encouraged to turn this feature off, and use error logging
+@@ -386,7 +388,7 @@
+ ;
+ ; stdout (On) - Display errors to STDOUT
+ ;
+-display_errors = On
++display_errors = Off
+ 
+ ; Even when display_errors is on, errors that occur during PHP's startup
+ ; sequence are not displayed.  It's strongly recommended to keep
