@@ -279,3 +279,54 @@
  
  ; Even when display_errors is on, errors that occur during PHP's startup
  ; sequence are not displayed.  It's strongly recommended to keep
+--- php-5.2.4/php.ini~	2007-09-05 19:34:32.000000000 +0300
++++ php-5.2.4/php.ini	2007-09-05 19:34:34.110706458 +0300
+@@ -559,48 +559,6 @@
+ ; disabled on them.
+ enable_dl = On
+ 
+-; cgi.force_redirect is necessary to provide security running PHP as a CGI under
+-; most web servers.  Left undefined, PHP turns this on by default.  You can
+-; turn it off here AT YOUR OWN RISK
+-; **You CAN safely turn this off for IIS, in fact, you MUST.**
+-; cgi.force_redirect = 1
+-
+-; if cgi.nph is enabled it will force cgi to always sent Status: 200 with
+-; every request.
+-; cgi.nph = 1
+-
+-; if cgi.force_redirect is turned on, and you are not running under Apache or Netscape
+-; (iPlanet) web servers, you MAY need to set an environment variable name that PHP
+-; will look for to know it is OK to continue execution.  Setting this variable MAY
+-; cause security issues, KNOW WHAT YOU ARE DOING FIRST.
+-; cgi.redirect_status_env = ;
+-
+-; cgi.fix_pathinfo provides *real* PATH_INFO/PATH_TRANSLATED support for CGI.  PHP's
+-; previous behaviour was to set PATH_TRANSLATED to SCRIPT_FILENAME, and to not grok
+-; what PATH_INFO is.  For more information on PATH_INFO, see the cgi specs.  Setting
+-; this to 1 will cause PHP CGI to fix it's paths to conform to the spec.  A setting
+-; of zero causes PHP to behave as before.  Default is 1.  You should fix your scripts
+-; to use SCRIPT_FILENAME rather than PATH_TRANSLATED.
+-; cgi.fix_pathinfo=0
+-
+-; FastCGI under IIS (on WINNT based OS) supports the ability to impersonate
+-; security tokens of the calling client.  This allows IIS to define the
+-; security context that the request runs under.  mod_fastcgi under Apache
+-; does not currently support this feature (03/17/2002)
+-; Set to 1 if running under IIS.  Default is zero.
+-; fastcgi.impersonate = 1;
+-
+-; Disable logging through FastCGI connection
+-; fastcgi.logging = 0
+-
+-; cgi.rfc2616_headers configuration option tells PHP what type of headers to
+-; use when sending HTTP response code. If it's set 0 PHP sends Status: header that
+-; is supported by Apache. When this option is set to 1 PHP will send
+-; RFC2616 compliant header.
+-; Default is zero.
+-;cgi.rfc2616_headers = 0
+-
+-
+ ;;;;;;;;;;;;;;;;
+ ; File Uploads ;
+ ;;;;;;;;;;;;;;;;
