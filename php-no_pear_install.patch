@@ -1,0 +1,11 @@
+--- php-5.0.0b3.orig/configure.in	2003-12-24 17:30:44.000000000 +0100
++++ php-5.0.0b3/configure.in	2003-12-24 17:31:45.000000000 +0100
+@@ -1149,7 +1149,7 @@
+ CXXFLAGS="$CXXFLAGS $standard_libtool_flag"
+ 
+ all_targets="$lcov_target \$(OVERALL_TARGET) \$(PHP_MODULES) \$(PHP_CLI_TARGET)"
+-install_targets="$install_modules install-build install-headers install-programs $install_pear"
++install_targets="$install_modules install-build install-headers install-programs"
+ 
+ case $PHP_SAPI in
+   cgi)
