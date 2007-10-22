@@ -26,81 +26,51 @@
  
  ;;;;;;;;;;;;;;;;;;;
  ; About php.ini   ;
-@@ -60,9 +65,71 @@
- ; About this file ;
- ;;;;;;;;;;;;;;;;;;;
--; All the values in the php.ini-dist file correspond to the builtin
--; defaults (that is, if no php.ini is used, or if you delete these lines,
--; the builtin defaults will be identical).
-+; If you use constants in your value, and these constants belong to a
-+; dynamically loaded extension (either a PHP extension or a Zend extension),
-+; you may only use these constants *after* the line that loads the extension.
+--- php5.3-200710222030/php.ini~	2007-10-23 00:20:28.000000000 +0300
++++ php5.3-200710222030/php.ini	2007-10-23 00:22:43.853262016 +0300
+@@ -1,13 +1,9 @@
+ [PHP]
  
- 
-+; Below is the list of settings changed from default as specified in
-+; php.ini-recommended. These settings make PHP more secure and encourage
-+; cleaner coding.
-+; The price is that with these settings, PHP may be incompatible with some old
-+; or bad-written applications, and sometimes, more difficult to develop with.
-+; Using this settings is warmly recommended for production sites.  As all of
-+; the changes from the standard settings are thoroughly documented, you can
-+; go over each one, and decide whether you want to use it or not.
+-;;;;;;;;;;;
+-; WARNING ;
+-;;;;;;;;;;;
+-; This is the default settings file for new PHP installations from
+-; PLD Linux Distribution.
+-; It's based mainly on php.ini-dist, but with some changes made with
+-; security in mind (see below, consult also
+-; http://php.net/manual/en/security.php).
++;;;;;;;;;;;;;;;;;;;
++; About php.ini   ;
++;;;;;;;;;;;;;;;;;;;
++; This file controls many aspects of PHP's behavior.
+ ;
+ ; Please note, that in PLD installations /etc/php/php.ini file
+ ; contains global settings for all SAPIs (cgi, cli, apache...),
+@@ -15,17 +11,11 @@
+ ; /etc/php/php-cli.ini, /etc/php/php-apache.ini...) is INCLUDED
+ ; (so you don't have to duplicate whole large file to override only
+ ; few options)
+-
+-;;;;;;;;;;;;;;;;;;;
+-; About php.ini   ;
+-;;;;;;;;;;;;;;;;;;;
+-; This file controls many aspects of PHP's behavior.  In order for PHP to
+-; read it, it must be named 'php.ini'.  PHP looks for it in the current
+-; working directory, in the path designated by the environment variable
+-; PHPRC, and in the path that was defined in compile time (in that order).
+-; Under Windows, the compile-time path is the Windows directory.  The
+-; path in which the php.ini file is looked for can be overridden using
+-; the -c argument in command line mode.
 +;
-+; - register_globals = Off         [Security, Performance]
-+;     Global variables are no longer registered for input data (POST, GET, cookies,
-+;     environment and other server variables).  Instead of using $foo, you must use
-+;     you can use $_REQUEST["foo"] (includes any variable that arrives through the
-+;     request, namely, POST, GET and cookie variables), or use one of the specific
-+;     $_GET["foo"], $_POST["foo"], $_COOKIE["foo"] or $_FILES["foo"], depending
-+;     on where the input originates.  Also, you can look at the
-+;     import_request_variables() function.
-+;     Note that register_globals = Off is the default setting since PHP 4.2.0.
-+; - display_errors = Off           [Security]
-+;     With this directive set to off, errors that occur during the execution of
-+;     scripts will no longer be displayed as a part of the script output, and thus,
-+;     will no longer be exposed to remote users.  With some errors, the error message
-+;     content may expose information about your script, web server, or database
-+;     server that may be exploitable for hacking.  Production sites should have this
-+;     directive set to off.
-+; - log_errors = On                [Security]
-+;     This directive complements the above one.  Any errors that occur during the
-+;     execution of your script will be logged (typically, to your server's error log,
-+;     but can be configured in several ways).  Along with setting display_errors to off,
-+;     this setup gives you the ability to fully understand what may have gone wrong,
-+;     without exposing any sensitive information to remote users.
-+; - error_reporting = E_ALL        [Code Cleanliness, Security(?)]
-+;     By default, PHP surpresses errors of type E_NOTICE.  These error messages
-+;     are emitted for non-critical errors, but that could be a symptom of a bigger
-+;     problem.  Most notably, this will cause error messages about the use
-+;     of uninitialized variables to be displayed.
-+; - register_argc_argv = Off       [Performance]
-+;     Disables registration of the somewhat redundant $argv and $argc global
-+;     variables.
-+; - magic_quotes_gpc = Off         [Performance]
-+;     Input data is no longer escaped with slashes so that it can be sent into
-+;     SQL databases without further manipulation.  Instead, you should use the
-+;     function addslashes() on each input element you wish to send to a database.
-+; - variables_order = "GPCS"       [Performance]
-+;     The environment variables are not hashed into the $HTTP_ENV_VARS[].  To access
-+;     environment variables, you can use getenv() instead.
-+
-+; For completeness, below is list of the rest of changes recommended for
-+; performance, but NOT applied in default php.ini in PLD (since they are
-+; not needed for security or may cause problems with some applications
-+; more likely than above).
-+
-+; - output_buffering = 4096        [Performance]
-+;     Set a 4KB output buffer.  Enabling output buffering typically results in less
-+;     writes, and sometimes less packets sent on the wire, which can often lead to
-+;     better performance.  The gain this directive actually yields greatly depends
-+;     on which Web server you're working with, and what kind of scripts you're using.
-+; - allow_call_time_pass_reference = Off     [Code cleanliness]
-+;     It's not possible to decide to force a variable to be passed by reference
-+;     when calling a function.  The PHP 4 style to do this is by making the
-+;     function require the relevant argument by reference.
-+
- ;;;;;;;;;;;;;;;;;;;;
- ; Language Options ;
++; This is the default settings file for new PHP installations from
++; PLD Linux Distribution. It's based mainly on php.ini-dist, but with some
++; changes made with security in mind (see below, consult also
++; http://php.net/manual/en/security.php).
+ ;
+ ; The syntax of the file is extremely simple.  Whitespace and Lines
+ ; beginning with a semicolon are silently ignored (as you probably guessed).
+--- php5.3-200710222030/php.ini~	2007-10-23 00:20:28.000000000 +0300
++++ php5.3-200710222030/php.ini	2007-10-23 00:22:43.853262016 +0300
 @@ -86,7 +153,7 @@
  asp_tags = Off
  
