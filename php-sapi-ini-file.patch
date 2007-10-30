@@ -1,6 +1,6 @@
---- php-4.3.0/main/php_ini.c	Sat Jan  4 12:22:39 2003
-+++ php-4.4.2/main/php_ini.c	2006-04-04 18:50:17.756460517 +0300
-@@ -430,6 +430,24 @@
+--- php5.2-200710301730/main/php_ini.c	2007-08-31 11:31:28.000000000 +0300
++++ php5.2-200710301730-sapi-ini-file/main/php_ini.c	2007-10-30 21:28:48.493329368 +0200
+@@ -463,6 +463,24 @@
  				}
  			}
  		}
@@ -25,7 +25,8 @@
  		/* Search php-%sapi-module-name%.ini file in search path */
  		if (!fh.handle.fp) {
  			const char *fmt = "php-%s.ini";
-@@ -363,11 +379,4 @@
+@@ -474,13 +492,6 @@
+ 				fh.filename = php_ini_opened_path;
  			}
  		}
 -		/* Search php.ini file in search path */
@@ -36,8 +37,9 @@
 -			}
 -		}
  	}
+ 
  	if (free_ini_search_path) {
-@@ -431,9 +440,13 @@
+@@ -513,9 +524,13 @@
  	 * parse any .ini files found in this directory. */
  	if (!sapi_module.php_ini_ignore && strlen(PHP_CONFIG_FILE_SCAN_DIR)) {
  		struct dirent **namelist;
@@ -52,10 +54,18 @@
  			for (i = 0; i < ndir; i++) {
  				/* check for a .ini extension */
  				if (!(p = strrchr(namelist[i]->d_name, '.')) || (p && strcmp(p, ".ini"))) {
-@@ -458,7 +471,39 @@
- 				free(namelist[i]);
- 			}
- 			free(namelist);
+@@ -532,6 +547,35 @@
+ 							/* Here, add it to the list of ini files read */
+ 							l = strlen(ini_file);
+ 							total_l += l + 2;
++							p = estrndup(ini_file, l); 
++							zend_llist_add_element(&scanned_ini_list, &p);
++						}
++					}
++				}
++				free(namelist[i]);
++			}
++			free(namelist);
 +		}
 +
 +		if ((ndir = php_scandir(sapi_scan_dir, &namelist, 0, php_alphasort)) > 0) {
@@ -77,18 +87,19 @@
 +							/* Here, add it to the list of ini files read */
 +							l = strlen(ini_file);
 +							total_l += l + 2;
-+							p = estrndup(ini_file, l);
-+							zend_llist_add_element(&scanned_ini_list, &p);
-+						}
-+					}
-+				}
-+				free(namelist[i]);
-+			}
-+			free(namelist);
+ 							p = estrndup(ini_file, l);
+ 							zend_llist_add_element(&scanned_ini_list, &p);
+ 						}
+@@ -540,8 +584,11 @@
+ 				free(namelist[i]);
+ 			}
+ 			free(namelist);
 +		}
 +		efree(sapi_scan_dir);
  
+-			/*
 +		if (found) {
- 			/* 
++			/* 
  			 * Don't need an extra byte for the \0 in this malloc as the last
  			 * element will not get a trailing , which gives us the byte for the \0
+ 			 */
