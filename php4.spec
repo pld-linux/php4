@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 4
+%define	_rel 9
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr):	Le langage de script embarque-HTML PHP
 Summary(pl):	Jêzyk skryptowy PHP
@@ -142,6 +142,7 @@ Patch43:	%{name}-gd.patch
 Patch45:	%{name}-config-dir.patch
 Patch46:	%{name}-phpinfo_no_configure.patch
 Patch47:	%{name}-ming.patch
+Patch48:	%{name}-fcgi-graceful.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -1594,36 +1595,42 @@ cp php.ini-dist php.ini
 %patch45 -p1
 %patch46 -p1
 %patch47 -p1
+%patch48 -p1
 
 %if %{with hardening}
 zcat %{SOURCE8} | patch -p1
 %endif
 
+cp -f Zend/LICENSE{,.Zend}
+
 %build
-if API=$(awk '/#define PHP_API_VERSION/{print $3}' main/php.h) && [ $API != %{php_api_version} ]; then
-	echo "Set %%define php_api_version to $API and rerun."
+API=$(awk '/#define PHP_API_VERSION/{print $3}' main/php.h)
+if [ $API != %{php_api_version} ]; then
+	echo "Set %%define php_api_version to $API and re-run."
 	exit 1
 fi
 
-if API=$(awk '/#define ZEND_MODULE_API_NO/{print $3}' Zend/zend_modules.h) && [ $API != %{zend_module_api} ]; then
-	echo "Set %%define zend_module_api to $API and rerun."
+API=$(awk '/#define ZEND_MODULE_API_NO/{print $3}' Zend/zend_modules.h)
+if [ $API != %{zend_module_api} ]; then
+	echo "Set %%define zend_module_api to $API and re-run."
 	exit 1
 fi
 
-if API=$(awk '/#define ZEND_EXTENSION_API_NO/{print $3}' Zend/zend_extensions.h) && [ $API != %{zend_extension_api} ]; then
-	echo "Set %%define zend_extension_api to $API and rerun."
+API=$(awk '/#define ZEND_EXTENSION_API_NO/{print $3}' Zend/zend_extensions.h)
+if [ $API != %{zend_extension_api} ]; then
+	echo "Set %%define zend_extension_api to $API and re-run."
 	exit 1
 fi
 
-EXTENSION_DIR="%{extensionsdir}"; export EXTENSION_DIR
+export EXTENSION_DIR="%{extensionsdir}"
 if [ ! -f _built-conf ]; then # configure once (for faster debugging purposes)
-	./buildconf --force
+	rm -f Makefile.{fcgi,cgi,cli,apxs{1,2}} # now remove Makefile copies
 	%{__libtoolize}
 	%{__aclocal}
-	%{__autoconf}
+	./buildconf --force
 	touch _built-conf
 fi
-PROG_SENDMAIL="/usr/lib/sendmail"; export PROG_SENDMAIL
+export PROG_SENDMAIL="/usr/lib/sendmail"
 
 sapis="
 %if %{with fcgi}
@@ -1638,30 +1645,32 @@ apxs2
 %endif
 "
 for sapi in $sapis; do
+	: SAPI $sapi
 	[ -f Makefile.$sapi ] && continue # skip if already configured (for faster debugging purposes)
 
-	%configure \
-	`
+	sapi_args=''
 	case $sapi in
 	cgi)
-		echo --enable-discard-path --enable-force-cgi-redirect
-	;;
+		sapi_args='--enable-discard-path --enable-force-cgi-redirect'
+		;;
 	cli)
-		echo --disable-cgi
-	;;
+		sapi_args='--disable-cgi'
+		;;
 	fcgi)
-		echo --enable-fastcgi --with-fastcgi=/usr --enable-force-cgi-redirect
-	;;
+		sapi_args='--enable-fastcgi --with-fastcgi=/usr --enable-force-cgi-redirect'
+		;;
 	apxs1)
-		ver=%(rpm -q --qf '%%{version}' apache1-apxs)
-		echo --with-apxs=%{apxs1} --with-apache-version=$ver
-	;;
+		ver=$(rpm -q --qf '%{V}' apache1-devel)
+		sapi_args="--with-apxs=%{apxs1} --with-apache-version=$ver"
+		;;
 	apxs2)
-		ver=%(rpm -q --qf '%%{version}' apache-apxs)
-		echo --with-apxs2=%{apxs2} --with-apache-version=$ver
-	;;
+		ver=$(rpm -q --qf '%{V}' apache-devel)
+		sapi_args="--with-apxs2=%{apxs2} --with-apache-version=$ver"
+		;;
 	esac
-	` \
+
+	%configure \
+	$sapi_args \
 %if "%{!?configure_cache:0}%{?configure_cache}" == "0"
 	--cache-file=config.cache \
 %endif
@@ -1769,9 +1778,6 @@ done
 
 # must make this first, so modules can link against it.
 %{__make} libphp_common.la
-# FIXME: needed for linking modules with libphp_common.la
-#libtool --mode=install cp libphp_common.la `pwd`/libs
-
 %{__make} build-modules
 
 %if %{with apache1}
@@ -1785,18 +1791,22 @@ done
 # FCGI
 %if %{with fcgi}
 cp -af php_config.h.fcgi main/php_config.h
+rm -rf sapi/cgi/.libs sapi/cgi/*.lo
 %{__make} sapi/cgi/php -f Makefile.fcgi
 cp -r sapi/cgi sapi/fcgi
-rm -rf sapi/cgi/.libs sapi/cgi/*.lo
+[ "$(echo '<?=php_sapi_name();' | ./sapi/fcgi/php -qn)" = cgi-fcgi ] || exit 1
 %endif
 
 # CGI
 cp -af php_config.h.cgi main/php_config.h
+rm -rf sapi/cgi/.libs sapi/cgi/*.lo
 %{__make} sapi/cgi/php -f Makefile.cgi
+[ "$(echo '<?=php_sapi_name();' | ./sapi/cgi/php -qn)" = cgi ] || exit 1
 
 # CLI
 cp -af php_config.h.cli main/php_config.h
 %{__make} sapi/cli/php -f Makefile.cli
+[ "$(echo '<?=php_sapi_name();' | ./sapi/cli/php -n)" = cli ] || exit 1
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -1865,22 +1875,22 @@ install %{SOURCE3} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_php4.conf
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache2handler.ini
 %endif
 
-cp -f Zend/LICENSE{,.Zend}
-
-install ext/ext_skel $RPM_BUILD_ROOT%{_bindir}/php-ext_skel
-
 # Generate stub .ini files for each subpackage
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/conf.d
-for so in modules/*.so; do
-	mod=$(basename $so .so)
-	conf="%{_sysconfdir}/conf.d/${mod}.ini"
-	# xml needs to be loaded before wddx
-	[ "$mod" = "wddx" ] && conf="%{_sysconfdir}/conf.d/xml_${mod}.ini"
-	cat > $RPM_BUILD_ROOT${conf} <<EOF
-; Enable ${mod} extension module
-extension=${mod}.so
-EOF
-done
+generate_inifiles() {
+	for so in modules/*.so; do
+		mod=$(basename $so .so)
+		conf="%{_sysconfdir}/conf.d/$mod.ini"
+		# xml needs to be loaded before wddx
+		[ "$mod" = "wddx" ] && conf="%{_sysconfdir}/conf.d/xml_$mod.ini"
+		echo "+ $conf"
+		cat > $RPM_BUILD_ROOT$conf <<-EOF
+			; Enable $mod extension module
+			extension=$mod.so
+		EOF
+	done
+}
+generate_inifiles
 
 # per SAPI ini directories
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/{cgi,cli,cgi-fcgi,apache,apache2handler}.d
