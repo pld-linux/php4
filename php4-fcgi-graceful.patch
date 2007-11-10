@@ -1,0 +1,64 @@
+--- php-4.4.7/sapi/cgi/cgi_main.c	2007-02-16 13:47:20.000000000 +0200
++++ php-4.4.7-gracefup/sapi/cgi/cgi_main.c	2007-11-09 17:19:32.722741559 +0200
+@@ -105,6 +105,11 @@
+  */
+ static int parent = 1;
+ 
++#if PHP_FASTCGI
++/* Socket we are listening on incoming FastCGI connections */
++static int fcgi_fd = 0;
++#endif
++
+ /**
+  * Process group
+  */
+@@ -952,6 +957,22 @@
+ }
+ #endif
+ 
++#if PHP_FASTCGI
++/**
++ * Graceful shutdown. Close listening sockets.
++ */
++void fastcgi_graceful_shutdown(int signal)
++{
++#ifdef DEBUG_FASTCGI
++	fprintf(stderr, "FastCGI graceful shutdown, pid %d\n", getpid());
++#endif
++
++	/* Close the listening socket so new processes can reuse the same port */
++	closesocket(fcgi_fd);
++	fcgi_fd = 0;
++}
++#endif
++
+ /* {{{ main
+  */
+ int main(int argc, char *argv[])
+@@ -990,7 +1011,6 @@
+ #ifndef PHP_WIN32
+ 	char *bindpath = NULL;
+ #endif
+-	int fcgi_fd = 0;
+ 	FCGX_Request request;
+ #ifdef PHP_WIN32
+ 	long impersonate = 0;
+@@ -1238,9 +1258,17 @@
+ 					parent = 0;
+ 
+ 					/* don't catch our signals */
+-					sigaction( SIGTERM, &old_term, 0 );
+ 					sigaction( SIGQUIT, &old_quit, 0 );
+ 					sigaction( SIGINT, &old_int, 0 );
++#if PHP_FASTCGI
++
++					/* call graceful shutdown handler for SIGTERM */
++					act.sa_flags = 0;
++					act.sa_handler = fastcgi_graceful_shutdown;
++					sigaction(SIGTERM, &act, &old_term);
++#else
++					sigaction(SIGTERM, &old_term, 0);
++#endif
+ 					break;
+ 				case -1:
+ 					perror( "php (pre-forking)" );
