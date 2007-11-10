@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define	_rel 10
+%define	_rel 11
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -2648,7 +2648,6 @@ fi
 %doc CODING_STANDARDS
 %attr(755,root,root) %{_bindir}/phpize
 %attr(755,root,root) %{_bindir}/php-config
-%attr(755,root,root) %{_bindir}/php-ext_skel
 %attr(755,root,root) %{_libdir}/libphp_common.so
 # FIXME: how exactly this is needed? as it contains libdir for apache1 or apache2
 %{_libdir}/libphp_common.la
