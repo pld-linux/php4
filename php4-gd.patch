@@ -1,6 +1,6 @@
 diff -urN php-4.4.8.org/ext/gd/config.m4 php-4.4.8/ext/gd/config.m4
 --- php-4.4.8.org/ext/gd/config.m4	2007-03-10 14:06:37.000000000 +0100
-+++ php-4.4.8/ext/gd/config.m4	2008-01-22 14:35:21.033975591 +0100
++++ php-4.4.8/ext/gd/config.m4	2008-01-22 14:59:28.606647293 +0100
 @@ -259,12 +259,13 @@
    PHP_CHECK_LIBRARY(gd, gdCacheCreate,          [AC_DEFINE(HAVE_GD_CACHE_CREATE,     1, [ ])], [], [ -L$GD_LIB $GD_SHARED_LIBADD ])
    PHP_CHECK_LIBRARY(gd, gdFontCacheShutdown,    [AC_DEFINE(HAVE_GD_FONTCACHESHUTDOWN,1, [ ])], [], [ -L$GD_LIB $GD_SHARED_LIBADD ])
@@ -16,7 +16,13 @@ diff -urN php-4.4.8.org/ext/gd/config.m4 php-4.4.8/ext/gd/config.m4
  
  if test "$PHP_GD" = "yes"; then
    GD_MODULE_TYPE=builtin
-@@ -310,6 +311,7 @@
+@@ -305,11 +306,12 @@
+   AC_DEFINE(HAVE_GD_GD2,              1, [ ])
+   AC_DEFINE(HAVE_GD_PNG,              1, [ ])
+   AC_DEFINE(HAVE_GD_XBM,              1, [ ])
+-  AC_DEFINE(HAVE_GD_BUNDLED,          1, [ ])
++dnl  AC_DEFINE(HAVE_GD_BUNDLED,          1, [ ])
+   AC_DEFINE(HAVE_GD_GIF_READ,         1, [ ])
    AC_DEFINE(HAVE_GD_GIF_CREATE,       1, [ ])
    AC_DEFINE(HAVE_GD_IMAGEELLIPSE,     1, [ ])
    AC_DEFINE(HAVE_GD_FONTCACHESHUTDOWN,1, [ ])
@@ -33,7 +39,7 @@ diff -urN php-4.4.8.org/ext/gd/CREDITS php-4.4.8/ext/gd/CREDITS
 +Rasmus Lerdorf, Stig Bakken, Jim Winstead, Jouni Ahto, Ilia Alshanetsky, Pierre-Alain Joye, Marcus Boerger
 diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
 --- php-4.4.8.org/ext/gd/gd.c	2007-12-31 08:22:47.000000000 +0100
-+++ php-4.4.8/ext/gd/gd.c	2008-01-22 14:35:21.037309093 +0100
++++ php-4.4.8/ext/gd/gd.c	2008-01-22 14:52:54.373545829 +0100
 @@ -1,8 +1,8 @@
  /*
     +----------------------------------------------------------------------+
@@ -87,9 +93,15 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  #endif
  
  #if HAVE_LIBGD
-@@ -68,6 +77,14 @@
+@@ -64,10 +73,20 @@
+ #include <gdfontmb.h> /* 3 Medium bold font */
+ #include <gdfontl.h>  /* 4 Large font */
+ #include <gdfontg.h>  /* 5 Giant font */
++#if HAVE_GD_BUNDLED
+ #ifdef HAVE_GD_WBMP
  #include "libgd/wbmp.h"
  #endif
++#endif
  #ifdef ENABLE_GD_TTF
 +# ifdef HAVE_LIBFREETYPE
 +#  include <ft2build.h>
@@ -102,7 +114,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  # include "gdttf.h"
  #endif
  
-@@ -112,6 +129,40 @@
+@@ -112,6 +131,40 @@
  #define gdNewDynamicCtxEx(len, data, val) gdNewDynamicCtx(len, data)
  #endif
  
@@ -143,7 +155,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  static gdImagePtr _php_image_create_from_string (zval **Data, char *tn, gdImagePtr (*ioctx_func_p)() TSRMLS_DC);
  static void _php_image_create_from(INTERNAL_FUNCTION_PARAMETERS, int image_type, char *tn, gdImagePtr (*func_p)(), gdImagePtr (*ioctx_func_p)());
  static void _php_image_output(INTERNAL_FUNCTION_PARAMETERS, int image_type, char *tn, void (*func_p)());
-@@ -121,7 +172,7 @@
+@@ -121,7 +174,7 @@
  
  /* {{{ gd_functions[]
   */
@@ -152,7 +164,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  	PHP_FE(gd_info,                                 NULL)
  	PHP_FE(imagearc,								NULL)
  	PHP_FE(imageellipse,							NULL)
-@@ -167,6 +218,11 @@
+@@ -167,6 +220,11 @@
  	PHP_FE(imagecopyresampled,						NULL)
  #endif
  
@@ -164,7 +176,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  #ifdef HAVE_GD_BUNDLED
  	PHP_FE(imagerotate,     						NULL)
  	PHP_FE(imageantialias,							NULL)
-@@ -277,6 +333,12 @@
+@@ -277,6 +335,12 @@
  #if HAVE_GD_BUNDLED
  	PHP_FE(imagelayereffect,						NULL)
  	PHP_FE(imagecolormatch,							NULL)
@@ -177,22 +189,22 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  #endif
  
  	{NULL, NULL, NULL}
-@@ -288,9 +350,13 @@
+@@ -288,9 +352,13 @@
  	"gd",
  	gd_functions,
  	PHP_MINIT(gd),
 +#if HAVE_LIBT1 || HAVE_GD_FONTMUTEX
  	PHP_MSHUTDOWN(gd),
 +#else
++	NULL,
++#endif
  	NULL,
 -#if HAVE_LIBGD20 && HAVE_GD_STRINGFT && (HAVE_GD_FONTCACHESHUTDOWN || HAVE_GD_FREEFONTCACHE)
-+#endif
-+	NULL,
 +#if HAVE_LIBGD20 && HAVE_GD_STRINGFT && (HAVE_LIBFREETYPE && (HAVE_GD_FONTCACHESHUTDOWN || HAVE_GD_FREEFONTCACHE))
  	PHP_RSHUTDOWN(gd),
  #else
  	NULL,
-@@ -304,6 +370,12 @@
+@@ -304,6 +372,12 @@
  ZEND_GET_MODULE(gd)
  #endif
  
@@ -205,7 +217,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  /* {{{ php_free_gd_image
   */
  static void php_free_gd_image(zend_rsrc_list_entry *rsrc TSRMLS_DC)
-@@ -326,15 +398,21 @@
+@@ -326,15 +400,21 @@
  }
  /* }}} */
  
@@ -227,7 +239,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  /* }}} */
  
  
-@@ -344,6 +422,10 @@
+@@ -344,6 +424,10 @@
  {
  	le_gd = zend_register_list_destructors_ex(php_free_gd_image, NULL, "gd", module_number);
  	le_gd_font = zend_register_list_destructors_ex(php_free_gd_font, NULL, "gd font", module_number);
@@ -238,7 +250,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  #if HAVE_LIBT1
  	T1_SetBitmapPad(8);
  	T1_InitLib(NO_LOGFILE | IGNORE_CONFIGFILE | IGNORE_FONTDATABASE);
-@@ -352,6 +434,8 @@
+@@ -352,6 +436,8 @@
  	le_ps_enc = zend_register_list_destructors_ex(php_free_ps_enc, NULL, "gd PS encoding", module_number);
  #endif
  
@@ -247,7 +259,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  	REGISTER_LONG_CONSTANT("IMG_GIF", 1, CONST_CS | CONST_PERSISTENT);
  	REGISTER_LONG_CONSTANT("IMG_JPG", 2, CONST_CS | CONST_PERSISTENT);
  	REGISTER_LONG_CONSTANT("IMG_JPEG", 2, CONST_CS | CONST_PERSISTENT);
-@@ -387,16 +471,58 @@
+@@ -387,16 +473,58 @@
  	REGISTER_LONG_CONSTANT("IMG_EFFECT_NORMAL", gdEffectNormal, CONST_CS | CONST_PERSISTENT);
  	REGISTER_LONG_CONSTANT("IMG_EFFECT_OVERLAY", gdEffectOverlay, CONST_CS | CONST_PERSISTENT);
  	REGISTER_LONG_CONSTANT("GD_BUNDLED", 1, CONST_CS | CONST_PERSISTENT);
@@ -307,7 +319,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  PHP_RSHUTDOWN_FUNCTION(gd)
  {
  #if HAVE_GD_FONTCACHESHUTDOWN
-@@ -410,7 +536,7 @@
+@@ -410,7 +538,7 @@
  /* }}} */
  
  #if HAVE_GD_BUNDLED
@@ -316,7 +328,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  #elif HAVE_LIBGD20
  #define PHP_GD_VERSION_STRING "2.0 or higher"
  #elif HAVE_GDIMAGECOLORRESOLVE
-@@ -436,8 +562,24 @@
+@@ -436,8 +564,24 @@
  	php_info_print_table_row(2, "FreeType Support", "enabled");
  #if HAVE_LIBFREETYPE
  	php_info_print_table_row(2, "FreeType Linkage", "with freetype");
@@ -341,7 +353,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  #else
  	php_info_print_table_row(2, "FreeType Linkage", "with unknown library");
  #endif
-@@ -464,6 +606,9 @@
+@@ -464,6 +608,9 @@
  #ifdef HAVE_GD_WBMP
  	php_info_print_table_row(2, "WBMP Support", "enabled");
  #endif
@@ -351,7 +363,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  #ifdef HAVE_GD_XBM
  	php_info_print_table_row(2, "XBM Support", "enabled");
  #endif
-@@ -530,6 +675,11 @@
+@@ -530,6 +677,11 @@
  #else
  	add_assoc_bool(return_value, "WBMP Support", 0);
  #endif
@@ -363,7 +375,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  #ifdef HAVE_GD_XBM
  	add_assoc_bool(return_value, "XBM Support", 1);
  #else
-@@ -548,6 +698,7 @@
+@@ -548,6 +700,7 @@
  {
  	return le_gd;
  }
@@ -371,7 +383,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  
  #ifndef HAVE_GDIMAGECOLORRESOLVE
  
-@@ -763,13 +914,19 @@
+@@ -763,13 +916,19 @@
  	convert_to_long_ex(x_size);
  	convert_to_long_ex(y_size);
  
@@ -392,7 +404,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  	ZEND_REGISTER_RESOURCE(return_value, im, le_gd);
  }
  /* }}} */
-@@ -836,15 +993,19 @@
+@@ -836,15 +995,19 @@
  	result = gdImageColorMatch(im1, im2);
  	switch (result) {
  		case -1:
@@ -415,7 +427,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  			RETURN_FALSE;
  			break;
  	}
-@@ -977,6 +1138,7 @@
+@@ -977,6 +1140,7 @@
  
  	RETURN_TRUE;
  }
@@ -423,7 +435,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  #endif
  
  #if HAVE_GD_BUNDLED
-@@ -1008,6 +1170,7 @@
+@@ -1008,6 +1172,7 @@
  	zval *IM;
  	long red, green, blue, alpha;
  	gdImagePtr im;
@@ -431,7 +443,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  
  	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "zllll", &IM, &red, &green, &blue, &alpha) == FAILURE) {
  		RETURN_FALSE;
-@@ -1015,7 +1178,12 @@
+@@ -1015,7 +1180,12 @@
  
  	ZEND_FETCH_RESOURCE(im, gdImagePtr, &IM, -1, "Image", le_gd);
  
@@ -445,7 +457,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  }
  /* }}} */
  
-@@ -1125,28 +1293,173 @@
+@@ -1125,28 +1295,173 @@
  /* }}} */
  #endif
  
@@ -630,7 +642,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  
  	if (im_dst != NULL) {
  		ZEND_REGISTER_RESOURCE(return_value, im_dst, le_gd);
-@@ -1215,13 +1528,19 @@
+@@ -1215,13 +1530,19 @@
  	convert_to_long_ex(x_size);
  	convert_to_long_ex(y_size);
  
@@ -651,7 +663,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  	ZEND_REGISTER_RESOURCE(return_value, im, le_gd);
  }
  /* }}} */
-@@ -1323,6 +1642,11 @@
+@@ -1323,6 +1644,11 @@
  	im = (*ioctx_func_p)(io_ctx);
  	if (!im) {
  		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Passed data is not in '%s' format", tn);
@@ -663,7 +675,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  		return NULL;
  	}
  
-@@ -1350,6 +1674,11 @@
+@@ -1350,6 +1676,11 @@
  	}
  
  	convert_to_string_ex(data);
@@ -675,7 +687,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  	memcpy(sig, Z_STRVAL_PP(data), 8);
  
  	imtype = _php_image_type(sig);
-@@ -1401,7 +1730,7 @@
+@@ -1401,7 +1732,7 @@
  			break;
  
  		default:
@@ -684,7 +696,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  			RETURN_FALSE;
  	}
  
-@@ -1425,6 +1754,9 @@
+@@ -1425,6 +1756,9 @@
  	php_stream *stream;
  	FILE * fp = NULL;
  	int argc=ZEND_NUM_ARGS();
@@ -694,7 +706,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  
  	if ((image_type == PHP_GDIMG_TYPE_GD2PART && argc != 5) ||
  		(image_type != PHP_GDIMG_TYPE_GD2PART && argc != 1) ||
-@@ -1436,6 +1768,10 @@
+@@ -1436,6 +1770,10 @@
  
  	if (argc == 5 && image_type == PHP_GDIMG_TYPE_GD2PART) {
  		multi_convert_to_long_ex(4, srcx, srcy, width, height);
@@ -705,7 +717,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  	}
  
  	fn = Z_STRVAL_PP(file);
-@@ -1471,6 +1807,7 @@
+@@ -1471,6 +1809,7 @@
  
  		io_ctx = gdNewDynamicCtxEx(buff_size, buff, 0);
  		if (!io_ctx) {
@@ -713,7 +725,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  			php_error_docref(NULL TSRMLS_CC, E_WARNING,"Cannot allocate GD IO context");
  			goto out_err;
  		}
-@@ -1485,7 +1822,7 @@
+@@ -1485,7 +1824,7 @@
  #else
  		io_ctx->free(io_ctx);
  #endif
@@ -722,7 +734,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  #endif
  	}
  	else {
-@@ -1505,6 +1842,18 @@
+@@ -1505,6 +1844,18 @@
  				im = gdImageCreateFromXpm(fn);
  				break;
  #endif
@@ -741,7 +753,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  			default:
  				im = (*func_p)(fp);
  				break;
-@@ -1685,6 +2034,14 @@
+@@ -1685,6 +2036,14 @@
  				(*func_p)(im, fp);
  				break;
  #endif
@@ -756,7 +768,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  			default:
  				if (q == -1) {
  					q = 128;
-@@ -1737,6 +2094,14 @@
+@@ -1737,6 +2096,14 @@
  				(*func_p)(im, tmp);
  				break;
  #endif
@@ -771,7 +783,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  			default:
  				(*func_p)(im, tmp);
  				break;
-@@ -1762,6 +2127,16 @@
+@@ -1762,6 +2129,16 @@
  }
  /* }}} */
  
@@ -788,7 +800,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  #ifdef HAVE_GD_GIF_CREATE
  /* {{{ proto bool imagegif(resource im [, string filename])
     Output GIF image to browser or file */
-@@ -1782,7 +2157,7 @@
+@@ -1782,7 +2159,7 @@
  PHP_FUNCTION(imagepng)
  {
  #ifdef USE_GD_IOCTX
@@ -797,7 +809,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  #else
  	_php_image_output(INTERNAL_FUNCTION_PARAM_PASSTHRU, PHP_GDIMG_TYPE_PNG, "PNG", gdImagePng);
  #endif
-@@ -1862,6 +2237,7 @@
+@@ -1862,6 +2239,7 @@
  {
  	zval **IM, **red, **green, **blue;
  	gdImagePtr im;
@@ -805,7 +817,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  
  	if (ZEND_NUM_ARGS() != 4 || zend_get_parameters_ex(4, &IM, &red, &green, &blue) == FAILURE) {
  		ZEND_WRONG_PARAM_COUNT();
-@@ -1872,8 +2248,11 @@
+@@ -1872,8 +2250,11 @@
  	convert_to_long_ex(red);
  	convert_to_long_ex(green);
  	convert_to_long_ex(blue);
@@ -819,7 +831,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  }
  /* }}} */
  
-@@ -2508,7 +2887,7 @@
+@@ -2508,7 +2889,7 @@
  static void php_imagepolygon(INTERNAL_FUNCTION_PARAMETERS, int filled)
  {
  	zval **IM, **POINTS, **NPOINTS, **COL;
@@ -828,7 +840,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  	gdImagePtr im;
  	gdPointPtr points;
  	int npoints, col, nelem, i;
-@@ -2716,7 +3095,7 @@
+@@ -2716,7 +3097,7 @@
  		ch = (int)((unsigned char)*(Z_STRVAL_PP(C)));
  	} else {
  		str = (unsigned char *) estrndup(Z_STRVAL_PP(C), Z_STRLEN_PP(C));
@@ -837,7 +849,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  	}
  
  	y = Z_LVAL_PP(Y);
-@@ -3083,7 +3462,7 @@
+@@ -3083,7 +3464,7 @@
  	{
  		char tmp_font_path[MAXPATHLEN];
  
@@ -846,7 +858,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  			fontname = (unsigned char *) fontname;
  		} else {
  			fontname = NULL;
-@@ -3093,16 +3472,18 @@
+@@ -3093,16 +3474,18 @@
  	fontname = (unsigned char *) fontname;
  #endif
  
@@ -867,7 +879,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  # elif HAVE_GD_STRINGTTF
  	error = gdImageStringTTF(im, brect, col, fontname, ptsize, angle, x, y, str);
  # endif
-@@ -3155,6 +3536,9 @@
+@@ -3155,6 +3538,9 @@
  {
  	zval **file;
  	int f_ind, *font;
@@ -877,7 +889,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  
  	if (ZEND_NUM_ARGS() != 1 || zend_get_parameters_ex(1, &file) == FAILURE) {
  		ZEND_WRONG_PARAM_COUNT();
-@@ -3162,24 +3546,18 @@
+@@ -3162,24 +3548,18 @@
  
  	convert_to_string_ex(file);
  
@@ -911,7 +923,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  	}
  
  	if (T1_LoadFont(f_ind)) {
-@@ -3317,6 +3695,11 @@
+@@ -3317,6 +3697,11 @@
  
  	T1_DeleteAllSizes(*f_ind);
  
@@ -923,7 +935,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  	if (T1_ExtendFont(*f_ind, Z_DVAL_PP(ext)) != 0) {
  		RETURN_FALSE;
  	}
-@@ -3348,7 +3731,7 @@
+@@ -3348,7 +3733,7 @@
  }
  /* }}} */
  
@@ -932,7 +944,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
     Rasterize a string over an image */
  PHP_FUNCTION(imagepstext)
  {
-@@ -3371,11 +3754,6 @@
+@@ -3371,11 +3756,6 @@
  	T1_TMATRIX *transform = NULL;
  	char *str;
  	int str_len;
@@ -944,7 +956,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  
  	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rsrlllll|lldl", &img, &str, &str_len, &fnt, &size, &_fg, &_bg, &x, &y, &space, &width, &angle, &aa_steps) == FAILURE) {
  		return;
-@@ -3455,7 +3833,7 @@
+@@ -3455,7 +3835,7 @@
  
  		if (!str_path) {
  			if (T1_errno) {
@@ -953,7 +965,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  			}
  			RETURN_FALSE;
  		}
-@@ -3476,7 +3854,7 @@
+@@ -3476,7 +3856,7 @@
  		str_img = T1_AASetString(*f_ind, str,  str_len, space, T1_KERNING, size, transform);
  	}
  	if (T1_errno) {
@@ -962,7 +974,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  		RETURN_FALSE;
  	}
  
-@@ -3719,7 +4097,10 @@
+@@ -3719,7 +4099,10 @@
  	int int_threshold;
  	int x, y;
  	float x_ratio, y_ratio;
@@ -974,7 +986,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  	if (argc != 5 || zend_get_parameters_ex(argc, &f_org, &f_dest, &height, &width, &threshold) == FAILURE) {
  		ZEND_WRONG_PARAM_COUNT();
  	}
-@@ -3775,7 +4156,12 @@
+@@ -3775,7 +4158,12 @@
  
  #ifdef HAVE_GD_JPG
  		case PHP_GDIMG_TYPE_JPG:
@@ -987,7 +999,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  			if (im_org == NULL) {
  				php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unable to open '%s' Not a valid JPEG file", fn_dest);
  				RETURN_FALSE;
-@@ -3886,7 +4272,282 @@
+@@ -3886,7 +4274,282 @@
  /* }}} */
  #endif /* HAVE_GD_WBMP */
  
@@ -1270,7 +1282,7 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
  /* {{{ proto bool imageantialias(resource im, bool on)
     Should antialiased functions used or not*/
  PHP_FUNCTION(imageantialias)
-@@ -3908,8 +4569,6 @@
+@@ -3908,8 +4571,6 @@
  /* }}} */
  #endif
  
