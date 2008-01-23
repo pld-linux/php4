@@ -8,7 +8,6 @@
 #  - php4-common-4.4.0-14 marks heimdal-libs-0.7.1-1 (cap heimdal-libs)
 #     heimdal-libs-0.7.1-1 marks openldap-libs-2.2.29-1 (cap liblber-2.2.so.7()(64bit))
 #       openldap-libs-2.2.29-1 marks cyrus-sasl-2.1.21-3 (cap cyrus-sasl)
-#  - php4-common-4.4.6-4 marks rpm-lib-4.4.2-43 (cap librpm-4.4.so()(64bit))
 #    php5-common doesn't have such deps
 #  - php4-cli pulls: libltdl
 # - above is caused by openssl linked in statically as openssl links with kerberos
@@ -73,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define	rel 0.1
+%define		rel 1
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -137,7 +136,8 @@ Patch37:	%{name}-zlib-for-getimagesize.patch
 Patch38:	%{name}-ini-search-path.patch
 Patch39:	%{name}-versioning.patch
 Patch40:	%{name}-linkflags-clean.patch
-Patch41:	%{name}-krb5.patch
+# XXX: obsolete?
+Patch41:	%{name}-openssl-huge-hack.patch
 Patch42:	%{name}-apr-apu.patch
 Patch43:	%{name}-gd.patch
 Patch45:	%{name}-config-dir.patch
@@ -170,7 +170,7 @@ BuildRequires:	freetype-devel >= 2.0
 %{?with_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
-%{?with_imap:BuildRequires:	krb5-devel}
+%{?with_imap:BuildRequires:	heimdal-devel >= 0.7}
 %{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2}
 %{?with_java:BuildRequires:	jdk >= 1.1}
 %{?with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
@@ -189,7 +189,7 @@ BuildRequires:	libtool >= 1.4.3
 %{?with_mnogosearch:BuildRequires:	mnogosearch-devel >= 3.2.29}
 BuildRequires:	mysql-devel >= 3.23.32
 BuildRequires:	ncurses-ext-devel
-%{?with_ldap:BuildRequires:	openldap-devel >= 2.4.6}
+%{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
 %if %{with openssl} || %{with ldap}
 BuildRequires:	openssl-devel >= 0.9.7d
 %endif
@@ -1591,7 +1591,6 @@ cp php.ini-dist php.ini
 %{?with_versioning:%patch39 -p1}
 # XXX: I believe this one is obsolete as of 4.4.3
 #%patch41 -p1
-%patch41 -p1
 %patch42 -p1
 %patch43 -p1
 %patch45 -p1
