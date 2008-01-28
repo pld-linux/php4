@@ -13,7 +13,7 @@
  --libs)
  	echo $libs;;
 +--include-dir)
-+	echo $include_dir;;
++	echo $includedir;;
  --extension-dir)
  	echo $extension_dir;;
 +--sysconfdir)
