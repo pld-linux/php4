@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 5
+%define		rel 6
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -1813,7 +1813,7 @@ cp -af php_config.h.cli main/php_config.h
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}} \
-	$RPM_BUILD_ROOT/home/services/{httpd,apache}/icons \
+	$RPM_BUILD_ROOT%{_datadir}/apache-icons \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT{/etc/apache/conf.d,/etc/httpd/conf.d} \
 	$RPM_BUILD_ROOT%{_mandir}/man1
@@ -1866,13 +1866,13 @@ install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi.ini
 install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-cli.ini
 
 %if %{with apache1}
-install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/apache/icons
+install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{_datadir}/apache-icons
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/apache/conf.d/70_mod_php4.conf
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache.ini
 %endif
 
 %if %{with apache2}
-install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/httpd/icons
+install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{_datadir}/apache-icons
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/httpd/conf.d/70_mod_php4.conf
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache2handler.ini
 %endif
@@ -2587,7 +2587,7 @@ fi
 %dir %{_sysconfdir}/apache.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-apache.ini
 %attr(755,root,root) %{_libdir}/apache1/libphp4.so
-/home/services/apache/icons/*
+%{_datadir}/apache-icons/*
 %endif
 
 %if %{with apache2}
@@ -2598,7 +2598,7 @@ fi
 %dir %{_sysconfdir}/apache2handler.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-apache2handler.ini
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
-/home/services/httpd/icons/*
+%{_datadir}/apache-icons/*
 %endif
 
 %if %{with fcgi}
