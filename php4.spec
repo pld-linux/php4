@@ -350,6 +350,7 @@ Summary(pl.UTF-8):	php4 jako program CGI
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-cgi = %{epoch}:%{version}-%{release}
+Provides:	php(cgi)
 
 %description cgi
 php4 as CGI program.
