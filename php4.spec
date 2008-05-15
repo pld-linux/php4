@@ -8,7 +8,6 @@
 #  - php4-common-4.4.0-14 marks heimdal-libs-0.7.1-1 (cap heimdal-libs)
 #     heimdal-libs-0.7.1-1 marks openldap-libs-2.2.29-1 (cap liblber-2.2.so.7()(64bit))
 #       openldap-libs-2.2.29-1 marks cyrus-sasl-2.1.21-3 (cap cyrus-sasl)
-#  - php4-common-4.4.6-4 marks rpm-lib-4.4.2-43 (cap librpm-4.4.so()(64bit))
 #    php5-common doesn't have such deps
 #  - php4-cli pulls: libltdl
 # - above is caused by openssl linked in statically as openssl links with kerberos
@@ -73,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 3
+%define		rel 9
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -137,7 +136,8 @@ Patch37:	%{name}-zlib-for-getimagesize.patch
 Patch38:	%{name}-ini-search-path.patch
 Patch39:	%{name}-versioning.patch
 Patch40:	%{name}-linkflags-clean.patch
-Patch41:	%{name}-krb5.patch
+# XXX: obsolete?
+Patch41:	%{name}-openssl-huge-hack.patch
 Patch42:	%{name}-apr-apu.patch
 Patch43:	%{name}-gd.patch
 Patch45:	%{name}-config-dir.patch
@@ -170,7 +170,7 @@ BuildRequires:	freetype-devel >= 2.0
 %{?with_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
-%{?with_imap:BuildRequires:	krb5-devel}
+%{?with_imap:BuildRequires:	heimdal-devel >= 0.7}
 %{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2}
 %{?with_java:BuildRequires:	jdk >= 1.1}
 %{?with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
@@ -189,7 +189,7 @@ BuildRequires:	libtool >= 1.4.3
 %{?with_mnogosearch:BuildRequires:	mnogosearch-devel >= 3.2.29}
 BuildRequires:	mysql-devel >= 3.23.32
 BuildRequires:	ncurses-ext-devel
-%{?with_ldap:BuildRequires:	openldap-devel >= 2.4.6}
+%{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
 %if %{with openssl} || %{with ldap}
 BuildRequires:	openssl-devel >= 0.9.7d
 %endif
@@ -1591,7 +1591,6 @@ cp php.ini-dist php.ini
 %{?with_versioning:%patch39 -p1}
 # XXX: I believe this one is obsolete as of 4.4.3
 #%patch41 -p1
-%patch41 -p1
 %patch42 -p1
 %patch43 -p1
 %patch45 -p1
@@ -1813,7 +1812,7 @@ cp -af php_config.h.cli main/php_config.h
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}} \
-	$RPM_BUILD_ROOT/home/services/{httpd,apache}/icons \
+	$RPM_BUILD_ROOT%{_datadir}/apache-icons \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT{/etc/apache/conf.d,/etc/httpd/conf.d} \
 	$RPM_BUILD_ROOT%{_mandir}/man1
@@ -1866,13 +1865,11 @@ install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi.ini
 install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-cli.ini
 
 %if %{with apache1}
-install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/apache/icons
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/apache/conf.d/70_mod_php4.conf
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache.ini
 %endif
 
 %if %{with apache2}
-install %{SOURCE2} php.gif $RPM_BUILD_ROOT/home/services/httpd/icons
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/httpd/conf.d/70_mod_php4.conf
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache2handler.ini
 %endif
@@ -2587,7 +2584,6 @@ fi
 %dir %{_sysconfdir}/apache.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-apache.ini
 %attr(755,root,root) %{_libdir}/apache1/libphp4.so
-/home/services/apache/icons/*
 %endif
 
 %if %{with apache2}
@@ -2598,7 +2594,6 @@ fi
 %dir %{_sysconfdir}/apache2handler.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-apache2handler.ini
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
-/home/services/httpd/icons/*
 %endif
 
 %if %{with fcgi}
