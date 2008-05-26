@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 11
+%define		rel 12
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -1630,6 +1630,7 @@ if [ ! -f _built-conf ]; then # configure once (for faster debugging purposes)
 	rm -f Makefile.{fcgi,cgi,cli,apxs{1,2}} # now remove Makefile copies
 	%{__libtoolize}
 	%{__aclocal}
+	cp -f /usr/share/automake/config.{sub,guess} .
 	./buildconf --force
 	touch _built-conf
 fi
