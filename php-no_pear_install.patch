@@ -1,11 +1,12 @@
---- php-5.0.0b3.orig/configure.in	2003-12-24 17:30:44.000000000 +0100
-+++ php-5.0.0b3/configure.in	2003-12-24 17:31:45.000000000 +0100
-@@ -1149,7 +1149,7 @@
- CXXFLAGS="$CXXFLAGS $standard_libtool_flag"
- 
- all_targets="$lcov_target \$(OVERALL_TARGET) \$(PHP_MODULES) \$(PHP_CLI_TARGET)"
--install_targets="$install_modules install-build install-headers install-programs $install_pear"
-+install_targets="$install_modules install-build install-headers install-programs"
- 
+diff -urN php5.3-200806102030/configure.in mod/configure.in
+--- php5.3-200806102030/configure.in    2008-06-02 18:33:55.000000000 +0000
++++ mod/configure.in    2008-06-10 21:04:48.282651967 +0000
+@@ -1353,7 +1353,7 @@
+ fi;
+
+ all_targets="$lcov_target \$(OVERALL_TARGET) \$(PHP_MODULES) \$(PHP_ZEND_EX) \$(PHP_CLI_TARGET) \$(PHAR_TARGET) $pharcmd"
+-install_targets="$install_modules install-build install-headers install-programs $install_pear $pharcmd_install"
++install_targets="$install_modules install-build install-headers install-programs $pharcmd_install"
+
  case $PHP_SAPI in
-   cgi)
+   cli)
