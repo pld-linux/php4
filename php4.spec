@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 13
+%define		rel 14
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -145,6 +145,8 @@ Patch46:	%{name}-phpinfo_no_configure.patch
 Patch47:	%{name}-ming.patch
 Patch48:	%{name}-fcgi-graceful.patch
 Patch49:	%{name}-ac.patch
+Patch50:	%{name}-mime_magic.patch
+Patch51:	%{name}-tds.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -165,7 +167,7 @@ BuildRequires:	expat-devel
 %{?with_fdf:BuildRequires:	fdftk-devel}
 BuildRequires:	flex
 %if %{with mssql} || %{with sybase}
-BuildRequires:	freetds-devel
+BuildRequires:	freetds-devel >= 0.82
 %endif
 BuildRequires:	freetype-devel >= 2.0
 %{?with_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
@@ -181,7 +183,7 @@ BuildRequires:	libmcal-devel
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libtiff-devel
-BuildRequires:	libtool >= 1.4.3
+BuildRequires:	libtool >= 2.2
 %{?with_xml:BuildRequires:	libxml2-devel >= 2.2.7}
 %{?with_domxslt:BuildRequires:	libxslt-devel >= 1.0.3}
 %{?with_mhash:BuildRequires:	mhash-devel}
@@ -433,6 +435,7 @@ Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	autoconf
 Requires:	automake
+Requires:	libtool >= 2.2
 Obsoletes:	php-devel
 
 %description devel
@@ -1601,6 +1604,8 @@ cp php.ini-dist php.ini
 %patch47 -p1
 %patch48 -p1
 %patch49 -p1
+%patch50 -p1
+%patch51 -p1
 
 %if %{with hardening}
 zcat %{SOURCE8} | patch -p1
@@ -1903,6 +1908,14 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/{cgi,cli,cgi-fcgi,apache,apache2handler
 
 # for CLI SAPI only
 mv $RPM_BUILD_ROOT%{_sysconfdir}/{conf.d/{ncurses,pcntl,readline}.ini,cli.d}
+
+# use system automake and {lib,sh}tool
+ln -snf /usr/share/automake/config.{guess,sub} $RPM_BUILD_ROOT%{_libdir}/php/build
+for i in libtool.m4 lt~obsolete.m4 ltoptions.m4 ltsugar.m4 ltversion.m4; do
+        ln -snf %{_aclocaldir}/${i} $RPM_BUILD_ROOT%{_libdir}/php/build
+done
+ln -snf %{_datadir}/libtool/config/ltmain.sh $RPM_BUILD_ROOT%{_libdir}/php/build
+ln -snf %{_bindir}/shtool $RPM_BUILD_ROOT%{_libdir}/php/build
 
 # as a result of ext/pcre/pcrelib removal in %%prep, ext/pcre/php_pcre.h
 # isn't installed by install-headers make target, we do it manually here.
