@@ -20,3 +20,23 @@
    case $with_pic in
      yes) pic_setting='-prefer-pic';;
 
+--- php/scripts/phpize.in~	2008-06-16 10:54:51.923509081 +0200
++++ php/scripts/phpize.in	2008-06-16 10:55:50.376836101 +0200
+@@ -7,7 +7,7 @@
+ includedir="`eval echo @includedir@`/php"
+ builddir="`pwd`"
+ 
+-FILES_BUILD="mkdep.awk scan_makefile_in.awk shtool libtool.m4"
++FILES_BUILD="mkdep.awk scan_makefile_in.awk shtool libtool.m4 lt~obsolete.m4 ltoptions.m4 ltsugar.m4 ltversion.m4"
+ FILES="acinclude.m4 Makefile.global config.sub config.guess ltmain.sh"
+ CLEAN_FILES="$FILES *.o *.lo *.la .deps .libs/ build/ include/ modules/ install-sh \
+     mkinstalldirs missing config.nice config.sub config.guess configure configure.in \
+@@ -121,7 +121,7 @@
+  
+   (cd "$phpdir" && cp $FILES_BUILD "$builddir"/build)
+   (cd "$phpdir" && cp $FILES "$builddir")
+-  (cd "$builddir" && cat acinclude.m4 ./build/libtool.m4 > aclocal.m4)
++  (cd "$builddir" && cat acinclude.m4 ./build/{libtool,lt~obsolete,ltoptions,ltsugar,ltversion}.m4 > aclocal.m4)
+ }
+ 
+ phpize_replace_prefix()
