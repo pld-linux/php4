@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 14
+%define		rel 15
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -126,7 +126,6 @@ Patch25:	%{name}-no_pear_install.patch
 Patch26:	%{name}-zlib.patch
 Patch27:	%{name}-db-shared.patch
 Patch28:	%{name}-sybase-fix.patch
-Patch29:	%{name}-lib64.patch
 Patch30:	%{name}-mnogosearch-fix.patch
 Patch31:	%{name}-stupidapache_version.patch
 Patch33:	%{name}-uint32_t.patch
@@ -147,6 +146,7 @@ Patch48:	%{name}-fcgi-graceful.patch
 Patch49:	%{name}-ac.patch
 Patch50:	%{name}-mime_magic.patch
 Patch51:	%{name}-tds.patch
+Patch52:	%{name}-lib64.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -1582,9 +1582,7 @@ cp php.ini-dist php.ini
 %patch26 -p1
 %patch27 -p1
 %patch28 -p1
-%if "%{_lib}" == "lib64"
-%patch29 -p1
-%endif
+
 %patch30 -p1
 %patch31 -p1
 %patch33 -p1
@@ -1606,6 +1604,9 @@ cp php.ini-dist php.ini
 %patch49 -p1
 %patch50 -p1
 %patch51 -p1
+%if "%{_lib}" == "lib64"
+%patch52 -p1
+%endif
 
 %if %{with hardening}
 zcat %{SOURCE8} | patch -p1
