@@ -810,7 +810,9 @@ Moduł PHP dodający obsługę Hyperwave.
 Summary:	iconv extension module for PHP
 Summary(pl.UTF-8):	Moduł iconv dla PHP
 Group:		Libraries
+Requires:	%{_libdir}/gconv
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Requires:	iconv
 Provides:	php(iconv)
 
 %description iconv
