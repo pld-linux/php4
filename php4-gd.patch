@@ -34,35 +34,6 @@ diff -urN php-4.4.8.org/ext/gd/CREDITS php-4.4.8/ext/gd/CREDITS
 diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
 --- php-4.4.8.org/ext/gd/gd.c	2007-12-31 08:22:47.000000000 +0100
 +++ php-4.4.8/ext/gd/gd.c	2008-01-22 22:38:05.837148890 +0100
-@@ -1,8 +1,8 @@
- /*
-    +----------------------------------------------------------------------+
--   | PHP Version 4                                                        |
-+   | PHP Version 5                                                        |
-    +----------------------------------------------------------------------+
--   | Copyright (c) 1997-2008 The PHP Group                                |
-+   | Copyright (c) 1997-2007 The PHP Group                                |
-    +----------------------------------------------------------------------+
-    | This source file is subject to version 3.01 of the PHP license,      |
-    | that is bundled with this package in the file LICENSE, and is        |
-@@ -13,14 +13,14 @@
-    | license@php.net so we can mail you a copy immediately.               |
-    +----------------------------------------------------------------------+
-    | Authors: Rasmus Lerdorf <rasmus@php.net>                             |
--   |          Stig Bakken <ssb@fast.no>                                   |
-+   |          Stig Bakken <ssb@php.net>                                   |
-    |          Jim Winstead <jimw@php.net>                                 |
-    +----------------------------------------------------------------------+
-  */
- 
--/* $Id$ */
-+/* $Id$ */
- 
--/* gd 1.2 is copyright 1994, 1995, Quest Protein Database Center, 
-+/* gd 1.2 is copyright 1994, 1995, Quest Protein Database Center,
-    Cold Spring Harbor Labs. */
- 
- /* Note that there is no code from the gd package in this file */
 @@ -29,7 +29,13 @@
  #include "config.h"
  #endif
