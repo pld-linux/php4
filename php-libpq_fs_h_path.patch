@@ -1,12 +1,12 @@
-diff -burN php-5.0.0b3/ext/pgsql/php_pgsql.h php-5.0.0b3-libpq_fs_h_path/ext/pgsql/php_pgsql.h
---- php-5.0.0b3/ext/pgsql/php_pgsql.h	2003-12-05 02:03:35.000000000 +0100
-+++ php-5.0.0b3-libpq_fs_h_path/ext/pgsql/php_pgsql.h	2003-12-26 22:30:20.000000000 +0100
-@@ -43,7 +43,7 @@
+diff -urN php5.3-200803022130/ext/pgsql/php_pgsql.h mod/ext/pgsql/php_pgsql.h
+--- php5.3-200803022130/ext/pgsql/php_pgsql.h	2008-01-30 11:31:48.000000000 +0000
++++ mod/ext/pgsql/php_pgsql.h	2008-03-02 22:27:42.292062316 +0000
+@@ -41,7 +41,7 @@
  #define PHP_PGSQL_API __declspec(dllimport)
  #endif
  #else
 -#include <libpq/libpq-fs.h>
 +#include <postgresql/server/libpq/libpq-fs.h>
- #define PHP_PGSQL_API /* nothing special */
- #endif
- 
+ # if defined(__GNUC__) && __GNUC__ >= 4
+ #  define PHP_PGSQL_API __attribute__ ((visibility("default")))
+ # else
