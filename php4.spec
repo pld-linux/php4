@@ -8,6 +8,7 @@
 #  - php4-common-4.4.0-14 marks heimdal-libs-0.7.1-1 (cap heimdal-libs)
 #     heimdal-libs-0.7.1-1 marks openldap-libs-2.2.29-1 (cap liblber-2.2.so.7()(64bit))
 #       openldap-libs-2.2.29-1 marks cyrus-sasl-2.1.21-3 (cap cyrus-sasl)
+#  - php4-common-4.4.6-4 marks rpm-lib-4.4.2-43 (cap librpm-4.4.so()(64bit))
 #    php5-common doesn't have such deps
 #  - php4-cli pulls: libltdl
 # - above is caused by openssl linked in statically as openssl links with kerberos
@@ -72,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 13
+%define		rel 1
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -80,13 +81,13 @@ Summary(pt_BR.UTF-8):	A linguagem de script PHP
 Summary(ru.UTF-8):	PHP Версии 4 - язык препроцессирования HTML-файлов, выполняемый на сервере
 Summary(uk.UTF-8):	PHP Версії 4 - мова препроцесування HTML-файлів, виконувана на сервері
 Name:		php4
-Version:	4.4.8
+Version:	4.4.9
 Release:	%{rel}%{?with_hardening:hardened}
 Epoch:		3
 License:	PHP
 Group:		Libraries
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
-# Source0-md5:	ed31e77414e0331e787487b53732dbca
+# Source0-md5:	2e3b2a0e27f10cb84fd00e5ecd7a1880
 #Source0:	http://cvs.php.net/viewvc.cgi/phpweb/distributions/php-%{version}.tar.bz2?revision=1.1
 Source2:	zend.gif
 Source3:	%{name}-mod_php.conf
@@ -350,6 +351,7 @@ Summary(pl.UTF-8):	php4 jako program CGI
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Provides:	php-cgi = %{epoch}:%{version}-%{release}
+Provides:	php(cgi)
 
 %description cgi
 php4 as CGI program.
@@ -1867,11 +1869,13 @@ install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi.ini
 install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-cli.ini
 
 %if %{with apache1}
+install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{_datadir}/apache-icons
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/apache/conf.d/70_mod_php4.conf
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache.ini
 %endif
 
 %if %{with apache2}
+install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{_datadir}/apache-icons
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/httpd/conf.d/70_mod_php4.conf
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache2handler.ini
 %endif
@@ -2586,6 +2590,7 @@ fi
 %dir %{_sysconfdir}/apache.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-apache.ini
 %attr(755,root,root) %{_libdir}/apache1/libphp4.so
+%{_datadir}/apache-icons/*
 %endif
 
 %if %{with apache2}
@@ -2596,6 +2601,7 @@ fi
 %dir %{_sysconfdir}/apache2handler.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-apache2handler.ini
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
+%{_datadir}/apache-icons/*
 %endif
 
 %if %{with fcgi}
