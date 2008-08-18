@@ -431,10 +431,10 @@ diff -urbB php-4.4.0.org/ext/mssql/config.m4 php-4.4.0/ext/mssql/config.m4
      fi
    fi  
  
--  if test ! -r "$FREETDS_INSTALLATION_DIR/lib/libsybdb.a" && test ! -r "$FREETDS_INSTALLATION_DIR/lib/libsybdb.so"; then
--     AC_MSG_ERROR(Could not find $FREETDS_INSTALLATION_DIR/lib/libsybdb.[a|so])
-+  if test ! -r "$FREETDS_INSTALLATION_DIR/lib64/libsybdb.a" && test ! -r "$FREETDS_INSTALLATION_DIR/lib64/libsybdb.so"; then
-+     AC_MSG_ERROR(Could not find $FREETDS_INSTALLATION_DIR/lib64/libsybdb.[a|so])
+-  if test ! -r "$FREETDS_INSTALLATION_DIR/lib/libtds.a" && test ! -r "$FREETDS_INSTALLATION_DIR/lib/libtds.so"; then
+-     AC_MSG_ERROR(Could not find $FREETDS_INSTALLATION_DIR/lib/libtds.[a|so])
++  if test ! -r "$FREETDS_INSTALLATION_DIR/lib64/libtds.a" && test ! -r "$FREETDS_INSTALLATION_DIR/lib64/libtds.so"; then
++     AC_MSG_ERROR(Could not find $FREETDS_INSTALLATION_DIR/lib64/libtds.[a|so])
    fi
  
    MSSQL_INCDIR=$FREETDS_INSTALLATION_DIR/include
