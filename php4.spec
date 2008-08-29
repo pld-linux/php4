@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 1
+%define		rel 3
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -89,7 +89,6 @@ Group:		Libraries
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
 # Source0-md5:	2e3b2a0e27f10cb84fd00e5ecd7a1880
 #Source0:	http://cvs.php.net/viewvc.cgi/phpweb/distributions/php-%{version}.tar.bz2?revision=1.1
-Source2:	zend.gif
 Source3:	%{name}-mod_php.conf
 Source4:	%{name}-cgi-fcgi.ini
 Source5:	%{name}-cgi.ini
@@ -126,6 +125,7 @@ Patch25:	%{name}-no_pear_install.patch
 Patch26:	%{name}-zlib.patch
 Patch27:	%{name}-db-shared.patch
 Patch28:	%{name}-sybase-fix.patch
+Patch29:	%{name}-lib64.patch
 Patch30:	%{name}-mnogosearch-fix.patch
 Patch31:	%{name}-stupidapache_version.patch
 Patch33:	%{name}-uint32_t.patch
@@ -136,17 +136,14 @@ Patch37:	%{name}-zlib-for-getimagesize.patch
 Patch38:	%{name}-ini-search-path.patch
 Patch39:	%{name}-versioning.patch
 Patch40:	%{name}-linkflags-clean.patch
-Patch41:	%{name}-krb5.patch
+# XXX: obsolete?
+Patch41:	%{name}-openssl-huge-hack.patch
 Patch42:	%{name}-apr-apu.patch
 Patch43:	%{name}-gd.patch
 Patch45:	%{name}-config-dir.patch
 Patch46:	%{name}-phpinfo_no_configure.patch
 Patch47:	%{name}-ming.patch
 Patch48:	%{name}-fcgi-graceful.patch
-Patch49:	%{name}-ac.patch
-Patch50:	%{name}-mime_magic.patch
-Patch51:	%{name}-tds.patch
-Patch52:	%{name}-lib64.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -167,13 +164,13 @@ BuildRequires:	expat-devel
 %{?with_fdf:BuildRequires:	fdftk-devel}
 BuildRequires:	flex
 %if %{with mssql} || %{with sybase}
-BuildRequires:	freetds-devel >= 0.82
+BuildRequires:	freetds-devel
 %endif
 BuildRequires:	freetype-devel >= 2.0
 %{?with_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
-%{?with_imap:BuildRequires:	krb5-devel}
+%{?with_imap:BuildRequires:	heimdal-devel >= 0.7}
 %{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2}
 %{?with_java:BuildRequires:	jdk >= 1.1}
 %{?with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
@@ -183,11 +180,11 @@ BuildRequires:	libmcal-devel
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libtiff-devel
-BuildRequires:	libtool >= 2.2
+BuildRequires:	libtool >= 1.4.3
 %{?with_xml:BuildRequires:	libxml2-devel >= 2.2.7}
 %{?with_domxslt:BuildRequires:	libxslt-devel >= 1.0.3}
 %{?with_mhash:BuildRequires:	mhash-devel}
-%{?with_ming:BuildRequires:	ming-devel >= 0.1.0}
+%{?with_ming:BuildRequires:	ming-devel >= 0.3.0}
 %{?with_mm:BuildRequires:	mm-devel >= 1.3.0}
 %{?with_mnogosearch:BuildRequires:	mnogosearch-devel >= 3.2.29}
 BuildRequires:	mysql-devel >= 3.23.32
@@ -435,7 +432,6 @@ Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	autoconf
 Requires:	automake
-Requires:	libtool >= 2.2
 Obsoletes:	php-devel
 
 %description devel
@@ -1584,7 +1580,9 @@ cp php.ini-dist php.ini
 %patch26 -p1
 %patch27 -p1
 %patch28 -p1
-
+%if "%{_lib}" == "lib64"
+%patch29 -p1
+%endif
 %patch30 -p1
 %patch31 -p1
 %patch33 -p1
@@ -1596,19 +1594,12 @@ cp php.ini-dist php.ini
 %{?with_versioning:%patch39 -p1}
 # XXX: I believe this one is obsolete as of 4.4.3
 #%patch41 -p1
-%patch41 -p1
 %patch42 -p1
 %patch43 -p1
 %patch45 -p1
 %patch46 -p1
 %patch47 -p1
 %patch48 -p1
-%patch49 -p1
-%patch50 -p1
-%patch51 -p1
-%if "%{_lib}" == "lib64"
-%patch52 -p1
-%endif
 
 %if %{with hardening}
 zcat %{SOURCE8} | patch -p1
@@ -1640,7 +1631,6 @@ if [ ! -f _built-conf ]; then # configure once (for faster debugging purposes)
 	rm -f Makefile.{fcgi,cgi,cli,apxs{1,2}} # now remove Makefile copies
 	%{__libtoolize}
 	%{__aclocal}
-	cp -f /usr/share/automake/config.{sub,guess} .
 	./buildconf --force
 	touch _built-conf
 fi
@@ -1825,7 +1815,6 @@ cp -af php_config.h.cli main/php_config.h
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}} \
-	$RPM_BUILD_ROOT%{_datadir}/apache-icons \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT{/etc/apache/conf.d,/etc/httpd/conf.d} \
 	$RPM_BUILD_ROOT%{_mandir}/man1
@@ -1878,13 +1867,11 @@ install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-cgi.ini
 install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/php-cli.ini
 
 %if %{with apache1}
-install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{_datadir}/apache-icons
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/apache/conf.d/70_mod_php4.conf
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache.ini
 %endif
 
 %if %{with apache2}
-install %{SOURCE2} php.gif $RPM_BUILD_ROOT%{_datadir}/apache-icons
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/httpd/conf.d/70_mod_php4.conf
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/php-apache2handler.ini
 %endif
@@ -1911,14 +1898,6 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/{cgi,cli,cgi-fcgi,apache,apache2handler
 
 # for CLI SAPI only
 mv $RPM_BUILD_ROOT%{_sysconfdir}/{conf.d/{ncurses,pcntl,readline}.ini,cli.d}
-
-# use system automake and {lib,sh}tool
-ln -snf /usr/share/automake/config.{guess,sub} $RPM_BUILD_ROOT%{_libdir}/php/build
-for i in libtool.m4 lt~obsolete.m4 ltoptions.m4 ltsugar.m4 ltversion.m4; do
-        ln -snf %{_aclocaldir}/${i} $RPM_BUILD_ROOT%{_libdir}/php/build
-done
-ln -snf %{_datadir}/libtool/config/ltmain.sh $RPM_BUILD_ROOT%{_libdir}/php/build
-ln -snf %{_bindir}/shtool $RPM_BUILD_ROOT%{_libdir}/php/build
 
 # as a result of ext/pcre/pcrelib removal in %%prep, ext/pcre/php_pcre.h
 # isn't installed by install-headers make target, we do it manually here.
@@ -2607,7 +2586,6 @@ fi
 %dir %{_sysconfdir}/apache.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-apache.ini
 %attr(755,root,root) %{_libdir}/apache1/libphp4.so
-%{_datadir}/apache-icons/*
 %endif
 
 %if %{with apache2}
@@ -2618,7 +2596,6 @@ fi
 %dir %{_sysconfdir}/apache2handler.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-apache2handler.ini
 %attr(755,root,root) %{_libdir}/apache/libphp4.so
-%{_datadir}/apache-icons/*
 %endif
 
 %if %{with fcgi}
