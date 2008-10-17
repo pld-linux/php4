@@ -13,3 +13,23 @@ diff -burN php-4.3.9RC2.orig/ext/mnogosearch/config.m4 php-4.3.9RC2/ext/mnogosea
      PHP_SUBST(MNOGOSEARCH_SHARED_LIBADD)
      
    fi
+--- php-4.4.9/ext/mnogosearch/php_mnogo.c.org	2008-10-17 19:01:41.224322154 +0200
++++ php-4.4.9/ext/mnogosearch/php_mnogo.c	2008-10-17 19:07:34.984802087 +0200
+@@ -902,7 +902,7 @@
+ 				php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s",Agent->Conf->errstr);
+ 				RETURN_FALSE;
+ #if UDM_VERSION_ID >= 30204
+-			} else UdmSynonymListSort(&(Agent->Conf->Synonyms));
++			} else UdmSynonymListSort(&(Agent->Conf->Synonym));
+ #else
+ 			} else UdmSynonymListSort(&(Agent->Conf->SynList));
+ #endif			
+@@ -1819,7 +1819,7 @@
+ 		if (UdmSynonymListLoad(Agent->Conf,val)) {
+ 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s",Agent->Conf->errstr);
+ 			RETURN_FALSE;
+-		} else UdmSynonymListSort(&(Agent->Conf->Synonyms));
++		} else UdmSynonymListSort(&(Agent->Conf->Synonym));
+ 	} else if (!strcasecmp(var,"Stopwordfile")) {
+ 		if (UdmStopListLoad(Agent->Conf,val)) {
+ 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", Agent->Conf->errstr);
