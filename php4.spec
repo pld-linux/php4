@@ -45,6 +45,7 @@
 %bcond_without	wddx		# without WDDX extension module
 %bcond_without	xml		# without XML and DOMXML extension modules
 %bcond_without	xmlrpc		# without XML-RPC extension module
+%bcond_with     system_xmlrpc_epi       # use system xmlrpc-epi library (broken on 64bit arches, see http://bugs.php.net/41611)
 %bcond_without	xslt		# without XSLT extension module
 %bcond_without	yaz		# without YAZ extension module
 %bcond_without	apache1		# disable building apache 1.3.x module
@@ -71,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 7
+%define		rel 8
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -209,7 +210,7 @@ BuildRequires:	rpmbuild(macros) >= 1.236
 BuildRequires:	sed >= 4.0
 BuildRequires:	t1lib-devel
 %{?with_odbc:BuildRequires:	unixODBC-devel}
-%{?with_xmlrpc:BuildRequires:	xmlrpc-epi-devel}
+%{?with_system_xmlrpc_epi:BuildRequires:	xmlrpc-epi-devel}
 %{?with_yaz:BuildRequires:	yaz-devel >= 1.9}
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.0.9
@@ -1777,7 +1778,7 @@ for sapi in $sapis; do
 	--with-t1lib=shared \
 	--with-tiff-dir=/usr \
 	%{?with_xml:--with-dom=shared} \
-	%{!?with_xmlrpc:--without-xmlrpc}%{?with_xmlrpc:--with-xmlrpc=shared,/usr} \
+	%{!?with_xmlrpc:--without-xmlrpc}%{?with_xmlrpc:--with-xmlrpc=shared%{?with_system_xmlrpc_epi:,/usr}} \
 	%{?with_xslt:--with-xslt-sablot=shared} --without-sablot-js \
 	%{?with_yaz:--with-yaz=shared} \
 	--with-zip=shared \
