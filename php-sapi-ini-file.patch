@@ -1,14 +1,20 @@
---- php5.2-200710301730/main/php_ini.c	2007-08-31 11:31:28.000000000 +0300
-+++ php5.2-200710301730-sapi-ini-file/main/php_ini.c	2007-10-30 21:28:48.493329368 +0200
-@@ -463,6 +463,24 @@
- 				}
+--- php-5.2.7/main/php_ini.c.org	2008-12-05 23:30:07.843241117 +0100
++++ php-5.2.7/main/php_ini.c	2008-12-05 23:36:18.096968965 +0100
+@@ -475,21 +475,32 @@
  			}
  		}
+ 
+-		/* Otherwise search for php-%sapi-module-name%.ini file in search path */
 +		/* Search (global) php.ini file in search path */
-+		if (!fh.handle.fp) {
+ 		if (!fh.handle.fp) {
+-			const char *fmt = "php-%s.ini";
+-			char *ini_fname;
+-			spprintf(&ini_fname, 0, fmt, sapi_module.name);
+-			fh.handle.fp = php_fopen_with_path(ini_fname, "r", php_ini_search_path, &php_ini_opened_path TSRMLS_CC);
+-			efree(ini_fname);
 +			fh.handle.fp = php_fopen_with_path("php.ini", "r", php_ini_search_path, &php_ini_opened_path TSRMLS_CC);
-+			if (fh.handle.fp) {
-+				fh.filename = php_ini_opened_path;
+ 			if (fh.handle.fp) {
+ 				fh.filename = php_ini_opened_path;
 +				PG(safe_mode) = safe_mode_state;
 +				PG(open_basedir) = open_basedir;
 +				fh.type = ZEND_HANDLE_FP;
@@ -20,28 +26,24 @@
 +				fh.handle.fp = NULL;
 +				efree(php_ini_opened_path);
 +				fh.filename = php_ini_opened_path = NULL;
-+			}
-+		}
- 		/* Search php-%sapi-module-name%.ini file in search path */
- 		if (!fh.handle.fp) {
- 			const char *fmt = "php-%s.ini";
-@@ -474,13 +492,6 @@
- 				fh.filename = php_ini_opened_path;
  			}
  		}
--		/* Search php.ini file in search path */
--		if (!fh.handle.fp) {
--			fh.handle.fp = php_fopen_with_path("php.ini", "r", php_ini_search_path, &php_ini_opened_path TSRMLS_CC);
--			if (fh.handle.fp) {
--				fh.filename = php_ini_opened_path;
--			}
--		}
- 	}
  
- 	if (free_ini_search_path) {
-@@ -513,9 +524,13 @@
- 	 * parse any .ini files found in this directory. */
- 	if (!sapi_module.php_ini_ignore && strlen(PHP_CONFIG_FILE_SCAN_DIR)) {
+-		/* If still no ini file found, search for php.ini file in search path */
++		/* Otherwise search for php-%sapi-module-name%.ini file in search path */
+ 		if (!fh.handle.fp) {
+-			fh.handle.fp = php_fopen_with_path("php.ini", "r", php_ini_search_path, &php_ini_opened_path TSRMLS_CC);
++			const char *fmt = "php-%s.ini";
++			char *ini_fname;
++			spprintf(&ini_fname, 0, fmt, sapi_module.name);
++			fh.handle.fp = php_fopen_with_path(ini_fname, "r", php_ini_search_path, &php_ini_opened_path TSRMLS_CC);
++			efree(ini_fname);
+ 			if (fh.handle.fp) {
+ 				fh.filename = php_ini_opened_path;
+ 			}
+@@ -533,9 +544,13 @@
+ 	/* Scan and parse any .ini files found in scan path if path not empty. */
+ 	if (!sapi_module.php_ini_ignore && php_ini_scanned_path_len) {
  		struct dirent **namelist;
 -		int ndir, i;
 +		int ndir, i, found = 0;
@@ -49,28 +51,19 @@
 +		char *sapi_scan_dir = emalloc(strlen(fmt) + strlen(sapi_module.name));
 +		sprintf(sapi_scan_dir, fmt, sapi_module.name);
  
- 		if ((ndir = php_scandir(PHP_CONFIG_FILE_SCAN_DIR, &namelist, 0, php_alphasort)) > 0) {
+ 		if ((ndir = php_scandir(php_ini_scanned_path, &namelist, 0, php_alphasort)) > 0) {
 +			found += ndir;
  			for (i = 0; i < ndir; i++) {
  				/* check for a .ini extension */
  				if (!(p = strrchr(namelist[i]->d_name, '.')) || (p && strcmp(p, ".ini"))) {
-@@ -532,6 +547,35 @@
- 							/* Here, add it to the list of ini files read */
- 							l = strlen(ini_file);
- 							total_l += l + 2;
-+							p = estrndup(ini_file, l); 
-+							zend_llist_add_element(&scanned_ini_list, &p);
-+						}
-+					}
-+				}
-+				free(namelist[i]);
-+			}
-+			free(namelist);
+@@ -564,6 +579,38 @@
+ 				free(namelist[i]);
+ 			}
+ 			free(namelist);
 +		}
-+
++		
 +		if ((ndir = php_scandir(sapi_scan_dir, &namelist, 0, php_alphasort)) > 0) {
 +			found += ndir;
-+
 +			for (i = 0; i < ndir; i++) {
 +				/* check for a .ini extension */
 +				if (!(p = strrchr(namelist[i]->d_name, '.')) || (p && strcmp(p, ".ini"))) {
@@ -87,19 +80,18 @@
 +							/* Here, add it to the list of ini files read */
 +							l = strlen(ini_file);
 +							total_l += l + 2;
- 							p = estrndup(ini_file, l);
- 							zend_llist_add_element(&scanned_ini_list, &p);
- 						}
-@@ -540,8 +584,11 @@
- 				free(namelist[i]);
- 			}
- 			free(namelist);
++							p = estrndup(ini_file, l);
++							zend_llist_add_element(&scanned_ini_list, &p);
++						}
++					}
++				}
++				free(namelist[i]);
++			}
++			free(namelist);
 +		}
 +		efree(sapi_scan_dir);
- 
--			/*
++
 +		if (found) {
-+			/* 
+ 
+ 			/*
  			 * Don't need an extra byte for the \0 in this malloc as the last
- 			 * element will not get a trailing , which gives us the byte for the \0
- 			 */
