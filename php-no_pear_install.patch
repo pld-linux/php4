@@ -1,6 +1,6 @@
---- php-5.0.0b3.orig/configure.in	2003-12-24 17:30:44.000000000 +0100
-+++ php-5.0.0b3/configure.in	2003-12-24 17:31:45.000000000 +0100
-@@ -1343,7 +1343,7 @@
+--- php-5.2.7/configure.in~	2008-12-05 13:00:48.000000000 +0200
++++ php-5.2.7/configure.in	2008-12-05 13:02:07.458670585 +0200
+@@ -1328,7 +1328,7 @@
  CXXFLAGS="$CXXFLAGS $standard_libtool_flag"
  
  all_targets="$lcov_target \$(OVERALL_TARGET) \$(PHP_MODULES) \$(PHP_ZEND_EX) \$(PHP_CLI_TARGET)"
