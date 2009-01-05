@@ -26,7 +26,7 @@
  
  ;;;;;;;;;;;;;;;;;;;
  ; About php.ini   ;
-@@ -59,11 +64,73 @@
+@@ -59,10 +64,72 @@
  ;;;;;;;;;;;;;;;;;;;
  ; About this file ;
  ;;;;;;;;;;;;;;;;;;;
@@ -36,7 +36,7 @@
 +; If you use constants in your value, and these constants belong to a
 +; dynamically loaded extension (either a PHP extension or a Zend extension),
 +; you may only use these constants *after* the line that loads the extension.
- 
++
  
 +; Below is the list of settings changed from default as specified in
 +; php.ini-recommended. These settings make PHP more secure and encourage
@@ -99,10 +99,9 @@
 +;     It's not possible to decide to force a variable to be passed by reference
 +;     when calling a function.  The PHP 4 style to do this is by making the
 +;     function require the relevant argument by reference.
-+
+ 
  ;;;;;;;;;;;;;;;;;;;;
  ; Language Options ;
- ;;;;;;;;;;;;;;;;;;;;
 @@ -86,7 +153,7 @@
  asp_tags = Off
  
@@ -150,6 +149,15 @@
  
  ; Set maximum length of log_errors. In error_log information about the source is
  ; added. The default is 1024 and 0 allows to not apply any maximum length at all.
+@@ -352,7 +421,7 @@
+ ;report_zend_debug = 0
+ 
+ ; Store the last error/warning message in $php_errormsg (boolean).
+-track_errors = Off
++track_errors = On
+ 
+ ; Turn off normal error reporting and emit XML-RPC error XML
+ ;xmlrpc_errors = 0
 @@ -361,7 +430,7 @@
  
  ; Disable the inclusion of HTML tags in error messages.
