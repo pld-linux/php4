@@ -124,11 +124,11 @@
  ;
  ;   - Show all errors except for notices and coding standards warnings
  ;
--error_reporting  =  E_ALL & ~E_NOTICE
+-error_reporting = E_ALL & ~E_NOTICE
 +;error_reporting  =  E_ALL & ~E_NOTICE
 +
 +error_reporting  =  E_ALL
- 
+
  ; Print out errors (as a part of the output).  For production web sites,
  ; you're strongly encouraged to turn this feature off, and use error logging
 @@ -319,7 +388,7 @@
