@@ -1,6 +1,5 @@
-diff -ur php5.3-200808101830/php.ini mod/php.ini
---- php5.3-200808101830/php.ini	2008-08-10 21:52:36.034263222 +0000
-+++ mod/php.ini	2008-08-10 21:51:30.527603438 +0000
+--- mod/php.ini	2008-08-10 21:51:30.527603438 +0000
++++ php5.3-200904152030/php.ini	2009-04-24 01:26:05.434886222 +0300
 @@ -1,26 +1,21 @@
  [PHP]
  
@@ -50,6 +49,15 @@ diff -ur php5.3-200808101830/php.ini mod/php.ini
  
  ; Enforce year 2000 compliance (will cause problems with non-compliant browsers)
  y2k_compliance = On
+@@ -228,7 +223,7 @@
+ ; Development Value: Off
+ ; Production Value: Off
+ ; http://php.net/short-open-tag
+-short_open_tag = Off
++short_open_tag = On
+ 
+ ; Allow ASP-style <% %> tags.
+ ; http://php.net/asp-tags
 @@ -253,7 +248,7 @@
  ; (e.g. by adding its signature to the Web server header).  It is no security
  ; threat in any way, but it makes it possible to determine whether you use PHP
