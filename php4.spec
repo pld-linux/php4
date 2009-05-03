@@ -47,7 +47,7 @@
 %bcond_without	xmlrpc		# without XML-RPC extension module
 %bcond_with     system_xmlrpc_epi       # use system xmlrpc-epi library (broken on 64bit arches, see http://bugs.php.net/41611)
 %bcond_without	xslt		# without XSLT extension module
-%bcond_without	yaz		# without YAZ extension module
+%bcond_with	yaz		# without YAZ extension module
 %bcond_without	apache1		# disable building apache 1.3.x module
 %bcond_without	apache2		# disable building apache 2.x module
 %bcond_without	fcgi		# disable building FCGI SAPI
@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 11
+%define		rel 12
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
