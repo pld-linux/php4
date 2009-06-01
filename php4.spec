@@ -171,7 +171,7 @@ BuildRequires:	freetype-devel >= 2.0
 %{?with_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
-%{?with_imap:BuildRequires:	krb5-devel}
+%{?with_imap:BuildRequires:	heimdal-devel >= 0.7}
 %{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2}
 %{?with_java:BuildRequires:	jdk >= 1.1}
 %{?with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
@@ -181,11 +181,15 @@ BuildRequires:	libmcal-devel
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libtiff-devel
-BuildRequires:	libtool >= 2.2
+%if "%{pld_release}" != "ac"
+BuildRequires:	libtool >= 2:2.2
+%else
+BuildRequires:	libtool >= 1.4.3
+%endif
 %{?with_xml:BuildRequires:	libxml2-devel >= 2.2.7}
 %{?with_domxslt:BuildRequires:	libxslt-devel >= 1.0.3}
 %{?with_mhash:BuildRequires:	mhash-devel}
-%{?with_ming:BuildRequires:	ming-devel >= 0.1.0}
+%{?with_ming:BuildRequires:	ming-devel >= 0.3.0}
 %{?with_mm:BuildRequires:	mm-devel >= 1.3.0}
 %{?with_mnogosearch:BuildRequires:	mnogosearch-devel >= 3.2.29}
 BuildRequires:	mysql-devel >= 3.23.32
@@ -204,6 +208,7 @@ BuildRequires:	pcre-devel
 %{?with_qtdom:BuildRequires:	qt-devel >= 2.2.0}
 BuildRequires:	readline-devel
 %{?with_recode:BuildRequires:	recode-devel >= 3.5d-3}
+BuildRequires:	rpm >= 4.4.9-56
 BuildRequires:	rpm-build >= 4.4.0
 BuildRequires:	rpmbuild(macros) >= 1.236
 %{?with_xslt:BuildRequires:	sablotron-devel >= 0.96}
@@ -433,7 +438,11 @@ Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	autoconf
 Requires:	automake
-Requires:	libtool >= 2.2
+%if "%{pld_release}" != "ac"
+Requires:	libtool >= 2:2.2
+%else
+Requires:	libtool
+%endif
 Obsoletes:	php-devel
 
 %description devel
@@ -1908,11 +1917,16 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/{cgi,cli,cgi-fcgi,apache,apache2handler
 mv $RPM_BUILD_ROOT%{_sysconfdir}/{conf.d/{ncurses,pcntl,readline}.ini,cli.d}
 
 # use system automake and {lib,sh}tool
-ln -snf /usr/share/automake/config.{guess,sub} $RPM_BUILD_ROOT%{_libdir}/php/build
-for i in libtool.m4 lt~obsolete.m4 ltoptions.m4 ltsugar.m4 ltversion.m4; do
-        ln -snf %{_aclocaldir}/${i} $RPM_BUILD_ROOT%{_libdir}/php/build
-done
-ln -snf %{_datadir}/libtool/config/ltmain.sh $RPM_BUILD_ROOT%{_libdir}/php/build
+%if "%{pld_release}" != "ac"
+	ln -snf /usr/share/automake/config.{guess,sub} $RPM_BUILD_ROOT%{_libdir}/php/build
+	for i in libtool.m4 lt~obsolete.m4 ltoptions.m4 ltsugar.m4 ltversion.m4; do
+		ln -snf %{_aclocaldir}/${i} $RPM_BUILD_ROOT%{_libdir}/php/build
+	done
+	ln -snf %{_datadir}/libtool/config/ltmain.sh $RPM_BUILD_ROOT%{_libdir}/php/build
+%else
+	ln -snf %{_aclocaldir}/libtool.m4 $RPM_BUILD_ROOT%{_libdir}/php/build
+	ln -snf %{_datadir}/libtool/ltmain.sh $RPM_BUILD_ROOT%{_libdir}/php/build
+%endif
 ln -snf %{_bindir}/shtool $RPM_BUILD_ROOT%{_libdir}/php/build
 
 # as a result of ext/pcre/pcrelib removal in %%prep, ext/pcre/php_pcre.h
