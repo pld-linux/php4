@@ -171,7 +171,11 @@ BuildRequires:	freetype-devel >= 2.0
 %{?with_fribidi:BuildRequires:	fribidi-devel >= 0.10.4}
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
+%if "%{pld_release}" != "ac"
+%{?with_imap:BuildRequires:	krb5-devel}
+%else
 %{?with_imap:BuildRequires:	heimdal-devel >= 0.7}
+%endif
 %{?with_imap:BuildRequires:	imap-devel >= 1:2001-0.BETA.200107022325.2}
 %{?with_java:BuildRequires:	jdk >= 1.1}
 %{?with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
