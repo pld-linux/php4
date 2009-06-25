@@ -1,0 +1,42 @@
+--- php-4.3.0/acinclude.m4.orig	Sun Nov 17 20:28:57 2002
++++ php-4.3.0/acinclude.m4	Fri Jan  3 09:59:15 2003
+@@ -783,13 +783,13 @@
+ dnl
+ AC_DEFUN([PHP_BUILD_PROGRAM],[
+   OVERALL_TARGET=[]ifelse($1,,php,$1)
+-  php_c_pre='$(CC)'
++  php_c_pre='$(LIBTOOL) --mode=compile $(CC)'
+   php_c_meta='$(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)'
+-  php_c_post=' && echo > $[@]'
+-  php_cxx_pre='$(CXX)'
++  php_c_post=''
++  php_cxx_pre='$(LIBTOOL) --mode=compile $(CXX)'
+   php_cxx_meta='$(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)'
+-  php_cxx_post=' && echo > $[@]'
+-  php_lo=o
++  php_cxx_post=''
++  php_lo=lo
+ 
+   case $with_pic in
+     yes) pic_setting='-prefer-pic';;
+
+--- php/scripts/phpize.in~	2008-06-16 10:54:51.923509081 +0200
++++ php/scripts/phpize.in	2008-06-16 10:55:50.376836101 +0200
+@@ -7,7 +7,7 @@
+ includedir="`eval echo @includedir@`/php"
+ builddir="`pwd`"
+ 
+-FILES_BUILD="mkdep.awk scan_makefile_in.awk shtool libtool.m4"
++FILES_BUILD="mkdep.awk scan_makefile_in.awk shtool libtool.m4 lt~obsolete.m4 ltoptions.m4 ltsugar.m4 ltversion.m4"
+ FILES="acinclude.m4 Makefile.global config.sub config.guess ltmain.sh"
+ CLEAN_FILES="$FILES *.o *.lo *.la .deps .libs/ build/ include/ modules/ install-sh \
+     mkinstalldirs missing config.nice config.sub config.guess configure configure.in \
+@@ -121,7 +121,7 @@
+  
+   (cd "$phpdir" && cp $FILES_BUILD "$builddir"/build)
+   (cd "$phpdir" && cp $FILES "$builddir")
+-  (cd "$builddir" && cat acinclude.m4 ./build/libtool.m4 > aclocal.m4)
++  (cd "$builddir" && cat acinclude.m4 ./build/{libtool,lt~obsolete,ltoptions,ltsugar,ltversion}.m4 > aclocal.m4)
+ }
+ 
+ phpize_replace_prefix()

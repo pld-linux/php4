@@ -1,0 +1,31 @@
+--- php-5.2.7/configure.in~	2008-12-05 12:58:17.000000000 +0200
++++ php-5.2.7/configure.in	2008-12-05 13:00:02.247644045 +0200
+@@ -1053,19 +1053,6 @@
+ PHP_SUBST_OLD(YACC)
+ PHP_SUBST_OLD(SHLIB_SUFFIX_NAME)
+ 
+-old_CC=$CC
+-
+-if test "$PHP_THREAD_SAFETY" = "yes" && test -n "$ac_cv_pthreads_cflags"; then
+-  CXXFLAGS="$CXXFLAGS $ac_cv_pthreads_cflags"
+-  INLINE_CFLAGS="$INLINE_CFLAGS $ac_cv_pthreads_cflags"
+-  cat >meta_ccld<<EOF
+-#! /bin/sh
+-exec $CC $ac_cv_pthreads_cflags \$@
+-EOF
+-  CC="$abs_builddir/meta_ccld"
+-  chmod +x meta_ccld
+-fi
+-
+ dnl This will go away, if we have a facility to run per-extension code
+ dnl after the thread_safety decision was done
+ if test "$PHP_THREAD_SAFETY" = "yes" && test "$PHP_MYSQL" = "yes"; then
+@@ -1310,8 +1310,6 @@
+ test -z "$CXX_PHP_COMPILE" && CXX_PHP_COMPILE='$(LIBTOOL) --mode=compile $(CXX_COMPILE) -c $<'
+ SHARED_LIBTOOL='$(LIBTOOL)'
+ 
+-CC=$old_CC
+-
+ dnl Finish the Darwin hack
+ if test "$php_did_darwin9_cheat" -eq 1; then
+   if test "$PHP_DEBUG" = "yes"; then

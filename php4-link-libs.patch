@@ -1,0 +1,77 @@
+--- php-4.3.0/configure.in.orig	Fri Dec 27 05:07:18 2002
++++ php-4.3.0/configure.in	Thu Jan  2 20:34:43 2003
+@@ -288,7 +288,6 @@
+ PHP_CHECK_FUNC(htonl, socket)
+ PHP_CHECK_FUNC(gethostname, nsl)
+ PHP_CHECK_FUNC(gethostbyaddr, nsl)
+-PHP_CHECK_FUNC(yp_get_default_domain, nsl)
+ 
+ PHP_CHECK_FUNC(dlopen, dl)
+ if test "$ac_cv_func_dlopen" = "yes"; then
+--- php.org/ext/ldap/config.m4.org	2006-08-10 14:23:59.583381250 +0000
++++ php/ext/ldap/config.m4	2006-08-10 14:24:40.013908000 +0000
+@@ -113,8 +113,9 @@
+   dnl Save original values
+   _SAVE_CPPFLAGS=$CPPFLAGS
+   _SAVE_LDFLAGS=$LDFLAGS
+-  LDFLAGS="$LDFLAGS $LDAP_SHARED_LIBADD"
++  LDFLAGS="$LDFLAGS"
+   CPPFLAGS="$CPPFLAGS -I$LDAP_INCDIR"
++  LIBS="$LIBS $LDAP_SHARED_LIBADD"
+ 
+   dnl Check for 3 arg ldap_set_rebind_proc
+   AC_CACHE_CHECK([for 3 arg ldap_set_rebind_proc], ac_cv_3arg_setrebindproc,
+@@ -138,4 +139,5 @@
+   dnl Restore original values
+   CPPFLAGS=$_SAVE_CPPFLAGS
+   LDFLAGS=$_SAVE_LDFLAGS
++  LIBS=$_SAVE_LIBS
+ fi 
+--- php.org/acinclude.m4~	2006-08-20 13:12:40.191078397 +0200
++++ php/acinclude.m4	2006-08-20 13:14:34.859406479 +0200
+@@ -1607,7 +1607,7 @@
+   
+   save_ext_shared=$ext_shared
+   ext_shared=yes
+-  PHP_EVAL_LIBLINE([$]ac_stuff, LDFLAGS)
++  PHP_EVAL_LIBLINE([$]ac_stuff, LIBS)
+   AC_CHECK_LIB([$1],[$2],[
+     LDFLAGS=$save_old_LDFLAGS
+     ext_shared=$save_ext_shared
+--- php.org/ext/openssl/config0.m4~	2004-12-30 15:54:35.000000000 +0100
++++ php/ext/openssl/config0.m4	2006-08-20 13:32:55.412011298 +0200
+@@ -22,6 +22,7 @@
+       AC_DEFINE(HAVE_OPENSSL_SHARED_EXT,1,[ ])
+     else
+       AC_DEFINE(HAVE_OPENSSL_EXT,1,[ ])
++      EXTRA_LIBS="$EXTRA_LIBS $OPENSSL_LIBS"
+     fi
+   ], [
+     AC_MSG_ERROR([OpenSSL check failed. Please check config.log for more information.])
+--- php4.org/configure.in~	2006-08-20 13:46:26.604918962 +0200
++++ php4/configure.in	2006-08-20 13:57:32.736841691 +0200
+@@ -353,6 +353,9 @@
+ PHP_CHECK_FUNC(inet_aton, resolv, bind)
+ PHP_CHECK_FUNC(dn_skipname, resolv, bind)
+ 
++PHP_CHECK_FUNC(__dn_expand, resolv, bind)
++PHP_CHECK_FUNC(__dn_skipname, resolv, bind)
++PHP_CHECK_FUNC(__res_search, resolv, bind)
+ 
+ dnl Then headers.
+ dnl -------------------------------------------------------------------------
+--- php4/configure.in.orig	2006-08-20 13:58:18.272000811 +0200
++++ php4/configure.in	2006-08-20 14:11:43.477794868 +0200
+@@ -353,9 +353,8 @@
+ PHP_CHECK_FUNC(inet_aton, resolv, bind)
+ PHP_CHECK_FUNC(dn_skipname, resolv, bind)
+ 
+-PHP_CHECK_FUNC(__dn_expand, resolv, bind)
+-PHP_CHECK_FUNC(__dn_skipname, resolv, bind)
+-PHP_CHECK_FUNC(__res_search, resolv, bind)
++dnl force resolv and pthread
++EXTRA_LIBS="$EXTRA_LIBS -lresolv -pthread"
+ 
+ dnl Then headers.
+ dnl -------------------------------------------------------------------------
+

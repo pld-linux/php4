@@ -1,0 +1,41 @@
+--- php/ext/sybase_ct/config.m4~	2007-07-03 19:25:35.000000000 +0200
++++ php/ext/sybase_ct/config.m4	2008-06-16 10:42:20.463792334 +0200
+@@ -31,7 +31,7 @@
+   fi
+   
+   PHP_ADD_LIBPATH($SYBASE_CT_LIBDIR, SYBASE_CT_SHARED_LIBADD)
+-  if test -f $SYBASE_CT_INCDIR/tds.h; then
++  if test -f $SYBASE_CT_INCDIR/sybdb.h; then
+     PHP_ADD_LIBRARY(ct,, SYBASE_CT_SHARED_LIBADD)
+     SYBASE_CT_LIBS="-L$SYBASE_CT_LIBDIR -lct"
+   else
+--- php-4.4.8/ext/mssql/config.m4.org	2008-06-16 11:00:30.226183384 +0200
++++ php-4.4.8/ext/mssql/config.m4	2008-06-16 11:00:54.402222204 +0200
+@@ -13,7 +13,7 @@
+   if test "$PHP_MSSQL" = "yes"; then
+ 
+     for i in /usr/local /usr; do
+-      if test -f $i/include/tds.h; then
++      if test -f $i/include/sybdb.h; then
+         FREETDS_INSTALLATION_DIR=$i
+         break
+       fi
+@@ -25,15 +25,15 @@
+ 
+   elif test "$PHP_MSSQL" != "no"; then
+ 
+-    if test -f $PHP_MSSQL/include/tds.h; then
++    if test -f $PHP_MSSQL/include/sybdb.h; then
+       FREETDS_INSTALLATION_DIR=$PHP_MSSQL
+     else
+       AC_MSG_ERROR(Directory $PHP_MSSQL is not a FreeTDS installation directory)
+     fi
+   fi  
+ 
+-  if test ! -r "$FREETDS_INSTALLATION_DIR/lib/libtds.a" && test ! -r "$FREETDS_INSTALLATION_DIR/lib/libtds.so"; then
+-     AC_MSG_ERROR(Could not find $FREETDS_INSTALLATION_DIR/lib/libtds.[a|so])
++  if test ! -r "$FREETDS_INSTALLATION_DIR/lib/libsybdb.a" && test ! -r "$FREETDS_INSTALLATION_DIR/lib/libsybdb.so"; then
++     AC_MSG_ERROR(Could not find $FREETDS_INSTALLATION_DIR/lib/libsybdb.[a|so])
+   fi
+ 
+   MSSQL_INCDIR=$FREETDS_INSTALLATION_DIR/include

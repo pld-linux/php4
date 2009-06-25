@@ -1,0 +1,38 @@
+diff -burN php-5.0.4RC1.orig/TSRM/threads.m4 php-5.0.4RC1/TSRM/threads.m4
+--- php-5.0.4RC1.orig/TSRM/threads.m4	2005-03-15 18:02:27.630294512 +0100
++++ php-5.0.4RC1/TSRM/threads.m4	2005-03-15 18:07:05.301082136 +0100
+@@ -116,7 +116,6 @@
+ else
+   save_CFLAGS=$CFLAGS
+   save_LIBS=$LIBS
+-  PTHREADS_ASSIGN_VARS
+   PTHREADS_CHECK_COMPILE
+   LIBS=$save_LIBS
+   CFLAGS=$save_CFLAGS
+@@ -134,9 +133,10 @@
+         break
+       fi
+     done
++    pthreads_working=
+   fi
+-fi
+ ])
++fi
+ 
+ AC_CACHE_CHECK(for pthreads_lib, ac_cv_pthreads_lib,[
+ ac_cv_pthreads_lib=
+@@ -163,6 +163,7 @@
+ dnl
+ dnl
+ AC_DEFUN([PTHREADS_ASSIGN_VARS],[
++if test "$pthreads_assign_done" != "yes" ; then
+ if test -n "$ac_cv_pthreads_lib"; then
+   LIBS="$LIBS -l$ac_cv_pthreads_lib"
+ fi
+@@ -170,4 +171,6 @@
+ if test -n "$ac_cv_pthreads_cflags"; then
+   CFLAGS="$CFLAGS $ac_cv_pthreads_cflags"
+ fi
++pthreads_assign_done="yes"
++fi
+ ])dnl
