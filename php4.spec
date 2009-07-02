@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 13
+%define		rel 14
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -172,7 +172,7 @@ BuildRequires:	freetype-devel >= 2.0
 BuildRequires:	gdbm-devel
 BuildRequires:	gmp-devel
 %if "%{pld_release}" != "ac"
-%{?with_imap:BuildRequires:	krb5-devel}
+%{?with_imap:BuildRequires:	heimdal-devel}
 %else
 %{?with_imap:BuildRequires:	heimdal-devel >= 0.7}
 %endif
