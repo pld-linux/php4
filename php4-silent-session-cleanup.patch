@@ -1,0 +1,10 @@
+--- php-4.4.9/ext/session/mod_files.c~	2007-12-31 08:22:51.000000000 +0100
++++ php-4.4.9/ext/session/mod_files.c	2009-08-07 09:33:31.242380636 +0200
+@@ -189,7 +189,6 @@
+ 
+ 	dir = opendir(dirname);
+ 	if (!dir) {
+-		php_error_docref(NULL TSRMLS_CC, E_NOTICE, "ps_files_cleanup_dir: opendir(%s) failed: %s (%d)\n", dirname, strerror(errno), errno);
+ 		return (0);
+ 	}
+ 
