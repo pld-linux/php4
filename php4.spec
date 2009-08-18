@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 17
+%define		rel 18
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -968,7 +968,7 @@ Summary:	mime_magic extension module for PHP
 Summary(pl.UTF-8):	Moduł mime_magic dla PHP
 Group:		Libraries
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	/usr/share/file/magic.mime
+Requires:	/usr/share/misc/magic.mime
 Provides:	php(mime_magic)
 
 %description mime_magic
@@ -1766,7 +1766,7 @@ for sapi in $sapis; do
 	--with-mcal=shared,/usr \
 	--with-mcrypt=shared \
 	%{?with_mhash:--with-mhash=shared} \
-	--with-mime-magic=shared,/usr/share/file/magic.mime \
+	--with-mime-magic=shared,/usr/share/misc/magic.mime \
 	%{?with_ming:--with-ming=shared} \
 	%{!?with_mnogosearch:--without-mnogosearch}%{?with_mnogosearch:--with-mnogosearch=shared,/usr} \
 	%{?with_msession:--with-msession=shared}%{!?with_msession:--without-msession} \
