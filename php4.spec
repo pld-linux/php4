@@ -205,6 +205,7 @@ BuildRequires:	pam-devel
 BuildRequires:	pcre-devel
 %{?with_pdf:BuildRequires:	pdflib-devel >= 4.0.0}
 %{?with_msession:BuildRequires:	phoenix-devel}
+BuildRequires:	pkgconfig
 %{?with_pgsql:BuildRequires:	postgresql-backend-devel >= 7.2}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 %{?with_qtdom:BuildRequires:	qt-devel >= 2.2.0}
