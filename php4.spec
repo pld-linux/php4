@@ -27,7 +27,7 @@
 %bcond_without	interbase	# without InterBase extension module
 %bcond_without	ldap		# without LDAP extension module
 %bcond_without	mhash		# without mhash extension module
-%bcond_without	ming		# without ming extension module
+%bcond_with	ming		# with ming extension module
 %bcond_without	mm		# without mm support for session storage
 %bcond_without	mnogosearch	# without mnogosearch extension module
 %bcond_without	msession	# without msession extension module
@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 23
+%define		rel 24
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
