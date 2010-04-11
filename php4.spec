@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 27
+%define		rel 28
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -124,6 +124,7 @@ Patch25:	%{name}-no_pear_install.patch
 Patch26:	%{name}-zlib.patch
 Patch27:	%{name}-db-shared.patch
 Patch28:	%{name}-sybase-fix.patch
+Patch29:	%{name}-openssl.patch
 Patch30:	%{name}-mnogosearch-fix.patch
 Patch31:	%{name}-stupidapache_version.patch
 Patch33:	%{name}-uint32_t.patch
@@ -1596,7 +1597,7 @@ cp php.ini-dist php.ini
 %patch26 -p1
 %patch27 -p1
 %patch28 -p1
-
+%patch29 -p1
 %patch30 -p1
 %patch31 -p1
 %patch33 -p1
