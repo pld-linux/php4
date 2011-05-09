@@ -22,7 +22,7 @@
 %bcond_without	cpdf		# without cpdf extension module
 %bcond_without	curl		# without CURL extension module
 %bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
-%bcond_without	fribidi		# without FriBiDi extension module
+%bcond_with	fribidi		# without FriBiDi extension module (use pecl-fribidi)
 %bcond_without	imap		# without IMAP extension module
 %bcond_without	interbase	# without InterBase extension module
 %bcond_without	ldap		# without LDAP extension module
@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 36
+%define		rel 37
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
