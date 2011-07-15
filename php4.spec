@@ -51,7 +51,7 @@
 %bcond_without	apache1		# disable building apache 1.3.x module
 %bcond_without	apache2		# disable building apache 2.x module
 %bcond_without	fcgi		# disable building FCGI SAPI
-%bcond_without	zts		# disable experimental-zts
+%bcond_with	zts		# disable experimental-zts
 %bcond_with	versioning	# build with experimental versioning (to load php4/php5 into same apache)
 
 %define apxs1		/usr/sbin/apxs1
@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 38
+%define		rel 39
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
