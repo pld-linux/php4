@@ -1,0 +1,24 @@
+diff -ur php-4.4.9.org/ext/pcre/php_pcre.c php-4.4.9/ext/pcre/php_pcre.c
+--- php-4.4.9.org/ext/pcre/php_pcre.c	2007-12-31 08:22:50.000000000 +0100
++++ php-4.4.9/ext/pcre/php_pcre.c	2012-07-02 14:17:54.974558709 +0200
+@@ -141,6 +141,7 @@
+ 	int				 	 regex_len;
+ 	int				 	 do_study = 0;
+ 	int					 poptions = 0;
++	int				count = 0;
+ 	unsigned const char *tables = NULL;
+ #if HAVE_SETLOCALE
+ 	char				*locale = setlocale(LC_CTYPE, NULL);
+@@ -154,10 +155,10 @@
+ 	regex_len = strlen(regex);
+ 	if (zend_hash_find(&PCRE_G(pcre_cache), regex, regex_len+1, (void **)&pce) == SUCCESS) {
+ 		/*
+-		 * We use a quick pcre_info() check to see whether cache is corrupted, and if it
++		 * We use a quick pcre_fullinfo() check to see whether cache is corrupted, and if it
+ 		 * is, we flush it and compile the pattern from scratch.
+ 		 */
+-		if (pcre_info(pce->re, NULL, NULL) == PCRE_ERROR_BADMAGIC) {
++		if (pcre_fullinfo(pce->re, NULL, PCRE_INFO_CAPTURECOUNT, &count) == PCRE_ERROR_BADMAGIC) {
+ 			zend_hash_clean(&PCRE_G(pcre_cache));
+ 		} else {
+ #if HAVE_SETLOCALE
