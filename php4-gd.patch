@@ -24,13 +24,6 @@ diff -urN php-4.4.8.org/ext/gd/config.m4 php-4.4.8/ext/gd/config.m4
    AC_DEFINE(HAVE_GD_DYNAMIC_CTX_EX,   1, [ ])
    AC_DEFINE(HAVE_GD_GIF_CTX,          1, [ ])
  
-diff -urN php-4.4.8.org/ext/gd/CREDITS php-4.4.8/ext/gd/CREDITS
---- php-4.4.8.org/ext/gd/CREDITS	2003-03-01 02:16:00.000000000 +0100
-+++ php-4.4.8/ext/gd/CREDITS	2008-01-22 22:38:05.837148890 +0100
-@@ -1,2 +1,2 @@
- GD imaging
--Rasmus Lerdorf, Stig Bakken, Jim Winstead, Jouni Ahto, Ilia Alshanetsky, Pierre-Alain Joye
-+Rasmus Lerdorf, Stig Bakken, Jim Winstead, Jouni Ahto, Ilia Alshanetsky, Pierre-Alain Joye, Marcus Boerger
 diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
 --- php-4.4.8.org/ext/gd/gd.c	2007-12-31 08:22:47.000000000 +0100
 +++ php-4.4.8/ext/gd/gd.c	2008-01-22 22:38:05.837148890 +0100
@@ -1259,42 +1252,6 @@ diff -urN php-4.4.8.org/ext/gd/gd.c php-4.4.8/ext/gd/gd.c
 diff -urN php-4.4.8.org/ext/gd/gdcache.c php-4.4.8/ext/gd/gdcache.c
 --- php-4.4.8.org/ext/gd/gdcache.c	2005-01-09 22:05:31.000000000 +0100
 +++ php-4.4.8/ext/gd/gdcache.c	2008-01-22 22:38:05.863816915 +0100
-@@ -1,8 +1,8 @@
--/* 
-- * $Id$
-+/*
-+ * $Id$
-  *
-- * Caches of pointers to user structs in which the least-recently-used 
-- * element is replaced in the event of a cache miss after the cache has 
-+ * Caches of pointers to user structs in which the least-recently-used
-+ * element is replaced in the event of a cache miss after the cache has
-  * reached a given size.
-  *
-  * John Ellson  (ellson@lucent.com)  Oct 31, 1997
-@@ -17,17 +17,17 @@
-  * The head structure has a pointer to the most-recently-used
-  * element, and elements are moved to this position in the list each
-  * time they are used.  The head also contains pointers to three
-- * user defined functions: 
-- *		- a function to test if a cached userdata matches some keydata 
-- *		- a function to provide a new userdata struct to the cache 
-+ * user defined functions:
-+ *		- a function to test if a cached userdata matches some keydata
-+ *		- a function to provide a new userdata struct to the cache
-  *          if there has been a cache miss.
-  *		- a function to release a userdata struct when it is
-  *          no longer being managed by the cache
-  *
-  * In the event of a cache miss the cache is allowed to grow up to
-  * a specified maximum size.  After the maximum size is reached then
-- * the least-recently-used element is discarded to make room for the 
-- * new.  The most-recently-returned value is always left at the 
-+ * the least-recently-used element is discarded to make room for the
-+ * new.  The most-recently-returned value is always left at the
-  * beginning of the list after retrieval.
-  *
-  * In the current implementation the cache is traversed by a linear
 @@ -59,9 +59,9 @@
  	int					size,
  	gdCacheTestFn_t		gdCacheTest,
@@ -1307,65 +1264,9 @@ diff -urN php-4.4.8.org/ext/gd/gdcache.c php-4.4.8/ext/gd/gdcache.c
  
  	head = (gdCache_head_t *)pemalloc(sizeof(gdCache_head_t), 1);
  	head->mru = NULL;
-diff -urN php-4.4.8.org/ext/gd/gdcache.h php-4.4.8/ext/gd/gdcache.h
---- php-4.4.8.org/ext/gd/gdcache.h	2003-03-05 17:04:20.000000000 +0100
-+++ php-4.4.8/ext/gd/gdcache.h	2008-01-22 22:38:05.863816915 +0100
-@@ -1,8 +1,8 @@
--/* 
-- * $Id$ 
-+/*
-+ * $Id$
-  *
-- * Caches of pointers to user structs in which the least-recently-used 
-- * element is replaced in the event of a cache miss after the cache has 
-+ * Caches of pointers to user structs in which the least-recently-used
-+ * element is replaced in the event of a cache miss after the cache has
-  * reached a given size.
-  *
-  * John Ellson  (ellson@lucent.com)  Oct 31, 1997
-@@ -17,17 +17,17 @@
-  * The head structure has a pointer to the most-recently-used
-  * element, and elements are moved to this position in the list each
-  * time they are used.  The head also contains pointers to three
-- * user defined functions: 
-- *		- a function to test if a cached userdata matches some keydata 
-- *		- a function to provide a new userdata struct to the cache 
-+ * user defined functions:
-+ *		- a function to test if a cached userdata matches some keydata
-+ *		- a function to provide a new userdata struct to the cache
-  *          if there has been a cache miss.
-  *		- a function to release a userdata struct when it is
-  *          no longer being managed by the cache
-  *
-  * In the event of a cache miss the cache is allowed to grow up to
-  * a specified maximum size.  After the maximum size is reached then
-- * the least-recently-used element is discarded to make room for the 
-- * new.  The most-recently-returned value is always left at the 
-+ * the least-recently-used element is discarded to make room for the
-+ * new.  The most-recently-returned value is always left at the
-  * beginning of the list after retrieval.
-  *
-  * In the current implementation the cache is traversed by a linear
 diff -urN php-4.4.8.org/ext/gd/gd_ctx.c php-4.4.8/ext/gd/gd_ctx.c
 --- php-4.4.8.org/ext/gd/gd_ctx.c	2007-12-31 08:22:47.000000000 +0100
 +++ php-4.4.8/ext/gd/gd_ctx.c	2008-01-22 22:38:05.863816915 +0100
-@@ -1,13 +1,13 @@
- /*
-    +----------------------------------------------------------------------+
--   | PHP Version 4                                                        |
-+   | PHP Version 5                                                        |
-    +----------------------------------------------------------------------+
--   | Copyright (c) 1997-2008 The PHP Group                                |
-+   | Copyright (c) 1997-2007 The PHP Group                                |
-    +----------------------------------------------------------------------+
-    | This source file is subject to version 3.01 of the PHP license,      |
-    | that is bundled with this package in the file LICENSE, and is        |
-    | available through the world-wide-web at the following url:           |
--   | http://www.php.net/license/3_0.txt.                                  |
-+   | http://www.php.net/license/3_01.txt                                  |
-    | If you did not receive a copy of the PHP license and are unable to   |
-    | obtain it through the world-wide-web, please send a note to          |
-    | license@php.net so we can mail you a copy immediately.               |
 @@ -15,11 +15,13 @@
     | Authors: Stanislav Malyshev <stas@php.net>                           |
     +----------------------------------------------------------------------+
@@ -1519,29 +1420,6 @@ diff -urN php-4.4.8.org/ext/gd/gd_ctx.c php-4.4.8/ext/gd/gd_ctx.c
 diff -urN php-4.4.8.org/ext/gd/gdttf.c php-4.4.8/ext/gd/gdttf.c
 --- php-4.4.8.org/ext/gd/gdttf.c	2005-01-09 22:05:31.000000000 +0100
 +++ php-4.4.8/ext/gd/gdttf.c	2008-01-22 22:38:05.887151436 +0100
-@@ -2,7 +2,7 @@
- /*                                          */
- /* John Ellson   ellson@lucent.com          */
- 
--/* $Id$ */
-+/* $Id$ */
- 
- #include "php.h"
- 
-@@ -28,11 +28,11 @@
- /* number of fonts cached before least recently used is replaced */
- #define FONTCACHESIZE 6
- 
--/* number of character glyphs cached per font before 
-+/* number of character glyphs cached per font before
- 	least-recently-used is replaced */
- #define GLYPHCACHESIZE 120
- 
--/* number of bitmaps cached per glyph before 
-+/* number of bitmaps cached per glyph before
- 	least-recently-used is replaced */
- #define BITMAPCACHESIZE 8
- 
 @@ -42,15 +42,15 @@
  /* ptsize below which anti-aliasing is ineffective */
  #define MINANTIALIASPTSIZE 0
@@ -2323,15 +2201,6 @@ diff -urN php-4.4.8.org/ext/gd/gdttf.c php-4.4.8/ext/gd/gdttf.c
 diff -urN php-4.4.8.org/ext/gd/libgd/gd_arc_f_buggy.c php-4.4.8/ext/gd/libgd/gd_arc_f_buggy.c
 --- php-4.4.8.org/ext/gd/libgd/gd_arc_f_buggy.c	2003-03-05 17:04:20.000000000 +0100
 +++ php-4.4.8/ext/gd/libgd/gd_arc_f_buggy.c	2005-08-18 14:54:43.000000000 +0200
-@@ -1,6 +1,6 @@
- /* This is potentially great stuff, but fails against the test
--   program at the end. This would probably be much more 
--   efficent than the implementation currently in gd.c if the 
-+   program at the end. This would probably be much more
-+   efficent than the implementation currently in gd.c if the
-    errors in the output were corrected. TBB */
- 
- #if 0
 @@ -698,7 +698,7 @@
  #define WIDTH	500
  #define HEIGHT	300
@@ -2450,28 +2319,6 @@ diff -urN php-4.4.8.org/ext/gd/libgd/gd.c php-4.4.8/ext/gd/libgd/gd.c
  	im->polyInts = 0;
  	im->polyAllocated = 0;
  	im->brush = 0;
-@@ -267,8 +287,8 @@
- }
- 
- /* This code is taken from http://www.acm.org/jgt/papers/SmithLyons96/hwb_rgb.html, an article
-- * on colour conversion to/from RBG and HWB colour systems. 
-- * It has been modified to return the converted value as a * parameter. 
-+ * on colour conversion to/from RBG and HWB colour systems.
-+ * It has been modified to return the converted value as a * parameter.
-  */
- 
- #define RETURN_HWB(h, w, b) {HWB->H = h; HWB->W = w; HWB->B = b; return HWB;}
-@@ -287,8 +307,8 @@
- 
- 
- /*
-- * Theoretically, hue 0 (pure red) is identical to hue 6 in these transforms. Pure 
-- * red always maps to 6 in this implementation. Therefore UNDEFINED can be 
-+ * Theoretically, hue 0 (pure red) is identical to hue 6 in these transforms. Pure
-+ * red always maps to 6 in this implementation. Therefore UNDEFINED can be
-  * defined as 0 in situations where only unsigned numbers are desired.
-  */
- typedef struct
 @@ -305,8 +325,8 @@
  static HWBType * RGB_to_HWB (RGBType RGB, HWBType * HWB)
  {
@@ -2514,24 +2361,6 @@ diff -urN php-4.4.8.org/ext/gd/libgd/gd.c php-4.4.8/ext/gd/libgd/gd.c
  	return ct;
  }
  
-@@ -629,7 +649,7 @@
-  * Given the end points of a line, and a bounding rectangle (which we
-  * know to be from (0,0) to (SX,SY)), adjust the endpoints to be on
-  * the edges of the rectangle if the line should be drawn at all,
-- * otherwise return a failure code 
-+ * otherwise return a failure code
-  */
- 
- /* this does "one-dimensional" clipping: note that the second time it
-@@ -637,7 +657,7 @@
-  *  - the comments ignore this (if you can understand it when it's
-  *  looking at the X parameters, it should become clear what happens on
-  *  the second call!)  The code is simplified from that in the article,
-- *  as we know that gd images always start at (0,0) 
-+ *  as we know that gd images always start at (0,0)
-  */
- 
- static int clip_1d(int *x0, int *y0, int *x1, int *y1, int maxdim) {
 @@ -664,7 +684,7 @@
  		}
  		m = (*y1 - *y0)/(double)(*x1 - *x0);  /* calculate the slope of the line */
@@ -9696,26 +9525,6 @@ diff -urN php-4.4.8.org/ext/gd/libgd/webpng.c php-4.4.8/ext/gd/libgd/webpng.c
 diff -urN php-4.4.8.org/ext/gd/libgd/xbm.c php-4.4.8/ext/gd/libgd/xbm.c
 --- php-4.4.8.org/ext/gd/libgd/xbm.c	2007-12-31 08:22:47.000000000 +0100
 +++ php-4.4.8/ext/gd/libgd/xbm.c	2007-08-09 14:08:29.000000000 +0200
-@@ -1,8 +1,8 @@
- /*
-    +----------------------------------------------------------------------+
--   | PHP Version 4                                                        |
-+   | PHP Version 5                                                        |
-    +----------------------------------------------------------------------+
--   | Copyright (c) 1997-2008 The PHP Group                                |
-+   | Copyright (c) 1997-2007 The PHP Group                                |
-    +----------------------------------------------------------------------+
-    | This source file is subject to version 3.01 of the PHP license,      |
-    | that is bundled with this package in the file LICENSE, and is        |
-@@ -16,7 +16,7 @@
-    +----------------------------------------------------------------------+
-  */
- 
--/* $Id$ */
-+/* $Id$ */
- 
- #include <stdio.h>
- #include <math.h>
 @@ -29,8 +29,8 @@
  
  #define MAX_XBM_LINE_SIZE 255
@@ -9854,31 +9663,6 @@ diff -urN php-4.4.8.org/ext/gd/libgd/xbm.c php-4.4.8/ext/gd/libgd/xbm.c
 diff -urN php-4.4.8.org/ext/gd/php_gd.h php-4.4.8/ext/gd/php_gd.h
 --- php-4.4.8.org/ext/gd/php_gd.h	2007-12-31 08:22:47.000000000 +0100
 +++ php-4.4.8/ext/gd/php_gd.h	2008-01-22 22:38:05.897151947 +0100
-@@ -1,8 +1,8 @@
- /*
-    +----------------------------------------------------------------------+
--   | PHP Version 4                                                        |
-+   | PHP Version 5                                                        |
-    +----------------------------------------------------------------------+
--   | Copyright (c) 1997-2008 The PHP Group                                |
-+   | Copyright (c) 1997-2007 The PHP Group                                |
-    +----------------------------------------------------------------------+
-    | This source file is subject to version 3.01 of the PHP license,      |
-    | that is bundled with this package in the file LICENSE, and is        |
-@@ -13,11 +13,11 @@
-    | license@php.net so we can mail you a copy immediately.               |
-    +----------------------------------------------------------------------+
-    | Authors: Rasmus Lerdorf <rasmus@php.net>                             |
--   |          Stig Bakken <ssb@fast.no>                                   |
-+   |          Stig Bakken <ssb@php.net>                                   |
-    +----------------------------------------------------------------------+
- */
- 
--/* $Id$ */
-+/* $Id$ */
- 
- #ifndef PHP_GD_H
- #define PHP_GD_H
 @@ -32,7 +32,7 @@
  
  /* open_basedir and safe_mode checks */

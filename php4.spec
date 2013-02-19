@@ -48,6 +48,7 @@
 %bcond_with     system_xmlrpc_epi       # use system xmlrpc-epi library (broken on 64bit arches, see http://bugs.php.net/41611)
 %bcond_without	xslt		# without XSLT extension module
 %bcond_with	yaz		# without YAZ extension module
+%bcond_with	yp
 %bcond_without	apache1		# disable building apache 1.3.x module
 %bcond_without	apache2		# disable building apache 2.x module
 %bcond_without	fcgi		# disable building FCGI SAPI
@@ -1743,7 +1744,7 @@ for sapi in $sapis; do
 	%{?with_wddx:--enable-wddx=shared} \
 	%{!?with_xml:--disable-xml}%{?with_xml:--enable-xml=shared} \
 	%{?with_xslt:--enable-xslt=shared} \
-	--enable-yp=shared \
+	%{?with_yp:--enable-yp=shared} \
 	--with-bz2=shared \
 	%{?with_cpdf:--with-cpdflib=shared} \
 	--with-crack=shared \
@@ -3151,11 +3152,13 @@ fi
 %attr(755,root,root) %{extensionsdir}/yaz.so
 %endif
 
+%if %{with yp}
 %files yp
 %defattr(644,root,root,755)
 %doc ext/yp/CREDITS
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/conf.d/yp.ini
 %attr(755,root,root) %{extensionsdir}/yp.so
+%endif
 
 %files zip
 %defattr(644,root,root,755)
