@@ -9,3 +9,49 @@
      fi
    else
      MAGIC_MIME_LOCATIONS="/usr/local/apache/conf/magic /usr/local/etc/apache/conf/magic /etc/apache/magic /etc/httpd/conf/magic /usr/share/magic.mime /usr/share/misc/magic.mime /etc/magic.mime"
+--- php-4.4.9/ext/mime_magic/mime_magic.c~	2007-12-31 08:22:49.000000000 +0100
++++ php-4.4.9/ext/mime_magic/mime_magic.c	2013-02-20 09:07:01.388809868 +0100
+@@ -478,8 +478,8 @@
+     /* get offset, then skip over it */
+     m->offset = (int) strtol(l, &t, 0);
+     if (l == t) {
+-		php_error(E_WARNING,
+-					 MODNAME ": (line %d) offset `%s' invalid", lineno, l);
++		//php_error(E_WARNING,
++		//			 MODNAME ": (line %d) offset `%s' invalid", lineno, l);
+     }
+     l = t;
+ 
+@@ -501,8 +501,8 @@
+ 				m->in.type = BYTE;
+ 				break;
+ 			default:
+-				php_error(E_WARNING,
+-							 MODNAME ": indirect offset type %c invalid", *l);
++				//php_error(E_WARNING,
++				//			 MODNAME ": indirect offset type %c invalid", *l);
+ 				break;
+ 			}
+ 			l++;
+@@ -518,8 +518,8 @@
+ 		else
+ 			t = l;
+ 		if (*t++ != ')') {
+-			php_error(E_WARNING,
+-						 MODNAME ": missing ')' in indirect offset");
++			//php_error(E_WARNING,
++			//			 MODNAME ": missing ')' in indirect offset");
+ 		}
+ 		l = t;
+     }
+@@ -592,8 +592,8 @@
+ 		l += NLEDATE;
+     }
+     else {
+-		php_error(E_WARNING,
+-					 MODNAME ": type %s invalid", l);
++		//php_error(E_WARNING,
++		//			 MODNAME ": type %s invalid", l);
+ 		return -1;
+     }
+     /* New-style anding: "0 byte&0x80 =0x80 dynamically linked" */
