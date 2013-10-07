@@ -1,0 +1,98 @@
+diff -ur -x configure -x aclocal.m4 -x config.guess -x config.sub -x '*.orig' -x install-sh -x ltmain.sh -x php_config.h.in php-4.4.9.org/acinclude.m4 php-4.4.9.changed/acinclude.m4
+--- php-4.4.9.org/acinclude.m4	2013-10-07 13:35:57.560042156 +0200
++++ php-4.4.9.changed/acinclude.m4	2013-10-07 13:35:39.659624293 +0200
+@@ -2007,6 +2007,10 @@
+   ac_output=`$1 -v 2>&1`
+ fi
+ 
++  if test -n "$FORCE_APACHE_VERSION"; then
++    ac_output="Server version: Apache/${FORCE_APACHE_VERSION} (PLD/Linux)"
++  fi
++
+   ac_IFS=$IFS
+ IFS="- /.
+ "
+diff -ur -x configure -x aclocal.m4 -x config.guess -x config.sub -x '*.orig' -x install-sh -x ltmain.sh -x php_config.h.in php-4.4.9.org/configure.in php-4.4.9.changed/configure.in
+--- php-4.4.9.org/configure.in	2013-10-07 13:35:57.586709445 +0200
++++ php-4.4.9.changed/configure.in	2013-10-07 13:34:26.551250929 +0200
+@@ -1421,6 +1421,21 @@
+ X
+   fi
+ 
++  if test "$PHP_SAPI" = "apache2handler" || test "$PHP_SAPI" = "apache2filter"; then
++    if test "$APACHE_VERSION" -ge 2004001; then
++      if test -z "$APACHE_THREADED_MPM"; then
++cat <<X
+++--------------------------------------------------------------------+
++|                        *** WARNING ***                             |
++|                                                                    |
++| You have built PHP for Apache's current non-threaded MPM.          |
++| If you change Apache to use a threaded MPM you must reconfigure    |
++| PHP with --enable-maintainer-zts                                   |
++X
++      fi
++    fi
++  fi
++
+   # Warn about linking Apache with libpthread if oci8 extension is enabled on linux.
+   if test "$PHP_OCI8" != "no" -o "$PHP_ORACLE" != "no"; then
+     if test "$PHP_SAPI" = "apache"; then
+diff -ur -x configure -x aclocal.m4 -x config.guess -x config.sub -x '*.orig' -x install-sh -x ltmain.sh -x php_config.h.in php-4.4.9.org/sapi/apache2filter/config.m4 php-4.4.9.changed/sapi/apache2filter/config.m4
+--- php-4.4.9.org/sapi/apache2filter/config.m4	2004-12-17 00:14:28.000000000 +0100
++++ php-4.4.9.changed/sapi/apache2filter/config.m4	2013-10-07 13:34:26.551250929 +0200
+@@ -36,7 +36,6 @@
+   APXS_BINDIR=`$APXS -q BINDIR`
+   APXS_HTTPD=`$APXS -q SBINDIR`/`$APXS -q TARGET`
+   APXS_CFLAGS=`$APXS -q CFLAGS`
+-  APXS_MPM=`$APXS -q MPM_NAME`
+   APU_BINDIR=`$APXS -q APU_BINDIR`
+   APR_BINDIR=`$APXS -q APR_BINDIR`
+ 
+@@ -115,8 +114,16 @@
+     ;;
+   esac
+ 
+-  if test "$APXS_MPM" != "prefork"; then
+-    PHP_BUILD_THREAD_SAFE
++  if test "$APACHE_VERSION" -lt 2004001; then
++    APXS_MPM=`$APXS -q MPM_NAME`
++    if test "$APXS_MPM" != "prefork" && test "$APXS_MPM" != "peruser" && test "$APXS_MPM" != "itk"; then
++      PHP_BUILD_THREAD_SAFE
++    fi
++  else
++    APACHE_THREADED_MPM=`$APXS_HTTPD -V | grep 'threaded:.*yes'`
++    if test -n "$APACHE_THREADED_MPM"; then
++      PHP_BUILD_THREAD_SAFE
++    fi
+   fi
+   AC_MSG_RESULT(yes)
+ 
+diff -ur -x configure -x aclocal.m4 -x config.guess -x config.sub -x '*.orig' -x install-sh -x ltmain.sh -x php_config.h.in php-4.4.9.org/sapi/apache2handler/config.m4 php-4.4.9.changed/sapi/apache2handler/config.m4
+--- php-4.4.9.org/sapi/apache2handler/config.m4	2013-10-07 13:35:57.520041222 +0200
++++ php-4.4.9.changed/sapi/apache2handler/config.m4	2013-10-07 13:34:26.551250929 +0200
+@@ -35,7 +35,6 @@
+   APXS_BINDIR=`$APXS -q BINDIR`
+   APXS_HTTPD=`$APXS -q SBINDIR`/`$APXS -q TARGET`
+   APXS_CFLAGS=`$APXS -q CFLAGS`
+-  APXS_MPM=`$APXS -q MPM_NAME`
+   APU_BINDIR=`$APXS -q APU_BINDIR`
+   APR_BINDIR=`$APXS -q APR_BINDIR`
+ 
+@@ -114,8 +113,16 @@
+     ;;
+   esac
+ 
+-  if test "$APXS_MPM" != "prefork"; then
+-    PHP_BUILD_THREAD_SAFE
++  if test "$APACHE_VERSION" -lt 2004001; then
++    APXS_MPM=`$APXS -q MPM_NAME`
++    if test "$APXS_MPM" != "prefork" && test "$APXS_MPM" != "peruser" && test "$APXS_MPM" != "itk"; then
++      PHP_BUILD_THREAD_SAFE
++    fi
++  else
++    APACHE_THREADED_MPM=`$APXS_HTTPD -V | grep 'threaded:.*yes'`
++    if test -n "$APACHE_THREADED_MPM"; then
++      PHP_BUILD_THREAD_SAFE
++    fi
+   fi
+   AC_MSG_RESULT(yes)
