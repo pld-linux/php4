@@ -96,3 +96,18 @@ diff -ur -x configure -x aclocal.m4 -x config.guess -x config.sub -x '*.orig' -x
 +    fi
    fi
    AC_MSG_RESULT(yes)
+
+--- php-4.4.9/sapi.org/apache2handler/php_functions.c	2007-12-31 08:22:55.000000000 +0100
++++ php-4.4.9/sapi/apache2handler/php_functions.c	2014-08-11 13:09:01.932246720 +0200
+@@ -324,7 +324,11 @@
+ 
+ static char *php_apache_get_version()
+ {
++#if MODULE_MAGIC_NUMBER_MAJOR >= 20060905
++	return (char *) ap_get_server_banner();
++#else
+ 	return (char *) ap_get_server_version();
++#endif
+ }
+ 
+ /* {{{ proto string apache_get_version(void)
