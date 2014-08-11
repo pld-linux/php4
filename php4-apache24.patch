@@ -111,8 +111,6 @@ diff -ur -x configure -x aclocal.m4 -x config.guess -x config.sub -x '*.orig' -x
  }
  
  /* {{{ proto string apache_get_version(void)
---- php-4.4.9/sapi.org/apache2handler/php_functions.c	2014-08-11 13:11:51.548100920 +0200
-+++ php-4.4.9/sapi/apache2handler/php_functions.c	2014-08-11 13:23:17.638383128 +0200
 @@ -373,9 +373,13 @@
  	int n, max_requests;
  	char *p;
@@ -128,3 +126,19 @@ diff -ur -x configure -x aclocal.m4 -x config.guess -x config.sub -x '*.orig' -x
  	
  	for (n = 0; ap_loaded_modules[n]; ++n) {
  		char *s = (char *) ap_loaded_modules[n]->name;
+@@ -407,9 +407,13 @@
+ 	
+ 	snprintf(tmp, sizeof(tmp), "%s:%u", serv->server_hostname, serv->port);
+ 	php_info_print_table_row(2, "Hostname:Port", tmp);
+-	
+-#if !defined(WIN32) && !defined(WINNT)
++
++#if !defined(WIN32) && !defined(WINNT) && !defined(NETWARE)
++#if MODULE_MAGIC_NUMBER_MAJOR >= 20081201
++	snprintf(tmp, sizeof(tmp), "%s(%d)/%d", ap_unixd_config.user_name, ap_unixd_config.user_id, ap_unixd_config.group_id);
++#else
+ 	snprintf(tmp, sizeof(tmp), "%s(%d)/%d", unixd_config.user_name, unixd_config.user_id, unixd_config.group_id);
++#endif
+ 	php_info_print_table_row(2, "User/Group", tmp);
+ #endif
+ 
