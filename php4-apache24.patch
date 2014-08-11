@@ -111,3 +111,20 @@ diff -ur -x configure -x aclocal.m4 -x config.guess -x config.sub -x '*.orig' -x
  }
  
  /* {{{ proto string apache_get_version(void)
+--- php-4.4.9/sapi.org/apache2handler/php_functions.c	2014-08-11 13:11:51.548100920 +0200
++++ php-4.4.9/sapi/apache2handler/php_functions.c	2014-08-11 13:23:17.638383128 +0200
+@@ -373,9 +373,13 @@
+ 	int n, max_requests;
+ 	char *p;
+ 	server_rec *serv = ((php_struct *) SG(server_context))->r->server;
+-#if !defined(WIN32) && !defined(WINNT)
++#if !defined(WIN32) && !defined(WINNT) && !defined(NETWARE)
++#if MODULE_MAGIC_NUMBER_MAJOR >= 20081201
++	AP_DECLARE_DATA extern unixd_config_rec ap_unixd_config;
++#else
+ 	AP_DECLARE_DATA extern unixd_config_rec unixd_config;
+ #endif
++#endif
+ 	
+ 	for (n = 0; ap_loaded_modules[n]; ++n) {
+ 		char *s = (char *) ap_loaded_modules[n]->name;
