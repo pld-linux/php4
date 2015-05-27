@@ -378,7 +378,6 @@ Summary:	php4 as CLI interpreter
 Summary(pl.UTF-8):	php4 jako interpreter działający z linii poleceń
 Group:		Development/Languages/PHP
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Provides:	php-cli = %{epoch}:%{version}-%{release}
 
 %description cli
 php4 as CLI interpreter.
