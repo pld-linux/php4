@@ -2696,6 +2696,7 @@ fi
 # FIXME: how exactly this is needed? as it contains libdir for apache1 or apache2
 %{_libdir}/libphp_common.la
 %{_includedir}/php
+%dir %{_libdir}/php
 %{_libdir}/php/build
 %{_mandir}/man1/php-config.1*
 %{_mandir}/man1/phpize.1*
