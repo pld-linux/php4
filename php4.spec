@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 50
+%define		rel 51
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -1817,6 +1817,9 @@ done
 %{__make} libphp_common.la
 %{__make} build-modules
 
+# version suffix
+v=$(echo %{version} | cut -d. -f1-2)
+
 %if %{with apache1}
 %{__make} libtool-sapi LIBTOOL_SAPI=sapi/apache/libphp4.la -f Makefile.apxs1
 %endif
@@ -1864,12 +1867,18 @@ sed -i -e "s|^libdir=.*|libdir='%{_libdir}'|" $RPM_BUILD_ROOT%{_libdir}/libphp_c
 %if %{with apache1}
 libtool --silent --mode=install install sapi/apache/libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache1
 rm $RPM_BUILD_ROOT%{_libdir}/apache1/libphp4.la
+
+mv $RPM_BUILD_ROOT%{_libdir}/apache1/libphp4{,-$v}.so
+ln -s libphp4-$v.so $RPM_BUILD_ROOT%{_libdir}/apache1/mod_php.so
 %endif
 
 # install apache2 DSO module
 %if %{with apache2}
 libtool --silent --mode=install install sapi/apache2handler/libphp4.la $RPM_BUILD_ROOT%{_libdir}/apache
 rm $RPM_BUILD_ROOT%{_libdir}/apache/libphp4.la
+
+mv $RPM_BUILD_ROOT%{_libdir}/apache/libphp4{,-$v}.so
+ln -s libphp4-$v.so $RPM_BUILD_ROOT%{_libdir}/apache/mod_php.so
 %endif
 
 # better solution?
@@ -2013,6 +2022,12 @@ if [ -f %{_sysconfdir}/php-apache.ini.rpmsave ]; then
 	mv -f %{_sysconfdir}/php-apache.ini.rpmsave %{_sysconfdir}/php-apache2handler.ini
 fi
 %endif
+
+%triggerpostun -n apache1-mod_%{name} -- apache1-mod_%{name} < 3:4.4.9-51
+sed -i -e 's#modules/libphp4.so#modules/mod_php.so#g' /etc/apache/conf.d/*_mod_php4.conf
+
+%triggerpostun -n apache-mod_%{name} -- apache-mod_%{name} < 3:4.4.9-51
+sed -i -e 's#modules/libphp4.so#modules/mod_php.so#g' /etc/httpd/conf.d/*_mod_php4.conf
 
 %post bcmath
 %extension_post
@@ -2631,7 +2646,8 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/apache/conf.d/*_mod_php4.conf
 %dir %{_sysconfdir}/apache.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-apache.ini
-%attr(755,root,root) %{_libdir}/apache1/libphp4.so
+%attr(755,root,root) %{_libdir}/apache1/mod_php.so
+%attr(755,root,root) %{_libdir}/apache1/libphp4-*.so
 %endif
 
 %if %{with apache2}
@@ -2641,7 +2657,8 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/httpd/conf.d/*_mod_php4.conf
 %dir %{_sysconfdir}/apache2handler.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-apache2handler.ini
-%attr(755,root,root) %{_libdir}/apache/libphp4.so
+%attr(755,root,root) %{_libdir}/apache/mod_php.so
+%attr(755,root,root) %{_libdir}/apache/libphp4-*.so
 %endif
 
 %if %{with fcgi}
