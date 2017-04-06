@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 53
+%define		rel 54
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -328,12 +328,11 @@ php4 as DSO module for apache 1.3.x.
 php4 jako moduł DSO (Dynamic Shared Object) dla apache 1.3.x.
 
 %package -n apache-mod_php4
-Summary:	php4 DSO module for apache 2.x
-Summary(pl.UTF-8):	Moduł DSO (Dynamic Shared Object) php4 dla apache 2.x
+Summary:	php4 support for apache 2.x
+Summary(pl.UTF-8):	Wsparcie php4 dla apache 2.x
 Group:		Development/Languages/PHP
+Requires:       apache-mod_php4-core = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	apache(modules-api) = %{apache_modules_api}
-Requires:	apache-mod_mime
 Provides:	webserver(php) = %{version}
 Obsoletes:	apache-mod_php < 1:4.1.1
 Obsoletes:	phpfi
@@ -341,9 +340,23 @@ Obsoletes:	phpfi
 Obsoletes:	php4 < 3:4.3.11-4.16
 
 %description -n apache-mod_php4
-php4 as DSO module for apache 2.x.
+php4 support for apache 2.x.
 
 %description -n apache-mod_php4 -l pl.UTF-8
+Wsparcie php4 dla apache 2.x.
+
+%package -n apache-mod_php4-core
+Summary:	php4 DSO module for apache 2.x
+Summary(pl.UTF-8):	Moduł DSO (Dynamic Shared Object) php4 dla apache 2.x
+Group:		Development/Languages/PHP
+Requires:	%{name}-common = %{epoch}:%{version}-%{release}
+Requires:	apache(modules-api) = %{apache_modules_api}
+Requires:	apache-mod_mime
+
+%description -n apache-mod_php4-core
+php4 as DSO module for apache 2.x.
+
+%description -n apache-mod_php4-core -l pl.UTF-8
 php4 jako moduł DSO (Dynamic Shared Object) dla apache 2.x.
 
 %package fcgi
@@ -2654,9 +2667,12 @@ fi
 %defattr(644,root,root,755)
 %doc sapi/apache2handler/{CREDITS,README}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/httpd/conf.d/*_mod_php4.conf
+%attr(755,root,root) %{_libdir}/apache/mod_php.so
+
+%files -n apache-mod_php4-core
+%defattr(644,root,root,755)
 %dir %{_sysconfdir}/apache2handler.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/php-apache2handler.ini
-%attr(755,root,root) %{_libdir}/apache/mod_php.so
 %attr(755,root,root) %{_libdir}/apache/libphp4-*.so
 %endif
 
