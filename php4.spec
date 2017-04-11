@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 54
+%define		rel 55
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -1866,6 +1866,8 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/{php,apache{,1}},%{_sysconfdir}} \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT{/etc/apache/conf.d,/etc/httpd/conf.d} \
 	$RPM_BUILD_ROOT%{_mandir}/man1
+
+v=$(echo %{version} | cut -d. -f1-2)
 
 # install the apache modules' files
 %{__make} install-headers install-build install-modules install-programs \
