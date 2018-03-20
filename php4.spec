@@ -154,6 +154,7 @@ Patch56:	%{name}-gmp.patch
 Patch57:	%{name}-pcre.patch
 Patch58:	%{name}-apache24.patch
 Patch59:	php-bug-68486.patch
+Patch60:	%{name}-libx32.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -1644,6 +1645,9 @@ cp php.ini-dist php.ini
 %patch57 -p1
 %patch58 -p1
 %patch59 -p1
+%if "%{_lib}" == "libx32"
+%patch60 -p1
+%endif
 
 %if %{with hardening}
 zcat %{SOURCE8} | patch -p1
