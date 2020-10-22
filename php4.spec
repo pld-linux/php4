@@ -1655,6 +1655,9 @@ zcat %{SOURCE8} | patch -p1
 
 cp -f Zend/LICENSE{,.Zend}
 
+# make colliding symbol static
+%{__sed} -i -e 's/^char \*yytext/static &/' Zend/zend_{ini,language}_scanner.c
+
 %build
 API=$(awk '/#define PHP_API_VERSION/{print $3}' main/php.h)
 if [ $API != %{php_api_version} ]; then
