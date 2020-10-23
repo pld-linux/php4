@@ -6,7 +6,6 @@
 # - make additional headers added by mail patch configurable
 # - too many unneccessary libs:
 #  - libkrb5.so.3 is needed by (installed) php4-common-4.4.8-15.i686
-#  - php4-common-4.4.8-15.i686 marks net-snmp-libs-5.4.1.2-1.i686 (cap libnetsnmp.so.15)
 #    php5-common doesn't have such deps
 #  - php4-cli pulls: libltdl
 # - above is caused by openssl linked in statically as openssl links with kerberos

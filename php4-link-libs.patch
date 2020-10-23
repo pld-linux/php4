@@ -10,34 +10,48 @@
  if test "$ac_cv_func_dlopen" = "yes"; then
 --- php.org/ext/ldap/config.m4.org	2006-08-10 14:23:59.583381250 +0000
 +++ php/ext/ldap/config.m4	2006-08-10 14:24:40.013908000 +0000
-@@ -113,8 +113,9 @@
+@@ -113,8 +113,8 @@
    dnl Save original values
    _SAVE_CPPFLAGS=$CPPFLAGS
-   _SAVE_LDFLAGS=$LDFLAGS
+-  _SAVE_LDFLAGS=$LDFLAGS
 -  LDFLAGS="$LDFLAGS $LDAP_SHARED_LIBADD"
-+  LDFLAGS="$LDFLAGS"
++  _SAVE_LIBS="$LIBS"
    CPPFLAGS="$CPPFLAGS -I$LDAP_INCDIR"
 +  LIBS="$LIBS $LDAP_SHARED_LIBADD"
  
    dnl Check for 3 arg ldap_set_rebind_proc
    AC_CACHE_CHECK([for 3 arg ldap_set_rebind_proc], ac_cv_3arg_setrebindproc,
-@@ -138,4 +139,5 @@
+@@ -138,4 +138,4 @@
    dnl Restore original values
    CPPFLAGS=$_SAVE_CPPFLAGS
-   LDFLAGS=$_SAVE_LDFLAGS
+-  LDFLAGS=$_SAVE_LDFLAGS
 +  LIBS=$_SAVE_LIBS
  fi 
---- php.org/acinclude.m4~	2006-08-20 13:12:40.191078397 +0200
-+++ php/acinclude.m4	2006-08-20 13:14:34.859406479 +0200
-@@ -1607,7 +1607,7 @@
+--- php-4.4.9/acinclude.m4.orig	2020-10-22 22:24:40.164611677 +0200
++++ php-4.4.9/acinclude.m4	2020-10-22 22:25:44.137927068 +0200
+@@ -1621,18 +1621,18 @@
+ dnl Wrapper for AC_CHECK_LIB
+ dnl
+ AC_DEFUN([PHP_CHECK_LIBRARY], [
+-  save_old_LDFLAGS=$LDFLAGS
++  save_old_LIBS=$LIBS
+   ac_stuff="$5"
    
    save_ext_shared=$ext_shared
    ext_shared=yes
 -  PHP_EVAL_LIBLINE([$]ac_stuff, LDFLAGS)
 +  PHP_EVAL_LIBLINE([$]ac_stuff, LIBS)
    AC_CHECK_LIB([$1],[$2],[
-     LDFLAGS=$save_old_LDFLAGS
+-    LDFLAGS=$save_old_LDFLAGS
++    LIBS=$save_old_LIBS
      ext_shared=$save_ext_shared
+     $3
+   ],[
+-    LDFLAGS=$save_old_LDFLAGS
++    LIBS=$save_old_LIBS
+     ext_shared=$save_ext_shared
+     unset ac_cv_lib_$1[]_$2
+     $4
 --- php.org/ext/openssl/config0.m4~	2004-12-30 15:54:35.000000000 +0100
 +++ php/ext/openssl/config0.m4	2006-08-20 13:32:55.412011298 +0200
 @@ -22,6 +22,7 @@
