@@ -72,7 +72,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 67
+%define		rel 68
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -404,7 +404,17 @@ Summary:	/usr/bin/php symlink
 Summary(pl.UTF-8):	Dowiązanie symboliczne /usr/bin/php
 Group:		Development/Languages/PHP
 Requires:	%{name}-cli = %{epoch}:%{version}-%{release}
-Obsoletes:	/usr/bin/php
+Obsoletes:	php52-program
+Obsoletes:	php53-program
+Obsoletes:	php54-program
+Obsoletes:	php55-program
+Obsoletes:	php56-program
+Obsoletes:	php70-program
+Obsoletes:	php71-program
+Obsoletes:	php72-program
+Obsoletes:	php73-program
+Obsoletes:	php74-program
+Obsoletes:	php80-program
 
 %description program
 Package providing /usr/bin/php symlink to PHP CLI.
