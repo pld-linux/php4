@@ -428,7 +428,6 @@ Summary(ru.UTF-8):	Разделяемые библиотеки для php
 Summary(uk.UTF-8):	Бібліотеки спільного використання для php
 Group:		Libraries
 # because of dlclose() bugs in glibc <= 2.3.4 causing SEGVs on exit
-Requires(triggerun):	sed >= 4.0
 Requires:	glibc >= 6:2.3.5
 Requires:	php-dirs
 Provides:	php(modules_api) = %{php_api_version}
