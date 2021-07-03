@@ -43,7 +43,7 @@
  sinclude(threads.m4)
 -sinclude(TSRM/threads.m4)
  
- AC_DEFUN(TSRM_CHECK_PTHREADS,[
+ AC_DEFUN([TSRM_CHECK_PTHREADS],[
  		
 --- php-4.3.4/configure.in.orig	2003-12-16 23:38:01.000000000 +0100
 +++ php-4.3.4/configure.in	2003-12-16 23:41:38.479641328 +0100

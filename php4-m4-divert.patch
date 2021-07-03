@@ -2,7 +2,7 @@ diff -ur php-4.4.9.org/configure.in php-4.4.9/configure.in
 --- php-4.4.9.org/configure.in	2008-08-06 10:32:30.000000000 +0200
 +++ php-4.4.9/configure.in	2009-08-18 12:24:17.574051486 +0200
 @@ -1,7 +1,7 @@
- dnl ## $Id$ -*- sh -*-
+ dnl ## $Id: configure.in,v 1.396.2.164.2.53 2008/08/06 08:32:30 derick Exp $ -*- sh -*-
  dnl ## Process this file with autoconf to produce a configure script.
  
 -divert(1)
@@ -50,7 +50,7 @@ diff -ur php-4.4.9.org/ext/standard/config.m4 php-4.4.9/ext/standard/config.m4
 --- php-4.4.9.org/ext/standard/config.m4	2007-01-22 20:59:21.000000000 +0100
 +++ php-4.4.9/ext/standard/config.m4	2009-08-18 12:24:17.576968996 +0200
 @@ -1,6 +1,6 @@
- dnl $Id$ -*- sh -*-
+ dnl $Id: config.m4,v 1.47.2.16.2.1 2007/01/22 19:59:21 derick Exp $ -*- sh -*-
  
 -divert(3)dnl
 +divert(1003)dnl

@@ -21,7 +21,7 @@ diff -ur php-5.2.0.org/ext/standard/mail.c php-5.2.0/ext/standard/mail.c
  #ifdef PHP_WIN32
  #include "win32/sendmail.h"
 @@ -104,6 +109,18 @@
- 		return;
+ 		MAIL_ASCIIZ_CHECK(extra_cmd, extra_cmd_len);
  	}
  
 +    /* search for To: and Subject: headers which should be specified in proper mail() parameters, not in additional headers */

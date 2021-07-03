@@ -1,7 +1,7 @@
 --- php-4.3.0/ext/hyperwave/config.m4.orig	Thu Jan  2 23:17:53 2003
 +++ php-4.3.0/ext/hyperwave/config.m4	Thu Jan  2 23:19:42 2003
 @@ -2,19 +2,12 @@
- dnl $Id$
+ dnl $Id: config.m4,v 1.4 2002/03/12 16:47:14 sas Exp $
  dnl
  
 -AC_MSG_CHECKING(for Hyperwave support)

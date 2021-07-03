@@ -35,10 +35,10 @@ diff -urN php-4.2.1RC2.org/ext/standard/info.h php-4.2.1RC2/ext/standard/info.h
  PHP_FUNCTION(phpinfo);
 --- php-4.3.0.org/main/logos.h	Sat May 11 20:49:24 2002
 +++ php-4.3.0/main/logos.h	Sat May 11 20:50:32 2002
-@@ -1503,1 +1503,127 @@
- 	249, 249, 207, 233,   5,   4,   0,  59 };
-+
-+
+@@ -1392,3 +1392,127 @@
+ 	164,  85,  35,  68, 221, 218, 245, 107, 216, 174, 
+ 	  3,   2,   0,  59  }; 
+ 
 +unsigned char pld_logo[] = {
 + 	137,  80,  78,  71,  13,  10,  26,  10,   0,   0,
 + 	  0,  13,  73,  72,  68,  82,   0,   0,   0,  80,

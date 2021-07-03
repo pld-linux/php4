@@ -36,7 +36,7 @@
 -			}
 -		}
  	}
- 	if (free_ini_search_path) {
+ 
 @@ -431,9 +440,13 @@
  	 * parse any .ini files found in this directory. */
  	if (!sapi_module.php_ini_ignore && strlen(PHP_CONFIG_FILE_SCAN_DIR)) {

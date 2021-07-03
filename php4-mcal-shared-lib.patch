@@ -10,8 +10,8 @@
      fi
    done
 @@ -37,8 +37,8 @@
-     AC_MSG_ERROR(Unable to locate your libmcal header files - icalroutines.h should be in the directory you specify or in the include/ subdirectory below it - default search location is $MCAL_DEFAULT_SEARCH)
-   fi
+     fi
+   done
  
 -  if test ! -f "$MCAL_LIBRARY/libmcal.a"; then
 -    AC_MSG_ERROR(Unable to locate your libmcal library files - libmcal.a should be in the directory you specify or in the lib/ subdirectory below it - default search location is $MCAL_DEFAULT_SEARCH)

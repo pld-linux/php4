@@ -78,7 +78,7 @@ diff -ur -x configure -x aclocal.m4 -x config.guess -x config.sub -x '*.orig' -x
    APU_BINDIR=`$APXS -q APU_BINDIR`
    APR_BINDIR=`$APXS -q APR_BINDIR`
  
-@@ -114,8 +113,16 @@
+@@ -114,8 +114,16 @@
      ;;
    esac
  
@@ -96,7 +96,7 @@ diff -ur -x configure -x aclocal.m4 -x config.guess -x config.sub -x '*.orig' -x
 +    fi
    fi
    AC_MSG_RESULT(yes)
-
+  
 --- php-4.4.9/sapi.org/apache2handler/php_functions.c	2007-12-31 08:22:55.000000000 +0100
 +++ php-4.4.9/sapi/apache2handler/php_functions.c	2014-08-11 13:09:01.932246720 +0200
 @@ -324,7 +324,11 @@

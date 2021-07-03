@@ -7,5 +7,5 @@ diff -burN php-4.3.10.orig/Zend/zend_strtod.c php-4.3.10/Zend/zend_strtod.c
  #include <zend_strtod.h>
 +#include <stdint.h>
  
- #if defined(LIBC_SCCS) && !defined(lint)
- static char *rcsid = "$OpenBSD: strtod.c,v 1.19 2004/02/03 16:52:11 drahn Exp $";
+ #ifdef HAVE_SYS_TYPES_H
+ #include <sys/types.h>

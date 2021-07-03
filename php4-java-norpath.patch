@@ -2,7 +2,7 @@ diff -burN php-4.3.2/ext/java/config.m4 php-4.3.2-java-norpath/ext/java/config.m
 --- php-4.3.2/ext/java/config.m4	Fri Apr  4 19:43:13 2003
 +++ php-4.3.2-java-norpath/ext/java/config.m4	Wed Jun 11 09:38:23 2003
 @@ -58,7 +58,6 @@
- AC_DEFUN(JAVA_CHECK_LIB, [
+ AC_DEFUN([JAVA_CHECK_LIB], [
   AC_MSG_CHECKING([Checking for libjava])
   if test -d $PHP_JAVA/lib/kaffe; then
 -   PHP_ADD_LIBPATH($PHP_JAVA/lib)
