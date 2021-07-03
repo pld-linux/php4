@@ -423,7 +423,7 @@ diff -urbB php-4.4.0.org/ext/ming/config.m4 php-4.4.0/ext/ming/config.m4
 +  PHP_ADD_LIBRARY_WITH_PATH(ming, $MING_DIR/libx32, MING_SHARED_LIBADD)
  
    AC_MSG_CHECKING([for destroySWFBlock])
-   AC_TRY_RUN([
+   old_CPPFLAGS=$CPPFLAGS
 diff -urbB php-4.4.0.org/ext/mssql/config.m4 php-4.4.0/ext/mssql/config.m4
 --- php-4.4.0.org/ext/mssql/config.m4	2004-12-08 19:59:11.000000000 +0100
 +++ php-4.4.0/ext/mssql/config.m4	2005-07-11 21:44:33.635262496 +0200
@@ -456,8 +456,8 @@ diff -urbB php-4.4.0.org/ext/mysql/config.m4 php-4.4.0/ext/mysql/config.m4
      /usr/local/mysql/var/mysql.sock \
      /Private/tmp/mysql.sock \
 @@ -115,7 +115,7 @@
- 
-   MYSQL_MODULE_TYPE=external
+       ;;
+   esac
  
 -  for i in lib lib/mysql; do
 +  for i in libx32 libx32/mysql; do
@@ -465,7 +465,7 @@ diff -urbB php-4.4.0.org/ext/mysql/config.m4 php-4.4.0/ext/mysql/config.m4
    done
  
 @@ -130,9 +130,9 @@
-       PHP_CHECK_LIBRARY(mysqlclient, mysql_error, [], [
+       PHP_CHECK_LIBRARY($MY_LIBNAME, mysql_error, [], [
          AC_MSG_ERROR([mysql configure failed. Please check config.log for more information.])
        ], [
 -        -L$PHP_ZLIB_DIR/lib -L$MYSQL_LIB_DIR 
@@ -475,7 +475,7 @@ diff -urbB php-4.4.0.org/ext/mysql/config.m4 php-4.4.0/ext/mysql/config.m4
 +      MYSQL_LIBS="-L$PHP_ZLIB_DIR/libx32 -lz"
      else
        PHP_ADD_LIBRARY(z,, MYSQL_SHARED_LIBADD)
-       PHP_CHECK_LIBRARY(mysqlclient, mysql_errno, [], [
+       PHP_CHECK_LIBRARY($MY_LIBNAME, mysql_errno, [], [
 diff -urbB php-4.4.0.org/ext/xml/config.m4 php-4.4.0/ext/xml/config.m4
 --- php-4.4.0.org/ext/xml/config.m4	2005-07-11 21:44:02.598980000 +0200
 +++ php-4.4.0/ext/xml/config.m4	2005-07-11 21:44:33.637262192 +0200
