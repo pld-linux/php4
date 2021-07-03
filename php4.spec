@@ -87,7 +87,6 @@ License:	PHP
 Group:		Libraries
 Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
 # Source0-md5:	2e3b2a0e27f10cb84fd00e5ecd7a1880
-#Source0:	http://cvs.php.net/viewvc.cgi/phpweb/distributions/php-%{version}.tar.bz2?revision=1.1
 Source3:	%{name}-mod_php.conf
 Source4:	%{name}-cgi-fcgi.ini
 Source5:	%{name}-cgi.ini
