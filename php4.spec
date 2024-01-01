@@ -25,6 +25,7 @@
 %bcond_without	imap		# without IMAP extension module
 %bcond_without	interbase	# without InterBase extension module
 %bcond_without	ldap		# without LDAP extension module
+%bcond_with	mcal		# with mcal extension module
 %bcond_without	mhash		# without mhash extension module
 %bcond_with	ming		# with ming extension module
 %bcond_without	mm		# without mm support for session storage
@@ -72,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 73
+%define		rel 74
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -185,7 +186,7 @@ BuildRequires:	gmp-devel
 %{?with_cpdf:BuildRequires:	libcpdf-devel >= 2.02r1-2}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libltdl-devel >= 1.4
-BuildRequires:	libmcal-devel
+%{?with_mcal:BuildRequires:	libmcal-devel}
 BuildRequires:	libmcrypt-devel >= 2.4.4
 BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libtiff-devel
@@ -1801,7 +1802,7 @@ for sapi in $sapis; do
 	%{?with_java:--with-java=%{_libdir}/java} \
 	--with-jpeg-dir=/usr \
 	%{?with_ldap:--with-ldap=shared} \
-	--with-mcal=shared,/usr \
+	%{?with_mcal:--with-mcal=shared,/usr} \
 	--with-mcrypt=shared \
 	%{?with_mhash:--with-mhash=shared} \
 	--with-mime-magic=shared,/usr/share/misc/magic.mime \
@@ -2934,11 +2935,13 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/conf.d/mbstring.ini
 %attr(755,root,root) %{extensionsdir}/mbstring.so
 
+%if %{with mcal}
 %files mcal
 %defattr(644,root,root,755)
 %doc ext/mcal/CREDITS
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/conf.d/mcal.ini
 %attr(755,root,root) %{extensionsdir}/mcal.so
+%endif
 
 %files mcrypt
 %defattr(644,root,root,755)
