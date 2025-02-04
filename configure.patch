@@ -1,0 +1,178 @@
+--- php-7.2.34/acinclude.m4.orig	2025-01-23 20:45:18.432571977 +0100
++++ php-7.2.34/acinclude.m4	2025-01-23 20:54:20.252520613 +0100
+@@ -1349,12 +1349,13 @@
+ #define _REENTRANT
+ #include <sys/types.h>
+ #include <dirent.h>
++#include <stdlib.h>
+ 
+ #ifndef PATH_MAX
+ #define PATH_MAX 1024
+ #endif
+ 
+-main() {
++int main() {
+ 	DIR *dir;
+ 	char entry[sizeof(struct dirent)+PATH_MAX];
+ 	struct dirent *pentry = (struct dirent *) &entry;
+--- php-7.2.34/acinclude.m4.orig	2025-01-24 18:36:21.516873084 +0100
++++ php-7.2.34/acinclude.m4	2025-01-24 20:22:44.293766361 +0100
+@@ -339,8 +340,9 @@
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <errno.h>
++#include <stdlib.h>
+ $1
+-    main() {
++    int main() {
+     int fd = open("conftest_in", O_WRONLY|O_CREAT, 0600);
+ 
+     if (fd < 0) exit(1);
+@@ -367,8 +369,9 @@
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <errno.h>
++#include <stdlib.h>
+ $1
+-    main() {
++    int main() {
+     char buf[3]; 
+     int fd = open("conftest_in", O_RDONLY);
+     if (fd < 0) exit(1);
+@@ -1157,7 +1157,7 @@
+ AC_TRY_RUN([
+ #include <time.h>
+ 
+-main() {
++int main() {
+ char buf[27];
+ struct tm t;
+ time_t old = 0;
+@@ -1474,7 +1476,10 @@
+ dnl
+ AC_DEFUN([PHP_AC_BROKEN_SPRINTF],[
+   AC_CACHE_CHECK(whether sprintf is broken, ac_cv_broken_sprintf,[
+-    AC_TRY_RUN([main() {char buf[20];exit(sprintf(buf,"testing 123")!=11); }],[
++    AC_TRY_RUN([
++#include <stdio.h>
++#include <stdlib.h>
++int main() {char buf[20];exit(sprintf(buf,"testing 123")!=11); }],[
+       ac_cv_broken_sprintf=no
+     ],[
+       ac_cv_broken_sprintf=yes
+@@ -1698,6 +1703,8 @@
+   AC_CACHE_VAL(have_broken_glibc_fopen_append,[
+   AC_TRY_RUN([
+ #include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
+ int main(int argc, char *argv[])
+ {
+   FILE *fp;
+@@ -1765,6 +1772,7 @@
+ 		AC_TRY_RUN([
+ #define _GNU_SOURCE
+ #include <stdio.h>
++#include <stdlib.h>
+ 
+ struct cookiedata {
+ 	__off64_t pos;
+@@ -1781,7 +1789,7 @@
+ 
+ cookie_io_functions_t funcs = {reader, writer, seeker, closer};
+ 
+-main() {
++int main() {
+   struct cookiedata g = { 0 };
+   FILE *fp = fopencookie(&g, "r", funcs);
+ 
+@@ -1898,7 +1906,7 @@
+   if test "$found" = "yes"; then
+     ac_libs=$LIBS
+     LIBS="$LIBS -l$2"
+-    AC_TRY_RUN([main() { return (0); }],[found=yes],[found=no],[found=no])
++    AC_TRY_RUN([int main() { return (0); }],[found=yes],[found=no],[found=no])
+     LIBS=$ac_libs
+   fi
+ 
+--- php-7.2.34/configure.in.orig	2025-01-24 18:36:21.610206957 +0100
++++ php-7.2.34/configure.in	2025-01-24 19:52:10.669915792 +0100
+@@ -697,6 +697,8 @@
+ #ifndef AF_INET
+ # include <sys/socket.h>
+ #endif
++#include <string.h>
++#include <stdlib.h>
+ int main(void) {
+   struct addrinfo *ai, *pai, hints;
+ 
+#if HAVE_CRYPT
+--- php-5.5.38/ext/standard/config.m4.orig	2016-07-20 10:41:48.000000000 +0200
++++ php-5.5.38/ext/standard/config.m4	2025-01-29 22:44:40.021689011 +0100
+@@ -7,6 +7,8 @@
+   AC_TRY_RUN( [
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
+ 
+ int main(int argc, char **argv)
+ {
+@@ -68,7 +70,10 @@
+ #if HAVE_CRYPT_H
+ #include <crypt.h>
+ #endif
++#include <stdlib.h>
++#include <string.h>
+ 
++int
+ main() {
+ #if HAVE_CRYPT
+     exit (strcmp((char *)crypt("rasmuslerdorf","rl"),"rl.3StKT.4T8M"));
+@@ -92,7 +97,10 @@
+ #if HAVE_CRYPT_H
+ #include <crypt.h>
+ #endif
++#include <stdlib.h>
++#include <string.h>
+ 
++int
+ main() {
+ #if HAVE_CRYPT
+     exit (strcmp((char *)crypt("rasmuslerdorf","_J9..rasm"),"_J9..rasmBYk8r9AiWNc"));
+@@ -116,7 +124,10 @@
+ #if HAVE_CRYPT_H
+ #include <crypt.h>
+ #endif
++#include <stdlib.h>
++#include <string.h>
+ 
++int
+ main() {
+ #if HAVE_CRYPT
+     char salt[15], answer[40];
+@@ -149,7 +160,10 @@
+ #if HAVE_CRYPT_H
+ #include <crypt.h>
+ #endif
++#include <stdlib.h>
++#include <string.h>
+ 
++int
+ main() {
+ #if HAVE_CRYPT
+     char salt[30], answer[70];
+--- php-7.2.34/Zend/acinclude.m4.orig	2020-09-30 07:15:55.000000000 +0200
++++ php-7.2.34/Zend/acinclude.m4	2025-01-24 20:51:32.443588605 +0100
+@@ -67,7 +67,10 @@
+ dnl
+ AC_DEFUN([AC_ZEND_BROKEN_SPRINTF],[
+   AC_CACHE_CHECK(whether sprintf is broken, ac_cv_broken_sprintf,[
+-    AC_TRY_RUN([main() {char buf[20];exit(sprintf(buf,"testing 123")!=11); }],[
++    AC_TRY_RUN([
++#include <stdio.h>
++#include <stdlib.h>
++int main() {char buf[20];exit(sprintf(buf,"testing 123")!=11); }],[
+       ac_cv_broken_sprintf=no
+     ],[
+       ac_cv_broken_sprintf=yes

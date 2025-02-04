@@ -1,0 +1,531 @@
+--- php-4.4.9/ext/hyperwave/hg_comm.c.orig	2007-12-31 08:22:47.000000000 +0100
++++ php-4.4.9/ext/hyperwave/hg_comm.c	2025-02-03 23:39:05.551797387 +0100
+@@ -654,7 +654,7 @@
+ 		scriptname = emalloc(5*sizeof(char *));
+ 		if (zend_hash_find(&EG(symbol_table), "SCRIPT_NAME", sizeof("SCRIPT_NAME"), (void **) &script_name)==FAILURE)
+ 			for(i=0; i<5; i++)
+-				scriptname[i] = &emptystring;
++				scriptname[i] = emptystring;
+ 		else {
+ 			convert_to_string_ex(script_name);
+ 			for(i=0; i<5; i++)
+--- php-4.4.9/ext/mnogosearch/php_mnogo.c.orig	2025-02-03 15:39:29.567737815 +0100
++++ php-4.4.9/ext/mnogosearch/php_mnogo.c	2025-02-03 23:43:55.133417888 +0100
+@@ -902,7 +902,7 @@
+ 				php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s",Agent->Conf->errstr);
+ 				RETURN_FALSE;
+ #if UDM_VERSION_ID >= 30300
+-			} else UdmSynonymListSort(&(Agent->Conf->Synonym));
++			} else UdmSynonymListListSortItems(&(Agent->Conf->Synonym));
+ #else
+ #if UDM_VERSION_ID >= 30204
+ 			} else UdmSynonymListSort(&(Agent->Conf->Synonyms));
+@@ -1824,7 +1824,7 @@
+ 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s",Agent->Conf->errstr);
+ 			RETURN_FALSE;
+ #if UDM_VERSION_ID >= 30300
+-		} else UdmSynonymListSort(&(Agent->Conf->Synonym));
++		} else UdmSynonymListListSortItems(&(Agent->Conf->Synonym));
+ #else
+ 		} else UdmSynonymListSort(&(Agent->Conf->Synonyms));
+ #endif
+--- php-4.4.9/ext/qtdom/qtdom.c.orig	2007-12-31 08:22:51.000000000 +0100
++++ php-4.4.9/ext/qtdom/qtdom.c	2025-02-03 23:46:23.417581021 +0100
+@@ -26,6 +26,7 @@
+ #include "php_ini.h"
+ #include "qtdom.h"
+ #include "qtdom_qt.h"
++#include "ext/standard/info.h"
+ 
+ #if HAVE_QTDOM
+ 
+--- php-4.4.9/ext/readline/readline.c.orig	2007-12-31 08:22:51.000000000 +0100
++++ php-4.4.9/ext/readline/readline.c	2025-02-03 23:59:45.845414718 +0100
+@@ -336,7 +336,7 @@
+ /* {{{ proto void readline_completion_function(string funcname) 
+    Readline completion function? */
+ 
+-static char *_readline_command_generator(char *text,int state)
++static char *_readline_command_generator(const char *text,int state)
+ {
+ 	HashTable  *myht = Z_ARRVAL(_readline_array);
+ 	zval **entry;
+@@ -379,7 +379,7 @@
+ 	return ret;
+ }
+ 
+-static char **_readline_completion_cb(char *text, int start, int end)
++static char **_readline_completion_cb(const char *text, int start, int end)
+ { 
+ 	zval *params[4];
+ 	int i;
+@@ -394,7 +394,7 @@
+ 	if (call_user_function(CG(function_table), NULL, params[0], &_readline_array, 3, params+1 TSRMLS_CC) == SUCCESS) {
+ 		if (Z_TYPE(_readline_array) == IS_ARRAY) {
+ 			if (zend_hash_num_elements(Z_ARRVAL(_readline_array))) {
+-				matches = completion_matches(text,_readline_command_generator);
++				matches = rl_completion_matches(text,_readline_command_generator);
+ 			} else {
+ 				matches = malloc(sizeof(char *) * 2);
+ 				matches[0] = strdup("");
+--- php-4.4.9/ext/sysvmsg/sysvmsg.c.orig	2007-12-31 08:22:53.000000000 +0100
++++ php-4.4.9/ext/sysvmsg/sysvmsg.c	2025-02-04 00:02:29.046333400 +0100
+@@ -320,7 +320,7 @@
+ 
+ 			MAKE_STD_ZVAL(tmp);
+ 			PHP_VAR_UNSERIALIZE_INIT(var_hash);
+-			if (!php_var_unserialize(&tmp, &p, p + result, &var_hash TSRMLS_CC)) {
++			if (!php_var_unserialize(&tmp, (const unsigned char **)&p, p + result, &var_hash TSRMLS_CC)) {
+ 				zend_error(E_WARNING, "%s(): message corrupted", get_active_function_name(TSRMLS_C));
+ 				RETVAL_FALSE;
+ 			} else {
+--- php-4.4.9/ext/xmlrpc/libxmlrpc/encodings.c.orig	2004-03-08 19:52:40.000000000 +0100
++++ php-4.4.9/ext/xmlrpc/libxmlrpc/encodings.c	2025-02-04 00:05:27.930673700 +0100
+@@ -61,7 +61,7 @@
+       size_t inlenleft = src_len;
+       int outlen = src_len;
+       iconv_t ic = iconv_open(to_enc, from_enc);
+-      char const *src_ptr = src;
++      char *src_ptr = src;
+       char* out_ptr = 0;
+ 
+       if(ic != (iconv_t)-1) {
+--- php-4.4.9/ext/interbase/interbase.c.orig	2007-12-31 08:22:48.000000000 +0100
++++ php-4.4.9/ext/interbase/interbase.c	2025-02-04 12:45:49.839809259 +0100
+@@ -331,20 +331,20 @@
+ 	int i;
+ 
+ 	IBDEBUG("Checking transactions to close...");
+-	if (link->trans[0] != NULL) { /* commit default */
++	if (link->trans[0] != (isc_tr_handle) NULL) { /* commit default */
+ 		IBDEBUG("Committing default transaction...");
+ 		if (isc_commit_transaction(IB_STATUS, &link->trans[0])) {
+ 			_php_ibase_error(TSRMLS_C);
+ 		}
+-		link->trans[0] = NULL;
++		link->trans[0] = (isc_tr_handle) NULL;
+ 	}
+ 	for (i = 1; i < IBASE_TRANS_ON_LINK; i++) {
+-		if (link->trans[i] != NULL) {
++		if (link->trans[i] != (isc_tr_handle) NULL) {
+ 			IBDEBUG("Rolling back other transactions...");
+ 			if (isc_rollback_transaction(IB_STATUS, &link->trans[i])) {
+ 				_php_ibase_error(TSRMLS_C);
+ 			}
+-			link->trans[i] = NULL;
++			link->trans[i] = (isc_tr_handle) NULL;
+ 		}
+ 	}
+ }
+@@ -479,7 +479,7 @@
+ {
+ 	ibase_blob_handle *ib_blob = (ibase_blob_handle *)rsrc->ptr;
+ 
+-	if (ib_blob->bl_handle != NULL) { /* blob open*/
++	if (ib_blob->bl_handle != (isc_blob_handle) NULL) { /* blob open*/
+ 		if (isc_cancel_blob(IB_STATUS, &ib_blob->bl_handle)) {
+ 			php_error_docref(NULL TSRMLS_CC, E_ERROR, "You can lose data. Close any blob after reading of writing it. Use ibase_blob_close() before calling ibase_close()");
+ 		}
+@@ -501,12 +501,12 @@
+ 		ib_link = (ibase_db_link *) zend_fetch_resource(NULL TSRMLS_CC, ib_trans->link_rsrc, "InterBase link", NULL, 2, le_link, le_plink);
+ 	
+ 		if (ib_link) {
+-			if (ib_link->trans[ib_trans->trans_num] != NULL) {
++			if (ib_link->trans[ib_trans->trans_num] != (isc_tr_handle) NULL) {
+ 				IBDEBUG("Rolling back unhandled transaction...");
+ 				if (isc_rollback_transaction(IB_STATUS, &ib_link->trans[ib_trans->trans_num])) {
+ 					_php_ibase_error(TSRMLS_C);
+ 				}
+-				ib_link->trans[ib_trans->trans_num] = NULL;
++				ib_link->trans[ib_trans->trans_num] = (isc_tr_handle) NULL;
+ 			}
+ 		}
+ 	}	
+@@ -739,7 +739,7 @@
+ 	zval ***args;
+ 	char *ib_server = NULL, *ib_uname, *ib_passwd, *ib_charset = NULL, *ib_buffers = NULL, *ib_dialect = NULL, *ib_role = NULL;
+ 	int i, ib_uname_len, ib_passwd_len;
+-	isc_db_handle db_handle = NULL;
++	isc_db_handle db_handle = (isc_db_handle) NULL;
+ 	char *hashed_details;
+ 	int hashed_details_length = 0;
+ 	ibase_db_link *ib_link = NULL;
+@@ -850,7 +850,7 @@
+ 			ib_link->dialect = (ib_dialect ? (unsigned short) strtoul(ib_dialect, NULL, 10) : SQL_DIALECT_CURRENT);
+ 
+ 			for (i = 0; i < IBASE_TRANS_ON_LINK; i++) {
+-				ib_link->trans[i] = NULL;
++				ib_link->trans[i] = (isc_tr_handle) NULL;
+ 			}
+ 						
+ 			/* hash it up */
+@@ -913,7 +913,7 @@
+ 		ib_link->dialect = (ib_dialect ? (unsigned short) strtoul(ib_dialect, NULL, 10) : SQL_DIALECT_CURRENT);
+ 
+ 		for (i = 0; i < IBASE_TRANS_ON_LINK; i++) {
+-			ib_link->trans[i] = NULL;
++			ib_link->trans[i] = (isc_tr_handle) NULL;
+ 		}
+ 		
+ 		ZEND_REGISTER_RESOURCE(return_value, ib_link, le_link);
+@@ -1082,7 +1082,7 @@
+ 	IB_QUERY = emalloc(sizeof(ibase_query));
+ 	IB_QUERY->link = link;
+ 	IB_QUERY->trans = trans;
+-	IB_QUERY->stmt = NULL;
++	IB_QUERY->stmt = (isc_stmt_handle) NULL;
+ 	IB_QUERY->out_sqlda = NULL;
+ 	IB_QUERY->in_sqlda = NULL;
+ 	IB_QUERY->in_array = NULL;
+@@ -1322,7 +1322,7 @@
+ 							ib_blob = (ibase_blob_handle *) emalloc(sizeof(ibase_blob_handle));
+ 							ib_blob->trans_handle = ib_query->trans;
+ 							ib_blob->link = ib_query->link;
+-							ib_blob->bl_handle = NULL;
++							ib_blob->bl_handle = (isc_blob_handle) NULL;
+ 							if (isc_create_blob(IB_STATUS, &ib_blob->link, &ib_blob->trans_handle, &ib_blob->bl_handle, &ib_blob->bl_qd)) {
+ 								efree(ib_blob);
+ 								_php_ibase_error(TSRMLS_C);
+@@ -1610,7 +1610,7 @@
+ 		return FAILURE;
+ 	}
+ 
+-	if (trans_n == 0 && ib_link->trans[0] == NULL) { 
++	if (trans_n == 0 && ib_link->trans[0] == (isc_tr_handle) NULL) { 
+ 		if (isc_start_transaction(IB_STATUS, &ib_link->trans[0], 1, &ib_link->link, 0, NULL)) {
+ 			_php_ibase_error(TSRMLS_C);
+ 			return FAILURE;
+@@ -1652,7 +1652,7 @@
+ 		RETURN_FALSE;
+ 	}
+ 
+-	if (ib_link->trans[trans_n] == NULL) {
++	if (ib_link->trans[trans_n] == (isc_tr_handle) NULL) {
+ 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Trying to commit or rollback an already handled transaction");
+ 		RETURN_FALSE;
+ 	}
+@@ -1668,7 +1668,7 @@
+ 			RETURN_FALSE;
+ 		}
+ 	}
+-	ib_link->trans[trans_n] = NULL;
++	ib_link->trans[trans_n] = (isc_tr_handle) NULL;
+ 
+ 	/* Don't try to destroy imnplicitly opened transaction from list... */
+ 	if (trans_id) {
+@@ -1766,7 +1766,7 @@
+ 	
+ 	if (ib_result) { /* select statement */
+ 		ib_result->drop_stmt = 1; /* drop stmt when free result */
+-		ib_query->stmt = NULL; /* keep stmt when free query */
++		ib_query->stmt = (isc_stmt_handle) NULL; /* keep stmt when free query */
+ 		_php_ibase_free_query(ib_query TSRMLS_CC);
+ 		ZEND_REGISTER_RESOURCE(return_value, ib_result, le_result);
+ 	} else {
+@@ -2102,7 +2102,7 @@
+ 						char bl_info[20];
+ 						unsigned short i;
+ 
+-						blob_handle.bl_handle = NULL;
++						blob_handle.bl_handle = (isc_blob_handle) NULL;
+ 						blob_handle.bl_qd = *(ISC_QUAD ISC_FAR *) var->sqldata;
+ 			
+ 						if (isc_open_blob(IB_STATUS, &ib_result->link, &ib_result->trans, &blob_handle.bl_handle, &blob_handle.bl_qd)) {
+@@ -2640,7 +2640,7 @@
+ 	ib_blob = (ibase_blob_handle *) emalloc(sizeof(ibase_blob_handle));
+ 	ib_blob->trans_handle = ib_link->trans[trans_n];
+ 	ib_blob->link = ib_link->link;
+-	ib_blob->bl_handle = NULL;
++	ib_blob->bl_handle = (isc_blob_handle) NULL;
+ 	
+ 	if (isc_create_blob(IB_STATUS, &ib_blob->link, &ib_blob->trans_handle, &ib_blob->bl_handle, &ib_blob->bl_qd)) {
+ 		efree(ib_blob);
+@@ -2677,7 +2677,7 @@
+ 	ib_blob->trans_handle = ib_blob_id->trans_handle;
+ 	ib_blob->bl_qd.gds_quad_high = ib_blob_id->bl_qd.gds_quad_high;
+ 	ib_blob->bl_qd.gds_quad_low = ib_blob_id->bl_qd.gds_quad_low;
+-	ib_blob->bl_handle = NULL;
++	ib_blob->bl_handle = (isc_blob_handle) NULL;
+ 	if (isc_open_blob(IB_STATUS, &ib_blob->link, &ib_blob->trans_handle, &ib_blob->bl_handle, &ib_blob->bl_qd)) {
+ 		efree(ib_blob);
+ 		_php_ibase_error(TSRMLS_C);
+@@ -2756,7 +2756,7 @@
+ 				RETURN_FALSE;
+ 			}
+ 		}
+-		ib_blob->bl_handle = NULL;
++		ib_blob->bl_handle = (isc_blob_handle) NULL;
+ 		RETVAL_STRINGL((char *) ib_blob, sizeof(ibase_blob_handle), 1);
+ 		zend_list_delete(Z_LVAL_PP(blob_arg));
+ 	} else { /* discard created blob */
+@@ -2764,7 +2764,7 @@
+ 			_php_ibase_error(TSRMLS_C);
+ 			RETURN_FALSE;
+ 		}
+-		ib_blob->bl_handle = NULL;
++		ib_blob->bl_handle = (isc_blob_handle) NULL;
+ 		zend_list_delete(Z_LVAL_PP(blob_arg));
+ 		RETURN_TRUE;
+ 	}
+@@ -2818,7 +2818,7 @@
+ 			_php_ibase_error(TSRMLS_C);
+ 			RETURN_FALSE;
+ 		}
+-		ib_blob_id->bl_handle = NULL;
++		ib_blob_id->bl_handle = (isc_blob_handle) NULL;
+ 	} else { /* null blob, all values to zero */
+ 		bl_info.max_segment = 0;
+ 		bl_info.num_segments = 0;
+@@ -2891,7 +2891,7 @@
+ 			_php_ibase_error(TSRMLS_C);
+ 			RETURN_FALSE;
+ 		}
+-		ib_blob_id->bl_handle = NULL;
++		ib_blob_id->bl_handle = (isc_blob_handle) NULL;
+ 	} /* not null ? */
+ 
+ 	RETURN_TRUE;
+@@ -2940,7 +2940,7 @@
+ 	
+ 	ib_blob.link = ib_link->link;
+ 	ib_blob.trans_handle = ib_link->trans[trans_n];
+-	ib_blob.bl_handle = NULL;
++	ib_blob.bl_handle = (isc_blob_handle) NULL;
+ 	ib_blob.bl_qd.gds_quad_high = 0;
+ 	ib_blob.bl_qd.gds_quad_low = 0;
+ 	
+@@ -2964,7 +2964,7 @@
+ 		RETURN_FALSE;
+ 	}
+ 
+-	ib_blob.bl_handle = NULL;
++	ib_blob.bl_handle = (isc_blob_handle) NULL;
+ 	RETVAL_STRINGL((char *) &ib_blob, sizeof(ibase_blob_handle), 1);
+ }
+ /* }}} */
+@@ -2979,7 +2979,7 @@
+ 	char service_name_buffer[128], *service_name = service_name_buffer;
+ 	char spb_buffer[128], *spb = spb_buffer;
+ 	unsigned short spb_length;
+-	isc_svc_handle service_handle = NULL;
++	isc_svc_handle service_handle = (isc_svc_handle) NULL;
+ 	
+ 	RESET_ERRMSG;
+ 
+--- php-4.4.9/ext/odbc/php_odbc.c.orig	2007-12-31 08:22:50.000000000 +0100
++++ php-4.4.9/ext/odbc/php_odbc.c	2025-02-04 14:08:32.236987149 +0100
+@@ -634,7 +634,8 @@
+ 	RETCODE rc;
+ 	int i;
+ 	SWORD       colnamelen; /* Not used */
+-	SDWORD      displaysize;
++	SQLLEN      displaysize;
++	SQLLEN      value;
+ 
+ 	result->values = (odbc_result_value *) emalloc(sizeof(odbc_result_value)*result->numcols);
+ 
+@@ -645,7 +646,8 @@
+ 		rc = SQLColAttributes(result->stmt, (UWORD)(i+1), SQL_COLUMN_NAME, 
+ 				result->values[i].name, sizeof(result->values[i].name), &colnamelen, 0);
+ 		rc = SQLColAttributes(result->stmt, (UWORD)(i+1), SQL_COLUMN_TYPE, 
+-				NULL, 0, NULL, &result->values[i].coltype);
++				NULL, 0, NULL, &value);
++		result->values[i].coltype = value;
+ 		
+ 		/* Don't bind LONG / BINARY columns, so that fetch behaviour can
+ 		 * be controlled by odbc_binmode() / odbc_longreadlen()
+@@ -673,7 +675,8 @@
+ 								result->longreadlen;
+ 				result->values[i].value = (char *)emalloc(displaysize + 1);
+ 				rc = SQLBindCol(result->stmt, (UWORD)(i+1), SQL_C_CHAR, result->values[i].value,
+-							displaysize + 1, &result->values[i].vallen);
++							displaysize + 1, &value);
++				result->values[i].vallen = value;
+ 				break;
+ 		}
+ 	}
+@@ -728,7 +731,7 @@
+ 	 */
+ 	SDWORD len;
+ #else
+-	SQLINTEGER len;
++	SQLLEN len;
+ #endif
+ 	pval **pv_res, **pv_num;
+ 
+@@ -933,7 +936,8 @@
+ 	unsigned char otype;
+    	SWORD sqltype, ctype, scale;
+ 	SWORD nullable;
+-	UDWORD precision;
++	SQLULEN precision;
++	SQLLEN value;
+    	odbc_result   *result;
+ 	int numArgs, i, ne;
+ 	RETCODE rc;
+@@ -1040,7 +1044,8 @@
+ 				rc = SQLBindParameter(result->stmt, (UWORD)i, SQL_PARAM_INPUT,
+ 									  ctype, sqltype, precision, scale,
+ 									  (void *)params[i-1].fp, 0,
+-									  &params[i-1].vallen);
++									  &value);
++				params[i-1].vallen = value;
+ 			} else {
+ #ifdef HAVE_DBMAKER
+ 				precision = params[i-1].vallen;
+@@ -1052,7 +1057,8 @@
+ 				rc = SQLBindParameter(result->stmt, (UWORD)i, SQL_PARAM_INPUT,
+ 									  ctype, sqltype, precision, scale,
+ 									  Z_STRVAL_PP(tmp), 0,
+-									  &params[i-1].vallen);
++									  &value);
++				params[i-1].vallen = value;
+ 			}
+ 			zend_hash_move_forward(Z_ARRVAL_PP(pv_param_arr));
+ 		}
+@@ -1347,9 +1353,10 @@
+ 	odbc_result *result;
+ 	RETCODE rc;
+ 	SWORD sql_c_type;
++	SQLLEN value;
+ 	char *buf = NULL;
+ #ifdef HAVE_SQL_EXTENDED_FETCH
+-	UDWORD crow;
++	SQLULEN crow;
+ 	UWORD  RowStatus[1];
+ 	SDWORD rownum = -1;
+ 	pval **pv_res, **pv_row, *tmp;
+@@ -1431,7 +1438,8 @@
+ 				}
+ 				if (buf == NULL) buf = emalloc(result->longreadlen + 1);
+ 				rc = SQLGetData(result->stmt, (UWORD)(i + 1), sql_c_type,
+-						buf, result->longreadlen + 1, &result->values[i].vallen);
++						buf, result->longreadlen + 1, &value);
++				result->values[i].vallen = value;
+ 
+ 				if (rc == SQL_ERROR) {
+ 					odbc_sql_error(result->conn_ptr, result->stmt, "SQLGetData");
+@@ -1505,11 +1513,12 @@
+ 	odbc_result *result;
+ 	RETCODE rc;
+ 	SWORD sql_c_type;
++	SQLLEN value;
+ 	char *buf = NULL;
+ 	pval **pv_res, **pv_res_arr, *tmp;
+ #ifdef HAVE_SQL_EXTENDED_FETCH
+ 	pval **pv_row;
+-	UDWORD crow;
++	SQLULEN crow;
+ 	UWORD  RowStatus[1];
+ 	SDWORD rownum = -1;
+ #endif /* HAVE_SQL_EXTENDED_FETCH */
+@@ -1591,7 +1600,8 @@
+ 
+ 				if (buf == NULL) buf = emalloc(result->longreadlen + 1);
+ 				rc = SQLGetData(result->stmt, (UWORD)(i + 1),sql_c_type,
+-								buf, result->longreadlen + 1, &result->values[i].vallen);
++								buf, result->longreadlen + 1, &value);
++				result->values[i].vallen = value;
+ 
+ 					if (rc == SQL_ERROR) {
+ 					odbc_sql_error(result->conn_ptr, result->stmt, "SQLGetData");
+@@ -1666,7 +1676,7 @@
+ 	RETCODE rc;
+ 	pval **pv_res, **pv_row;
+ #ifdef HAVE_SQL_EXTENDED_FETCH
+-	UDWORD crow;
++	SQLULEN crow;
+ 	UWORD RowStatus[1];
+ #endif
+ 
+@@ -1727,10 +1737,11 @@
+ 	odbc_result *result;
+ 	int i = 0;
+ 	RETCODE rc;
+-	SDWORD	fieldsize;
++	SQLLEN	fieldsize;
++	SQLLEN	value;
+ 	pval **pv_res, **pv_field;
+ #ifdef HAVE_SQL_EXTENDED_FETCH
+-	UDWORD crow;
++	SQLULEN crow;
+ 	UWORD RowStatus[1];
+ #endif
+ 
+@@ -1822,7 +1833,8 @@
+ 		 * For binary data it is truncated to fieldsize bytes. 
+ 		 */
+ 			rc = SQLGetData(result->stmt, (UWORD)(field_ind + 1), sql_c_type,
+-							field, fieldsize, &result->values[field_ind].vallen);
++							field, fieldsize, &value);
++			result->values[field_ind].vallen = value;
+ 
+ 			if (rc == SQL_ERROR) {
+ 				odbc_sql_error(result->conn_ptr, result->stmt, "SQLGetData");
+@@ -1865,7 +1877,8 @@
+ 	/* Call SQLGetData() until SQL_SUCCESS is returned */
+ 	while(1) {
+ 		rc = SQLGetData(result->stmt, (UWORD)(field_ind + 1),sql_c_type,
+-							field, fieldsize, &result->values[field_ind].vallen);
++							field, fieldsize, &value);
++		result->values[field_ind].vallen = value;
+ 
+ 		if (rc == SQL_ERROR) {
+ 			odbc_sql_error(result->conn_ptr, result->stmt, "SQLGetData");
+@@ -1900,8 +1913,9 @@
+ 	RETCODE rc;
+ 	pval **pv_res, **pv_format;
+ 	SWORD sql_c_type;
++	SQLLEN value;
+ #ifdef HAVE_SQL_EXTENDED_FETCH
+-	UDWORD crow;
++	SQLULEN crow;
+ 	UWORD RowStatus[1];
+ #endif
+ 
+@@ -1969,7 +1983,8 @@
+ 					if (buf == NULL) buf = emalloc(result->longreadlen);
+ 
+ 					rc = SQLGetData(result->stmt, (UWORD)(i + 1),sql_c_type,
+-								buf, result->longreadlen, &result->values[i].vallen);
++								buf, result->longreadlen, &value);
++					result->values[i].vallen = value;
+  
+ 					php_printf("<td>");
+ 
+@@ -2385,7 +2400,7 @@
+ PHP_FUNCTION(odbc_num_rows)
+ {
+ 	odbc_result *result;
+-	SDWORD rows;
++	SQLLEN rows;
+ 	pval **pv_res;
+ 	
+ 	if (zend_get_parameters_ex(1, &pv_res) == FAILURE) {
+--- php-4.4.9/ext/pgsql/pgsql.c.orig	2007-12-31 08:22:50.000000000 +0100
++++ php-4.4.9/ext/pgsql/pgsql.c	2025-02-04 14:36:18.019954669 +0100
+@@ -302,11 +302,13 @@
+ static void _php_pgsql_notice_handler(void *resource_id, const char *message)
+ {
+ 	php_pgsql_notice *notice;
++	int len;
+ 	
+ 	TSRMLS_FETCH();
+ 	if (! PGG(ignore_notices)) {
+ 		notice = (php_pgsql_notice *)emalloc(sizeof(php_pgsql_notice));
+-		notice->message = _php_pgsql_trim_message(message, &notice->len);
++		notice->message = _php_pgsql_trim_message(message, &len);
++		notice->len = len;
+ 		if (PGG(log_notices)) {
+ 			php_error_docref(NULL TSRMLS_CC, E_NOTICE, "%s", notice->message);
+ 		}
+@@ -4507,7 +4509,8 @@
+ {
+ 	zval *row;
+ 	char *field_name, *element, *data;
+-	size_t num_fields, element_len, data_len;
++	size_t num_fields, element_len;
++	int data_len;
+ 	int pg_numrows, pg_row;
+ 	uint i;
+ 	assert(Z_TYPE_P(ret_array) == IS_ARRAY);

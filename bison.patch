@@ -1,0 +1,30 @@
+--- php-4.4.9/ext/standard/parsedate.y.orig	2005-05-20 13:13:14.000000000 +0200
++++ php-4.4.9/ext/standard/parsedate.y	2025-02-03 23:20:33.425601095 +0100
+@@ -143,13 +143,15 @@
+     enum _MERIDIAN	Meridian;
+ } date_ll;
+ 
+-#define YYPARSE_PARAM parm
+-#define YYLEX_PARAM parm
+ #define YYSTYPE date_ll
+-#define YYLTYPE void
++
++int yylex (YYSTYPE *lvalp, void *parm);
+ 
+ %}
+ 
++%parse-param {YYSTYPE* parm}
++%lex-param {void* parm}
++
+ /* This grammar has 40 shift/reduce conflicts. */
+ %expect 40
+ %pure_parser
+@@ -860,7 +862,7 @@
+   return tID;
+ }
+ 
+-yylex (YYSTYPE *lvalp, void *parm)
++int yylex (YYSTYPE *lvalp, void *parm)
+ {
+   register unsigned char c;
+   register char *p;

@@ -1,0 +1,12 @@
+--- php-4.4.9/ext/gd/gd.c.orig	2025-02-03 23:32:50.103037199 +0100
++++ php-4.4.9/ext/gd/gd.c	2025-02-03 23:34:13.180166546 +0100
+@@ -73,6 +73,9 @@
+ #include <gdfontmb.h> /* 3 Medium bold font */
+ #include <gdfontl.h>  /* 4 Large font */
+ #include <gdfontg.h>  /* 5 Giant font */
++
++#include "gdhelpers.h"
++
+ #if HAVE_GD_BUNDLED
+ #ifdef HAVE_GD_WBMP
+ #include "libgd/wbmp.h"
