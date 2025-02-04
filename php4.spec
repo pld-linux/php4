@@ -2043,19 +2043,15 @@ fi
 [ ! -f /etc/apache/conf.d/??_mod_php4.conf ] || %service -q apache restart
 [ ! -f /etc/httpd/conf.d/??_mod_php4.conf ] || %service -q httpd restart
 
-%if %{with apache2}
-%triggerpostun -n apache-mod_php4 -- apache-mod_php4 < 3:4.4.0-2.16, php4 < 3:4.3.11-4.16
+%triggerpostun -n apache1-mod_%{name} -- apache1-mod_%{name} < 3:4.4.9-51
+sed -i -e 's#modules/libphp4.so#modules/mod_php.so#g' /etc/apache/conf.d/*_mod_php4.conf
+
+%triggerpostun -n apache-mod_%{name} -- apache-mod_%{name} < 3:4.4.9-51
 # for fixed php-SAPI.ini, the poor php-apache.ini was never read for apache2
 if [ -f %{_sysconfdir}/php-apache.ini.rpmsave ]; then
 	cp -f %{_sysconfdir}/php-apache2handler.ini{,.rpmnew}
 	mv -f %{_sysconfdir}/php-apache.ini.rpmsave %{_sysconfdir}/php-apache2handler.ini
 fi
-%endif
-
-%triggerpostun -n apache1-mod_%{name} -- apache1-mod_%{name} < 3:4.4.9-51
-sed -i -e 's#modules/libphp4.so#modules/mod_php.so#g' /etc/apache/conf.d/*_mod_php4.conf
-
-%triggerpostun -n apache-mod_%{name} -- apache-mod_%{name} < 3:4.4.9-51
 sed -i -e 's#modules/libphp4.so#modules/mod_php.so#g' /etc/httpd/conf.d/*_mod_php4.conf
 
 %post bcmath
