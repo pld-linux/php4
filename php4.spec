@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 74
+%define		rel 75
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -1673,6 +1673,8 @@ cp -f Zend/LICENSE{,.Zend}
 
 # make colliding symbol static
 %{__sed} -i -e 's/^char \*yytext/static &/' Zend/zend_{ini,language}_scanner.c
+
+touch ext/standard/parsedate.y
 
 %build
 API=$(awk '/#define PHP_API_VERSION/{print $3}' main/php.h)
