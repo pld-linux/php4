@@ -1590,7 +1590,7 @@ Moduł PHP umożliwiający używanie kompresji zlib.
 
 %prep
 %setup -q -n php-%{version}
-#%patch -P43 -p1
+#%%patch -P43 -p1
 %patch -P40 -p1
 %patch -P0 -p1
 %patch -P1 -p1
@@ -1602,7 +1602,7 @@ Moduł PHP umożliwiający używanie kompresji zlib.
 %patch -P7 -p1
 %patch -P8 -p1
 # Not really needed?
-#%patch -P9 -p1
+#%%patch -P9 -p1
 %patch -P10 -p1
 %patch -P11 -p1
 %patch -P12 -p1
@@ -1636,7 +1636,7 @@ cp php.ini-dist php.ini
 %patch -P38 -p1
 %{?with_versioning:%patch -P39 -p1}
 # XXX: I believe this one is obsolete as of 4.4.3
-#%patch -P41 -p1
+#%%patch -P41 -p1
 %patch -P41 -p1
 %patch -P42 -p1
 %patch -P43 -p1
