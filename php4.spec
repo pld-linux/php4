@@ -20,7 +20,7 @@
 %bcond_with	oracle		# with oracle extension module		(BR: proprietary libs)
 %bcond_without	cpdf		# without cpdf extension module
 %bcond_without	curl		# without CURL extension module
-%bcond_without	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
+%bcond_with	domxslt		# without DOM XSLT/EXSLT support in DOM XML extension module
 %bcond_with	fribidi		# without FriBiDi extension module (use pecl-fribidi)
 %bcond_without	imap		# without IMAP extension module
 %bcond_without	interbase	# without InterBase extension module
@@ -43,7 +43,7 @@
 %bcond_without	snmp		# without SNMP extension module
 %bcond_without	sybase		# without Sybase and Sybase-CT extension modules
 %bcond_without	wddx		# without WDDX extension module
-%bcond_without	xml		# without XML and DOMXML extension modules
+%bcond_with	xml		# without XML and DOMXML extension modules
 %bcond_without	xmlrpc		# without XML-RPC extension module
 %bcond_with     system_xmlrpc_epi       # use system xmlrpc-epi library (broken on 64bit arches, see http://bugs.php.net/41611)
 %bcond_without	xslt		# without XSLT extension module
@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 76
+%define		rel 77
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
