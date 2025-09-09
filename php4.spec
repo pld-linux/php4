@@ -42,7 +42,7 @@
 %bcond_without	recode		# without recode extension module
 %bcond_without	snmp		# without SNMP extension module
 %bcond_without	sybase		# without Sybase and Sybase-CT extension modules
-%bcond_without	wddx		# without WDDX extension module
+%bcond_with	wddx		# without WDDX extension module
 %bcond_with	xml		# without XML and DOMXML extension modules
 %bcond_without	xmlrpc		# without XML-RPC extension module
 %bcond_with     system_xmlrpc_epi       # use system xmlrpc-epi library (broken on 64bit arches, see http://bugs.php.net/41611)
@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 78
+%define		rel 79
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
