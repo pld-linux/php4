@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 80
+%define		rel 81
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -1744,6 +1744,7 @@ for sapi in $sapis; do
 	esac
 
 	%configure \
+	CPPFLAGS="%{rpmcppflags} -std=gnu17" \
 	$sapi_args \
 %if "%{!?configure_cache:0}%{?configure_cache}" == "0"
 	--cache-file=config.cache \
