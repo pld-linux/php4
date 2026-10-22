@@ -1,0 +1,21 @@
+gd-transparent-index: gd: a GD/GD2 file can set a transparent palette index past the palette, later used as an array index.
+Upstream libgd https://github.com/libgd/libgd/commit/0be86e1926 and https://github.com/libgd/libgd/commit/2dbd8f6e66 (#383)
+
+diff --git a/ext/gd/libgd/gd_gd.c b/ext/gd/libgd/gd_gd.c
+index 81a957d..4d24121 100644
+--- a/ext/gd/libgd/gd_gd.c
++++ b/ext/gd/libgd/gd_gd.c
+@@ -54,9 +54,10 @@ int _gdGetColors (gdIOCtx * in, gdImagePtr im, int gd2xFlag)
+ 		if (!gdGetWord(&im->transparent, in)) {
+ 			goto fail1;
+ 		}
+-		if (im->transparent == 257) {
+-			im->transparent = (-1);
+-		}
++	}
++	/* Make sure transparent index is within bounds of the palette. */
++	if (!(im->trueColor) && (im->transparent >= im->colorsTotal || im->transparent < 0)) {
++		im->transparent = (-1);
+ 	}
+ 
+ 	GD2_DBG(printf("Pallette had %d colours (T=%d)\n", im->colorsTotal, im->transparent));

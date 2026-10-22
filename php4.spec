@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 82
+%define		rel 83
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -158,6 +158,111 @@ Patch61:	configure.patch
 Patch62:	bison.patch
 Patch63:	includes.patch
 Patch64:	types.patch
+Patch65:	%{name}-CVE-2007-0907.patch
+Patch66:	%{name}-CVE-2007-4782.patch
+Patch67:	%{name}-CVE-2010-1917.patch
+Patch68:	%{name}-CVE-2007-5898.patch
+Patch69:	%{name}-CVE-2008-2107.patch
+Patch70:	%{name}-CVE-2008-3660.patch
+Patch71:	%{name}-CVE-2008-5498.patch
+Patch72:	%{name}-CVE-2009-2687.patch
+Patch73:	%{name}-CVE-2009-3291.patch
+Patch74:	%{name}-CVE-2009-3292.patch
+Patch75:	%{name}-CVE-2009-3546.patch
+Patch76:	%{name}-CVE-2009-4017.patch
+Patch77:	%{name}-CVE-2010-0397.patch
+Patch78:	%{name}-CVE-2010-1128.patch
+Patch79:	%{name}-CVE-2010-3870.patch
+Patch80:	%{name}-CVE-2011-0708.patch
+Patch81:	%{name}-CVE-2011-1466.patch
+Patch82:	%{name}-CVE-2013-4113.patch
+Patch83:	%{name}-CVE-2008-2051.patch
+Patch84:	%{name}-CVE-2008-5557.patch
+Patch85:	%{name}-CVE-2009-4142.patch
+Patch86:	%{name}-CVE-2010-2531.patch
+Patch87:	%{name}-CVE-2010-3065.patch
+Patch88:	%{name}-CVE-2011-2202.patch
+Patch89:	%{name}-CVE-2011-4566.patch
+Patch90:	%{name}-CVE-2011-4885.patch
+Patch91:	%{name}-gd-transparent-index.patch
+Patch92:	%{name}-curl-handler-free.patch
+Patch93:	%{name}-CVE-2014-3670.patch
+Patch94:	%{name}-CVE-2016-10158.patch
+Patch95:	%{name}-CVE-2019-11041.patch
+Patch96:	%{name}-CVE-2019-11047.patch
+Patch97:	%{name}-CVE-2020-7064.patch
+Patch98:	%{name}-exif-APP12-SOFn-infoleak.patch
+Patch99:	%{name}-CVE-2014-9709.patch
+Patch100:	%{name}-CVE-2017-7890.patch
+Patch101:	%{name}-CVE-2018-5711.patch
+Patch102:	%{name}-CVE-2016-3074.patch
+Patch103:	%{name}-CVE-2016-5766.patch
+Patch104:	%{name}-CVE-2016-10168.patch
+Patch105:	%{name}-CVE-2016-10167.patch
+Patch106:	%{name}-CVE-2016-8670.patch
+Patch107:	%{name}-CVE-2016-6161.patch
+Patch108:	%{name}-CVE-2019-11038.patch
+Patch109:	%{name}-CVE-2016-9933.patch
+Patch110:	%{name}-CVE-2015-8874.patch
+Patch111:	%{name}-CVE-2019-6977.patch
+Patch112:	%{name}-CVE-2025-23016.patch
+Patch113:	%{name}-CVE-2018-17082.patch
+Patch114:	%{name}-CVE-2015-2305.patch
+Patch115:	%{name}-CVE-2016-6296.patch
+Patch116:	%{name}-CVE-2014-8626.patch
+Patch117:	%{name}-CVE-2013-6420.patch
+Patch118:	%{name}-CVE-2010-4150.patch
+Patch119:	%{name}-CVE-2018-19518.patch
+Patch120:	%{name}-CVE-2019-9024.patch
+Patch121:	%{name}-CVE-2019-9020.patch
+Patch122:	%{name}-CVE-2016-5769.patch
+Patch123:	%{name}-CVE-2017-11144.patch
+Patch124:	%{name}-CVE-2018-10548.patch
+Patch125:	%{name}-bcmath-scale-overflow.patch
+Patch126:	%{name}-CVE-2016-4542.patch
+Patch127:	%{name}-exif-bug70385.patch
+Patch128:	%{name}-CVE-2016-7128.patch
+Patch129:	%{name}-CVE-2018-14883.patch
+Patch130:	%{name}-exif-bug65873.patch
+Patch131:	%{name}-CVE-2019-11036.patch
+Patch132:	%{name}-CVE-2016-6291.patch
+Patch133:	%{name}-CVE-2018-14851.patch
+Patch134:	%{name}-CVE-2019-9638.patch
+Patch135:	%{name}-CVE-2019-11034.patch
+Patch136:	%{name}-CVE-2019-9640.patch
+Patch137:	%{name}-CVE-2019-11040.patch
+Patch138:	%{name}-CVE-2019-9641.patch
+Patch139:	%{name}-CVE-2019-11035.patch
+Patch140:	%{name}-getimagesize-short-read.patch
+Patch141:	%{name}-CVE-2016-7126.patch
+Patch142:	%{name}-CVE-2016-7127.patch
+Patch143:	%{name}-CVE-2014-5120.patch
+Patch144:	%{name}-CVE-2015-4598.patch
+Patch145:	%{name}-CVE-2015-6834.patch
+Patch146:	%{name}-CVE-2015-2787.patch
+Patch147:	%{name}-CVE-2016-10161.patch
+Patch148:	%{name}-CVE-2017-12933.patch
+Patch149:	%{name}-CVE-2024-8927.patch
+Patch150:	%{name}-cgi-shebang-eof.patch
+Patch151:	%{name}-CVE-2015-8935.patch
+Patch152:	%{name}-CVE-2015-4024.patch
+Patch153:	%{name}-CVE-2023-0662.patch
+Patch154:	%{name}-CVE-2012-1172.patch
+Patch155:	%{name}-CVE-2024-8925.patch
+Patch156:	%{name}-CVE-2016-7125.patch
+Patch157:	%{name}-CVE-2015-6835.patch
+Patch158:	%{name}-CVE-2018-7584.patch
+Patch159:	%{name}-CVE-2014-4721.patch
+Patch160:	%{name}-CVE-2015-2348.patch
+Patch161:	%{name}-CVE-2023-0568.patch
+Patch162:	%{name}-open-basedir-empty-path.patch
+Patch163:	%{name}-CVE-2015-4022.patch
+Patch164:	%{name}-CVE-2016-5399.patch
+Patch165:	%{name}-CVE-2016-10397.patch
+Patch166:	%{name}-CVE-2020-7059.patch
+Patch167:	%{name}-CVE-2011-1092.patch
+Patch168:	%{name}-CVE-2015-0232.patch
+Patch169:	%{name}-exif-zero-components.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -1664,6 +1769,111 @@ cp php.ini-dist php.ini
 %patch -P62 -p1
 %patch -P63 -p1
 %patch -P64 -p1
+%patch -P65 -p1
+%patch -P66 -p1
+%patch -P67 -p1
+%patch -P68 -p1
+%patch -P69 -p1
+%patch -P70 -p1
+%patch -P71 -p1
+%patch -P72 -p1
+%patch -P73 -p1
+%patch -P74 -p1
+%patch -P75 -p1
+%patch -P76 -p1
+%patch -P77 -p1
+%patch -P78 -p1
+%patch -P79 -p1
+%patch -P80 -p1
+%patch -P81 -p1
+%patch -P82 -p1
+%patch -P83 -p1
+%patch -P84 -p1
+%patch -P85 -p1
+%patch -P86 -p1
+%patch -P87 -p1
+%patch -P88 -p1
+%patch -P89 -p1
+%patch -P90 -p1
+%patch -P91 -p1
+%patch -P92 -p1
+%patch -P93 -p1
+%patch -P94 -p1
+%patch -P95 -p1
+%patch -P96 -p1
+%patch -P97 -p1
+%patch -P98 -p1
+%patch -P99 -p1
+%patch -P100 -p1
+%patch -P101 -p1
+%patch -P102 -p1
+%patch -P103 -p1
+%patch -P104 -p1
+%patch -P105 -p1
+%patch -P106 -p1
+%patch -P107 -p1
+%patch -P108 -p1
+%patch -P109 -p1
+%patch -P110 -p1
+%patch -P111 -p1
+%patch -P112 -p1
+%patch -P113 -p1
+%patch -P114 -p1
+%patch -P115 -p1
+%patch -P116 -p1
+%patch -P117 -p1
+%patch -P118 -p1
+%patch -P119 -p1
+%patch -P120 -p1
+%patch -P121 -p1
+%patch -P122 -p1
+%patch -P123 -p1
+%patch -P124 -p1
+%patch -P125 -p1
+%patch -P126 -p1
+%patch -P127 -p1
+%patch -P128 -p1
+%patch -P129 -p1
+%patch -P130 -p1
+%patch -P131 -p1
+%patch -P132 -p1
+%patch -P133 -p1
+%patch -P134 -p1
+%patch -P135 -p1
+%patch -P136 -p1
+%patch -P137 -p1
+%patch -P138 -p1
+%patch -P139 -p1
+%patch -P140 -p1
+%patch -P141 -p1
+%patch -P142 -p1
+%patch -P143 -p1
+%patch -P144 -p1
+%patch -P145 -p1
+%patch -P146 -p1
+%patch -P147 -p1
+%patch -P148 -p1
+%patch -P149 -p1
+%patch -P150 -p1
+%patch -P151 -p1
+%patch -P152 -p1
+%patch -P153 -p1
+%patch -P154 -p1
+%patch -P155 -p1
+%patch -P156 -p1
+%patch -P157 -p1
+%patch -P158 -p1
+%patch -P159 -p1
+%patch -P160 -p1
+%patch -P161 -p1
+%patch -P162 -p1
+%patch -P163 -p1
+%patch -P164 -p1
+%patch -P165 -p1
+%patch -P166 -p1
+%patch -P167 -p1
+%patch -P168 -p1
+%patch -P169 -p1
 
 %if %{with hardening}
 zcat %{SOURCE8} | patch -p1
@@ -1675,6 +1885,8 @@ cp -f Zend/LICENSE{,.Zend}
 %{__sed} -i -e 's/^char \*yytext/static &/' Zend/zend_{ini,language}_scanner.c
 
 touch ext/standard/parsedate.y
+# patches fix var_unserializer.re and the generated .c alike; keep re2c from regenerating it
+touch ext/standard/var_unserializer.c
 
 %build
 API=$(awk '/#define PHP_API_VERSION/{print $3}' main/php.h)

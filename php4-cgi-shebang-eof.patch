@@ -1,0 +1,29 @@
+cgi-shebang-eof: cgi and cli: a script starting with '#' and without a newline loops at EOF.
+PLD fix, PHP 5 has the same EOF check
+
+diff --git a/sapi/cgi/cgi_main.c b/sapi/cgi/cgi_main.c
+index 47be360..6c602dc 100644
+--- a/sapi/cgi/cgi_main.c
++++ b/sapi/cgi/cgi_main.c
+@@ -1635,7 +1635,7 @@ consult the installation file that came with this distribution, or visit \n\
+ 			/* #!php support */
+ 			c = fgetc(file_handle.handle.fp);
+ 			if (c == '#') {
+-				while (c != 10 && c != 13) {
++				while (c != 10 && c != 13 && c != EOF) {
+ 					c = fgetc(file_handle.handle.fp);	/* skip to end of line */
+ 				}
+ 				/* handle situations where line is terminated by \r\n */
+diff --git a/sapi/cli/php_cli.c b/sapi/cli/php_cli.c
+index 12a1514..d0b7023 100644
+--- a/sapi/cli/php_cli.c
++++ b/sapi/cli/php_cli.c
+@@ -492,7 +492,7 @@ static int cli_seek_file_begin(zend_file_handle *file_handle, char *script_file,
+ 	/* #!php support */
+ 	c = fgetc(file_handle->handle.fp);
+ 	if (c == '#') {
+-		while (c != 10 && c != 13) {
++		while (c != 10 && c != 13 && c != EOF) {
+ 			c = fgetc(file_handle->handle.fp);	/* skip to end of line */
+ 		}
+ 		/* handle situations where line is terminated by \r\n */

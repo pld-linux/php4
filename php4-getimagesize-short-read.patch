@@ -1,0 +1,25 @@
+getimagesize-short-read: getimagesize(): a truncated APPn section leaks uninitialised memory into $info.
+Upstream https://github.com/php/php-src/commit/52aa0d9ecc7a; PHP 4 only needs the length check
+
+diff --git a/ext/standard/image.c b/ext/standard/image.c
+index 61c0c37..4dd779b 100644
+--- a/ext/standard/image.c
++++ b/ext/standard/image.c
+@@ -358,7 +358,7 @@ static unsigned short php_read2(php_stream * stream TSRMLS_DC)
+ 	unsigned char a[2];
+ 
+ 	/* just return 0 if we hit the end-of-file */
+-	if((php_stream_read(stream, a, sizeof(a))) <= 0) return 0;
++	if((php_stream_read(stream, a, sizeof(a))) != sizeof(a)) return 0;
+ 
+ 	return (((unsigned short)a[0]) << 8) + ((unsigned short)a[1]);
+ }
+@@ -449,7 +449,7 @@ static int php_read_APP(php_stream * stream, unsigned int marker, zval *info TSR
+ 
+ 	buffer = emalloc(length);
+ 
+-	if (php_stream_read(stream, buffer, (long) length) <= 0) {
++	if (php_stream_read(stream, buffer, (long) length) != length) {
+ 		efree(buffer);
+ 		return 0;
+ 	}
