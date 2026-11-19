@@ -73,7 +73,7 @@
 %undefine	with_msession
 %endif
 
-%define		rel 84
+%define		rel 85
 Summary:	PHP: Hypertext Preprocessor
 Summary(fr.UTF-8):	Le langage de script embarque-HTML PHP
 Summary(pl.UTF-8):	Język skryptowy PHP
@@ -86,7 +86,7 @@ Release:	%{rel}%{?with_hardening:hardened}
 Epoch:		3
 License:	PHP
 Group:		Libraries
-Source0:	http://www.php.net/distributions/php-%{version}.tar.bz2
+Source0:	https://www.php.net/distributions/php-%{version}.tar.bz2
 # Source0-md5:	2e3b2a0e27f10cb84fd00e5ecd7a1880
 Source3:	%{name}-mod_php.conf
 Source4:	%{name}-cgi-fcgi.ini
@@ -263,6 +263,9 @@ Patch166:	%{name}-CVE-2020-7059.patch
 Patch167:	%{name}-CVE-2011-1092.patch
 Patch168:	%{name}-CVE-2015-0232.patch
 Patch169:	%{name}-exif-zero-components.patch
+Patch170:	%{name}-CVE-2026-129538.patch
+Patch171:	%{name}-CVE-2026-126714.patch
+Patch172:	%{name}-CVE-2026-128064.patch
 URL:		http://www.php.net/
 %{?with_interbase:%{!?with_interbase_inst:BuildRequires:	Firebird-devel >= 1.0.2.908-2}}
 %{?with_pspell:BuildRequires:	aspell-devel >= 2:0.50.0}
@@ -1875,6 +1878,9 @@ cp php.ini-dist php.ini
 %patch -P167 -p1
 %patch -P168 -p1
 %patch -P169 -p1
+%patch -P170 -p1
+%patch -P171 -p1
+%patch -P172 -p1
 
 %if %{with hardening}
 zcat %{SOURCE8} | patch -p1

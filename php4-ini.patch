@@ -255,7 +255,7 @@
  ;from="john@doe.com"
 --- php-4.4.8/php.ini-dist~	2008-07-02 18:50:01.000000000 +0300
 +++ php-4.4.8/php.ini-dist	2008-07-02 18:56:09.636680270 +0300
-@@ -482,7 +482,7 @@
+@@ -418,7 +418,7 @@
  ; if PHP was not compiled with FORCE_REDIRECT, you SHOULD set doc_root
  ; if you are running php as a CGI under any web server (other than IIS)
  ; see documentation for security issues.  The alternate is to use the
@@ -264,7 +264,7 @@
  doc_root =
  
  ; The directory under which PHP opens the script using /~username used only
-@@ -497,48 +497,6 @@
+@@ -433,48 +433,6 @@
  ; disabled on them.
  enable_dl = On
  
@@ -313,7 +313,7 @@
  ;;;;;;;;;;;;;;;;
  ; File Uploads ;
  ;;;;;;;;;;;;;;;;
-@@ -553,7 +511,6 @@
+@@ -489,7 +447,6 @@
  ; Maximum allowed size for uploaded files.
  upload_max_filesize = 2M
  
